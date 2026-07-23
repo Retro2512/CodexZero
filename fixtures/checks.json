@@ -1,0 +1,18 @@
+{
+  "fixture": {
+    "commands": [
+      {
+        "program": "node",
+        "args": ["--check", "app.js"]
+      },
+      {
+        "program": "git",
+        "args": ["diff", "--check"]
+      },
+      {
+        "program": "node",
+        "args": ["fixtures/repeated-lines.js", "3"]
+      }
+    ]
+  }
+}

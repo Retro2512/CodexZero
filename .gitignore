@@ -1,3 +1,9 @@
 .DS_Store
 Thumbs.db
 desktop.ini
+/work/
+/private-artifacts/
+/target/
+*.tmp
+__pycache__/
+*.pyc

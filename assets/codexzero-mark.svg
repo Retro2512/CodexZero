@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">CodexZero mark</title>
+  <rect width="64" height="64" fill="#171713"/>
+  <path d="M13 18h25L25 32l13 14H13l13-14z" fill="#c9ff36"/>
+  <rect x="41" y="18" width="10" height="28" fill="#ff7759"/>
+</svg>

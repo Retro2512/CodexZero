@@ -1,0 +1,2797 @@
+diff --git a/codex-rs/Cargo.lock b/codex-rs/Cargo.lock
+index c43d29ce3c49c3302cd5193f661dd3ec0b4ab587..06f1c6f63c45554fc83deb88774742b5dc7338c0 100644
+--- a/codex-rs/Cargo.lock
++++ b/codex-rs/Cargo.lock
+@@ -394,7 +394,7 @@ checksum = "7f202df86484c868dbad7eaa557ef785d5c66295e41b460ef922eca0723b842c"
+ 
+ [[package]]
+ name = "app_test_support"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "base64 0.22.1",
+@@ -1837,7 +1837,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-agent-extension"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "codex-core",
+@@ -1849,7 +1849,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-agent-graph-store"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-protocol",
+  "codex-state",
+@@ -1863,7 +1863,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-agent-identity"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "base64 0.22.1",
+@@ -1882,7 +1882,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-analytics"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-app-server-protocol",
+  "codex-git-utils",
+@@ -1903,7 +1903,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-ansi-escape"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "ansi-to-tui",
+  "ratatui",
+@@ -1912,7 +1912,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-api"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "assert_matches",
+@@ -1948,7 +1948,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-app-server"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "app_test_support",
+@@ -2043,7 +2043,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-app-server-client"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-app-server",
+  "codex-app-server-protocol",
+@@ -2070,7 +2070,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-app-server-daemon"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "codex-app-server-protocol",
+@@ -2091,7 +2091,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-app-server-protocol"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "clap",
+@@ -2120,7 +2120,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-app-server-test-client"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "clap",
+@@ -2142,7 +2142,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-app-server-transport"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "axum",
+@@ -2184,7 +2184,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-apply-patch"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "assert_cmd",
+@@ -2204,7 +2204,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-arg0"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "codex-apply-patch",
+@@ -2224,7 +2224,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-async-utils"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "pretty_assertions",
+  "tokio",
+@@ -2233,7 +2233,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-aws-auth"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "aws-config",
+  "aws-credential-types",
+@@ -2248,7 +2248,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-backend-client"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "codex-api",
+@@ -2265,7 +2265,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-backend-openapi-models"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "serde",
+  "serde_json",
+@@ -2274,7 +2274,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-bwrap"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "cc",
+  "libc",
+@@ -2283,7 +2283,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-chatgpt"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "clap",
+@@ -2304,7 +2304,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-cli"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "app_test_support",
+@@ -2381,7 +2381,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-client"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-http-client",
+  "eventsource-stream",
+@@ -2393,7 +2393,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-cloud-config"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "base64 0.22.1",
+  "chrono",
+@@ -2417,7 +2417,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-cloud-tasks"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "chrono",
+@@ -2448,7 +2448,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-cloud-tasks-client"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "chrono",
+@@ -2462,7 +2462,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-cloud-tasks-mock-client"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "chrono",
+  "codex-cloud-tasks-client",
+@@ -2471,7 +2471,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-code-mode"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-code-mode-protocol",
+  "codex-protocol",
+@@ -2487,7 +2487,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-code-mode-host"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "codex-code-mode",
+@@ -2503,7 +2503,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-code-mode-protocol"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-protocol",
+  "pretty_assertions",
+@@ -2515,11 +2515,11 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-collaboration-mode-templates"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ 
+ [[package]]
+ name = "codex-config"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "base64 0.22.1",
+@@ -2567,7 +2567,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-connectors"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "arc-swap",
+@@ -2589,7 +2589,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-connectors-extension"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-connectors",
+  "codex-core-plugins",
+@@ -2602,7 +2602,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-context-fragments"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-protocol",
+  "codex-utils-string",
+@@ -2610,7 +2610,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-core"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "arc-swap",
+@@ -2683,6 +2683,7 @@ dependencies = [
+  "codex-utils-string",
+  "codex-web-search-extension",
+  "codex-windows-sandbox",
++ "codex-zero-codec",
+  "core_test_support",
+  "csv",
+  "ctor 0.6.3",
+@@ -2737,7 +2738,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-core-api"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-analytics",
+  "codex-app-server-protocol",
+@@ -2758,7 +2759,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-core-plugins"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "chrono",
+@@ -2807,7 +2808,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-core-skills"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "codex-analytics",
+@@ -2841,7 +2842,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-exec"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "assert_cmd",
+@@ -2887,7 +2888,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-exec-server"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "arc-swap",
+@@ -2939,7 +2940,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-exec-server-protocol"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "base64 0.22.1",
+  "codex-file-system",
+@@ -2954,7 +2955,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-execpolicy"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "clap",
+@@ -2971,7 +2972,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-experimental-api-macros"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "proc-macro2",
+  "quote",
+@@ -2980,7 +2981,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-extension-api"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-config",
+  "codex-context-fragments",
+@@ -2994,7 +2995,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-extension-items"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-utils-absolute-path",
+  "pretty_assertions",
+@@ -3006,7 +3007,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-external-agent-migration"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "chrono",
+  "codex-analytics",
+@@ -3034,7 +3035,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-features"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-otel",
+  "codex-protocol",
+@@ -3047,7 +3048,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-feedback"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "codex-login",
+@@ -3061,7 +3062,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-file-search"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "clap",
+@@ -3077,7 +3078,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-file-system"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "bytes",
+  "codex-protocol",
+@@ -3089,7 +3090,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-file-watcher"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "notify",
+  "pretty_assertions",
+@@ -3100,7 +3101,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-git-utils"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "chrono",
+@@ -3125,7 +3126,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-goal-extension"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "chrono",
+@@ -3147,7 +3148,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-guardian"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-core",
+  "codex-extension-api",
+@@ -3156,7 +3157,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-home"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-extension-api",
+  "codex-utils-absolute-path",
+@@ -3167,7 +3168,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-hooks"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "chrono",
+@@ -3190,7 +3191,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-http-client"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "bytes",
+  "codex-utils-cargo-bin",
+@@ -3221,7 +3222,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-image-generation-extension"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "base64 0.22.1",
+  "codex-api",
+@@ -3248,7 +3249,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-install-context"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-utils-absolute-path",
+  "codex-utils-home-dir",
+@@ -3258,7 +3259,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-keyring-store"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "keyring",
+  "tracing",
+@@ -3266,7 +3267,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-linux-sandbox"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "clap",
+  "codex-core",
+@@ -3291,7 +3292,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-lmstudio"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-core",
+  "codex-model-provider-info",
+@@ -3305,7 +3306,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-login"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "base64 0.22.1",
+@@ -3348,7 +3349,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-mcp"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "arc-swap",
+@@ -3384,7 +3385,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-mcp-extension"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-config",
+  "codex-connectors-extension",
+@@ -3409,7 +3410,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-mcp-server"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "codex-arg0",
+@@ -3443,7 +3444,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-memories-extension"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-core",
+  "codex-extension-api",
+@@ -3464,7 +3465,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-memories-read"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-protocol",
+  "codex-shell-command",
+@@ -3474,7 +3475,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-memories-write"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "chrono",
+@@ -3511,7 +3512,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-message-history"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-config",
+  "memchr",
+@@ -3525,7 +3526,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-model-provider"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-agent-identity",
+  "codex-api",
+@@ -3548,7 +3549,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-model-provider-info"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-api",
+  "codex-protocol",
+@@ -3564,7 +3565,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-models-manager"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "chrono",
+  "codex-collaboration-mode-templates",
+@@ -3584,7 +3585,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-network-proxy"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "base64 0.22.1",
+@@ -3620,7 +3621,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-ollama"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "assert_matches",
+  "async-stream",
+@@ -3640,7 +3641,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-otel"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "chrono",
+  "codex-api",
+@@ -3671,7 +3672,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-plugin"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-config",
+  "codex-protocol",
+@@ -3684,7 +3685,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-process-hardening"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "libc",
+  "pretty_assertions",
+@@ -3692,7 +3693,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-prompts"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "codex-context-fragments",
+@@ -3706,7 +3707,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-protocol"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "chardetng",
+@@ -3748,7 +3749,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-response-debug-context"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "base64 0.22.1",
+  "codex-api",
+@@ -3759,7 +3760,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-responses-api-proxy"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "clap",
+@@ -3776,7 +3777,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-rmcp-client"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "axum",
+@@ -3817,7 +3818,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-rollout"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "chrono",
+@@ -3842,7 +3843,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-rollout-trace"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "codex-code-mode",
+@@ -3858,7 +3859,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-sandboxing"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "codex-network-proxy",
+@@ -3881,7 +3882,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-secrets"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "age",
+  "anyhow",
+@@ -3902,7 +3903,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-shell-command"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "base64 0.22.1",
+@@ -3923,7 +3924,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-shell-escalation"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "clap",
+@@ -3943,7 +3944,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-skills"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-utils-absolute-path",
+  "include_dir",
+@@ -3952,7 +3953,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-skills-extension"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-core-skills",
+  "codex-exec-server",
+@@ -3975,7 +3976,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-state"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "chrono",
+@@ -3999,7 +4000,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-stdio-to-uds"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "codex-uds",
+@@ -4011,7 +4012,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-terminal-detection"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "pretty_assertions",
+  "tracing",
+@@ -4019,7 +4020,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-test-binary-support"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-arg0",
+  "tempfile",
+@@ -4027,7 +4028,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-thread-manager-sample"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "clap",
+@@ -4038,7 +4039,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-thread-store"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "chrono",
+  "codex-app-server-protocol",
+@@ -4062,7 +4063,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-tools"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-code-mode",
+  "codex-connectors",
+@@ -4087,7 +4088,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-tui"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "app_test_support",
+@@ -4197,7 +4198,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-uds"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "async-io",
+  "pretty_assertions",
+@@ -4209,7 +4210,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-absolute-path"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "dirs",
+  "dunce",
+@@ -4223,14 +4224,14 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-approval-presets"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-protocol",
+ ]
+ 
+ [[package]]
+ name = "codex-utils-cache"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "lru 0.16.3",
+  "sha1 0.10.6",
+@@ -4239,7 +4240,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-cargo-bin"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "assert_cmd",
+  "runfiles",
+@@ -4248,7 +4249,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-cli"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "clap",
+  "codex-protocol",
+@@ -4260,15 +4261,15 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-elapsed"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ 
+ [[package]]
+ name = "codex-utils-fuzzy-match"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ 
+ [[package]]
+ name = "codex-utils-home-dir"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-utils-absolute-path",
+  "dirs",
+@@ -4278,7 +4279,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-image"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "base64 0.22.1",
+  "codex-utils-cache",
+@@ -4291,7 +4292,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-json-to-toml"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "pretty_assertions",
+  "serde_json",
+@@ -4300,7 +4301,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-oss"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-core",
+  "codex-lmstudio",
+@@ -4310,7 +4311,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-output-truncation"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-protocol",
+  "codex-utils-string",
+@@ -4319,7 +4320,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-path"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-utils-absolute-path",
+  "dunce",
+@@ -4329,7 +4330,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-path-uri"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "base64 0.22.1",
+  "codex-utils-absolute-path",
+@@ -4345,7 +4346,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-plugins"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-exec-server",
+  "codex-utils-absolute-path",
+@@ -4358,7 +4359,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-pty"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "filedescriptor",
+@@ -4374,7 +4375,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-readiness"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "assert_matches",
+  "thiserror 2.0.18",
+@@ -4384,14 +4385,14 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-rustls-provider"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "rustls",
+ ]
+ 
+ [[package]]
+ name = "codex-utils-sandbox-summary"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-core",
+  "codex-model-provider-info",
+@@ -4402,7 +4403,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-sleep-inhibitor"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "core-foundation 0.9.4",
+  "libc",
+@@ -4412,14 +4413,14 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-stream-parser"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "pretty_assertions",
+ ]
+ 
+ [[package]]
+ name = "codex-utils-string"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "pretty_assertions",
+  "regex-lite",
+@@ -4429,14 +4430,14 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-template"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "pretty_assertions",
+ ]
+ 
+ [[package]]
+ name = "codex-v8-poc"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "pretty_assertions",
+  "v8",
+@@ -4444,7 +4445,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-web-search-extension"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-api",
+  "codex-core",
+@@ -4464,7 +4465,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-websocket-client"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "codex-http-client",
+  "codex-utils-rustls-provider",
+@@ -4480,7 +4481,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-windows-sandbox"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "base64 0.22.1",
+@@ -4504,6 +4505,19 @@ dependencies = [
+  "windows-sys 0.52.0",
+ ]
+ 
++[[package]]
++name = "codex-zero-codec"
++version = "0.145.0-alpha.30"
++dependencies = [
++ "anyhow",
++ "pretty_assertions",
++ "serde",
++ "serde_json",
++ "sha2 0.10.9",
++ "tempfile",
++ "tiktoken-rs",
++]
++
+ [[package]]
+ name = "color-eyre"
+ version = "0.6.5"
+@@ -4731,7 +4745,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "core_test_support"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "assert_cmd",
+@@ -5893,6 +5907,17 @@ dependencies = [
+  "regex-syntax",
+ ]
+ 
++[[package]]
++name = "fancy-regex"
++version = "0.17.0"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "72cf461f865c862bb7dc573f643dd6a2b6842f7c30b07882b56bd148cc2761b8"
++dependencies = [
++ "bit-set",
++ "regex-automata",
++ "regex-syntax",
++]
++
+ [[package]]
+ name = "faster-hex"
+ version = "0.10.0"
+@@ -8896,7 +8921,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "mcp_test_support"
+-version = "0.0.0"
++version = "0.145.0-alpha.30"
+ dependencies = [
+  "anyhow",
+  "codex-login",
+@@ -9798,7 +9823,7 @@ dependencies = [
+  "dupe",
+  "either",
+  "erased-serde 0.4.10",
+- "fancy-regex",
++ "fancy-regex 0.16.2",
+  "indexmap 2.14.0",
+  "inventory",
+  "num-bigint",
+@@ -13125,6 +13150,21 @@ dependencies = [
+  "zune-jpeg 0.4.21",
+ ]
+ 
++[[package]]
++name = "tiktoken-rs"
++version = "0.12.0"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "027853bbf8c7763b77c5c595f1c271c7d536ced7d6f83452911b944621e57fc2"
++dependencies = [
++ "anyhow",
++ "base64 0.22.1",
++ "bstr",
++ "fancy-regex 0.17.0",
++ "lazy_static",
++ "regex",
++ "rustc-hash 2.1.1",
++]
++
+ [[package]]
+ name = "time"
+ version = "0.3.47"
+diff --git a/codex-rs/Cargo.toml b/codex-rs/Cargo.toml
+index fda1df940f65cfaf57c705688837ed18ed02fde5..10d4b1c09529011876b9fc0daf139f96ab8374a4 100644
+--- a/codex-rs/Cargo.toml
++++ b/codex-rs/Cargo.toml
+@@ -23,6 +23,7 @@ members = [
+     "code-mode",
+     "code-mode-host",
+     "code-mode-protocol",
++    "codex-zero-codec",
+     "codex-home",
+     "cloud-config",
+     "cloud-tasks",
+@@ -164,6 +165,7 @@ codex-cloud-tasks-client = { path = "cloud-tasks-client" }
+ codex-cloud-tasks-mock-client = { path = "cloud-tasks-mock-client" }
+ codex-code-mode = { path = "code-mode" }
+ codex-code-mode-protocol = { path = "code-mode-protocol" }
++codex-zero-codec = { path = "codex-zero-codec" }
+ codex-home = { path = "codex-home" }
+ codex-http-client = { path = "http-client" }
+ codex-websocket-client = { path = "websocket-client" }
+@@ -395,6 +397,7 @@ serde_yaml = "0.9"
+ serial_test = "3.2.0"
+ sha1 = "0.10.6"
+ sha2 = "0.10"
++tiktoken-rs = "0.12.0"
+ shlex = "1.3.0"
+ similar = "2.7.0"
+ socket2 = "0.6.1"
+diff --git a/codex-rs/codex-zero-codec/Cargo.toml b/codex-rs/codex-zero-codec/Cargo.toml
+new file mode 100644
+index 0000000000000000000000000000000000000000..18b6cc2c9766fdd5c5563233f5909c866625fd7a
+--- /dev/null
++++ b/codex-rs/codex-zero-codec/Cargo.toml
+@@ -0,0 +1,23 @@
++[package]
++name = "codex-zero-codec"
++version.workspace = true
++edition.workspace = true
++license.workspace = true
++
++[lib]
++name = "codex_zero_codec"
++path = "src/lib.rs"
++
++[lints]
++workspace = true
++
++[dependencies]
++anyhow = { workspace = true }
++serde = { workspace = true, features = ["derive"] }
++serde_json = { workspace = true }
++sha2 = { workspace = true }
++tiktoken-rs = { workspace = true }
++
++[dev-dependencies]
++pretty_assertions = { workspace = true }
++tempfile = { workspace = true }
+diff --git a/codex-rs/codex-zero-codec/src/lib.rs b/codex-rs/codex-zero-codec/src/lib.rs
+new file mode 100644
+index 0000000000000000000000000000000000000000..94b8fe639c0c2de951203e4207ac07e434afe8ba
+--- /dev/null
++++ b/codex-rs/codex-zero-codec/src/lib.rs
+@@ -0,0 +1,336 @@
++use anyhow::Context;
++use anyhow::Result;
++use serde::Deserialize;
++use serde::Serialize;
++use sha2::Digest;
++use sha2::Sha256;
++use std::fs;
++use std::fs::OpenOptions;
++use std::io::Write;
++use std::path::Path;
++use std::path::PathBuf;
++use std::sync::atomic::AtomicU64;
++use std::sync::atomic::Ordering;
++use tiktoken_rs::o200k_base_singleton;
++
++const RLE_CODEC: &str = "line-rle-v1";
++static NEXT_TEMP_ID: AtomicU64 = AtomicU64::new(0);
++
++#[derive(Debug, Clone, PartialEq, Eq)]
++pub struct Artifact {
++    pub sha256: String,
++    pub byte_count: usize,
++    pub path: PathBuf,
++}
++
++#[derive(Debug, Clone, PartialEq, Eq)]
++pub struct MonotonicSelection {
++    pub text: String,
++    pub original_tokens: usize,
++    pub selected_tokens: usize,
++    pub transformed: bool,
++}
++
++#[derive(Debug, Clone, PartialEq, Eq)]
++pub struct TerminalEncoding {
++    pub text: String,
++    pub codec: Option<&'static str>,
++    pub presentation_changed: bool,
++}
++
++#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
++struct LineRle {
++    codec: String,
++    runs: Vec<LineRun>,
++}
++
++#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
++struct LineRun {
++    count: usize,
++    text: String,
++}
++
++pub fn token_count(text: &str) -> usize {
++    o200k_base_singleton()
++        .encode_with_special_tokens(text)
++        .len()
++}
++
++pub fn sha256(raw: &[u8]) -> String {
++    format!("{:x}", Sha256::digest(raw))
++}
++
++pub fn select_strictly_smaller(original: &str, candidate: String) -> MonotonicSelection {
++    let original_tokens = token_count(original);
++    let candidate_tokens = token_count(&candidate);
++    if candidate_tokens < original_tokens {
++        MonotonicSelection {
++            text: candidate,
++            original_tokens,
++            selected_tokens: candidate_tokens,
++            transformed: true,
++        }
++    } else {
++        MonotonicSelection {
++            text: original.to_string(),
++            original_tokens,
++            selected_tokens: original_tokens,
++            transformed: false,
++        }
++    }
++}
++
++pub fn store_raw(root: &Path, raw: &[u8]) -> Result<Artifact> {
++    let sha256 = sha256(raw);
++    let directory = root.join("sha256");
++    let path = directory.join(&sha256);
++    fs::create_dir_all(&directory).with_context(|| {
++        format!(
++            "failed to create artifact directory {}",
++            directory.display()
++        )
++    })?;
++    if path.exists() {
++        let existing = fs::read(&path)
++            .with_context(|| format!("failed to verify raw artifact {}", path.display()))?;
++        anyhow::ensure!(
++            existing == raw,
++            "artifact hash collision or corruption at {}",
++            path.display()
++        );
++    } else {
++        let temporary = directory.join(format!(
++            ".{sha256}.{}.{}.tmp",
++            std::process::id(),
++            NEXT_TEMP_ID.fetch_add(1, Ordering::Relaxed)
++        ));
++        let mut file = OpenOptions::new()
++            .write(true)
++            .create_new(true)
++            .open(&temporary)
++            .with_context(|| format!("failed to create raw artifact {}", temporary.display()))?;
++        file.write_all(raw)
++            .with_context(|| format!("failed to write raw artifact {}", temporary.display()))?;
++        file.sync_all()
++            .with_context(|| format!("failed to flush raw artifact {}", temporary.display()))?;
++        drop(file);
++        if let Err(error) = fs::rename(&temporary, &path) {
++            if path.exists() {
++                let _ = fs::remove_file(&temporary);
++                let existing = fs::read(&path).with_context(|| {
++                    format!("failed to verify raced raw artifact {}", path.display())
++                })?;
++                anyhow::ensure!(
++                    existing == raw,
++                    "artifact hash collision or corruption at {}",
++                    path.display()
++                );
++            } else {
++                return Err(error).with_context(|| {
++                    format!(
++                        "failed to move raw artifact {} to {}",
++                        temporary.display(),
++                        path.display()
++                    )
++                });
++            }
++        }
++    }
++
++    Ok(Artifact {
++        sha256,
++        byte_count: raw.len(),
++        path,
++    })
++}
++
++pub fn append_telemetry(record: &serde_json::Value) -> Result<bool> {
++    let Ok(path) = std::env::var("CODEX_ZERO_TELEMETRY_FILE") else {
++        return Ok(false);
++    };
++    let path = PathBuf::from(path);
++    if let Some(parent) = path.parent() {
++        fs::create_dir_all(parent).with_context(|| {
++            format!("failed to create telemetry directory {}", parent.display())
++        })?;
++    }
++    let mut file = OpenOptions::new()
++        .create(true)
++        .append(true)
++        .open(&path)
++        .with_context(|| format!("failed to open telemetry file {}", path.display()))?;
++    serde_json::to_writer(&mut file, record).context("failed to serialize telemetry record")?;
++    file.write_all(b"\n")
++        .context("failed to terminate telemetry record")?;
++    Ok(true)
++}
++
++pub fn encode_terminal(raw: &[u8]) -> TerminalEncoding {
++    let source = String::from_utf8_lossy(raw);
++    let without_presentation = strip_presentation_ansi(&source);
++    let presentation_changed = without_presentation != source;
++    let normalized = normalize_line_endings_if_smaller(&without_presentation);
++    let plain_tokens = token_count(&normalized);
++    let rle = encode_line_runs(&normalized);
++
++    if let Ok(rle_text) = serde_json::to_string(&rle)
++        && token_count(&rle_text) < plain_tokens
++    {
++        return TerminalEncoding {
++            text: rle_text,
++            codec: Some(RLE_CODEC),
++            presentation_changed,
++        };
++    }
++
++    TerminalEncoding {
++        text: normalized,
++        codec: None,
++        presentation_changed,
++    }
++}
++
++pub fn decode_terminal(encoded: &TerminalEncoding) -> Result<String> {
++    match encoded.codec {
++        Some(RLE_CODEC) => {
++            let rle: LineRle =
++                serde_json::from_str(&encoded.text).context("invalid line-rle payload")?;
++            let mut decoded = String::new();
++            for run in rle.runs {
++                for _ in 0..run.count {
++                    decoded.push_str(&run.text);
++                }
++            }
++            Ok(decoded)
++        }
++        Some(codec) => anyhow::bail!("unsupported terminal codec {codec}"),
++        None => Ok(encoded.text.clone()),
++    }
++}
++
++fn normalize_line_endings_if_smaller(text: &str) -> String {
++    if !text.contains('\r') {
++        return text.to_string();
++    }
++
++    let normalized = text.replace("\r\n", "\n").replace('\r', "\n");
++    if token_count(&normalized) < token_count(text) {
++        normalized
++    } else {
++        text.to_string()
++    }
++}
++
++fn encode_line_runs(text: &str) -> LineRle {
++    let mut runs: Vec<LineRun> = Vec::new();
++    for line in text.split_inclusive('\n') {
++        if let Some(previous) = runs.last_mut()
++            && previous.text == line
++        {
++            previous.count += 1;
++        } else {
++            runs.push(LineRun {
++                count: 1,
++                text: line.to_string(),
++            });
++        }
++    }
++
++    if text.is_empty() {
++        runs.clear();
++    }
++
++    LineRle {
++        codec: RLE_CODEC.to_string(),
++        runs,
++    }
++}
++
++fn strip_presentation_ansi(text: &str) -> String {
++    let bytes = text.as_bytes();
++    let mut output = Vec::with_capacity(bytes.len());
++    let mut index = 0;
++    let mut active_hyperlink: Option<String> = None;
++
++    while index < bytes.len() {
++        if bytes[index] != 0x1b {
++            output.push(bytes[index]);
++            index += 1;
++            continue;
++        }
++
++        if index + 1 >= bytes.len() {
++            output.push(bytes[index]);
++            break;
++        }
++
++        match bytes[index + 1] {
++            b'[' => {
++                let sequence_start = index;
++                index += 2;
++                let mut final_byte = None;
++                while index < bytes.len() {
++                    let byte = bytes[index];
++                    index += 1;
++                    if (0x40..=0x7e).contains(&byte) {
++                        final_byte = Some(byte);
++                        break;
++                    }
++                }
++                if final_byte != Some(b'm') {
++                    output.extend_from_slice(&bytes[sequence_start..index]);
++                }
++            }
++            b']' => {
++                let sequence_start = index;
++                let content_start = index + 2;
++                index = content_start;
++                while index < bytes.len()
++                    && bytes[index] != 0x07
++                    && !(bytes[index] == 0x1b
++                        && index + 1 < bytes.len()
++                        && bytes[index + 1] == b'\\')
++                {
++                    index += 1;
++                }
++                let content = String::from_utf8_lossy(&bytes[content_start..index]);
++                let is_hyperlink = content.starts_with("8;;");
++                if let Some(link) = content.strip_prefix("8;;") {
++                    if link.is_empty() {
++                        if let Some(url) = active_hyperlink.take() {
++                            output.extend_from_slice(b" (");
++                            output.extend_from_slice(url.as_bytes());
++                            output.push(b')');
++                        }
++                    } else {
++                        active_hyperlink = Some(link.to_string());
++                    }
++                }
++                if index < bytes.len() && bytes[index] == 0x07 {
++                    index += 1;
++                } else if index + 1 < bytes.len() {
++                    index += 2;
++                }
++                if !is_hyperlink {
++                    output.extend_from_slice(&bytes[sequence_start..index]);
++                }
++            }
++            _ => {
++                output.extend_from_slice(&bytes[index..index + 2]);
++                index += 2;
++            }
++        }
++    }
++
++    if let Some(url) = active_hyperlink {
++        output.extend_from_slice(b" (");
++        output.extend_from_slice(url.as_bytes());
++        output.push(b')');
++    }
++
++    String::from_utf8_lossy(&output).into_owned()
++}
++
++#[cfg(test)]
++#[path = "lib_tests.rs"]
++mod tests;
+diff --git a/codex-rs/codex-zero-codec/src/lib_tests.rs b/codex-rs/codex-zero-codec/src/lib_tests.rs
+new file mode 100644
+index 0000000000000000000000000000000000000000..2d9a75cc53dde440ed6860cdd6121406c6c9cc36
+--- /dev/null
++++ b/codex-rs/codex-zero-codec/src/lib_tests.rs
+@@ -0,0 +1,82 @@
++use super::*;
++use pretty_assertions::assert_eq;
++
++#[test]
++fn strips_styling_and_preserves_hyperlink_target() {
++    let raw = b"\x1b[1;34mblue\x1b[0m \x1b]8;;https://example.com\x07docs\x1b]8;;\x07\n";
++    let encoded = encode_terminal(raw);
++
++    assert_eq!(
++        decode_terminal(&encoded).unwrap(),
++        "blue docs (https://example.com)\n"
++    );
++    assert!(encoded.presentation_changed);
++}
++
++#[test]
++fn preserves_non_styling_terminal_control_sequences() {
++    let raw = b"\x1b[2Jkept\x1b]0;title\x07\n";
++    let encoded = encode_terminal(raw);
++    assert_eq!(
++        decode_terminal(&encoded).unwrap(),
++        "\x1b[2Jkept\x1b]0;title\x07\n"
++    );
++}
++
++#[test]
++fn repeated_complete_lines_round_trip_with_exact_count() {
++    let raw = "same diagnostic\n".repeat(250);
++    let encoded = encode_terminal(raw.as_bytes());
++
++    assert_eq!(encoded.codec, Some(RLE_CODEC));
++    assert_eq!(decode_terminal(&encoded).unwrap(), raw);
++    assert!(token_count(&encoded.text) < token_count(&raw));
++}
++
++#[test]
++fn non_identical_lines_are_not_collapsed() {
++    let raw = "first\nsecond\nthird\n";
++    let encoded = encode_terminal(raw.as_bytes());
++
++    assert_eq!(decode_terminal(&encoded).unwrap(), raw);
++}
++
++#[test]
++fn raw_artifact_hash_and_bytes_are_exact() {
++    let directory = tempfile::tempdir().unwrap();
++    let raw = b"\x00raw\r\n\xffbytes";
++    let artifact = store_raw(directory.path(), raw).unwrap();
++
++    assert_eq!(
++        artifact.sha256,
++        "af9510137a462abb539c532d5281d8d1a1373a6445f639e5876ba95e65e23c87"
++    );
++    assert_eq!(artifact.byte_count, raw.len());
++    assert_eq!(std::fs::read(artifact.path).unwrap(), raw);
++}
++
++#[test]
++fn raw_artifact_store_rejects_corrupt_existing_content() {
++    let temp = tempfile::tempdir().unwrap();
++    let raw = b"trusted bytes";
++    let artifact = store_raw(temp.path(), raw).unwrap();
++    std::fs::write(&artifact.path, b"corrupt").unwrap();
++    let error = store_raw(temp.path(), raw).expect_err("corrupt artifact must fail closed");
++    assert!(error.to_string().contains("collision or corruption"));
++}
++
++#[test]
++fn equal_or_larger_candidate_falls_back_to_original() {
++    let original = "short";
++    let selected = select_strictly_smaller(original, "not any shorter".to_string());
++
++    assert_eq!(
++        selected,
++        MonotonicSelection {
++            text: original.to_string(),
++            original_tokens: token_count(original),
++            selected_tokens: token_count(original),
++            transformed: false,
++        }
++    );
++}
+diff --git a/codex-rs/core/Cargo.toml b/codex-rs/core/Cargo.toml
+index de9d118e9cc7ad6914748033880c6ac70f64a3bc..d3955647ddae576dc1ef13313db303ffa80bd611 100644
+--- a/codex-rs/core/Cargo.toml
++++ b/codex-rs/core/Cargo.toml
+@@ -39,6 +39,7 @@ codex-exec-server = { workspace = true }
+ codex-extension-api = { workspace = true }
+ codex-extension-items = { workspace = true }
+ codex-features = { workspace = true }
++codex-zero-codec = { workspace = true }
+ codex-feedback = { workspace = true }
+ codex-file-system = { workspace = true }
+ codex-login = { workspace = true }
+diff --git a/codex-rs/core/src/session/session.rs b/codex-rs/core/src/session/session.rs
+index d931a136c62243b2fff4eee96f347caa384cfa81..7ec0e18961b8a68fafd04b52fe54066386e8b9df 100644
+--- a/codex-rs/core/src/session/session.rs
++++ b/codex-rs/core/src/session/session.rs
+@@ -471,6 +471,35 @@ impl Session {
+         state.session_configuration.originator.clone()
+     }
+ 
++    pub(crate) async fn codex_zero_active_duplicate_call(
++        &self,
++        result_key: String,
++        current_call_id: String,
++    ) -> Option<String> {
++        let mut state = self.state.lock().await;
++        let active_call = state
++            .codex_zero_exact_tool_results
++            .get(&result_key)
++            .filter(|previous_call_id| {
++                state.history.raw_items().iter().any(|item| {
++                    matches!(
++                        item,
++                        codex_protocol::models::ResponseItem::FunctionCallOutput {
++                            call_id,
++                            ..
++                        } if call_id == *previous_call_id
++                    )
++                })
++            })
++            .cloned();
++        if active_call.is_none() {
++            state
++                .codex_zero_exact_tool_results
++                .insert(result_key, current_call_id);
++        }
++        active_call
++    }
++
+     #[instrument(name = "session_init", level = "info", skip_all)]
+     #[allow(clippy::too_many_arguments)]
+     pub(crate) async fn new(
+diff --git a/codex-rs/core/src/state/session.rs b/codex-rs/core/src/state/session.rs
+index 28a08ef4d6886a3d47a39f1a20aa46a8e99b5f4c..c26996f82f6d330e526bcf34428572fadbfd3d66 100644
+--- a/codex-rs/core/src/state/session.rs
++++ b/codex-rs/core/src/state/session.rs
+@@ -41,6 +41,9 @@ pub(crate) struct SessionState {
+     pub(crate) current_time_reminder: CurrentTimeReminderState,
+     pub(crate) active_connector_selection: HashSet<String>,
+     pub(crate) pending_session_start_sources: VecDeque<codex_hooks::SessionStartSource>,
++    /// Exact source-state + output hashes mapped to the original tool call.
++    /// Entries are used only while that call remains present in active history.
++    pub(crate) codex_zero_exact_tool_results: HashMap<String, String>,
+     granted_permissions_by_environment_id: HashMap<String, AdditionalPermissionProfile>,
+     next_turn_is_first: bool,
+ }
+@@ -73,6 +76,7 @@ impl SessionState {
+             current_time_reminder: CurrentTimeReminderState::default(),
+             active_connector_selection: HashSet::new(),
+             pending_session_start_sources: VecDeque::new(),
++            codex_zero_exact_tool_results: HashMap::new(),
+             granted_permissions_by_environment_id: HashMap::new(),
+             next_turn_is_first: true,
+         }
+diff --git a/codex-rs/core/src/tasks/mod.rs b/codex-rs/core/src/tasks/mod.rs
+index 9dfa559b7d864a1760e3a657a79b1b946781ddfc..8d457ca168d55c2e6630f0285540e3f5bd581a3f 100644
+--- a/codex-rs/core/src/tasks/mod.rs
++++ b/codex-rs/core/src/tasks/mod.rs
+@@ -7,6 +7,8 @@ mod user_shell;
+ use std::sync::Arc;
+ use std::time::Duration;
+ use std::time::Instant;
++use std::time::SystemTime;
++use std::time::UNIX_EPOCH;
+ 
+ use codex_extension_api::ExtensionData;
+ use futures::future::BoxFuture;
+@@ -720,6 +722,22 @@ impl Session {
+                     thread_id: self.thread_id.to_string(),
+                     token_usage: turn_token_usage.clone(),
+                 });
++            let timestamp_ms = SystemTime::now()
++                .duration_since(UNIX_EPOCH)
++                .map(|duration| duration.as_millis())
++                .unwrap_or_default();
++            let _ = codex_zero_codec::append_telemetry(&serde_json::json!({
++                "schema": "codex-zero-telemetry-v1",
++                "event": "usage",
++                "timestamp_ms": timestamp_ms,
++                "input_tokens": turn_token_usage.input_tokens,
++                "cached_input_tokens": turn_token_usage.cached_input_tokens,
++                "cache_write_tokens": turn_token_usage.cache_write_input_tokens,
++                "uncached_input_tokens": turn_token_usage.non_cached_input(),
++                "output_tokens": turn_token_usage.output_tokens,
++                "reasoning_tokens": turn_token_usage.reasoning_output_tokens,
++                "tool_calls": turn_tool_calls,
++            }));
+             self.services.session_telemetry.histogram(
+                 TURN_TOKEN_USAGE_METRIC,
+                 turn_token_usage.total_tokens,
+diff --git a/codex-rs/core/src/tools/context.rs b/codex-rs/core/src/tools/context.rs
+index 72018904dd2d5d45e4dce21c0f514b566a8b51d8..b897e80d0326d85ee78a5adc156f09184815b2e6 100644
+--- a/codex-rs/core/src/tools/context.rs
++++ b/codex-rs/core/src/tools/context.rs
+@@ -22,11 +22,19 @@ use codex_utils_output_truncation::approx_token_count;
+ use codex_utils_output_truncation::formatted_truncate_text;
+ use codex_utils_output_truncation::truncate_text;
+ use codex_utils_string::take_bytes_at_char_boundary;
++use codex_zero_codec::encode_terminal;
++use codex_zero_codec::select_strictly_smaller;
++use codex_zero_codec::store_raw;
+ use serde::Serialize;
+ use serde_json::Value as JsonValue;
++use std::fs::OpenOptions;
++use std::io::Write;
+ use std::num::NonZeroUsize;
++use std::path::PathBuf;
+ use std::sync::Arc;
+ use std::time::Duration;
++use std::time::SystemTime;
++use std::time::UNIX_EPOCH;
+ use tokio::sync::Mutex;
+ use tokio_util::sync::CancellationToken;
+ 
+@@ -326,6 +334,8 @@ pub struct ExecCommandToolOutput {
+     /// Bytes omitted by the output collection cap before model-facing truncation.
+     pub output_omitted_bytes: Option<NonZeroUsize>,
+     pub hook_command: Option<String>,
++    pub compact_model_payload: bool,
++    pub lossless_terminal_codec: bool,
+ }
+ 
+ impl ToolOutput for ExecCommandToolOutput {
+@@ -342,7 +352,7 @@ impl ToolOutput for ExecCommandToolOutput {
+             call_id,
+             payload,
+             vec![FunctionCallOutputContentItem::InputText {
+-                text: self.response_text(),
++                text: self.model_response_text(),
+             }],
+             Some(true),
+         )
+@@ -467,6 +477,150 @@ impl ExecCommandToolOutput {
+ 
+         sections.join("\n")
+     }
++
++    fn model_response_text(&self) -> String {
++        let original = self.response_text();
++        if !self.compact_model_payload && !self.lossless_terminal_codec {
++            return original;
++        }
++
++        let Ok(artifact_root) = std::env::var("CODEX_ZERO_ARTIFACT_DIR") else {
++            return original;
++        };
++        let telemetry_path = std::env::var("CODEX_ZERO_TELEMETRY_FILE")
++            .ok()
++            .map(PathBuf::from);
++        self.model_response_text_with_paths(
++            original,
++            &PathBuf::from(artifact_root),
++            telemetry_path.as_deref(),
++        )
++    }
++
++    fn model_response_text_with_paths(
++        &self,
++        original: String,
++        artifact_root: &std::path::Path,
++        telemetry_path: Option<&std::path::Path>,
++    ) -> String {
++        let Ok(artifact) = store_raw(artifact_root, &self.raw_output) else {
++            return original;
++        };
++
++        let truncated = self.truncated_output(self.model_output_max_tokens());
++        let terminal = if self.lossless_terminal_codec {
++            encode_terminal(truncated.as_bytes())
++        } else {
++            codex_zero_codec::TerminalEncoding {
++                text: truncated,
++                codec: None,
++                presentation_changed: false,
++            }
++        };
++
++        #[derive(Serialize)]
++        struct ArtifactMetadata<'a> {
++            sha256: &'a str,
++            raw_byte_count: usize,
++            #[serde(skip_serializing_if = "Option::is_none")]
++            original_token_count: Option<usize>,
++        }
++
++        #[derive(Serialize)]
++        struct CompactExecOutput<'a> {
++            #[serde(skip_serializing_if = "str::is_empty")]
++            chunk_id: &'a str,
++            wall_time_seconds: f64,
++            #[serde(skip_serializing_if = "Option::is_none")]
++            exit_code: Option<i32>,
++            #[serde(skip_serializing_if = "Option::is_none")]
++            process_id: Option<i32>,
++            #[serde(skip_serializing_if = "Option::is_none")]
++            original_token_count: Option<usize>,
++            #[serde(skip_serializing_if = "Option::is_none")]
++            output_omitted_bytes: Option<usize>,
++            artifact: ArtifactMetadata<'a>,
++            #[serde(skip_serializing_if = "Option::is_none")]
++            codec: Option<&'static str>,
++            #[serde(skip_serializing_if = "is_false")]
++            presentation_styling_removed: bool,
++            #[serde(skip_serializing_if = "str::is_empty")]
++            output: &'a str,
++        }
++
++        let candidate = CompactExecOutput {
++            chunk_id: &self.chunk_id,
++            wall_time_seconds: self.wall_time.as_secs_f64(),
++            exit_code: self.exit_code,
++            process_id: self.process_id,
++            original_token_count: self.original_token_count,
++            output_omitted_bytes: self.output_omitted_bytes.map(NonZeroUsize::get),
++            artifact: ArtifactMetadata {
++                sha256: &artifact.sha256,
++                raw_byte_count: artifact.byte_count,
++                original_token_count: self.original_token_count,
++            },
++            codec: terminal.codec,
++            presentation_styling_removed: terminal.presentation_changed,
++            output: &terminal.text,
++        };
++        let Ok(candidate) = serde_json::to_string(&candidate) else {
++            return original;
++        };
++        let selection = select_strictly_smaller(&original, candidate);
++        self.record_codex_zero_selection(
++            telemetry_path,
++            &artifact.sha256,
++            terminal.codec,
++            &selection,
++        );
++        selection.text
++    }
++
++    fn record_codex_zero_selection(
++        &self,
++        telemetry_path: Option<&std::path::Path>,
++        artifact_sha256: &str,
++        codec: Option<&str>,
++        selection: &codex_zero_codec::MonotonicSelection,
++    ) {
++        let Some(path) = telemetry_path else {
++            return;
++        };
++        let timestamp_ms = SystemTime::now()
++            .duration_since(UNIX_EPOCH)
++            .map(|duration| duration.as_millis())
++            .unwrap_or_default();
++        let record = serde_json::json!({
++            "schema": "codex-zero-telemetry-v1",
++            "event": "exec_model_payload",
++            "timestamp_ms": timestamp_ms,
++            "artifact_sha256": artifact_sha256,
++            "raw_byte_count": self.raw_output.len(),
++            "original_tokens": selection.original_tokens,
++            "selected_tokens": selection.selected_tokens,
++            "tokens_eliminated": selection.original_tokens.saturating_sub(selection.selected_tokens),
++            "transformed": selection.transformed,
++            "codec": codec,
++        });
++        let Some(parent) = path.parent() else {
++            return;
++        };
++        if std::fs::create_dir_all(parent).is_err() {
++            return;
++        }
++        let Ok(mut file) = OpenOptions::new().create(true).append(true).open(path) else {
++            return;
++        };
++        if serde_json::to_writer(&mut file, &record).is_ok() {
++            let _ = file.write_all(b"\n");
++        }
++    }
++}
++
++#[allow(clippy::trivially_copy_pass_by_ref)]
++fn is_false(value: &bool) -> bool {
++    !*value
+ }
+ 
+ fn function_tool_response(
+diff --git a/codex-rs/core/src/tools/context_tests.rs b/codex-rs/core/src/tools/context_tests.rs
+index caed87dfa5bbaa5a715d2d0fadc357c77d5a9f82..80beb2c0928a5a82928f0addadec35725ec83a01 100644
+--- a/codex-rs/core/src/tools/context_tests.rs
++++ b/codex-rs/core/src/tools/context_tests.rs
+@@ -436,6 +436,8 @@ fn exec_command_tool_output_formats_truncated_response() {
+         original_token_count: Some(10),
+         output_omitted_bytes: None,
+         hook_command: None,
++        compact_model_payload: false,
++        lossless_terminal_codec: false,
+     }
+     .to_response_item("call-42", &payload);
+ 
+@@ -487,6 +489,8 @@ fn exec_command_tool_output_preserves_omission_metadata_when_truncated() {
+         original_token_count: Some(42_000),
+         output_omitted_bytes: NonZeroUsize::new(/*n*/ 123_456),
+         hook_command: None,
++        compact_model_payload: false,
++        lossless_terminal_codec: false,
+     }
+     .to_response_item("call-omitted", &payload);
+ 
+@@ -501,3 +505,70 @@ fn exec_command_tool_output_preserves_omission_metadata_when_truncated() {
+     assert!(text.contains("Warning: truncated output (original token count: 42000)"));
+     assert_eq!(text.matches(&marker).count(), 1);
+ }
++
++#[test]
++fn codex_zero_exec_payload_is_selected_only_when_strictly_smaller() {
++    let temp = tempfile::tempdir().expect("temporary artifact directory");
++    let telemetry_path = temp.path().join("telemetry.jsonl");
++    let raw_output = "same diagnostic line\n".repeat(400).into_bytes();
++    let output = ExecCommandToolOutput {
++        event_call_id: "call-zero".to_string(),
++        chunk_id: "zero123".to_string(),
++        wall_time: std::time::Duration::from_millis(1250),
++        raw_output: raw_output.clone(),
++        truncation_policy: TruncationPolicy::Tokens(100_000),
++        max_output_tokens: None,
++        process_id: None,
++        exit_code: Some(0),
++        original_token_count: Some(1600),
++        output_omitted_bytes: None,
++        hook_command: Some("ignored model command".to_string()),
++        compact_model_payload: true,
++        lossless_terminal_codec: true,
++    };
++
++    let original = output.response_text();
++    let selected =
++        output.model_response_text_with_paths(original.clone(), temp.path(), Some(&telemetry_path));
++
++    assert!(codex_zero_codec::token_count(&selected) < codex_zero_codec::token_count(&original));
++    assert!(!selected.contains("Output:"));
++    assert!(!selected.contains("ignored model command"));
++    let payload: serde_json::Value =
++        serde_json::from_str(&selected).expect("compact payload should be JSON");
++    let sha = payload["artifact"]["sha256"]
++        .as_str()
++        .expect("artifact hash");
++    assert_eq!(
++        std::fs::read(temp.path().join("sha256").join(sha)).expect("raw artifact"),
++        raw_output
++    );
++    let telemetry = std::fs::read_to_string(telemetry_path).expect("telemetry record");
++    assert!(telemetry.contains(r#""transformed":true"#));
++}
++
++#[test]
++fn codex_zero_exec_payload_falls_back_when_candidate_is_not_smaller() {
++    let temp = tempfile::tempdir().expect("temporary artifact directory");
++    let output = ExecCommandToolOutput {
++        event_call_id: "call-zero-small".to_string(),
++        chunk_id: String::new(),
++        wall_time: std::time::Duration::ZERO,
++        raw_output: Vec::new(),
++        truncation_policy: TruncationPolicy::Tokens(100),
++        max_output_tokens: None,
++        process_id: None,
++        exit_code: None,
++        original_token_count: None,
++        output_omitted_bytes: None,
++        hook_command: None,
++        compact_model_payload: true,
++        lossless_terminal_codec: true,
++    };
++
++    let original = output.response_text();
++    assert_eq!(
++        output.model_response_text_with_paths(original.clone(), temp.path(), None),
++        original
++    );
++}
+diff --git a/codex-rs/core/src/tools/handlers/unified_exec/exec_command.rs b/codex-rs/core/src/tools/handlers/unified_exec/exec_command.rs
+index fc48f1ed81a88ae0a1e2babada28140538cddbdb..0bee33ecba89d0aaee88b3f9b289bc1801d87f51 100644
+--- a/codex-rs/core/src/tools/handlers/unified_exec/exec_command.rs
++++ b/codex-rs/core/src/tools/handlers/unified_exec/exec_command.rs
+@@ -337,6 +337,14 @@ impl ExecCommandHandler {
+                 original_token_count: None,
+                 output_omitted_bytes: None,
+                 hook_command: None,
++                compact_model_payload: turn
++                    .config
++                    .features
++                    .enabled(Feature::CodexZeroCompactExecOutput),
++                lossless_terminal_codec: turn
++                    .config
++                    .features
++                    .enabled(Feature::CodexZeroLosslessTerminalCodec),
+             }));
+         }
+ 
+@@ -391,6 +399,14 @@ impl ExecCommandHandler {
+                     original_token_count: Some(original_token_count),
+                     output_omitted_bytes,
+                     hook_command: Some(hook_command),
++                    compact_model_payload: turn
++                        .config
++                        .features
++                        .enabled(Feature::CodexZeroCompactExecOutput),
++                    lossless_terminal_codec: turn
++                        .config
++                        .features
++                        .enabled(Feature::CodexZeroLosslessTerminalCodec),
+                 }))
+             }
+             Err(err) => Err(FunctionCallError::RespondToModel(format!(
+diff --git a/codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs b/codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs
+index 7c949481885cecfcdf336911350df21cc3607a4d..18f82f3db02e044493e75bb123ed899cc1be865d 100644
+--- a/codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs
++++ b/codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs
+@@ -8,6 +8,7 @@ use crate::tools::registry::PostToolUsePayload;
+ use crate::tools::registry::PreToolUsePayload;
+ use crate::tools::registry::ToolExecutor;
+ use crate::unified_exec::WriteStdinRequest;
++use codex_features::Feature;
+ use codex_protocol::protocol::EventMsg;
+ use codex_protocol::protocol::TerminalInteractionEvent;
+ use codex_tools::ToolName;
+@@ -80,6 +81,14 @@ impl WriteStdinHandler {
+                 yield_time_ms: args.yield_time_ms,
+                 max_output_tokens: args.max_output_tokens,
+                 truncation_policy: turn.model_info.truncation_policy.into(),
++                compact_model_payload: turn
++                    .config
++                    .features
++                    .enabled(Feature::CodexZeroCompactExecOutput),
++                lossless_terminal_codec: turn
++                    .config
++                    .features
++                    .enabled(Feature::CodexZeroLosslessTerminalCodec),
+             })
+             .await
+             .map_err(|err| {
+diff --git a/codex-rs/core/src/tools/handlers/unified_exec_tests.rs b/codex-rs/core/src/tools/handlers/unified_exec_tests.rs
+index 9b107dd83d00b80f9c38339c8bfb284718e9fa62..73fe7210ef1c0d9021d9a1d15e8d8b0a92ea2c3d 100644
+--- a/codex-rs/core/src/tools/handlers/unified_exec_tests.rs
++++ b/codex-rs/core/src/tools/handlers/unified_exec_tests.rs
+@@ -303,6 +303,8 @@ async fn exec_command_post_tool_use_payload_uses_output_for_noninteractive_one_s
+         original_token_count: None,
+         output_omitted_bytes: None,
+         hook_command: Some("echo three".to_string()),
++        compact_model_payload: false,
++        lossless_terminal_codec: false,
+     };
+     let invocation = invocation_for_payload("exec_command", "call-43", payload).await;
+     let handler = ExecCommandHandler::default();
+@@ -334,6 +336,8 @@ async fn exec_command_post_tool_use_payload_uses_output_for_interactive_completi
+         original_token_count: None,
+         output_omitted_bytes: None,
+         hook_command: Some("echo three".to_string()),
++        compact_model_payload: false,
++        lossless_terminal_codec: false,
+     };
+     let invocation = invocation_for_payload("exec_command", "call-44", payload).await;
+     let handler = ExecCommandHandler::default();
+@@ -366,6 +370,8 @@ async fn exec_command_post_tool_use_payload_skips_running_sessions() {
+         original_token_count: None,
+         output_omitted_bytes: None,
+         hook_command: Some("echo three".to_string()),
++        compact_model_payload: false,
++        lossless_terminal_codec: false,
+     };
+     let invocation = invocation_for_payload("exec_command", "call-45", payload).await;
+     let handler = ExecCommandHandler::default();
+@@ -393,6 +399,8 @@ async fn write_stdin_post_tool_use_payload_uses_original_exec_call_id_and_comman
+         original_token_count: None,
+         output_omitted_bytes: None,
+         hook_command: Some("sleep 1; echo finished".to_string()),
++        compact_model_payload: false,
++        lossless_terminal_codec: false,
+     };
+     let invocation = invocation_for_payload("write_stdin", "write-stdin-call", payload).await;
+     let handler = WriteStdinHandler;
+@@ -425,6 +433,8 @@ async fn write_stdin_post_tool_use_payload_keeps_parallel_session_metadata_separ
+         original_token_count: None,
+         output_omitted_bytes: None,
+         hook_command: Some("sleep 2; echo alpha".to_string()),
++        compact_model_payload: false,
++        lossless_terminal_codec: false,
+     };
+     let output_b = ExecCommandToolOutput {
+         event_call_id: "exec-call-b".to_string(),
+@@ -438,6 +448,8 @@ async fn write_stdin_post_tool_use_payload_keeps_parallel_session_metadata_separ
+         original_token_count: None,
+         output_omitted_bytes: None,
+         hook_command: Some("sleep 1; echo beta".to_string()),
++        compact_model_payload: false,
++        lossless_terminal_codec: false,
+     };
+     let invocation_b = invocation_for_payload("write_stdin", "write-call-b", payload.clone()).await;
+     let invocation_a = invocation_for_payload("write_stdin", "write-call-a", payload).await;
+diff --git a/codex-rs/core/src/tools/parallel.rs b/codex-rs/core/src/tools/parallel.rs
+index e201f0ffce2a4f7a62fff50cf2075fc6bcc5f280..fc673e09cab34a0f25d055324de4f07dafe604f0 100644
+--- a/codex-rs/core/src/tools/parallel.rs
++++ b/codex-rs/core/src/tools/parallel.rs
+@@ -82,7 +82,7 @@ impl ToolCallRuntime {
+             self.handle_tool_call_with_source(call, ToolCallSource::Direct, cancellation_token);
+         async move {
+             match future.await {
+-                Ok(response) => Ok(response.into_response()),
++                Ok(response) => Ok(response.into_response().await),
+                 Err(FunctionCallError::Fatal(message)) => Err(CodexErr::Fatal(message)),
+                 Err(other) => Ok(Self::failure_response(error_call, other)),
+             }
+@@ -242,6 +242,9 @@ impl ToolCallRuntime {
+                 message: Self::abort_message(call, secs),
+             }),
+             post_tool_use_payload: None,
++            session: None,
++            exact_source_fingerprint: None,
++            exact_duplicate_results_enabled: false,
+         }
+     }
+ 
+diff --git a/codex-rs/core/src/tools/registry.rs b/codex-rs/core/src/tools/registry.rs
+index 928f43db562eae21d085ee94e8fa8a3c62f9be03..5e818b6de833fe1ca74fe3a404f0b553b596695b 100644
+--- a/codex-rs/core/src/tools/registry.rs
++++ b/codex-rs/core/src/tools/registry.rs
+@@ -3,6 +3,8 @@ use std::sync::Arc;
+ use std::sync::atomic::AtomicBool;
+ use std::sync::atomic::Ordering;
+ use std::time::Duration;
++use std::time::SystemTime;
++use std::time::UNIX_EPOCH;
+ 
+ use crate::function_tool::FunctionCallError;
+ use crate::hook_runtime::PreToolUseHookResult;
+@@ -165,17 +167,70 @@ pub(crate) struct AnyToolResult {
+     pub(crate) payload: ToolPayload,
+     pub(crate) result: Box<dyn ToolOutput>,
+     pub(crate) post_tool_use_payload: Option<PostToolUsePayload>,
++    pub(crate) session: Option<Arc<crate::session::session::Session>>,
++    pub(crate) exact_source_fingerprint: Option<String>,
++    pub(crate) exact_duplicate_results_enabled: bool,
+ }
+ 
+ impl AnyToolResult {
+-    pub(crate) fn into_response(self) -> ResponseInputItem {
++    pub(crate) async fn into_response(self) -> ResponseInputItem {
+         let Self {
+             call_id,
+             payload,
+             result,
++            session,
++            exact_source_fingerprint,
++            exact_duplicate_results_enabled,
+             ..
+         } = self;
+-        result.to_response_item(&call_id, &payload)
++        let mut response = result.to_response_item(&call_id, &payload);
++        if !exact_duplicate_results_enabled {
++            return response;
++        }
++        let (Some(session), Some(source_fingerprint)) = (session, exact_source_fingerprint) else {
++            return response;
++        };
++        let ResponseInputItem::FunctionCallOutput { output, .. } = &mut response else {
++            return response;
++        };
++        let codex_protocol::models::FunctionCallOutputBody::Text(original_text) = &mut output.body
++        else {
++            return response;
++        };
++
++        let result_key =
++            codex_zero_codec::sha256(format!("{source_fingerprint}\0{original_text}").as_bytes());
++        let active_call = session
++            .codex_zero_active_duplicate_call(result_key, call_id.clone())
++            .await;
++
++        if let Some(previous_call_id) = active_call {
++            let candidate = serde_json::json!({
++                "same_as_tool_call": previous_call_id,
++                "source_state_sha256": source_fingerprint,
++            })
++            .to_string();
++            let selection = codex_zero_codec::select_strictly_smaller(original_text, candidate);
++            if selection.transformed {
++                let timestamp_ms = SystemTime::now()
++                    .duration_since(UNIX_EPOCH)
++                    .map(|duration| duration.as_millis())
++                    .unwrap_or_default();
++                let _ = codex_zero_codec::append_telemetry(&serde_json::json!({
++                    "schema": "codex-zero-telemetry-v1",
++                    "event": "exact_duplicate_result",
++                    "timestamp_ms": timestamp_ms,
++                    "source_state_sha256": source_fingerprint,
++                    "original_tokens": selection.original_tokens,
++                    "selected_tokens": selection.selected_tokens,
++                    "tokens_eliminated": selection.original_tokens.saturating_sub(selection.selected_tokens),
++                    "transformed": true,
++                }));
++                *original_text = selection.text;
++                return response;
++            }
++        }
++        response
+     }
+ 
+     pub(crate) fn code_mode_result(self) -> serde_json::Value {
+@@ -726,9 +781,147 @@ async fn handle_any_tool(
+         payload,
+         result: output,
+         post_tool_use_payload,
++        session: Some(Arc::clone(&invocation.session)),
++        exact_source_fingerprint: exact_source_fingerprint(&invocation).await,
++        exact_duplicate_results_enabled: invocation
++            .turn
++            .config
++            .features
++            .enabled(codex_features::Feature::CodexZeroExactDuplicateResults),
+     })
+ }
+ 
++async fn exact_source_fingerprint(invocation: &ToolInvocation) -> Option<String> {
++    let script = shell_script_for_invocation(invocation)?;
++    let environment = invocation
++        .step_context
++        .environments
++        .turn_environments
++        .first()?;
++    if environment.environment.is_remote() {
++        return None;
++    }
++    let cwd = environment.cwd().to_abs_path().ok()?;
++    let commands = parse_shell_script(&script);
++    if !commands.is_empty()
++        && commands
++            .iter()
++            .all(|command| matches!(command, ParsedCommand::Read { .. }))
++    {
++        return file_source_fingerprint(&commands, cwd.as_path()).await;
++    }
++
++    match script.trim() {
++        "git status"
++        | "git status --short"
++        | "git status --porcelain"
++        | "git status --porcelain=v1" => repository_state_fingerprint(cwd.as_path()).await,
++        _ => None,
++    }
++}
++
++async fn file_source_fingerprint(
++    commands: &[ParsedCommand],
++    cwd: &std::path::Path,
++) -> Option<String> {
++    let mut sources = Vec::with_capacity(commands.len());
++    for command in commands {
++        let ParsedCommand::Read { path, .. } = command else {
++            return None;
++        };
++        let path = if path.is_absolute() {
++            path.clone()
++        } else {
++            cwd.join(path)
++        };
++        let bytes = tokio::fs::read(&path).await.ok()?;
++        sources.push(serde_json::json!({
++            "path": path,
++            "blob_sha256": codex_zero_codec::sha256(&bytes),
++            "byte_range": [0, bytes.len()],
++        }));
++    }
++    serde_json::to_vec(&sources)
++        .ok()
++        .map(|bytes| codex_zero_codec::sha256(&bytes))
++}
++
++async fn repository_state_fingerprint(cwd: &std::path::Path) -> Option<String> {
++    async fn git(cwd: &std::path::Path, args: &[&str]) -> Option<Vec<u8>> {
++        let output = tokio::process::Command::new("git")
++            .args(args)
++            .current_dir(cwd)
++            .output()
++            .await
++            .ok()?;
++        output.status.success().then_some(output.stdout)
++    }
++
++    let root = git(cwd, &["rev-parse", "--show-toplevel"]).await?;
++    let root = std::str::from_utf8(&root).ok()?.trim();
++    let root = std::path::PathBuf::from(root);
++    let status = git(
++        &root,
++        &["status", "--porcelain=v2", "-z", "--untracked-files=all"],
++    )
++    .await?;
++    let paths = git(
++        &root,
++        &[
++            "ls-files",
++            "-m",
++            "-o",
++            "--deleted",
++            "--exclude-standard",
++            "-z",
++        ],
++    )
++    .await?;
++    let head = git(&root, &["rev-parse", "HEAD"]).await.unwrap_or_default();
++    let index_path = git(&root, &["rev-parse", "--git-path", "index"]).await?;
++    let index_path = std::str::from_utf8(&index_path).ok()?.trim();
++    let index_path = {
++        let path = std::path::PathBuf::from(index_path);
++        if path.is_absolute() {
++            path
++        } else {
++            root.join(path)
++        }
++    };
++    let index = tokio::fs::read(index_path).await.unwrap_or_default();
++
++    let mut changed_files = Vec::new();
++    for raw_path in paths
++        .split(|byte| *byte == 0)
++        .filter(|path| !path.is_empty())
++    {
++        let relative = std::str::from_utf8(raw_path).ok()?;
++        let path = root.join(relative);
++        let state = match tokio::fs::read(&path).await {
++            Ok(bytes) => serde_json::json!({
++                "path": relative,
++                "blob_sha256": codex_zero_codec::sha256(&bytes),
++                "byte_range": [0, bytes.len()],
++            }),
++            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
++                serde_json::json!({"path": relative, "deleted": true})
++            }
++            Err(_) => return None,
++        };
++        changed_files.push(state);
++    }
++    changed_files.sort_by_key(std::string::ToString::to_string);
++    let fingerprint = serde_json::json!({
++        "status_sha256": codex_zero_codec::sha256(&status),
++        "head_sha256": codex_zero_codec::sha256(&head),
++        "index_sha256": codex_zero_codec::sha256(&index),
++        "changed_files": changed_files,
++    });
++    serde_json::to_vec(&fingerprint)
++        .ok()
++        .map(|bytes| codex_zero_codec::sha256(&bytes))
++}
++
+ fn function_hook_tool_name(invocation: &ToolInvocation) -> HookToolName {
+     if invocation.tool_name.name == "spawn_agent"
+         && matches!(
+diff --git a/codex-rs/core/src/tools/registry_tests.rs b/codex-rs/core/src/tools/registry_tests.rs
+index 9c8b9e87b8d1ba17525a829fbcc4362894bf16c6..e7bfc28de03755156e763107273c3ee6696ead59 100644
+--- a/codex-rs/core/src/tools/registry_tests.rs
++++ b/codex-rs/core/src/tools/registry_tests.rs
+@@ -319,8 +319,8 @@ async fn write_stdin_does_not_expose_default_pre_tool_use_payload() {
+     assert_eq!(write_stdin.pre_tool_use_payload(&invocation), None);
+ }
+ 
+-#[test]
+-fn post_tool_use_feedback_output_keeps_code_mode_result_typed() {
++#[tokio::test]
++async fn post_tool_use_feedback_output_keeps_code_mode_result_typed() {
+     let result = AnyToolResult {
+         call_id: "call-1".to_string(),
+         payload: ToolPayload::Function {
+@@ -336,10 +336,13 @@ fn post_tool_use_feedback_output_keeps_code_mode_result_typed() {
+             ),
+         }),
+         post_tool_use_payload: None,
++        session: None,
++        exact_source_fingerprint: None,
++        exact_duplicate_results_enabled: false,
+     };
+ 
+     assert_eq!(
+-        result.into_response(),
++        result.into_response().await,
+         ResponseInputItem::FunctionCallOutput {
+             call_id: "call-1".to_string(),
+             output: codex_protocol::models::FunctionCallOutputPayload::from_text(
+@@ -363,6 +366,9 @@ fn post_tool_use_feedback_output_keeps_code_mode_result_typed() {
+             ),
+         }),
+         post_tool_use_payload: None,
++        session: None,
++        exact_source_fingerprint: None,
++        exact_duplicate_results_enabled: false,
+     };
+ 
+     assert_eq!(
+@@ -371,6 +377,115 @@ fn post_tool_use_feedback_output_keeps_code_mode_result_typed() {
+     );
+ }
+ 
++#[tokio::test]
++async fn exact_duplicate_result_references_only_an_active_identical_output() {
++    let (session, turn) = crate::session::tests::make_session_and_context().await;
++    let session = Arc::new(session);
++    let payload = ToolPayload::Function {
++        arguments: "{}".to_string(),
++    };
++    let text = "unchanged source line\n".repeat(200);
++    let source_fingerprint = "a".repeat(64);
++    let first = AnyToolResult {
++        call_id: "read-1".to_string(),
++        payload: payload.clone(),
++        result: Box::new(crate::tools::context::FunctionToolOutput::from_text(
++            text.clone(),
++            Some(true),
++        )),
++        post_tool_use_payload: None,
++        session: Some(Arc::clone(&session)),
++        exact_source_fingerprint: Some(source_fingerprint.clone()),
++        exact_duplicate_results_enabled: true,
++    }
++    .into_response()
++    .await;
++    let first_history_item = codex_protocol::models::ResponseItem::from(first);
++    session
++        .record_conversation_items(&turn, &[first_history_item])
++        .await;
++
++    let second = AnyToolResult {
++        call_id: "read-2".to_string(),
++        payload,
++        result: Box::new(crate::tools::context::FunctionToolOutput::from_text(
++            text.clone(),
++            Some(true),
++        )),
++        post_tool_use_payload: None,
++        session: Some(session),
++        exact_source_fingerprint: Some(source_fingerprint.clone()),
++        exact_duplicate_results_enabled: true,
++    }
++    .into_response()
++    .await;
++
++    let ResponseInputItem::FunctionCallOutput { output, .. } = second else {
++        panic!("expected function output");
++    };
++    let codex_protocol::models::FunctionCallOutputBody::Text(selected) = output.body else {
++        panic!("expected text output");
++    };
++    assert!(codex_zero_codec::token_count(&selected) < codex_zero_codec::token_count(&text));
++    assert_eq!(
++        serde_json::from_str::<serde_json::Value>(&selected).expect("duplicate reference JSON"),
++        serde_json::json!({
++            "same_as_tool_call": "read-1",
++            "source_state_sha256": source_fingerprint,
++        })
++    );
++}
++
++#[tokio::test]
++async fn exact_source_fingerprints_change_with_file_and_repository_state() {
++    let temp = tempfile::tempdir().expect("temporary repository");
++    let file = temp.path().join("fixture.txt");
++    tokio::fs::write(&file, b"first")
++        .await
++        .expect("write fixture");
++    let read = ParsedCommand::Read {
++        cmd: "cat fixture.txt".to_string(),
++        name: "cat".to_string(),
++        path: std::path::PathBuf::from("fixture.txt"),
++    };
++    let first = file_source_fingerprint(std::slice::from_ref(&read), temp.path())
++        .await
++        .expect("file fingerprint");
++    let unchanged = file_source_fingerprint(std::slice::from_ref(&read), temp.path())
++        .await
++        .expect("unchanged file fingerprint");
++    assert_eq!(first, unchanged);
++    tokio::fs::write(&file, b"second")
++        .await
++        .expect("change fixture");
++    let changed = file_source_fingerprint(&[read], temp.path())
++        .await
++        .expect("changed file fingerprint");
++    assert_ne!(first, changed);
++
++    let status = tokio::process::Command::new("git")
++        .args(["init", "--quiet"])
++        .current_dir(temp.path())
++        .status()
++        .await
++        .expect("run git init");
++    assert!(status.success());
++    let first_repo = repository_state_fingerprint(temp.path())
++        .await
++        .expect("repository fingerprint");
++    let unchanged_repo = repository_state_fingerprint(temp.path())
++        .await
++        .expect("unchanged repository fingerprint");
++    assert_eq!(first_repo, unchanged_repo);
++    tokio::fs::write(&file, b"third")
++        .await
++        .expect("change repository file");
++    let changed_repo = repository_state_fingerprint(temp.path())
++        .await
++        .expect("changed repository fingerprint");
++    assert_ne!(first_repo, changed_repo);
++}
++
+ #[tokio::test]
+ async fn dispatch_notifies_tool_lifecycle_contributors() -> anyhow::Result<()> {
+     let (mut session, turn) = crate::session::tests::make_session_and_context().await;
+diff --git a/codex-rs/core/src/tools/router_tests.rs b/codex-rs/core/src/tools/router_tests.rs
+index b918035ccc877acbebaf0579ff16ba757a6aa020..38d379d5f196b01950ac69d2f869aea3b3027a70 100644
+--- a/codex-rs/core/src/tools/router_tests.rs
++++ b/codex-rs/core/src/tools/router_tests.rs
+@@ -428,7 +428,7 @@ async fn extension_tool_executors_are_model_visible_and_dispatchable() -> anyhow
+         )
+         .await?;
+ 
+-    let response = result.into_response();
++    let response = result.into_response().await;
+     match response {
+         ResponseInputItem::FunctionCallOutput { call_id, output } => {
+             assert_eq!(call_id, "call-extension");
+diff --git a/codex-rs/core/src/unified_exec/mod.rs b/codex-rs/core/src/unified_exec/mod.rs
+index 21c1a17f0965193982a50524fd129562ddad9d70..40eedfc310d2c2240ca073abb32e52a4a9a143be 100644
+--- a/codex-rs/core/src/unified_exec/mod.rs
++++ b/codex-rs/core/src/unified_exec/mod.rs
+@@ -116,6 +116,8 @@ pub(crate) struct WriteStdinRequest<'a> {
+     pub yield_time_ms: u64,
+     pub max_output_tokens: Option<usize>,
+     pub truncation_policy: TruncationPolicy,
++    pub compact_model_payload: bool,
++    pub lossless_terminal_codec: bool,
+ }
+ 
+ #[derive(Default)]
+diff --git a/codex-rs/core/src/unified_exec/mod_tests.rs b/codex-rs/core/src/unified_exec/mod_tests.rs
+index 7e3cf8083aa81d5ce18600a3b824107d4f3e7b23..71ab48a862512798d63c67bd272a82e56d427c41 100644
+--- a/codex-rs/core/src/unified_exec/mod_tests.rs
++++ b/codex-rs/core/src/unified_exec/mod_tests.rs
+@@ -205,6 +205,8 @@ async fn exec_command_with_tty(
+         original_token_count: Some(original_token_count),
+         output_omitted_bytes,
+         hook_command: Some(cmd.to_string()),
++        compact_model_payload: false,
++        lossless_terminal_codec: false,
+     })
+ }
+ 
+@@ -321,6 +323,8 @@ async fn write_stdin(
+             yield_time_ms,
+             max_output_tokens: None,
+             truncation_policy: TruncationPolicy::Tokens(10_000),
++            compact_model_payload: false,
++            lossless_terminal_codec: false,
+         })
+         .await
+ }
+diff --git a/codex-rs/core/src/unified_exec/process_manager.rs b/codex-rs/core/src/unified_exec/process_manager.rs
+index f828ace22597e82c9b1f43486d105131572ff0a6..b3a5786224ba6e6d38a09c2d190c501cc4a01147 100644
+--- a/codex-rs/core/src/unified_exec/process_manager.rs
++++ b/codex-rs/core/src/unified_exec/process_manager.rs
+@@ -648,6 +648,16 @@ impl UnifiedExecProcessManager {
+             original_token_count: Some(original_token_count),
+             output_omitted_bytes,
+             hook_command: Some(request.hook_command.clone()),
++            compact_model_payload: context
++                .turn
++                .config
++                .features
++                .enabled(codex_features::Feature::CodexZeroCompactExecOutput),
++            lossless_terminal_codec: context
++                .turn
++                .config
++                .features
++                .enabled(codex_features::Feature::CodexZeroLosslessTerminalCodec),
+         };
+ 
+         Ok(response)
+@@ -823,6 +833,8 @@ impl UnifiedExecProcessManager {
+             original_token_count: Some(original_token_count),
+             output_omitted_bytes,
+             hook_command: Some(hook_command),
++            compact_model_payload: request.compact_model_payload,
++            lossless_terminal_codec: request.lossless_terminal_codec,
+         };
+ 
+         Ok(response)
+diff --git a/codex-rs/core/tests/suite/client.rs b/codex-rs/core/tests/suite/client.rs
+index c73ccf4932ad89e016ef4177fcddc21827f6ee5f..0b5564ebc705be87922e92b296f4d6686d4a13e3 100644
+--- a/codex-rs/core/tests/suite/client.rs
++++ b/codex-rs/core/tests/suite/client.rs
+@@ -2682,6 +2682,7 @@ async fn reasoning_summary_is_omitted_when_disabled() -> anyhow::Result<()> {
+     let TestCodex { codex, .. } = test_codex()
+         .with_config(|config| {
+             config.model_reasoning_summary = Some(ReasoningSummary::None);
++            config.model_reasoning_effort = Some(ReasoningEffort::High);
+         })
+         .build(&server)
+         .await?;
+@@ -2705,11 +2706,10 @@ async fn reasoning_summary_is_omitted_when_disabled() -> anyhow::Result<()> {
+     let request = resp_mock.single_request();
+     let request_body = request.body_json();
+ 
++    pretty_assertions::assert_eq!(request_body["reasoning"], json!({"effort": "high"}));
+     pretty_assertions::assert_eq!(
+-        request_body
+-            .get("reasoning")
+-            .and_then(|reasoning| reasoning.get("summary")),
+-        None
++        request_body["include"],
++        json!(["reasoning.encrypted_content"])
+     );
+     pretty_assertions::assert_eq!(request_body.get("stream_options"), None);
+ 
+diff --git a/codex-rs/features/src/lib.rs b/codex-rs/features/src/lib.rs
+index 6c9b9fb64644a011a64a91142d2df537af50f4ff..2a167458cef92785718d0d188ef95dd771e000c9 100644
+--- a/codex-rs/features/src/lib.rs
++++ b/codex-rs/features/src/lib.rs
+@@ -98,6 +98,12 @@ pub enum Feature {
+     CodeModeOnly,
+     /// Use the single unified PTY-backed exec tool.
+     UnifiedExec,
++    /// Emit a strictly smaller structured model payload for unified exec results.
++    CodexZeroCompactExecOutput,
++    /// Apply a reversible, strictly smaller terminal codec to model-visible output.
++    CodexZeroLosslessTerminalCodec,
++    /// Replace a proven unchanged duplicate tool result with a smaller active-context reference.
++    CodexZeroExactDuplicateResults,
+     /// Route shell tool execution through the zsh exec bridge.
+     ShellZshFork,
+     /// Allow unified exec to compose with the zsh exec bridge.
+@@ -824,6 +830,24 @@ pub const FEATURES: &[FeatureSpec] = &[
+         stage: Stage::Stable,
+         default_enabled: !cfg!(windows),
+     },
++    FeatureSpec {
++        id: Feature::CodexZeroCompactExecOutput,
++        key: "codex_zero_compact_exec_output",
++        stage: Stage::UnderDevelopment,
++        default_enabled: false,
++    },
++    FeatureSpec {
++        id: Feature::CodexZeroLosslessTerminalCodec,
++        key: "codex_zero_lossless_terminal_codec",
++        stage: Stage::UnderDevelopment,
++        default_enabled: false,
++    },
++    FeatureSpec {
++        id: Feature::CodexZeroExactDuplicateResults,
++        key: "codex_zero_exact_duplicate_results",
++        stage: Stage::UnderDevelopment,
++        default_enabled: false,
++    },
+     FeatureSpec {
+         id: Feature::ShellZshFork,
+         key: "shell_zsh_fork",

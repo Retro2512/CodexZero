@@ -1,0 +1,22 @@
+{
+  "name": "codex-zero",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Measured, monotonic input-token savings for Codex.",
+  "repository": "github:Retro2512/CodexZero",
+  "homepage": "https://retro2512.github.io/CodexZero/",
+  "bugs": "https://github.com/Retro2512/CodexZero/issues",
+  "type": "module",
+  "bin": {
+    "codex-zero": "./bin/codex-zero.mjs"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "doctor": "node ./bin/codex-zero.mjs doctor",
+    "savings": "node ./bin/codex-zero.mjs savings"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}

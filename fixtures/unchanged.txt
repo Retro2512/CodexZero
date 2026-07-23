@@ -1,0 +1,2 @@
+CodexZero duplicate-read fixture.
+This file stays unchanged between two complete reads.

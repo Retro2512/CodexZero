@@ -1,0 +1,105 @@
+name: Build release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: CodexZero release version
+        required: true
+        default: 0.1.0
+
+permissions:
+  contents: write
+
+jobs:
+  core:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            asset: windows-x64
+            binary: codex.exe
+          - os: macos-13
+            asset: macos-x64
+            binary: codex
+          - os: macos-14
+            asset: macos-arm64
+            binary: codex
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: codex-zero
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: taiki-e/install-action@just
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Clone pinned Codex source
+        shell: bash
+        run: |
+          git clone --depth 1 --branch rust-v0.145.0-alpha.30 \
+            https://github.com/openai/codex.git upstream
+          git -C upstream apply ../codex-zero/patches/codex-rust-v0.145.0-alpha.30.patch
+      - name: Build patched core
+        shell: bash
+        env:
+          CARGO_BUILD_JOBS: 2
+        run: cargo build --manifest-path upstream/codex-rs/Cargo.toml -p codex-cli --release
+      - name: Assemble package
+        shell: bash
+        run: |
+          mkdir -p "package/dist/${{ matrix.asset }}"
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            CORE_NAME="codex-zero-core.exe"
+            NODE_SOURCE="$(where.exe node | head -n 1 | tr -d '\r')"
+            NODE_NAME="node.exe"
+          else
+            CORE_NAME="codex-zero-core"
+            NODE_SOURCE="$(command -v node)"
+            NODE_NAME="node"
+          fi
+          cp "upstream/codex-rs/target/release/${{ matrix.binary }}" \
+            "package/dist/${{ matrix.asset }}/$CORE_NAME"
+          mkdir -p package/runtime
+          cp "$NODE_SOURCE" "package/runtime/$NODE_NAME"
+          cp -R codex-zero/bin codex-zero/src codex-zero/config codex-zero/scripts package/
+          cp codex-zero/package.json codex-zero/README.md codex-zero/LICENSE package/
+          "package/runtime/$NODE_NAME" --version
+      - name: Archive Windows package
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: Compress-Archive -Path package\* -DestinationPath "codex-zero-${{ matrix.asset }}.zip"
+      - name: Archive Unix package
+        if: runner.os != 'Windows'
+        shell: bash
+        run: tar -C package -czf "codex-zero-${{ matrix.asset }}.tar.gz" .
+      - name: Write checksum
+        shell: bash
+        run: |
+          ARCHIVE="$(find . -maxdepth 1 -type f -name 'codex-zero-${{ matrix.asset }}.*' ! -name '*.sha256' -print -quit)"
+          if command -v sha256sum >/dev/null 2>&1; then
+            sha256sum "$ARCHIVE" > "$ARCHIVE.sha256"
+          else
+            shasum -a 256 "$ARCHIVE" > "$ARCHIVE.sha256"
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: codex-zero-${{ matrix.asset }}
+          path: |
+            codex-zero-${{ matrix.asset }}.*
+
+  publish:
+    needs: core
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ inputs.version }}
+          generate_release_notes: true
+          files: artifacts/*
