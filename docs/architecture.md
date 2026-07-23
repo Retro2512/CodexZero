@@ -40,6 +40,10 @@ Reuse is limited to commands proven read-only:
 
 The monitor watches the telemetry directory for changes and atomically writes an aggregate state file. It does not poll Codex, invoke a model, or inspect conversation content.
 
+### Desktop launcher
+
+`codex-zero desktop` starts the installed signed app with its supported `CODEX_CLI_PATH` override pointing at the side-by-side core. `CODEX_APP_SERVER_FORCE_CLI=1` prevents an existing daemon from bypassing that path. A custom runtime environment switch injects the same default-off feature overrides used by the CLI launcher. The command refuses to launch while an existing Desktop process is active because a single-instance handoff would keep the old process environment.
+
 ## Responsibility boundaries
 
 | Layer | Responsibility |

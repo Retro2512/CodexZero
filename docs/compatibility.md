@@ -25,4 +25,11 @@ Machine-readable details live in [`config/compatibility.json`](../config/compati
 
 ## Desktop
 
-Codex Desktop and CLI share `~/.codex/config.toml`, so the verified config-only reasoning-summary setting is available to both. The lossless payload codec and duplicate-result changes run in the side-by-side `codex-zero run` core. CodexZero does not modify or replace Desktop’s signed embedded executable.
+Codex Desktop and CLI share `~/.codex/config.toml`, so the verified config-only reasoning-summary setting is available to both.
+
+For binary optimizations:
+
+1. Quit Codex Desktop completely.
+2. Run `codex-zero desktop`.
+
+The launcher uses Desktop’s supported `CODEX_CLI_PATH` environment override and forces a fresh CLI-backed app server. The signed Desktop executable remains unchanged. `codex-zero desktop --check` resolves the current installed executable without starting it.

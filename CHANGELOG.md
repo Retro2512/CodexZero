@@ -8,4 +8,5 @@
 - Added deterministic local validation batches.
 - Added privacy-safe usage and savings telemetry.
 - Added side-by-side Windows and macOS launchers.
+- Added signed Desktop launcher using its supported custom CLI path.
 - Added stock fallback, installers, CI, release packaging, reports, and visual site.

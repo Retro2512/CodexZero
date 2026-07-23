@@ -59,4 +59,4 @@ EOF
 
 printf '\nCodexZero installed.\n'
 printf 'Add %s to PATH if needed.\n' "$CODEX_HOME/bin"
-printf 'Run: codex-zero run\nSavings: codex-zero savings\nStock rollback: codex-zero stock\n'
+printf 'Run: codex-zero run\nDesktop: codex-zero desktop\nSavings: codex-zero savings\nStock rollback: codex-zero stock\n'

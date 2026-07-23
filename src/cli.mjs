@@ -1,10 +1,13 @@
-import { spawn } from "node:child_process";
+import { execFile, spawn } from "node:child_process";
 import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { promisify } from "node:util";
 import { aggregateSavings, formatSavings, readTelemetry } from "./savings.mjs";
 import { artifactRoot, codexHome, codexZeroHome, statePath, telemetryPath } from "./paths.mjs";
 import { runChecks } from "./run-checks.mjs";
+
+const execFileAsync = promisify(execFile);
 
 export async function main(args) {
   const [command = "help", ...rest] = args;
@@ -14,6 +17,7 @@ export async function main(args) {
   if (command === "run-checks") return checks(rest);
   if (command === "run") return launch(rest, false);
   if (command === "stock") return launch(rest, true);
+  if (command === "desktop") return launchDesktop(rest);
   if (command === "help" || command === "--help" || command === "-h") {
     console.log(help());
     return;
@@ -120,17 +124,58 @@ async function persistSavings() {
 async function doctor() {
   const home = codexHome();
   const customBinary = customBinaryPath();
+  const desktopBinary = await resolveDesktopBinary();
   const checks = [
     ["Codex home", home, await exists(home)],
     ["Config", path.join(home, "config.toml"), await exists(path.join(home, "config.toml"))],
     ["Custom binary", customBinary, await exists(customBinary)],
     ["Artifact store", artifactRoot(), true],
-    ["Telemetry", telemetryPath(), true]
+    ["Telemetry", telemetryPath(), true],
+    ["Desktop launcher", desktopBinary || "not found", Boolean(desktopBinary)]
   ];
   for (const [label, value, ok] of checks) {
     console.log(`${ok ? "✓" : "×"} ${label}: ${value}`);
   }
   if (!checks[2][2]) process.exitCode = 2;
+}
+
+async function launchDesktop(args) {
+  const customBinary = customBinaryPath();
+  if (!(await exists(customBinary))) {
+    throw new Error(`Custom binary not found at ${customBinary}. Run the installer first.`);
+  }
+  const desktopBinary = await resolveDesktopBinary();
+  if (!desktopBinary) {
+    throw new Error("Codex Desktop was not found. Set CODEX_ZERO_DESKTOP_BINARY to its executable.");
+  }
+  if (args.includes("--check")) {
+    console.log(desktopBinary);
+    return;
+  }
+  if (await desktopIsRunning()) {
+    throw new Error("Quit Codex Desktop completely, then run codex-zero desktop again.");
+  }
+
+  const child = spawn(desktopBinary, [], {
+    detached: true,
+    stdio: "ignore",
+    env: {
+      ...process.env,
+      CODEX_CLI_PATH: customBinary,
+      CODEX_APP_SERVER_FORCE_CLI: "1",
+      CODEX_ZERO_RUNTIME_OVERRIDES: "1",
+      CODEX_ZERO_HOME: codexZeroHome(),
+      CODEX_ZERO_ARTIFACT_DIR: artifactRoot(),
+      CODEX_ZERO_TELEMETRY_FILE: telemetryPath(),
+      NO_COLOR: "1",
+      TERM: "dumb",
+      PAGER: "cat",
+      GIT_PAGER: "cat",
+      GH_PAGER: "cat"
+    }
+  });
+  child.unref();
+  console.log("Codex Desktop started with the CodexZero side-by-side core.");
 }
 
 async function checks(args) {
@@ -215,6 +260,67 @@ async function stockBinaryPath() {
   return await exists(candidate) ? candidate : "codex.exe";
 }
 
+async function resolveDesktopBinary() {
+  if (process.env.CODEX_ZERO_DESKTOP_BINARY) {
+    return await exists(process.env.CODEX_ZERO_DESKTOP_BINARY)
+      ? process.env.CODEX_ZERO_DESKTOP_BINARY
+      : null;
+  }
+
+  if (process.platform === "win32") {
+    try {
+      const { stdout } = await execFileAsync(
+        "powershell.exe",
+        [
+          "-NoProfile",
+          "-NonInteractive",
+          "-Command",
+          "(Get-AppxPackage OpenAI.Codex | Select-Object -First 1).InstallLocation"
+        ],
+        { windowsHide: true }
+      );
+      const installRoot = stdout.trim();
+      const candidate = path.join(installRoot, "app", "ChatGPT.exe");
+      return installRoot && await exists(candidate) ? candidate : null;
+    } catch {
+      return null;
+    }
+  }
+
+  if (process.platform === "darwin") {
+    const candidates = [
+      "/Applications/Codex.app/Contents/MacOS/Codex",
+      "/Applications/ChatGPT.app/Contents/MacOS/ChatGPT",
+      path.join(process.env.HOME || "", "Applications", "Codex.app", "Contents", "MacOS", "Codex"),
+      path.join(process.env.HOME || "", "Applications", "ChatGPT.app", "Contents", "MacOS", "ChatGPT")
+    ];
+    for (const candidate of candidates) {
+      if (await exists(candidate)) return candidate;
+    }
+  }
+  return null;
+}
+
+async function desktopIsRunning() {
+  try {
+    if (process.platform === "win32") {
+      const { stdout } = await execFileAsync(
+        "tasklist.exe",
+        ["/FI", "IMAGENAME eq ChatGPT.exe", "/FO", "CSV", "/NH"],
+        { windowsHide: true }
+      );
+      return stdout.toLowerCase().includes("chatgpt.exe");
+    }
+    if (process.platform === "darwin") {
+      await execFileAsync("pgrep", ["-x", "Codex|ChatGPT"]);
+      return true;
+    }
+  } catch {
+    return false;
+  }
+  return false;
+}
+
 async function exists(value) {
   try {
     await fs.access(value);
@@ -229,6 +335,8 @@ function help() {
     "CodexZero — zero wasted turns",
     "",
     "codex-zero run [codex arguments]    Run the side-by-side optimized CLI",
+    "codex-zero desktop                 Start Desktop with the side-by-side core",
+    "codex-zero desktop --check         Verify the Desktop executable path",
     "codex-zero stock [codex arguments]  Run the untouched stock CLI",
     "codex-zero savings [--json]         Show measured savings",
     "codex-zero monitor --start|--stop   Manage the savings monitor service",

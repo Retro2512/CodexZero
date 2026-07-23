@@ -85,6 +85,7 @@ if (-not $SkipMonitor) {
 Write-Host ''
 Write-Host 'CodexZero installed.'
 Write-Host 'Run: codex-zero run'
+Write-Host 'Desktop: codex-zero desktop'
 Write-Host 'Savings: codex-zero savings'
 Write-Host 'Stock rollback: codex-zero stock'
 Write-Host "Backup: $backupRoot"
