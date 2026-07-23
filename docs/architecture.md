@@ -29,8 +29,17 @@ Reuse is limited to commands proven read-only:
 
 - file reads include file blob hash and exact byte range;
 - local Git status commands include HEAD, index, porcelain status, and hashes for changed paths;
+- repository searches support proven read-only `rg`, `git grep`, and `git ls-files`
+  invocations and bind the result to the repository state;
+- search modes that can cross repository boundaries, follow links, include hidden
+  or ignored sources, or invoke preprocessors are excluded;
 - remote, side-effecting, or unproven commands are excluded;
 - references are used only while the original result is still active in model context.
+
+Command-result metadata that can legitimately change between calls—chunk ID,
+wall time, process state, exit status, artifact hash, and byte count—remains
+attached to the current call. Only byte-identical model-visible output content
+is referenced.
 
 ### Validation batch runner
 

@@ -1804,6 +1804,42 @@ index de9d118e9cc7ad6914748033880c6ac70f64a3bc..d3955647ddae576dc1ef13313db303ff
  codex-feedback = { workspace = true }
  codex-file-system = { workspace = true }
  codex-login = { workspace = true }
+diff --git a/codex-rs/core/config.schema.json b/codex-rs/core/config.schema.json
+index 0666e065c6c85816419d5b3ad6a69e61d95d648f..0df449da450bc024f1b9a2c04874a19e187cdb10 100644
+--- a/codex-rs/core/config.schema.json
++++ b/codex-rs/core/config.schema.json
+@@ -476,6 +476,15 @@
+             "codex_hooks": {
+               "type": "boolean"
+             },
++            "codex_zero_compact_exec_output": {
++              "type": "boolean"
++            },
++            "codex_zero_exact_duplicate_results": {
++              "type": "boolean"
++            },
++            "codex_zero_lossless_terminal_codec": {
++              "type": "boolean"
++            },
+             "collab": {
+               "type": "boolean"
+             },
+@@ -4870,6 +4879,15 @@
+         "codex_hooks": {
+           "type": "boolean"
+         },
++        "codex_zero_compact_exec_output": {
++          "type": "boolean"
++        },
++        "codex_zero_exact_duplicate_results": {
++          "type": "boolean"
++        },
++        "codex_zero_lossless_terminal_codec": {
++          "type": "boolean"
++        },
+         "collab": {
+           "type": "boolean"
+         },
 diff --git a/codex-rs/core/src/session/session.rs b/codex-rs/core/src/session/session.rs
 index d931a136c62243b2fff4eee96f347caa384cfa81..7ec0e18961b8a68fafd04b52fe54066386e8b9df 100644
 --- a/codex-rs/core/src/session/session.rs
@@ -1903,7 +1939,7 @@ index 9dfa559b7d864a1760e3a657a79b1b946781ddfc..8d457ca168d55c2e6630f0285540e3f5
                  TURN_TOKEN_USAGE_METRIC,
                  turn_token_usage.total_tokens,
 diff --git a/codex-rs/core/src/tools/context.rs b/codex-rs/core/src/tools/context.rs
-index 72018904dd2d5d45e4dce21c0f514b566a8b51d8..b897e80d0326d85ee78a5adc156f09184815b2e6 100644
+index 72018904dd2d5d45e4dce21c0f514b566a8b51d8..e8095698b8f7a4319cbc705c127c6e077709718c 100644
 --- a/codex-rs/core/src/tools/context.rs
 +++ b/codex-rs/core/src/tools/context.rs
 @@ -22,11 +22,19 @@ use codex_utils_output_truncation::approx_token_count;
@@ -1926,7 +1962,30 @@ index 72018904dd2d5d45e4dce21c0f514b566a8b51d8..b897e80d0326d85ee78a5adc156f0918
  use tokio::sync::Mutex;
  use tokio_util::sync::CancellationToken;
  
-@@ -326,6 +334,8 @@ pub struct ExecCommandToolOutput {
+@@ -230,6 +238,22 @@ impl ToolOutput for FunctionToolOutput {
+         self.success.unwrap_or(true)
+     }
+ 
++    fn exact_duplicate_key(&self) -> Option<Vec<u8>> {
++        function_call_output_content_items_to_text(&self.body).map(String::into_bytes)
++    }
++
++    fn exact_duplicate_reference(
++        &self,
++        previous_call_id: &str,
++        source_state_sha256: &str,
++    ) -> Option<String> {
++        serde_json::to_string(&serde_json::json!({
++            "same_as_tool_call": previous_call_id,
++            "source_state_sha256": source_state_sha256,
++        }))
++        .ok()
++    }
++
+     fn to_response_item(&self, call_id: &str, payload: &ToolPayload) -> ResponseInputItem {
+         function_tool_response(call_id, payload, self.body.clone(), self.success)
+     }
+@@ -326,6 +350,8 @@ pub struct ExecCommandToolOutput {
      /// Bytes omitted by the output collection cap before model-facing truncation.
      pub output_omitted_bytes: Option<NonZeroUsize>,
      pub hook_command: Option<String>,
@@ -1935,7 +1994,58 @@ index 72018904dd2d5d45e4dce21c0f514b566a8b51d8..b897e80d0326d85ee78a5adc156f0918
  }
  
  impl ToolOutput for ExecCommandToolOutput {
-@@ -342,7 +352,7 @@ impl ToolOutput for ExecCommandToolOutput {
+@@ -337,12 +363,58 @@ impl ToolOutput for ExecCommandToolOutput {
+         true
+     }
+ 
++    fn exact_duplicate_key(&self) -> Option<Vec<u8>> {
++        Some(
++            self.truncated_output(self.model_output_max_tokens())
++                .into_bytes(),
++        )
++    }
++
++    fn exact_duplicate_reference(
++        &self,
++        previous_call_id: &str,
++        source_state_sha256: &str,
++    ) -> Option<String> {
++        #[derive(Serialize)]
++        struct DuplicateExecOutput<'a> {
++            #[serde(skip_serializing_if = "str::is_empty")]
++            chunk_id: &'a str,
++            wall_time_seconds: f64,
++            #[serde(skip_serializing_if = "Option::is_none")]
++            exit_code: Option<i32>,
++            #[serde(skip_serializing_if = "Option::is_none")]
++            process_id: Option<i32>,
++            #[serde(skip_serializing_if = "Option::is_none")]
++            original_token_count: Option<usize>,
++            #[serde(skip_serializing_if = "Option::is_none")]
++            output_omitted_bytes: Option<usize>,
++            raw_sha256: String,
++            raw_byte_count: usize,
++            same_output_as_tool_call: &'a str,
++            source_state_sha256: &'a str,
++        }
++
++        serde_json::to_string(&DuplicateExecOutput {
++            chunk_id: &self.chunk_id,
++            wall_time_seconds: self.wall_time.as_secs_f64(),
++            exit_code: self.exit_code,
++            process_id: self.process_id,
++            original_token_count: self.original_token_count,
++            output_omitted_bytes: self.output_omitted_bytes.map(NonZeroUsize::get),
++            raw_sha256: codex_zero_codec::sha256(&self.raw_output),
++            raw_byte_count: self.raw_output.len(),
++            same_output_as_tool_call: previous_call_id,
++            source_state_sha256,
++        })
++        .ok()
++    }
++
+     fn to_response_item(&self, call_id: &str, payload: &ToolPayload) -> ResponseInputItem {
+         function_tool_response(
              call_id,
              payload,
              vec![FunctionCallOutputContentItem::InputText {
@@ -1944,7 +2054,7 @@ index 72018904dd2d5d45e4dce21c0f514b566a8b51d8..b897e80d0326d85ee78a5adc156f0918
              }],
              Some(true),
          )
-@@ -467,6 +477,150 @@ impl ExecCommandToolOutput {
+@@ -467,6 +539,150 @@ impl ExecCommandToolOutput {
  
          sections.join("\n")
      }
@@ -2188,6 +2298,212 @@ index caed87dfa5bbaa5a715d2d0fadc357c77d5a9f82..80beb2c0928a5a82928f0addadec3572
 +        original
 +    );
 +}
+diff --git a/codex-rs/core/src/tools/exact_duplicate.rs b/codex-rs/core/src/tools/exact_duplicate.rs
+new file mode 100644
+index 0000000000000000000000000000000000000000..50c3c8e8fc1c1714b04505f6690354b8145e3cee
+--- /dev/null
++++ b/codex-rs/core/src/tools/exact_duplicate.rs
+@@ -0,0 +1,200 @@
++use crate::memory_usage::shell_script_for_invocation;
++use crate::tools::context::ToolInvocation;
++use codex_protocol::parse_command::ParsedCommand;
++use codex_shell_command::parse_command::parse_shell_script;
++
++pub(crate) async fn source_fingerprint(invocation: &ToolInvocation) -> Option<String> {
++    let script = shell_script_for_invocation(invocation)?;
++    let environment = invocation
++        .step_context
++        .environments
++        .turn_environments
++        .first()?;
++    if environment.environment.is_remote() {
++        return None;
++    }
++    let cwd = environment.cwd().to_abs_path().ok()?;
++    let commands = parse_shell_script(&script);
++    if !commands.is_empty()
++        && commands
++            .iter()
++            .all(|command| matches!(command, ParsedCommand::Read { .. }))
++    {
++        return file_source_fingerprint(&commands, cwd.as_path()).await;
++    }
++    if !commands.is_empty()
++        && commands.iter().all(|command| {
++            matches!(
++                command,
++                ParsedCommand::Search { .. } | ParsedCommand::ListFiles { .. }
++            )
++        })
++    {
++        return repository_search_fingerprint(&commands, cwd.as_path()).await;
++    }
++
++    match script.trim() {
++        "git status"
++        | "git status --short"
++        | "git status --porcelain"
++        | "git status --porcelain=v1" => repository_state_fingerprint(cwd.as_path()).await,
++        _ => None,
++    }
++}
++
++pub(crate) async fn file_source_fingerprint(
++    commands: &[ParsedCommand],
++    cwd: &std::path::Path,
++) -> Option<String> {
++    let mut sources = Vec::with_capacity(commands.len());
++    for command in commands {
++        let ParsedCommand::Read { path, .. } = command else {
++            return None;
++        };
++        let path = if path.is_absolute() {
++            path.clone()
++        } else {
++            cwd.join(path)
++        };
++        let bytes = tokio::fs::read(&path).await.ok()?;
++        sources.push(serde_json::json!({
++            "path": path,
++            "blob_sha256": codex_zero_codec::sha256(&bytes),
++            "byte_range": [0, bytes.len()],
++        }));
++    }
++    serde_json::to_vec(&sources)
++        .ok()
++        .map(|bytes| codex_zero_codec::sha256(&bytes))
++}
++
++pub(crate) async fn repository_search_fingerprint(
++    commands: &[ParsedCommand],
++    cwd: &std::path::Path,
++) -> Option<String> {
++    let root = repository_root(cwd).await?;
++    let canonical_root = tokio::fs::canonicalize(&root).await.ok()?;
++    let canonical_cwd = tokio::fs::canonicalize(cwd).await.ok()?;
++    if !canonical_cwd.starts_with(&canonical_root) {
++        return None;
++    }
++
++    for command in commands {
++        let (cmd, path) = match command {
++            ParsedCommand::Search { cmd, path, .. } | ParsedCommand::ListFiles { cmd, path } => {
++                (cmd, path.as_deref())
++            }
++            ParsedCommand::Read { .. } | ParsedCommand::Unknown { .. } => return None,
++        };
++        if !supported_repository_search(cmd) {
++            return None;
++        }
++        let scope = path
++            .map(std::path::PathBuf::from)
++            .unwrap_or_else(|| std::path::PathBuf::from("."));
++        let scope = if scope.is_absolute() {
++            scope
++        } else {
++            cwd.join(scope)
++        };
++        let canonical_scope = tokio::fs::canonicalize(scope).await.ok()?;
++        if !canonical_scope.starts_with(&canonical_root) {
++            return None;
++        }
++    }
++
++    repository_state_fingerprint(&root).await
++}
++
++fn supported_repository_search(command: &str) -> bool {
++    let mut words = command.split_whitespace();
++    let executable = words.next().and_then(|word| {
++        std::path::Path::new(word)
++            .file_name()
++            .and_then(std::ffi::OsStr::to_str)
++    });
++    let is_ripgrep = matches!(executable, Some("rg" | "rg.exe"));
++    let is_git_read =
++        executable == Some("git") && matches!(words.next(), Some("grep" | "ls-files"));
++    if !is_ripgrep && !is_git_read {
++        return false;
++    }
++
++    !command.split_whitespace().any(|word| {
++        matches!(
++            word,
++            "--hidden" | "--follow" | "-L" | "-u" | "-uu" | "-uuu" | "--pre"
++        ) || word.starts_with("--no-ignore")
++            || word.starts_with("--pre=")
++    })
++}
++
++pub(crate) async fn repository_state_fingerprint(cwd: &std::path::Path) -> Option<String> {
++    let root = repository_root(cwd).await?;
++    let status = git(
++        &root,
++        &["status", "--porcelain=v2", "-z", "--untracked-files=all"],
++    )
++    .await?;
++    let paths = git(
++        &root,
++        &[
++            "ls-files",
++            "-m",
++            "-o",
++            "--deleted",
++            "--exclude-standard",
++            "-z",
++        ],
++    )
++    .await?;
++    let head = git(&root, &["rev-parse", "HEAD"]).await.unwrap_or_default();
++    let index = git(&root, &["ls-files", "--stage", "-z"]).await?;
++
++    let mut changed_files = Vec::new();
++    for raw_path in paths
++        .split(|byte| *byte == 0)
++        .filter(|path| !path.is_empty())
++    {
++        let relative = std::str::from_utf8(raw_path).ok()?;
++        let path = root.join(relative);
++        let state = match tokio::fs::read(&path).await {
++            Ok(bytes) => serde_json::json!({
++                "path": relative,
++                "blob_sha256": codex_zero_codec::sha256(&bytes),
++                "byte_range": [0, bytes.len()],
++            }),
++            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
++                serde_json::json!({"path": relative, "deleted": true})
++            }
++            Err(_) => return None,
++        };
++        changed_files.push(state);
++    }
++    changed_files.sort_by_key(std::string::ToString::to_string);
++    let fingerprint = serde_json::json!({
++        "status_sha256": codex_zero_codec::sha256(&status),
++        "head_sha256": codex_zero_codec::sha256(&head),
++        "index_sha256": codex_zero_codec::sha256(&index),
++        "changed_files": changed_files,
++    });
++    serde_json::to_vec(&fingerprint)
++        .ok()
++        .map(|bytes| codex_zero_codec::sha256(&bytes))
++}
++
++async fn repository_root(cwd: &std::path::Path) -> Option<std::path::PathBuf> {
++    let root = git(cwd, &["rev-parse", "--show-toplevel"]).await?;
++    let root = std::str::from_utf8(&root).ok()?.trim();
++    Some(std::path::PathBuf::from(root))
++}
++
++async fn git(cwd: &std::path::Path, args: &[&str]) -> Option<Vec<u8>> {
++    let output = tokio::process::Command::new("git")
++        .args(args)
++        .current_dir(cwd)
++        .output()
++        .await
++        .ok()?;
++    output.status.success().then_some(output.stdout)
++}
 diff --git a/codex-rs/core/src/tools/handlers/unified_exec/exec_command.rs b/codex-rs/core/src/tools/handlers/unified_exec/exec_command.rs
 index fc48f1ed81a88ae0a1e2babada28140538cddbdb..0bee33ecba89d0aaee88b3f9b289bc1801d87f51 100644
 --- a/codex-rs/core/src/tools/handlers/unified_exec/exec_command.rs
@@ -2307,6 +2623,18 @@ index 9b107dd83d00b80f9c38339c8bfb284718e9fa62..73fe7210ef1c0d9021d9a1d15e8d8b0a
      };
      let invocation_b = invocation_for_payload("write_stdin", "write-call-b", payload.clone()).await;
      let invocation_a = invocation_for_payload("write_stdin", "write-call-a", payload).await;
+diff --git a/codex-rs/core/src/tools/mod.rs b/codex-rs/core/src/tools/mod.rs
+index 76a836def392e0a3c0787e70112505fad74d2b92..4897393a8a85d940623685c25c0f99b332cd479f 100644
+--- a/codex-rs/core/src/tools/mod.rs
++++ b/codex-rs/core/src/tools/mod.rs
+@@ -2,6 +2,7 @@ mod approvals;
+ pub(crate) mod code_mode;
+ pub(crate) mod context;
+ pub(crate) mod events;
++pub(crate) mod exact_duplicate;
+ pub(crate) mod handlers;
+ pub(crate) mod hook_names;
+ pub(crate) mod hosted_spec;
 diff --git a/codex-rs/core/src/tools/parallel.rs b/codex-rs/core/src/tools/parallel.rs
 index e201f0ffce2a4f7a62fff50cf2075fc6bcc5f280..fc673e09cab34a0f25d055324de4f07dafe604f0 100644
 --- a/codex-rs/core/src/tools/parallel.rs
@@ -2331,7 +2659,7 @@ index e201f0ffce2a4f7a62fff50cf2075fc6bcc5f280..fc673e09cab34a0f25d055324de4f07d
      }
  
 diff --git a/codex-rs/core/src/tools/registry.rs b/codex-rs/core/src/tools/registry.rs
-index 928f43db562eae21d085ee94e8fa8a3c62f9be03..5e818b6de833fe1ca74fe3a404f0b553b596695b 100644
+index 928f43db562eae21d085ee94e8fa8a3c62f9be03..0ce51c0d0f8c3f1120c5faac3972269ea955a38f 100644
 --- a/codex-rs/core/src/tools/registry.rs
 +++ b/codex-rs/core/src/tools/registry.rs
 @@ -3,6 +3,8 @@ use std::sync::Arc;
@@ -2343,7 +2671,15 @@ index 928f43db562eae21d085ee94e8fa8a3c62f9be03..5e818b6de833fe1ca74fe3a404f0b553
  
  use crate::function_tool::FunctionCallError;
  use crate::hook_runtime::PreToolUseHookResult;
-@@ -165,17 +167,70 @@ pub(crate) struct AnyToolResult {
+@@ -18,6 +20,7 @@ use crate::tools::context::FunctionToolOutput;
+ use crate::tools::context::ToolInvocation;
+ use crate::tools::context::ToolOutput;
+ use crate::tools::context::ToolPayload;
++use crate::tools::exact_duplicate;
+ use crate::tools::flat_tool_name;
+ use crate::tools::handlers::multi_agents_spec::MULTI_AGENT_V1_NAMESPACE;
+ use crate::tools::hook_names::HookToolName;
+@@ -165,17 +168,76 @@ pub(crate) struct AnyToolResult {
      pub(crate) payload: ToolPayload,
      pub(crate) result: Box<dyn ToolOutput>,
      pub(crate) post_tool_use_payload: Option<PostToolUsePayload>,
@@ -2379,19 +2715,25 @@ index 928f43db562eae21d085ee94e8fa8a3c62f9be03..5e818b6de833fe1ca74fe3a404f0b553
 +        else {
 +            return response;
 +        };
++        let Some(duplicate_key) = result.exact_duplicate_key() else {
++            return response;
++        };
 +
-+        let result_key =
-+            codex_zero_codec::sha256(format!("{source_fingerprint}\0{original_text}").as_bytes());
++        let mut result_key = Vec::with_capacity(source_fingerprint.len() + duplicate_key.len() + 1);
++        result_key.extend_from_slice(source_fingerprint.as_bytes());
++        result_key.push(0);
++        result_key.extend_from_slice(&duplicate_key);
++        let result_key = codex_zero_codec::sha256(&result_key);
 +        let active_call = session
 +            .codex_zero_active_duplicate_call(result_key, call_id.clone())
 +            .await;
 +
 +        if let Some(previous_call_id) = active_call {
-+            let candidate = serde_json::json!({
-+                "same_as_tool_call": previous_call_id,
-+                "source_state_sha256": source_fingerprint,
-+            })
-+            .to_string();
++            let Some(candidate) =
++                result.exact_duplicate_reference(&previous_call_id, &source_fingerprint)
++            else {
++                return response;
++            };
 +            let selection = codex_zero_codec::select_strictly_smaller(original_text, candidate);
 +            if selection.transformed {
 +                let timestamp_ms = SystemTime::now()
@@ -2416,12 +2758,12 @@ index 928f43db562eae21d085ee94e8fa8a3c62f9be03..5e818b6de833fe1ca74fe3a404f0b553
      }
  
      pub(crate) fn code_mode_result(self) -> serde_json::Value {
-@@ -726,9 +781,147 @@ async fn handle_any_tool(
+@@ -726,6 +788,13 @@ async fn handle_any_tool(
          payload,
          result: output,
          post_tool_use_payload,
 +        session: Some(Arc::clone(&invocation.session)),
-+        exact_source_fingerprint: exact_source_fingerprint(&invocation).await,
++        exact_source_fingerprint: exact_duplicate::source_fingerprint(&invocation).await,
 +        exact_duplicate_results_enabled: invocation
 +            .turn
 +            .config
@@ -2430,142 +2772,8 @@ index 928f43db562eae21d085ee94e8fa8a3c62f9be03..5e818b6de833fe1ca74fe3a404f0b553
      })
  }
  
-+async fn exact_source_fingerprint(invocation: &ToolInvocation) -> Option<String> {
-+    let script = shell_script_for_invocation(invocation)?;
-+    let environment = invocation
-+        .step_context
-+        .environments
-+        .turn_environments
-+        .first()?;
-+    if environment.environment.is_remote() {
-+        return None;
-+    }
-+    let cwd = environment.cwd().to_abs_path().ok()?;
-+    let commands = parse_shell_script(&script);
-+    if !commands.is_empty()
-+        && commands
-+            .iter()
-+            .all(|command| matches!(command, ParsedCommand::Read { .. }))
-+    {
-+        return file_source_fingerprint(&commands, cwd.as_path()).await;
-+    }
-+
-+    match script.trim() {
-+        "git status"
-+        | "git status --short"
-+        | "git status --porcelain"
-+        | "git status --porcelain=v1" => repository_state_fingerprint(cwd.as_path()).await,
-+        _ => None,
-+    }
-+}
-+
-+async fn file_source_fingerprint(
-+    commands: &[ParsedCommand],
-+    cwd: &std::path::Path,
-+) -> Option<String> {
-+    let mut sources = Vec::with_capacity(commands.len());
-+    for command in commands {
-+        let ParsedCommand::Read { path, .. } = command else {
-+            return None;
-+        };
-+        let path = if path.is_absolute() {
-+            path.clone()
-+        } else {
-+            cwd.join(path)
-+        };
-+        let bytes = tokio::fs::read(&path).await.ok()?;
-+        sources.push(serde_json::json!({
-+            "path": path,
-+            "blob_sha256": codex_zero_codec::sha256(&bytes),
-+            "byte_range": [0, bytes.len()],
-+        }));
-+    }
-+    serde_json::to_vec(&sources)
-+        .ok()
-+        .map(|bytes| codex_zero_codec::sha256(&bytes))
-+}
-+
-+async fn repository_state_fingerprint(cwd: &std::path::Path) -> Option<String> {
-+    async fn git(cwd: &std::path::Path, args: &[&str]) -> Option<Vec<u8>> {
-+        let output = tokio::process::Command::new("git")
-+            .args(args)
-+            .current_dir(cwd)
-+            .output()
-+            .await
-+            .ok()?;
-+        output.status.success().then_some(output.stdout)
-+    }
-+
-+    let root = git(cwd, &["rev-parse", "--show-toplevel"]).await?;
-+    let root = std::str::from_utf8(&root).ok()?.trim();
-+    let root = std::path::PathBuf::from(root);
-+    let status = git(
-+        &root,
-+        &["status", "--porcelain=v2", "-z", "--untracked-files=all"],
-+    )
-+    .await?;
-+    let paths = git(
-+        &root,
-+        &[
-+            "ls-files",
-+            "-m",
-+            "-o",
-+            "--deleted",
-+            "--exclude-standard",
-+            "-z",
-+        ],
-+    )
-+    .await?;
-+    let head = git(&root, &["rev-parse", "HEAD"]).await.unwrap_or_default();
-+    let index_path = git(&root, &["rev-parse", "--git-path", "index"]).await?;
-+    let index_path = std::str::from_utf8(&index_path).ok()?.trim();
-+    let index_path = {
-+        let path = std::path::PathBuf::from(index_path);
-+        if path.is_absolute() {
-+            path
-+        } else {
-+            root.join(path)
-+        }
-+    };
-+    let index = tokio::fs::read(index_path).await.unwrap_or_default();
-+
-+    let mut changed_files = Vec::new();
-+    for raw_path in paths
-+        .split(|byte| *byte == 0)
-+        .filter(|path| !path.is_empty())
-+    {
-+        let relative = std::str::from_utf8(raw_path).ok()?;
-+        let path = root.join(relative);
-+        let state = match tokio::fs::read(&path).await {
-+            Ok(bytes) => serde_json::json!({
-+                "path": relative,
-+                "blob_sha256": codex_zero_codec::sha256(&bytes),
-+                "byte_range": [0, bytes.len()],
-+            }),
-+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
-+                serde_json::json!({"path": relative, "deleted": true})
-+            }
-+            Err(_) => return None,
-+        };
-+        changed_files.push(state);
-+    }
-+    changed_files.sort_by_key(std::string::ToString::to_string);
-+    let fingerprint = serde_json::json!({
-+        "status_sha256": codex_zero_codec::sha256(&status),
-+        "head_sha256": codex_zero_codec::sha256(&head),
-+        "index_sha256": codex_zero_codec::sha256(&index),
-+        "changed_files": changed_files,
-+    });
-+    serde_json::to_vec(&fingerprint)
-+        .ok()
-+        .map(|bytes| codex_zero_codec::sha256(&bytes))
-+}
-+
- fn function_hook_tool_name(invocation: &ToolInvocation) -> HookToolName {
-     if invocation.tool_name.name == "spawn_agent"
-         && matches!(
 diff --git a/codex-rs/core/src/tools/registry_tests.rs b/codex-rs/core/src/tools/registry_tests.rs
-index 9c8b9e87b8d1ba17525a829fbcc4362894bf16c6..e7bfc28de03755156e763107273c3ee6696ead59 100644
+index 9c8b9e87b8d1ba17525a829fbcc4362894bf16c6..8de51e84bd1422d267d04597d69130c9b8e64fbb 100644
 --- a/codex-rs/core/src/tools/registry_tests.rs
 +++ b/codex-rs/core/src/tools/registry_tests.rs
 @@ -319,8 +319,8 @@ async fn write_stdin_does_not_expose_default_pre_tool_use_payload() {
@@ -2604,7 +2812,7 @@ index 9c8b9e87b8d1ba17525a829fbcc4362894bf16c6..e7bfc28de03755156e763107273c3ee6
      };
  
      assert_eq!(
-@@ -371,6 +377,115 @@ fn post_tool_use_feedback_output_keeps_code_mode_result_typed() {
+@@ -371,6 +377,178 @@ fn post_tool_use_feedback_output_keeps_code_mode_result_typed() {
      );
  }
  
@@ -2679,17 +2887,23 @@ index 9c8b9e87b8d1ba17525a829fbcc4362894bf16c6..e7bfc28de03755156e763107273c3ee6
 +        name: "cat".to_string(),
 +        path: std::path::PathBuf::from("fixture.txt"),
 +    };
-+    let first = file_source_fingerprint(std::slice::from_ref(&read), temp.path())
-+        .await
-+        .expect("file fingerprint");
-+    let unchanged = file_source_fingerprint(std::slice::from_ref(&read), temp.path())
-+        .await
-+        .expect("unchanged file fingerprint");
++    let first = crate::tools::exact_duplicate::file_source_fingerprint(
++        std::slice::from_ref(&read),
++        temp.path(),
++    )
++    .await
++    .expect("file fingerprint");
++    let unchanged = crate::tools::exact_duplicate::file_source_fingerprint(
++        std::slice::from_ref(&read),
++        temp.path(),
++    )
++    .await
++    .expect("unchanged file fingerprint");
 +    assert_eq!(first, unchanged);
 +    tokio::fs::write(&file, b"second")
 +        .await
 +        .expect("change fixture");
-+    let changed = file_source_fingerprint(&[read], temp.path())
++    let changed = crate::tools::exact_duplicate::file_source_fingerprint(&[read], temp.path())
 +        .await
 +        .expect("changed file fingerprint");
 +    assert_ne!(first, changed);
@@ -2701,20 +2915,77 @@ index 9c8b9e87b8d1ba17525a829fbcc4362894bf16c6..e7bfc28de03755156e763107273c3ee6
 +        .await
 +        .expect("run git init");
 +    assert!(status.success());
-+    let first_repo = repository_state_fingerprint(temp.path())
++    let first_repo = crate::tools::exact_duplicate::repository_state_fingerprint(temp.path())
 +        .await
 +        .expect("repository fingerprint");
-+    let unchanged_repo = repository_state_fingerprint(temp.path())
++    let unchanged_repo = crate::tools::exact_duplicate::repository_state_fingerprint(temp.path())
 +        .await
 +        .expect("unchanged repository fingerprint");
 +    assert_eq!(first_repo, unchanged_repo);
 +    tokio::fs::write(&file, b"third")
 +        .await
 +        .expect("change repository file");
-+    let changed_repo = repository_state_fingerprint(temp.path())
++    let changed_repo = crate::tools::exact_duplicate::repository_state_fingerprint(temp.path())
 +        .await
 +        .expect("changed repository fingerprint");
 +    assert_ne!(first_repo, changed_repo);
++
++    let search = ParsedCommand::Search {
++        cmd: "rg third .".to_string(),
++        query: Some("third".to_string()),
++        path: Some(".".to_string()),
++    };
++    let first_search = crate::tools::exact_duplicate::repository_search_fingerprint(
++        std::slice::from_ref(&search),
++        temp.path(),
++    )
++    .await
++    .expect("search fingerprint");
++    let unchanged_search = crate::tools::exact_duplicate::repository_search_fingerprint(
++        std::slice::from_ref(&search),
++        temp.path(),
++    )
++    .await
++    .expect("unchanged search fingerprint");
++    assert_eq!(first_search, unchanged_search);
++    tokio::fs::write(&file, b"fourth")
++        .await
++        .expect("change searched file");
++    let changed_search =
++        crate::tools::exact_duplicate::repository_search_fingerprint(&[search], temp.path())
++            .await
++            .expect("changed search fingerprint");
++    assert_ne!(first_search, changed_search);
++
++    let hidden_search = ParsedCommand::Search {
++        cmd: "rg --hidden fourth .".to_string(),
++        query: Some("fourth".to_string()),
++        path: Some(".".to_string()),
++    };
++    assert_eq!(
++        crate::tools::exact_duplicate::repository_search_fingerprint(
++            &[hidden_search],
++            temp.path(),
++        )
++        .await,
++        None
++    );
++
++    let outside = tempfile::tempdir().expect("outside search directory");
++    let outside_path = outside.path().display().to_string();
++    let outside_search = ParsedCommand::Search {
++        cmd: format!("rg fourth {outside_path}"),
++        query: Some("fourth".to_string()),
++        path: Some(outside_path),
++    };
++    assert_eq!(
++        crate::tools::exact_duplicate::repository_search_fingerprint(
++            &[outside_search],
++            temp.path(),
++        )
++        .await,
++        None
++    );
 +}
 +
  #[tokio::test]
@@ -2825,6 +3096,179 @@ index c73ccf4932ad89e016ef4177fcddc21827f6ee5f..0b5564ebc705be87922e92b296f4d668
      );
      pretty_assertions::assert_eq!(request_body.get("stream_options"), None);
  
+diff --git a/codex-rs/core/tests/suite/unified_exec.rs b/codex-rs/core/tests/suite/unified_exec.rs
+index 62b10cf424245eeaa34db1d2d5f855b8ddd60411..9f60d22313704ba2ba8ebad2240920368bfbaf00 100644
+--- a/codex-rs/core/tests/suite/unified_exec.rs
++++ b/codex-rs/core/tests/suite/unified_exec.rs
+@@ -1497,6 +1497,168 @@ async fn exec_command_reports_chunk_and_exit_metadata() -> Result<()> {
+     Ok(())
+ }
+ 
++#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
++async fn exact_duplicate_repository_search_uses_active_result_reference() -> Result<()> {
++    skip_if_no_network!(Ok(()));
++    skip_if_sandbox!(Ok(()));
++
++    let server = start_mock_server().await;
++    let mut builder = test_codex().with_config(|config| {
++        config
++            .features
++            .enable(Feature::UnifiedExec)
++            .expect("test config should allow feature update");
++        config
++            .features
++            .enable(Feature::CodexZeroExactDuplicateResults)
++            .expect("test config should allow feature update");
++    });
++    let test = builder.build_with_auto_env(&server).await?;
++
++    let fixture = "needle diagnostic\n".repeat(200);
++    let fixture_path = test.config.cwd.join("fixture.txt");
++    let fixture_uri = PathUri::from_host_native_path(&fixture_path)?;
++    test.fs()
++        .write_file(&fixture_uri, fixture.into_bytes(), /*sandbox*/ None)
++        .await?;
++
++    let setup_call_id = "duplicate-search-setup";
++    let first_search_call_id = "duplicate-search-first";
++    let second_search_call_id = "duplicate-search-second";
++    let setup_args = json!({
++        "cmd": "git init --quiet; git add fixture.txt",
++        "yield_time_ms": 5_000,
++    });
++    let search_args = json!({
++        "cmd": "git grep needle fixture.txt",
++        "yield_time_ms": 5_000,
++    });
++    let responses = vec![
++        sse(vec![
++            ev_response_created("duplicate-search-resp-1"),
++            ev_function_call(
++                setup_call_id,
++                "exec_command",
++                &serde_json::to_string(&setup_args)?,
++            ),
++            ev_completed("duplicate-search-resp-1"),
++        ]),
++        sse(vec![
++            ev_response_created("duplicate-search-resp-2"),
++            ev_function_call(
++                first_search_call_id,
++                "exec_command",
++                &serde_json::to_string(&search_args)?,
++            ),
++            ev_completed("duplicate-search-resp-2"),
++        ]),
++        sse(vec![
++            ev_response_created("duplicate-search-resp-3"),
++            ev_function_call(
++                second_search_call_id,
++                "exec_command",
++                &serde_json::to_string(&search_args)?,
++            ),
++            ev_completed("duplicate-search-resp-3"),
++        ]),
++        sse(vec![
++            ev_assistant_message("duplicate-search-msg", "done"),
++            ev_completed("duplicate-search-resp-4"),
++        ]),
++    ];
++    let request_log = mount_sse_sequence(&server, responses).await;
++
++    let (sandbox_policy, permission_profile) =
++        turn_permission_fields(PermissionProfile::Disabled, test.config.cwd.as_path());
++    test.codex
++        .submit(Op::UserInput {
++            items: vec![UserInput::Text {
++                text: "run the same repository search twice".into(),
++                text_elements: Vec::new(),
++            }],
++            final_output_json_schema: None,
++            responsesapi_client_metadata: None,
++            additional_context: Default::default(),
++            thread_settings: codex_protocol::protocol::ThreadSettingsOverrides {
++                environments: Some(local_selections(test.config.cwd.clone())),
++                approval_policy: Some(AskForApproval::Never),
++                sandbox_policy: Some(sandbox_policy),
++                permission_profile,
++                collaboration_mode: Some(codex_protocol::config_types::CollaborationMode {
++                    mode: codex_protocol::config_types::ModeKind::Default,
++                    settings: codex_protocol::config_types::Settings {
++                        model: test.session_configured.model.clone(),
++                        reasoning_effort: None,
++                        developer_instructions: None,
++                    },
++                }),
++                ..Default::default()
++            },
++        })
++        .await?;
++    wait_for_event_with_timeout(
++        &test.codex,
++        |event| matches!(event, EventMsg::TurnComplete(_)),
++        Duration::from_secs(30),
++    )
++    .await;
++
++    let requests = request_log.requests();
++    let original = requests
++        .iter()
++        .find_map(|request| request.function_call_output_text(first_search_call_id))
++        .expect("first search output");
++    assert!(original.contains("needle diagnostic"));
++
++    let selected = requests
++        .iter()
++        .find_map(|request| request.function_call_output_text(second_search_call_id))
++        .expect("second search output");
++    let selected: Value = serde_json::from_str(&selected)
++        .with_context(|| format!("second search was not replaced: {selected:?}"))?;
++    let source_state_sha256 = selected
++        .get("source_state_sha256")
++        .and_then(Value::as_str)
++        .expect("source state hash");
++    assert_eq!(source_state_sha256.len(), 64);
++    let chunk_id = selected
++        .get("chunk_id")
++        .and_then(Value::as_str)
++        .expect("chunk id");
++    let wall_time_seconds = selected
++        .get("wall_time_seconds")
++        .and_then(Value::as_f64)
++        .expect("wall time");
++    let original_token_count = selected
++        .get("original_token_count")
++        .and_then(Value::as_u64)
++        .expect("original token count");
++    let raw_sha256 = selected
++        .get("raw_sha256")
++        .and_then(Value::as_str)
++        .expect("raw output hash");
++    assert_eq!(raw_sha256.len(), 64);
++    let raw_byte_count = selected
++        .get("raw_byte_count")
++        .and_then(Value::as_u64)
++        .expect("raw byte count");
++    assert_eq!(
++        selected,
++        json!({
++            "chunk_id": chunk_id,
++            "wall_time_seconds": wall_time_seconds,
++            "exit_code": 0,
++            "original_token_count": original_token_count,
++            "raw_sha256": raw_sha256,
++            "raw_byte_count": raw_byte_count,
++            "same_output_as_tool_call": first_search_call_id,
++            "source_state_sha256": source_state_sha256,
++        })
++    );
++
++    Ok(())
++}
++
+ #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+ async fn exec_command_clamps_model_requested_max_output_tokens_to_policy() -> Result<()> {
+     // TODO(anp): Remove after unified-exec fixtures use target-native commands.
 diff --git a/codex-rs/features/src/lib.rs b/codex-rs/features/src/lib.rs
 index 6c9b9fb64644a011a64a91142d2df537af50f4ff..2a167458cef92785718d0d188ef95dd771e000c9 100644
 --- a/codex-rs/features/src/lib.rs
@@ -2867,3 +3311,50 @@ index 6c9b9fb64644a011a64a91142d2df537af50f4ff..2a167458cef92785718d0d188ef95dd7
      FeatureSpec {
          id: Feature::ShellZshFork,
          key: "shell_zsh_fork",
+diff --git a/codex-rs/tools/src/tool_output.rs b/codex-rs/tools/src/tool_output.rs
+index f2eed18fac919df5bb619bc7f00f11e1367adf71..be067130ccfd683ad8f3e295ca490480b1f17738 100644
+--- a/codex-rs/tools/src/tool_output.rs
++++ b/codex-rs/tools/src/tool_output.rs
+@@ -24,6 +24,23 @@ pub trait ToolOutput: Send {
+         false
+     }
+ 
++    /// Returns deterministic model-output bytes eligible for exact duplicate detection.
++    ///
++    /// Implementations must exclude volatile execution metadata while retaining
++    /// every byte needed to prove that the referenced output content is equal.
++    fn exact_duplicate_key(&self) -> Option<Vec<u8>> {
++        None
++    }
++
++    /// Builds a lossless reference to equal output already active in model context.
++    fn exact_duplicate_reference(
++        &self,
++        _previous_call_id: &str,
++        _source_state_sha256: &str,
++    ) -> Option<String> {
++        None
++    }
++
+     fn to_response_item(&self, call_id: &str, payload: &ToolPayload) -> ResponseInputItem;
+ 
+     /// Returns the tool call id exposed to `PostToolUse` hooks for this output.
+@@ -68,6 +85,18 @@ where
+         (**self).contains_external_context()
+     }
+ 
++    fn exact_duplicate_key(&self) -> Option<Vec<u8>> {
++        (**self).exact_duplicate_key()
++    }
++
++    fn exact_duplicate_reference(
++        &self,
++        previous_call_id: &str,
++        source_state_sha256: &str,
++    ) -> Option<String> {
++        (**self).exact_duplicate_reference(previous_call_id, source_state_sha256)
++    }
++
+     fn to_response_item(&self, call_id: &str, payload: &ToolPayload) -> ResponseInputItem {
+         (**self).to_response_item(call_id, payload)
+     }

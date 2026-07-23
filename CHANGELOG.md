@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.1
+
+- Fixed exact duplicate detection for real command results whose chunk and timing metadata changes between calls.
+- Added repository-state fingerprints for read-only `rg`, `git grep`, and `git ls-files` results.
+- Preserved current execution metadata in duplicate references.
+- Added a full unified-exec integration test and generated feature-flag schema entries.
+
 ## 0.1.0
 
 - Added strictly monotonic compact model payloads.
