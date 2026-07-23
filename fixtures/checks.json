@@ -7,7 +7,7 @@
       },
       {
         "program": "git",
-        "args": ["diff", "--check"]
+        "args": ["diff", "--check", "--", ".", ":(exclude)patches/*.patch"]
       },
       {
         "program": "node",
