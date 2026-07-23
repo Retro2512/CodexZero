@@ -20,7 +20,7 @@ jobs:
           - os: windows-latest
             asset: windows-x64
             binary: codex.exe
-          - os: macos-13
+          - os: macos-15-intel
             asset: macos-x64
             binary: codex
           - os: macos-14
