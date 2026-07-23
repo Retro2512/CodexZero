@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.2
+
+- Regenerated the Bazel dependency lock for the added codec crate.
+- Kept the v0.1.1 duplicate-result fix unchanged.
+
 ## 0.1.1
 
 - Fixed exact duplicate detection for real command results whose chunk and timing metadata changes between calls.
