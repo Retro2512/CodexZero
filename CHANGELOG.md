@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0
+
+- Added installer choice between command-output-only and full-lean modes.
+- Made full lean the default for interactive and unattended new installs.
+- Added a 738-token lean model prompt that retains concise intermediary updates.
+- Preserved global and project instructions; the prompt override applies only to CodexZero launches.
+- Added `codex-zero mode` for switching modes without reinstalling.
+- Added a separate dated prompt benchmark, projections, verification script, CLI output, and site calculator.
+
 ## 0.1.4
 
 - Fixed Windows and macOS in-place upgrades while the savings monitor is running.
@@ -32,7 +41,7 @@
 - Added reversible terminal codec and SHA-256 raw artifact store.
 - Added exact duplicate-result references for proven read-only state.
 - Added deterministic local validation batches.
-- Added privacy-safe usage and savings telemetry.
+- Added content-free usage and savings telemetry counters.
 - Added side-by-side Windows and macOS launchers.
 - Added signed Desktop launcher using its supported custom CLI path.
 - Added stock fallback, installers, CI, release packaging, reports, and visual site.

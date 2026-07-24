@@ -6,6 +6,7 @@ import { promisify } from "node:util";
 import { aggregateSavings, formatSavings, readTelemetry } from "./savings.mjs";
 import { artifactRoot, codexHome, codexZeroHome, statePath, telemetryPath } from "./paths.mjs";
 import { runChecks } from "./run-checks.mjs";
+import { maybeSuggestStar } from "./star-prompt.mjs";
 
 const execFileAsync = promisify(execFile);
 
@@ -13,6 +14,7 @@ export async function main(args) {
   const [command = "help", ...rest] = args;
   if (command === "savings") return savings(rest);
   if (command === "monitor") return monitor(rest);
+  if (command === "mode") return promptMode(rest);
   if (command === "doctor") return doctor();
   if (command === "run-checks") return checks(rest);
   if (command === "run") return launch(rest, false);
@@ -27,8 +29,12 @@ export async function main(args) {
 
 async function savings(args) {
   const summary = aggregateSavings(await readTelemetry());
-  if (args.includes("--json")) console.log(JSON.stringify(summary, null, 2));
-  else console.log(formatSavings(summary));
+  const prompt = await promptBenchmarkSummary();
+  if (args.includes("--json")) {
+    console.log(JSON.stringify({ ...summary, promptBenchmark: prompt }, null, 2));
+  } else {
+    console.log(`${formatSavings(summary)}\n\n${formatPromptBenchmark(prompt)}`);
+  }
 }
 
 async function monitor(args) {
@@ -125,9 +131,16 @@ async function doctor() {
   const home = codexHome();
   const customBinary = customBinaryPath();
   const desktopBinary = await resolveDesktopBinary();
+  const mode = await selectedInstallMode();
+  const leanPrompt = mode === "full-lean" ? bundledLeanPromptPath() : null;
   const checks = [
     ["Codex home", home, await exists(home)],
     ["Config", path.join(home, "config.toml"), await exists(path.join(home, "config.toml"))],
+    [
+      "Optimization mode",
+      mode,
+      mode === "command-output" || (mode === "full-lean" && await exists(leanPrompt))
+    ],
     ["Custom binary", customBinary, await exists(customBinary)],
     ["Artifact store", artifactRoot(), true],
     ["Telemetry", telemetryPath(), true],
@@ -136,7 +149,7 @@ async function doctor() {
   for (const [label, value, ok] of checks) {
     console.log(`${ok ? "✓" : "×"} ${label}: ${value}`);
   }
-  if (!checks[2][2]) process.exitCode = 2;
+  if (!checks[3][2] || !checks[2][2]) process.exitCode = 2;
 }
 
 async function launchDesktop(args) {
@@ -155,6 +168,7 @@ async function launchDesktop(args) {
   if (await desktopIsRunning()) {
     throw new Error("Quit Codex Desktop completely, then run codex-zero desktop again.");
   }
+  const leanPrompt = await activeLeanPromptPath();
 
   const child = spawn(desktopBinary, [], {
     detached: true,
@@ -164,6 +178,7 @@ async function launchDesktop(args) {
       CODEX_CLI_PATH: customBinary,
       CODEX_APP_SERVER_FORCE_CLI: "1",
       CODEX_ZERO_RUNTIME_OVERRIDES: "1",
+      ...(leanPrompt ? { CODEX_ZERO_INSTRUCTIONS_FILE: leanPrompt } : {}),
       CODEX_ZERO_HOME: codexZeroHome(),
       CODEX_ZERO_ARTIFACT_DIR: artifactRoot(),
       CODEX_ZERO_TELEMETRY_FILE: telemetryPath(),
@@ -176,6 +191,7 @@ async function launchDesktop(args) {
   });
   child.unref();
   console.log("Codex Desktop started with the CodexZero side-by-side core.");
+  await maybeSuggestStar();
 }
 
 async function checks(args) {
@@ -195,11 +211,15 @@ async function launch(args, stock) {
   if (!stock && !(await exists(executable))) {
     throw new Error(`Custom binary not found at ${executable}. Run the installer or use "codex-zero stock".`);
   }
+  const leanPrompt = stock ? null : await activeLeanPromptPath();
   const launchArguments = stock
     ? args
     : [
         "--profile",
         "codexzero",
+        ...(leanPrompt
+          ? ["-c", `model_instructions_file=${JSON.stringify(leanPrompt)}`]
+          : []),
         "-c",
         "background_terminal_max_timeout=3600000",
         "-c",
@@ -232,7 +252,132 @@ async function launch(args, stock) {
     child.once("error", reject);
     child.once("exit", (code) => resolve(code ?? 1));
   });
+  if (!stock && exitCode === 0) await maybeSuggestStar();
   process.exitCode = exitCode;
+}
+
+async function promptMode(args) {
+  const requested = args[0];
+  const current = await selectedInstallMode();
+  if (!requested) {
+    console.log(current);
+    return;
+  }
+  if (!["command-output", "full-lean"].includes(requested)) {
+    throw new Error('Mode must be "command-output" or "full-lean".');
+  }
+  const metadataPath = path.join(codexZeroHome(), "install.json");
+  const metadata = await readInstallMetadata();
+  if (!metadata) {
+    throw new Error("CodexZero installation metadata is missing. Re-run the installer.");
+  }
+  if (requested === "full-lean") {
+    const promptPath = bundledLeanPromptPath();
+    if (!(await exists(promptPath))) {
+      throw new Error(`Bundled lean prompt is missing at ${promptPath}. Re-run the installer.`);
+    }
+  }
+  const updated = {
+    ...metadata,
+    mode: requested,
+    lean_prompt: requested === "full-lean" ? bundledLeanPromptPath() : null,
+    mode_updated_at: new Date().toISOString()
+  };
+  const temporary = `${metadataPath}.${process.pid}.tmp`;
+  await fs.writeFile(temporary, `${JSON.stringify(updated, null, 2)}\n`);
+  await fs.rename(temporary, metadataPath);
+  console.log(`CodexZero mode: ${requested}`);
+  if (requested !== current) console.log("New Codex tasks will use this mode.");
+}
+
+async function readInstallMetadata() {
+  try {
+    return JSON.parse(
+      await fs.readFile(path.join(codexZeroHome(), "install.json"), "utf8")
+    );
+  } catch {
+    return null;
+  }
+}
+
+async function selectedInstallMode() {
+  return (await readInstallMetadata())?.mode || "command-output";
+}
+
+function bundledLeanPromptPath() {
+  return path.join(codexZeroHome(), "prompts", "codex-core-lean-v1.md");
+}
+
+async function activeLeanPromptPath() {
+  if (await selectedInstallMode() !== "full-lean") return null;
+  const promptPath = bundledLeanPromptPath();
+  if (!(await exists(promptPath))) {
+    throw new Error(`Bundled lean prompt is missing at ${promptPath}. Re-run the installer.`);
+  }
+  return promptPath;
+}
+
+async function promptBenchmarkSummary() {
+  const mode = await selectedInstallMode();
+  if (mode !== "full-lean") {
+    return {
+      mode,
+      active: false,
+      note: "Existing model instructions are preserved."
+    };
+  }
+  try {
+    const manifest = JSON.parse(
+      await fs.readFile(path.join(codexZeroHome(), "prompts", "manifest.json"), "utf8")
+    );
+    const reference = manifest.references.find(
+      (item) => item.id === "gpt-5.6-sol-instructions-snapshot-2026-07-24"
+    );
+    return {
+      mode,
+      active: true,
+      tokenizer: manifest.tokenizer,
+      bundledPromptTokens: manifest.bundled_prompt.tokens,
+      referenceId: reference.id,
+      referenceTokens: reference.baseline_tokens,
+      referenceDifferencePerModelRequest: reference.tokens_removed_per_model_request,
+      referenceReductionPercent: reference.reduction_percent,
+      referenceScenarioAt50RequestsPerDay: {
+        perDay: reference.tokens_removed_per_model_request * 50,
+        per30Days: reference.tokens_removed_per_model_request * 50 * 30,
+        perYear: reference.tokens_removed_per_model_request * 50 * 365
+      },
+      note: "Dated prompt comparison; separate from measured tool-result savings."
+    };
+  } catch {
+    return {
+      mode,
+      active: true,
+      note: "Prompt benchmark manifest is unavailable; re-run the installer."
+    };
+  }
+}
+
+function formatPromptBenchmark(prompt) {
+  if (!prompt.active) {
+    return [
+      `Prompt mode: ${prompt.mode}`,
+      "Existing model instructions are preserved."
+    ].join("\n");
+  }
+  if (!Number.isFinite(prompt.referenceDifferencePerModelRequest)) {
+    return `Prompt mode: ${prompt.mode}\n${prompt.note}`;
+  }
+  return [
+    `Prompt mode: ${prompt.mode}`,
+    `Bundled lean prompt: ${prompt.bundledPromptTokens.toLocaleString()} tokens`,
+    `Dated reference: ${prompt.referenceTokens.toLocaleString()} → ${prompt.bundledPromptTokens.toLocaleString()}`,
+    `Reference difference: ${prompt.referenceDifferencePerModelRequest.toLocaleString()} tokens/model request (${prompt.referenceReductionPercent.toFixed(1)}%)`,
+    `At 50 model requests/day: ${prompt.referenceScenarioAt50RequestsPerDay.per30Days.toLocaleString()} fewer reference tokens/30 days`,
+    `At 50 model requests/day: ${prompt.referenceScenarioAt50RequestsPerDay.perYear.toLocaleString()} fewer reference tokens/year`,
+    "Prompt figures are a dated reference comparison, not observed provider usage.",
+    "They are kept separate from the measured tool-result total above."
+  ].join("\n");
 }
 
 function customBinaryPath() {
@@ -341,6 +486,7 @@ function help() {
     "codex-zero desktop --check         Verify the Desktop executable path",
     "codex-zero stock [codex arguments]  Run the untouched stock CLI",
     "codex-zero savings [--json]         Show measured savings",
+    "codex-zero mode [MODE]              Show or select command-output|full-lean",
     "codex-zero monitor --start|--stop   Manage the savings monitor service",
     "codex-zero monitor --status         Show monitor service status",
     "codex-zero run-checks <profile>     Run a deterministic local check batch",

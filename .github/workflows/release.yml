@@ -6,11 +6,11 @@ on:
       version:
         description: CodexZero release version
         required: true
-        default: 0.1.4
+        default: 0.2.0
       reuse_core_release:
         description: Reuse cores only when patches and runtime config match this release; leave blank to rebuild
         required: false
-        default: 0.1.3
+        default: ''
 
 permissions:
   contents: write
@@ -118,7 +118,7 @@ jobs:
             mkdir -p package/runtime
             cp "$NODE_SOURCE" "package/runtime/$NODE_NAME"
           fi
-          cp -R codex-zero/bin codex-zero/src codex-zero/config codex-zero/scripts package/
+          cp -R codex-zero/bin codex-zero/src codex-zero/config codex-zero/prompts codex-zero/scripts package/
           cp codex-zero/package.json codex-zero/README.md codex-zero/LICENSE package/
           if [ "${{ runner.os }}" = "Windows" ]; then
             NODE_NAME="node.exe"
@@ -131,16 +131,19 @@ jobs:
         shell: pwsh
         run: |
           $env:CODEX_HOME = Join-Path $env:RUNNER_TEMP 'codexzero-home'
-          & package\scripts\install.ps1 -PackageRoot package
-          & package\scripts\install.ps1 -PackageRoot package
+          & package\scripts\install.ps1 -PackageRoot package -Mode command-output
+          & package\scripts\install.ps1 -PackageRoot package -Mode full-lean
+          $mode = (& "$env:CODEX_HOME\bin\codex-zero.cmd" mode).Trim()
+          if ($mode -ne 'full-lean') { throw "Expected full-lean mode, got $mode" }
           & "$env:CODEX_HOME\bin\codex-zero.cmd" monitor --stop
       - name: Verify macOS installer and in-place upgrade
         if: runner.os == 'macOS'
         shell: bash
         run: |
           export CODEX_HOME="$RUNNER_TEMP/codexzero-home"
-          sh package/scripts/install.sh package
-          sh package/scripts/install.sh package
+          sh package/scripts/install.sh package command-output
+          sh package/scripts/install.sh package full-lean
+          test "$("$CODEX_HOME/bin/codex-zero" mode)" = "full-lean"
           "$CODEX_HOME/bin/codex-zero" monitor --stop
       - name: Archive Windows package
         if: runner.os == 'Windows'

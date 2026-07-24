@@ -8,6 +8,14 @@ codex-zero stock
 
 This launches the existing stock `codex` command. No files need to move.
 
+## Keep output optimization but restore existing prompts
+
+```sh
+codex-zero mode command-output
+```
+
+New CodexZero tasks keep the command-output optimizations and stop applying the bundled lean prompt. Switch back with `codex-zero mode full-lean`.
+
 ## Disable individual optimizations
 
 Edit `~/.codex/codexzero.config.toml`:

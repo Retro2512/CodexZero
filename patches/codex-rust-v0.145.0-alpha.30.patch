@@ -1285,7 +1285,7 @@ diff --git a/codex-rs/cli/src/main.rs b/codex-rs/cli/src/main.rs
 index 04d59c24abf40dcac432b9370a77f99fb8d2de46..6bd6591e8af5c20e7bbc482eba35b2d1d2972b28 100644
 --- a/codex-rs/cli/src/main.rs
 +++ b/codex-rs/cli/src/main.rs
-@@ -973,6 +973,12 @@ async fn cli_main(
+@@ -973,6 +973,13 @@ async fn cli_main(
          subcommand,
      } = MultitoolCli::parse();
  
@@ -1293,21 +1293,25 @@ index 04d59c24abf40dcac432b9370a77f99fb8d2de46..6bd6591e8af5c20e7bbc482eba35b2d1
 +        .raw_overrides
 +        .extend(codex_zero_runtime_overrides(
 +            std::env::var_os("CODEX_ZERO_RUNTIME_OVERRIDES").as_deref(),
++            std::env::var_os("CODEX_ZERO_INSTRUCTIONS_FILE").as_deref(),
 +        ));
 +
      // Fold --enable/--disable into config overrides so they flow to all subcommands.
      let toggle_overrides = feature_toggles.to_overrides()?;
      root_config_overrides.raw_overrides.extend(toggle_overrides);
-@@ -1647,6 +1653,26 @@ async fn cli_main(
+@@ -1647,6 +1654,35 @@ async fn cli_main(
      Ok(())
  }
  
-+fn codex_zero_runtime_overrides(value: Option<&std::ffi::OsStr>) -> Vec<String> {
++fn codex_zero_runtime_overrides(
++    value: Option<&std::ffi::OsStr>,
++    instructions_file: Option<&std::ffi::OsStr>,
++) -> Vec<String> {
 +    if value != Some(std::ffi::OsStr::new("1")) {
 +        return Vec::new();
 +    }
 +
-+    [
++    let mut overrides = [
 +        "model_reasoning_effort=\"high\"",
 +        "model_reasoning_summary=\"none\"",
 +        "background_terminal_max_timeout=3600000",
@@ -1319,26 +1323,38 @@ index 04d59c24abf40dcac432b9370a77f99fb8d2de46..6bd6591e8af5c20e7bbc482eba35b2d1
 +    ]
 +    .into_iter()
 +    .map(str::to_owned)
-+    .collect()
++    .collect::<Vec<_>>();
++    if let Some(instructions_file) = instructions_file.filter(|value| !value.is_empty())
++        && let Ok(value) = serde_json::to_string(&instructions_file.to_string_lossy())
++    {
++        overrides.push(format!("model_instructions_file={value}"));
++    }
++    overrides
 +}
 +
  fn profile_v2_for_subcommand<'a>(
      interactive: &'a TuiCli,
      subcommand: &Subcommand,
-@@ -4074,6 +4100,29 @@ mod tests {
+@@ -4074,6 +4110,47 @@ mod tests {
          );
      }
  
 +    #[test]
 +    fn codex_zero_runtime_overrides_are_opt_in() {
-+        assert!(codex_zero_runtime_overrides(None).is_empty());
-+        assert!(codex_zero_runtime_overrides(Some(std::ffi::OsStr::new("0"))).is_empty());
++        assert!(codex_zero_runtime_overrides(None, None).is_empty());
++        assert!(
++            codex_zero_runtime_overrides(
++                Some(std::ffi::OsStr::new("0")),
++                Some(std::ffi::OsStr::new("/tmp/lean.md"))
++            )
++            .is_empty()
++        );
 +    }
 +
 +    #[test]
 +    fn codex_zero_runtime_overrides_enable_every_guarded_feature() {
 +        assert_eq!(
-+            codex_zero_runtime_overrides(Some(std::ffi::OsStr::new("1"))),
++            codex_zero_runtime_overrides(Some(std::ffi::OsStr::new("1")), None),
 +            vec![
 +                "model_reasoning_effort=\"high\"",
 +                "model_reasoning_summary=\"none\"",
@@ -1349,6 +1365,18 @@ index 04d59c24abf40dcac432b9370a77f99fb8d2de46..6bd6591e8af5c20e7bbc482eba35b2d1
 +                "features.codex_zero_exact_duplicate_results=true",
 +                "features.codex_zero_event_driven_wait=true",
 +            ]
++        );
++    }
++
++    #[test]
++    fn codex_zero_runtime_overrides_include_optional_lean_prompt() {
++        let overrides = codex_zero_runtime_overrides(
++            Some(std::ffi::OsStr::new("1")),
++            Some(std::ffi::OsStr::new("/tmp/codex zero/lean.md")),
++        );
++        assert_eq!(
++            overrides.last().map(String::as_str),
++            Some("model_instructions_file=\"/tmp/codex zero/lean.md\"")
 +        );
 +    }
 +

@@ -60,13 +60,22 @@ The monitor watches the telemetry directory for changes and atomically writes an
 
 ### Desktop launcher
 
-`codex-zero desktop` starts the installed signed app with its supported `CODEX_CLI_PATH` override pointing at the side-by-side core. `CODEX_APP_SERVER_FORCE_CLI=1` prevents an existing daemon from bypassing that path. A custom runtime environment switch injects the same default-off feature overrides used by the CLI launcher. The command refuses to launch while an existing Desktop process is active because a single-instance handoff would keep the old process environment.
+`codex-zero desktop` starts the installed signed app with its supported `CODEX_CLI_PATH` override pointing at the side-by-side core. `CODEX_APP_SERVER_FORCE_CLI=1` prevents an existing daemon from bypassing that path. A custom runtime environment switch injects the same default-off feature overrides used by the CLI launcher. In full-lean mode it also passes the installed prompt path through `CODEX_ZERO_INSTRUCTIONS_FILE`. The command refuses to launch while an existing Desktop process is active because a single-instance handoff would keep the old process environment.
+
+### Prompt mode
+
+The installer records either `command-output` or `full-lean` in `~/.codex/codexzero/install.json`. New installs default to `full-lean`.
+
+- `command-output` activates only the patched result pipeline.
+- `full-lean` adds a per-launch `model_instructions_file` override.
+
+The bundled prompt is copied under the CodexZero installation. User, global, and project instruction files are neither edited nor replaced. `codex-zero mode` changes the recorded choice for new CodexZero tasks.
 
 ## Responsibility boundaries
 
 | Layer | Responsibility |
 |---|---|
-| Core prompt | Goals, scope, authorization, preservation, verification, honest reporting |
+| Optional lean prompt | Goals, scope, authorization, preservation, verification, concise progress updates, honest reporting |
 | Codex harness | Tool execution, context, feature flags, exact selection, telemetry |
 | Artifact store | Byte-identical raw evidence |
 | Wrapper | Side-by-side launch, environment defaults, monitor, stock fallback |

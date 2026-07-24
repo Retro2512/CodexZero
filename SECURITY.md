@@ -4,7 +4,7 @@
 
 - Raw output is stored before any compact form can be selected.
 - Artifact identity uses SHA-256 and existing objects are verified before reuse.
-- Only lossless, explicitly supported transforms are allowed.
+- Model-facing transforms are limited to explicitly supported reversible encodings and presentation-only ANSI cleanup; the raw artifact remains stored.
 - Exact token counts decide selection; equal or larger candidates fall back.
 - Duplicate references require output identity, source-state identity, and an active original item.
 - Side-effecting and remote commands are excluded from duplicate reuse.

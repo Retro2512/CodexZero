@@ -1,3 +1,9 @@
+[CmdletBinding()]
+param(
+    [ValidateSet('ask', 'command-output', 'full-lean')]
+    [string]$Mode = 'ask'
+)
+
 $ErrorActionPreference = 'Stop'
 $repo = 'Retro2512/CodexZero'
 $release = Invoke-RestMethod -Headers @{ 'User-Agent' = 'CodexZero installer' } `
@@ -18,4 +24,4 @@ $expected = ((Get-Content -Raw -LiteralPath $checksumFile).Trim() -split '\s+')[
 $actual = (Get-FileHash -Algorithm SHA256 -LiteralPath $archive).Hash.ToLowerInvariant()
 if ($actual -ne $expected) { throw 'CodexZero package checksum verification failed.' }
 Expand-Archive -LiteralPath $archive -DestinationPath $temp
-& (Join-Path $temp 'scripts\install.ps1') -PackageRoot $temp
+& (Join-Path $temp 'scripts\install.ps1') -PackageRoot $temp -Mode $Mode

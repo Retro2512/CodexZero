@@ -1,3 +1,51 @@
+const number = new Intl.NumberFormat("en-US");
+const compactNumber = new Intl.NumberFormat("en-US", {
+  notation: "compact",
+  maximumFractionDigits: 2,
+});
+
+const dailyResults = document.querySelector("#daily-results");
+const dailyResultsOutput = document.querySelector("#daily-results-output");
+const eligible = document.querySelector("#eligible");
+const eligibleOutput = document.querySelector("#eligible-output");
+const promptRequests = document.querySelector("#prompt-requests");
+const promptRequestsOutput = document.querySelector("#prompt-requests-output");
+const beforeWeekValue = document.querySelector("#before-week-value");
+const afterWeekValue = document.querySelector("#after-week-value");
+const combinedSavedValue = document.querySelector("#combined-saved-value");
+const combinedPercentValue = document.querySelector("#combined-percent-value");
+const capacityValue = document.querySelector("#capacity-value");
+const capacityPercentValue = document.querySelector("#capacity-percent-value");
+const promptBeforePerRequest = 3552;
+const promptAfterPerRequest = 738;
+
+function updateProjection() {
+  const requestsPerDay = Number(promptRequests.value);
+  const toolTokensPerDay = Number(dailyResults.value);
+  const toolReduction = Number(eligible.value) / 100;
+  const beforeWeek = (requestsPerDay * promptBeforePerRequest * 7) + (toolTokensPerDay * 7);
+  const afterWeek = (requestsPerDay * promptAfterPerRequest * 7) + (toolTokensPerDay * (1 - toolReduction) * 7);
+  const savedWeek = beforeWeek - afterWeek;
+  const reductionPercent = beforeWeek === 0 ? 0 : (savedWeek / beforeWeek) * 100;
+  const capacity = afterWeek === 0 ? 0 : beforeWeek / afterWeek;
+  const capacityIncrease = Math.max(0, (capacity - 1) * 100);
+
+  promptRequestsOutput.value = number.format(requestsPerDay);
+  dailyResultsOutput.value = number.format(toolTokensPerDay);
+  eligibleOutput.value = `${eligible.value}%`;
+  beforeWeekValue.textContent = compactNumber.format(Math.round(beforeWeek));
+  afterWeekValue.textContent = compactNumber.format(Math.round(afterWeek));
+  combinedSavedValue.textContent = compactNumber.format(Math.round(savedWeek));
+  combinedPercentValue.textContent = `${Math.round(reductionPercent)}%`;
+  capacityValue.textContent = `${capacity.toFixed(1)}×`;
+  capacityPercentValue.textContent = `+${Math.round(capacityIncrease)}%`;
+}
+
+dailyResults.addEventListener("input", updateProjection);
+eligible.addEventListener("input", updateProjection);
+promptRequests.addEventListener("input", updateProjection);
+updateProjection();
+
 const tabs = [...document.querySelectorAll('[role="tab"]')];
 for (const tab of tabs) {
   tab.addEventListener("click", () => {

@@ -1,0 +1,73 @@
+{
+  "schema": "codex-zero-prompt-benchmark-v1",
+  "tokenizer": "o200k_base",
+  "bundled_prompt": {
+    "id": "codex-core-lean-v1",
+    "path": "codex-core-lean-v1.md",
+    "tokens": 738,
+    "bytes": 4065,
+    "sha256": "662cd8a870cc720068cba44982a0d27d73ddb18dcedb0fe623c0300917185952",
+    "keeps_concise_intermediary_updates": true
+  },
+  "references": [
+    {
+      "id": "gpt-5.6-sol-instructions-snapshot-2026-07-24",
+      "scope": "model_instructions",
+      "model": "gpt-5.6-sol",
+      "baseline_tokens": 3552,
+      "lean_tokens": 738,
+      "tokens_removed_per_model_request": 2814,
+      "reduction_percent": 79.2,
+      "baseline_sha256": "cbefa6b0bede0e332d957fca70ccacf9f12f4c0ecdf81b819e5cbe1a3b16e265",
+      "measured_on": "2026-07-24"
+    },
+    {
+      "id": "gpt-5.5-hotfix-instructions-2026-07-05",
+      "scope": "model_instructions",
+      "model": "gpt-5.5",
+      "baseline_tokens": 4069,
+      "lean_tokens": 738,
+      "tokens_removed_per_model_request": 3331,
+      "reduction_percent": 81.9,
+      "measured_on": "2026-07-24"
+    },
+    {
+      "id": "historical-combined-lineage-2026-07-22",
+      "scope": "model_plus_global_instructions",
+      "baseline_tokens": 5099,
+      "lean_tokens": 1004,
+      "tokens_removed_per_model_request": 4095,
+      "reduction_percent": 80.3,
+      "measured_on": "2026-07-24",
+      "note": "Lineage comparison only. CodexZero does not replace the user's global AGENTS.md."
+    }
+  ],
+  "prior_refactor_result": {
+    "measured_on": "2026-07-22",
+    "model_instructions": {
+      "baseline_tokens": 4069,
+      "lean_tokens": 680,
+      "tokens_removed": 3389,
+      "reduction_percent": 83.3
+    },
+    "global_instructions": {
+      "baseline_tokens": 1030,
+      "lean_tokens": 266,
+      "tokens_removed": 764,
+      "reduction_percent": 74.2
+    },
+    "combined": {
+      "baseline_tokens": 5099,
+      "lean_tokens": 946,
+      "tokens_removed": 4153,
+      "reduction_percent": 81.4
+    },
+    "note": "Historical result before concise intermediary updates were restored to the bundled model prompt."
+  },
+  "notes": [
+    "Prompt figures are exact tokenizer comparisons against dated snapshots, not production telemetry.",
+    "The active installer changes only model_instructions_file in full-lean mode and preserves global and project instructions.",
+    "Prompt and tool-result reductions are reported separately because they measure different payload surfaces.",
+    "Provider caching and plan accounting can change the practical effect; no request-limit conversion is claimed."
+  ]
+}

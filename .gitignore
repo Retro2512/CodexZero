@@ -3,10 +3,10 @@ Thumbs.db
 desktop.ini
 /work/
 /private-artifacts/
+/reports/local-verification.json
+/reports/metadata-block-manifest.json
+/reports/past-usage-summary.json
 /target/
 *.tmp
 __pycache__/
 *.pyc
-/reports/local-verification.json
-/reports/metadata-block-manifest.json
-/reports/past-usage-summary.json
