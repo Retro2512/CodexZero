@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.4
+
+- Fixed Windows in-place upgrades while the savings monitor is running.
+- The installer now stops the recorded CodexZero monitor, waits for its process
+  to release the bundled runtime, and starts the monitor again after upgrade.
+- Release builds now exercise fresh installation and in-place upgrade on
+  Windows, macOS Intel, and macOS Apple silicon before publishing.
+
 ## 0.1.3
 
 - Added the default-off event-driven wait guard for empty background-process polls.

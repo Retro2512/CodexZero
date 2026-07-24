@@ -10,6 +10,8 @@ $installRoot = Join-Path $codexHome 'codexzero'
 $timestamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $backupRoot = Join-Path $codexHome "backups\codexzero-install-$timestamp"
 $sourceRoot = (Resolve-Path -LiteralPath $PackageRoot).Path
+$existingShim = Join-Path $codexHome 'bin\codex-zero.cmd'
+$monitorPidPath = Join-Path $installRoot 'monitor.pid'
 $sourceCore = Join-Path $sourceRoot 'dist\windows-x64\codex-zero-core.exe'
 if (-not (Test-Path -LiteralPath $sourceCore)) {
     $sourceCore = Join-Path $sourceRoot 'work\codex-0.145.0-alpha.30\codex-rs\target\debug\codex.exe'
@@ -24,6 +26,30 @@ $nodeCommand = if (Test-Path -LiteralPath $bundledNode) {
     (Get-Command node).Source
 } else {
     throw 'Node.js 20 or newer is required when installing from a source checkout.'
+}
+
+# Windows cannot replace the bundled Node executable while the previous
+# savings monitor is using it. Stop only CodexZero's recorded monitor, then
+# wait for that process to release the file before updating the installation.
+$previousMonitorPid = $null
+if (Test-Path -LiteralPath $monitorPidPath) {
+    $parsedPid = 0
+    if ([int]::TryParse((Get-Content -Raw -LiteralPath $monitorPidPath).Trim(), [ref]$parsedPid)) {
+        $previousMonitorPid = $parsedPid
+    }
+}
+if ($previousMonitorPid -and (Test-Path -LiteralPath $existingShim)) {
+    & $existingShim monitor --stop
+    if ($LASTEXITCODE -ne 0) {
+        throw 'The existing CodexZero savings monitor could not be stopped.'
+    }
+    $stopDeadline = [DateTime]::UtcNow.AddSeconds(15)
+    while (Get-Process -Id $previousMonitorPid -ErrorAction SilentlyContinue) {
+        if ([DateTime]::UtcNow -ge $stopDeadline) {
+            throw 'The existing CodexZero savings monitor did not stop within 15 seconds.'
+        }
+        Start-Sleep -Milliseconds 100
+    }
 }
 
 New-Item -ItemType Directory -Force -Path $backupRoot | Out-Null

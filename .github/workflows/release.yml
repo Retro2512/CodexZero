@@ -6,7 +6,7 @@ on:
       version:
         description: CodexZero release version
         required: true
-        default: 0.1.0
+        default: 0.1.4
 
 permissions:
   contents: write
@@ -67,6 +67,22 @@ jobs:
           cp -R codex-zero/bin codex-zero/src codex-zero/config codex-zero/scripts package/
           cp codex-zero/package.json codex-zero/README.md codex-zero/LICENSE package/
           "package/runtime/$NODE_NAME" --version
+      - name: Verify Windows installer and in-place upgrade
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $env:CODEX_HOME = Join-Path $env:RUNNER_TEMP 'codexzero-home'
+          & package\scripts\install.ps1 -PackageRoot package
+          & package\scripts\install.ps1 -PackageRoot package
+          & "$env:CODEX_HOME\bin\codex-zero.cmd" monitor --stop
+      - name: Verify macOS installer and in-place upgrade
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          export CODEX_HOME="$RUNNER_TEMP/codexzero-home"
+          sh package/scripts/install.sh package
+          sh package/scripts/install.sh package
+          "$CODEX_HOME/bin/codex-zero" monitor --stop
       - name: Archive Windows package
         if: runner.os == 'Windows'
         shell: pwsh
