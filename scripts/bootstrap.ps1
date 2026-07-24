@@ -24,4 +24,10 @@ $expected = ((Get-Content -Raw -LiteralPath $checksumFile).Trim() -split '\s+')[
 $actual = (Get-FileHash -Algorithm SHA256 -LiteralPath $archive).Hash.ToLowerInvariant()
 if ($actual -ne $expected) { throw 'CodexZero package checksum verification failed.' }
 Expand-Archive -LiteralPath $archive -DestinationPath $temp
-& (Join-Path $temp 'scripts\install.ps1') -PackageRoot $temp -Mode $Mode
+$installer = Join-Path $temp 'scripts\install.ps1'
+$installerCommand = Get-Command -Name $installer
+if ($installerCommand.Parameters.ContainsKey('Mode')) {
+    & $installer -PackageRoot $temp -Mode $Mode
+} else {
+    & $installer -PackageRoot $temp
+}
