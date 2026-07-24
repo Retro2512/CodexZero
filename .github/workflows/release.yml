@@ -131,6 +131,7 @@ jobs:
         shell: pwsh
         run: |
           $env:CODEX_HOME = Join-Path $env:RUNNER_TEMP 'codexzero-home'
+          & package\scripts\install.ps1 -PackageRoot package
           & package\scripts\install.ps1 -PackageRoot package -Mode command-output
           & package\scripts\install.ps1 -PackageRoot package -Mode full-lean
           $mode = (& "$env:CODEX_HOME\bin\codex-zero.cmd" mode).Trim()

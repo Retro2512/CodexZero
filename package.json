@@ -1,6 +1,6 @@
 {
   "name": "codex-zero",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "description": "Strictly gated compact tool-result views for Codex.",
   "repository": "github:Retro2512/CodexZero",

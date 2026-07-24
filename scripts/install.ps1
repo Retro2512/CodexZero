@@ -12,7 +12,12 @@ if ($Mode -eq 'ask') {
     Write-Host 'Choose how CodexZero should optimize Codex:'
     Write-Host '  1. Full lean (default) - command output plus the bundled lean system prompt'
     Write-Host '  2. Command output only - preserve the existing Codex system prompt'
-    $selection = ([string](Read-Host 'Select 1 or 2 [1]')).Trim()
+    try {
+        $selection = Read-Host 'Select 1 or 2 [1]'
+    } catch [System.Management.Automation.PSInvalidOperationException] {
+        $selection = ''
+    }
+    $selection = if ($null -eq $selection) { '' } else { $selection.Trim() }
     $Mode = if ($selection -eq '2') { 'command-output' } else { 'full-lean' }
 }
 $codexHome = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $HOME '.codex' }

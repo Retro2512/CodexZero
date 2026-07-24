@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.1
+
+- Fixed the Windows bootstrap command when the latest package uses an older installer without mode selection.
+- Made unattended Windows installs choose full-lean mode instead of failing when no prompt input is available.
+
 ## 0.2.0
 
 - Added installer choice between command-output-only and full-lean modes.
