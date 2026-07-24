@@ -23,9 +23,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      - name: Prepare public site
+        shell: bash
+        run: |
+          mkdir -p _site/assets _site/reports
+          cp index.html styles.css app.js _site/
+          cp -R assets/. _site/assets/
+          cp reports/fixture-payload-report.json _site/reports/
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4

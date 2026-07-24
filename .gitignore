@@ -7,3 +7,6 @@ desktop.ini
 *.tmp
 __pycache__/
 *.pyc
+/reports/local-verification.json
+/reports/metadata-block-manifest.json
+/reports/past-usage-summary.json
