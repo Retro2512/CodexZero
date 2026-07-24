@@ -6,6 +6,8 @@ CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
 INSTALL_ROOT="$CODEX_HOME/codexzero"
 STAMP="$(date -u +%Y%m%d-%H%M%S)"
 BACKUP_ROOT="$CODEX_HOME/backups/codexzero-install-$STAMP"
+EXISTING_SHIM="$CODEX_HOME/bin/codex-zero"
+MONITOR_PID_PATH="$INSTALL_ROOT/monitor.pid"
 ARCH="$(uname -m)"
 case "$ARCH" in
   arm64|aarch64) PLATFORM="macos-arm64" ;;
@@ -26,6 +28,26 @@ elif command -v node >/dev/null 2>&1; then
 else
   echo "Node.js 20 or newer is required when installing from a source checkout." >&2
   exit 1
+fi
+
+# Replacing the bundled runtime while the savings monitor is using it can
+# terminate or corrupt the running process. Stop only CodexZero's recorded
+# monitor and wait for it to release the old runtime before upgrading.
+PREVIOUS_MONITOR_PID=""
+if [ -f "$MONITOR_PID_PATH" ]; then
+  PREVIOUS_MONITOR_PID="$(tr -cd '0-9' < "$MONITOR_PID_PATH")"
+fi
+if [ -n "$PREVIOUS_MONITOR_PID" ] && [ -x "$EXISTING_SHIM" ]; then
+  "$EXISTING_SHIM" monitor --stop
+  STOP_ATTEMPTS=0
+  while kill -0 "$PREVIOUS_MONITOR_PID" 2>/dev/null; do
+    if [ "$STOP_ATTEMPTS" -ge 150 ]; then
+      echo "The existing CodexZero savings monitor did not stop within 15 seconds." >&2
+      exit 1
+    fi
+    STOP_ATTEMPTS=$((STOP_ATTEMPTS + 1))
+    sleep 0.1
+  done
 fi
 
 mkdir -p "$BACKUP_ROOT" "$INSTALL_ROOT/app" "$INSTALL_ROOT/bin" "$CODEX_HOME/bin"

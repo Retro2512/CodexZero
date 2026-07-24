@@ -2,9 +2,9 @@
 
 ## 0.1.4
 
-- Fixed Windows in-place upgrades while the savings monitor is running.
-- The installer now stops the recorded CodexZero monitor, waits for its process
-  to release the bundled runtime, and starts the monitor again after upgrade.
+- Fixed Windows and macOS in-place upgrades while the savings monitor is running.
+- Installers now stop the recorded CodexZero monitor, wait for its process to
+  release the bundled runtime, and start the monitor again after upgrade.
 - Release builds now exercise fresh installation and in-place upgrade on
   Windows, macOS Intel, and macOS Apple silicon before publishing.
 

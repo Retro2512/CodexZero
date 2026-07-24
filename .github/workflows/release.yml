@@ -56,18 +56,20 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          mkdir reusable
           if [ "${{ runner.os }}" = "Windows" ]; then
             ARCHIVE="codex-zero-${{ matrix.asset }}.zip"
           else
             ARCHIVE="codex-zero-${{ matrix.asset }}.tar.gz"
           fi
           gh release download "v${{ inputs.reuse_core_release }}" \
-            --repo "${{ github.repository }}" --pattern "$ARCHIVE" --pattern "$ARCHIVE.sha256"
-          EXPECTED="$(awk '{print $1}' "$ARCHIVE.sha256")"
+            --repo "${{ github.repository }}" --dir reusable \
+            --pattern "$ARCHIVE" --pattern "$ARCHIVE.sha256"
+          EXPECTED="$(awk '{print $1}' "reusable/$ARCHIVE.sha256")"
           if command -v sha256sum >/dev/null 2>&1; then
-            ACTUAL="$(sha256sum "$ARCHIVE" | awk '{print $1}')"
+            ACTUAL="$(sha256sum "reusable/$ARCHIVE" | awk '{print $1}')"
           else
-            ACTUAL="$(shasum -a 256 "$ARCHIVE" | awk '{print $1}')"
+            ACTUAL="$(shasum -a 256 "reusable/$ARCHIVE" | awk '{print $1}')"
           fi
           test "$ACTUAL" = "$EXPECTED"
       - name: Extract reusable Windows package
@@ -75,13 +77,13 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Path base | Out-Null
-          Expand-Archive -LiteralPath "codex-zero-${{ matrix.asset }}.zip" -DestinationPath base
+          Expand-Archive -LiteralPath "reusable\codex-zero-${{ matrix.asset }}.zip" -DestinationPath base
       - name: Extract reusable macOS package
         if: inputs.reuse_core_release != '' && runner.os == 'macOS'
         shell: bash
         run: |
           mkdir base
-          tar -C base -xzf "codex-zero-${{ matrix.asset }}.tar.gz"
+          tar -C base -xzf "reusable/codex-zero-${{ matrix.asset }}.tar.gz"
       - name: Clone pinned Codex source
         if: inputs.reuse_core_release == ''
         shell: bash
