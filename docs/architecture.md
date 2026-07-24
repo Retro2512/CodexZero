@@ -6,13 +6,22 @@ CodexZero keeps policy, enforcement, and evidence separate.
 
 ### Patched core
 
-The Rust patch adds three default-off feature flags:
+The Rust patch adds four default-off feature flags:
 
 - `codex_zero_compact_exec_output`
 - `codex_zero_lossless_terminal_codec`
 - `codex_zero_exact_duplicate_results`
+- `codex_zero_event_driven_wait`
 
 The UI-facing command result remains unchanged. A separate model-facing candidate is created, counted with the exact production tokenizer, and selected only when smaller.
+
+### Event-driven process waiting
+
+An empty `write_stdin` call remains inside the harness until the process emits
+output, exits, is cancelled, enters a permission pause, receives user
+interruption, or reaches the configured hard timeout. Requested polling
+intervals no longer create empty model-visible results. The UI keeps its local
+running state, and non-empty stdin keeps stock timing behavior.
 
 ### Artifact store
 

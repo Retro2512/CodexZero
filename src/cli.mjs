@@ -210,6 +210,8 @@ async function launch(args, stock) {
         "features.codex_zero_lossless_terminal_codec=true",
         "-c",
         "features.codex_zero_exact_duplicate_results=true",
+        "-c",
+        "features.codex_zero_event_driven_wait=true",
         ...args
       ];
   const child = spawn(executable, launchArguments, {

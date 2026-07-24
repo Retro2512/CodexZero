@@ -17,6 +17,7 @@ Edit `~/.codex/codexzero.config.toml`:
 codex_zero_compact_exec_output = false
 codex_zero_lossless_terminal_codec = false
 codex_zero_exact_duplicate_results = false
+codex_zero_event_driven_wait = false
 ```
 
 Every selector also has an internal stock-payload fallback.

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3
+
+- Added the default-off event-driven wait guard for empty background-process polls.
+- Empty polls now stay local until output, exit, cancellation, interruption, permission pause, or the hard timeout.
+- Added Windows unit and unified-exec integration coverage for silent-process waiting.
+
 ## 0.1.2
 
 - Regenerated the Bazel dependency lock for the added codec crate.

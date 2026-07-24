@@ -1282,7 +1282,7 @@ index fda1df940f65cfaf57c705688837ed18ed02fde5..10d4b1c09529011876b9fc0daf139f96
  similar = "2.7.0"
  socket2 = "0.6.1"
 diff --git a/codex-rs/cli/src/main.rs b/codex-rs/cli/src/main.rs
-index 04d59c24abf40dcac432b9370a77f99fb8d2de46..1c71e5f94da32023d96c67b81e1b19be2e0d9e25 100644
+index 04d59c24abf40dcac432b9370a77f99fb8d2de46..6bd6591e8af5c20e7bbc482eba35b2d1d2972b28 100644
 --- a/codex-rs/cli/src/main.rs
 +++ b/codex-rs/cli/src/main.rs
 @@ -973,6 +973,12 @@ async fn cli_main(
@@ -1298,7 +1298,7 @@ index 04d59c24abf40dcac432b9370a77f99fb8d2de46..1c71e5f94da32023d96c67b81e1b19be
      // Fold --enable/--disable into config overrides so they flow to all subcommands.
      let toggle_overrides = feature_toggles.to_overrides()?;
      root_config_overrides.raw_overrides.extend(toggle_overrides);
-@@ -1647,6 +1653,25 @@ async fn cli_main(
+@@ -1647,6 +1653,26 @@ async fn cli_main(
      Ok(())
  }
  
@@ -1315,6 +1315,7 @@ index 04d59c24abf40dcac432b9370a77f99fb8d2de46..1c71e5f94da32023d96c67b81e1b19be
 +        "features.codex_zero_compact_exec_output=true",
 +        "features.codex_zero_lossless_terminal_codec=true",
 +        "features.codex_zero_exact_duplicate_results=true",
++        "features.codex_zero_event_driven_wait=true",
 +    ]
 +    .into_iter()
 +    .map(str::to_owned)
@@ -1324,7 +1325,7 @@ index 04d59c24abf40dcac432b9370a77f99fb8d2de46..1c71e5f94da32023d96c67b81e1b19be
  fn profile_v2_for_subcommand<'a>(
      interactive: &'a TuiCli,
      subcommand: &Subcommand,
-@@ -4074,6 +4099,28 @@ mod tests {
+@@ -4074,6 +4100,29 @@ mod tests {
          );
      }
  
@@ -1346,6 +1347,7 @@ index 04d59c24abf40dcac432b9370a77f99fb8d2de46..1c71e5f94da32023d96c67b81e1b19be
 +                "features.codex_zero_compact_exec_output=true",
 +                "features.codex_zero_lossless_terminal_codec=true",
 +                "features.codex_zero_exact_duplicate_results=true",
++                "features.codex_zero_event_driven_wait=true",
 +            ]
 +        );
 +    }
@@ -1825,14 +1827,17 @@ index de9d118e9cc7ad6914748033880c6ac70f64a3bc..d3955647ddae576dc1ef13313db303ff
  codex-file-system = { workspace = true }
  codex-login = { workspace = true }
 diff --git a/codex-rs/core/config.schema.json b/codex-rs/core/config.schema.json
-index 0666e065c6c85816419d5b3ad6a69e61d95d648f..0df449da450bc024f1b9a2c04874a19e187cdb10 100644
+index 0666e065c6c85816419d5b3ad6a69e61d95d648f..ab8cc9b2971395835e14ea7903aa273542ec855c 100644
 --- a/codex-rs/core/config.schema.json
 +++ b/codex-rs/core/config.schema.json
-@@ -476,6 +476,15 @@
+@@ -476,6 +476,18 @@
              "codex_hooks": {
                "type": "boolean"
              },
 +            "codex_zero_compact_exec_output": {
++              "type": "boolean"
++            },
++            "codex_zero_event_driven_wait": {
 +              "type": "boolean"
 +            },
 +            "codex_zero_exact_duplicate_results": {
@@ -1844,11 +1849,14 @@ index 0666e065c6c85816419d5b3ad6a69e61d95d648f..0df449da450bc024f1b9a2c04874a19e
              "collab": {
                "type": "boolean"
              },
-@@ -4870,6 +4879,15 @@
+@@ -4870,6 +4882,18 @@
          "codex_hooks": {
            "type": "boolean"
          },
 +        "codex_zero_compact_exec_output": {
++          "type": "boolean"
++        },
++        "codex_zero_event_driven_wait": {
 +          "type": "boolean"
 +        },
 +        "codex_zero_exact_duplicate_results": {
@@ -2559,7 +2567,7 @@ index fc48f1ed81a88ae0a1e2babada28140538cddbdb..0bee33ecba89d0aaee88b3f9b289bc18
              }
              Err(err) => Err(FunctionCallError::RespondToModel(format!(
 diff --git a/codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs b/codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs
-index 7c949481885cecfcdf336911350df21cc3607a4d..18f82f3db02e044493e75bb123ed899cc1be865d 100644
+index 7c949481885cecfcdf336911350df21cc3607a4d..cab6f41564078362e2945a1e2a56e8959e54388f 100644
 --- a/codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs
 +++ b/codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs
 @@ -8,6 +8,7 @@ use crate::tools::registry::PostToolUsePayload;
@@ -2570,7 +2578,7 @@ index 7c949481885cecfcdf336911350df21cc3607a4d..18f82f3db02e044493e75bb123ed899c
  use codex_protocol::protocol::EventMsg;
  use codex_protocol::protocol::TerminalInteractionEvent;
  use codex_tools::ToolName;
-@@ -80,6 +81,14 @@ impl WriteStdinHandler {
+@@ -80,6 +81,18 @@ impl WriteStdinHandler {
                  yield_time_ms: args.yield_time_ms,
                  max_output_tokens: args.max_output_tokens,
                  truncation_policy: turn.model_info.truncation_policy.into(),
@@ -2582,6 +2590,10 @@ index 7c949481885cecfcdf336911350df21cc3607a4d..18f82f3db02e044493e75bb123ed899c
 +                    .config
 +                    .features
 +                    .enabled(Feature::CodexZeroLosslessTerminalCodec),
++                event_driven_wait: turn
++                    .config
++                    .features
++                    .enabled(Feature::CodexZeroEventDrivenWait),
              })
              .await
              .map_err(|err| {
@@ -3025,23 +3037,41 @@ index b918035ccc877acbebaf0579ff16ba757a6aa020..38d379d5f196b01950ac69d2f869aea3
          ResponseInputItem::FunctionCallOutput { call_id, output } => {
              assert_eq!(call_id, "call-extension");
 diff --git a/codex-rs/core/src/unified_exec/mod.rs b/codex-rs/core/src/unified_exec/mod.rs
-index 21c1a17f0965193982a50524fd129562ddad9d70..40eedfc310d2c2240ca073abb32e52a4a9a143be 100644
+index 21c1a17f0965193982a50524fd129562ddad9d70..ba1af86296c8764f785441e9c503975e4412e686 100644
 --- a/codex-rs/core/src/unified_exec/mod.rs
 +++ b/codex-rs/core/src/unified_exec/mod.rs
-@@ -116,6 +116,8 @@ pub(crate) struct WriteStdinRequest<'a> {
+@@ -116,6 +116,9 @@ pub(crate) struct WriteStdinRequest<'a> {
      pub yield_time_ms: u64,
      pub max_output_tokens: Option<usize>,
      pub truncation_policy: TruncationPolicy,
 +    pub compact_model_payload: bool,
 +    pub lossless_terminal_codec: bool,
++    pub event_driven_wait: bool,
  }
  
  #[derive(Default)]
 diff --git a/codex-rs/core/src/unified_exec/mod_tests.rs b/codex-rs/core/src/unified_exec/mod_tests.rs
-index 7e3cf8083aa81d5ce18600a3b824107d4f3e7b23..71ab48a862512798d63c67bd272a82e56d427c41 100644
+index 7e3cf8083aa81d5ce18600a3b824107d4f3e7b23..f4bbaba35650197b1d859241c027d2d50d34efc0 100644
 --- a/codex-rs/core/src/unified_exec/mod_tests.rs
 +++ b/codex-rs/core/src/unified_exec/mod_tests.rs
-@@ -205,6 +205,8 @@ async fn exec_command_with_tty(
+@@ -10,6 +10,7 @@ use crate::session::turn_context::TurnContext;
+ use crate::tools::context::ExecCommandToolOutput;
+ use crate::unified_exec::WriteStdinRequest;
+ use crate::unified_exec::process::OutputHandles;
++use crate::unified_exec::process_manager::OutputCollectionMode;
+ use codex_exec_server::ExecProcess;
+ use codex_exec_server::ExecProcessEventReceiver;
+ use codex_exec_server::ExecProcessFuture;
+@@ -162,7 +163,7 @@ async fn exec_command_with_tty(
+         &output_closed_notify,
+         &cancellation_token,
+         Some(session.subscribe_elicitation_pause_state()),
+-        deadline,
++        OutputCollectionMode::UntilDeadline(deadline),
+     )
+     .await;
+     let wall_time = Instant::now().saturating_duration_since(started_at);
+@@ -205,6 +206,8 @@ async fn exec_command_with_tty(
          original_token_count: Some(original_token_count),
          output_omitted_bytes,
          hook_command: Some(cmd.to_string()),
@@ -3050,20 +3080,52 @@ index 7e3cf8083aa81d5ce18600a3b824107d4f3e7b23..71ab48a862512798d63c67bd272a82e5
      })
  }
  
-@@ -321,6 +323,8 @@ async fn write_stdin(
+@@ -321,6 +324,9 @@ async fn write_stdin(
              yield_time_ms,
              max_output_tokens: None,
              truncation_policy: TruncationPolicy::Tokens(10_000),
 +            compact_model_payload: false,
 +            lossless_terminal_codec: false,
++            event_driven_wait: false,
          })
          .await
  }
+@@ -875,7 +881,7 @@ async fn unified_exec_uses_remote_exec_server_when_configured() -> anyhow::Resul
+         &output_closed_notify,
+         &cancellation_token,
+         /*pause_state*/ None,
+-        Instant::now() + Duration::from_millis(2_500),
++        OutputCollectionMode::UntilDeadline(Instant::now() + Duration::from_millis(2_500)),
+     )
+     .await
+     .to_bytes_with_omission_marker();
 diff --git a/codex-rs/core/src/unified_exec/process_manager.rs b/codex-rs/core/src/unified_exec/process_manager.rs
-index f828ace22597e82c9b1f43486d105131572ff0a6..b3a5786224ba6e6d38a09c2d190c501cc4a01147 100644
+index f828ace22597e82c9b1f43486d105131572ff0a6..cffb7eed9ad0d97dc04e1c959e2f8c9a68a90877 100644
 --- a/codex-rs/core/src/unified_exec/process_manager.rs
 +++ b/codex-rs/core/src/unified_exec/process_manager.rs
-@@ -648,6 +648,16 @@ impl UnifiedExecProcessManager {
+@@ -84,6 +84,12 @@ const NETWORK_ACCESS_DENIED_MESSAGE: &str =
+ const LATE_NETWORK_DENIAL_GRACE_PERIOD: Duration = Duration::from_millis(100);
+ const INTERRUPT: &str = "\u{3}";
+ 
++#[derive(Clone, Copy)]
++pub(super) enum OutputCollectionMode {
++    UntilDeadline(Instant),
++    UntilOutput(Instant),
++}
++
+ /// Test-only override for deterministic unified exec process IDs.
+ ///
+ /// In production builds this value should remain at its default (`false`) and
+@@ -495,7 +501,7 @@ impl UnifiedExecProcessManager {
+             &output_closed_notify,
+             &cancellation_token,
+             Some(context.session.subscribe_elicitation_pause_state()),
+-            deadline,
++            OutputCollectionMode::UntilDeadline(deadline),
+         )
+         .await;
+         let wall_time = Instant::now().saturating_duration_since(start);
+@@ -648,6 +654,16 @@ impl UnifiedExecProcessManager {
              original_token_count: Some(original_token_count),
              output_omitted_bytes,
              hook_command: Some(request.hook_command.clone()),
@@ -3080,7 +3142,40 @@ index f828ace22597e82c9b1f43486d105131572ff0a6..b3a5786224ba6e6d38a09c2d190c501c
          };
  
          Ok(response)
-@@ -823,6 +833,8 @@ impl UnifiedExecProcessManager {
+@@ -725,11 +741,15 @@ impl UnifiedExecProcessManager {
+         let yield_time_ms = {
+             // Empty polls use configurable background timeout bounds. Non-empty
+             // writes keep a fixed max cap so interactive stdin remains responsive.
+-            let time_ms = request.yield_time_ms.max(MIN_YIELD_TIME_MS);
+-            if request.input.is_empty() {
+-                time_ms.clamp(MIN_EMPTY_YIELD_TIME_MS, self.max_write_stdin_yield_time_ms)
++            if request.input.is_empty() && request.event_driven_wait {
++                self.max_write_stdin_yield_time_ms
+             } else {
+-                time_ms.min(MAX_YIELD_TIME_MS)
++                let time_ms = request.yield_time_ms.max(MIN_YIELD_TIME_MS);
++                if request.input.is_empty() {
++                    time_ms.clamp(MIN_EMPTY_YIELD_TIME_MS, self.max_write_stdin_yield_time_ms)
++                } else {
++                    time_ms.min(MAX_YIELD_TIME_MS)
++                }
+             }
+         };
+         let start = Instant::now();
+@@ -741,7 +761,11 @@ impl UnifiedExecProcessManager {
+             &output_closed_notify,
+             &cancellation_token,
+             pause_state,
+-            deadline,
++            if request.input.is_empty() && request.event_driven_wait {
++                OutputCollectionMode::UntilOutput(deadline)
++            } else {
++                OutputCollectionMode::UntilDeadline(deadline)
++            },
+         )
+         .await;
+         let wall_time = Instant::now().saturating_duration_since(start);
+@@ -823,6 +847,8 @@ impl UnifiedExecProcessManager {
              original_token_count: Some(original_token_count),
              output_omitted_bytes,
              hook_command: Some(hook_command),
@@ -3089,6 +3184,91 @@ index f828ace22597e82c9b1f43486d105131572ff0a6..b3a5786224ba6e6d38a09c2d190c501c
          };
  
          Ok(response)
+@@ -1250,9 +1276,13 @@ impl UnifiedExecProcessManager {
+         output_closed_notify: &Arc<Notify>,
+         cancellation_token: &CancellationToken,
+         mut pause_state: Option<watch::Receiver<bool>>,
+-        mut deadline: Instant,
++        mode: OutputCollectionMode,
+     ) -> HeadTailBuffer {
+         const POST_EXIT_CLOSE_WAIT_CAP: Duration = Duration::from_millis(50);
++        let (mut deadline, return_on_output) = match mode {
++            OutputCollectionMode::UntilDeadline(deadline) => (deadline, false),
++            OutputCollectionMode::UntilOutput(deadline) => (deadline, true),
++        };
+ 
+         let mut collected = HeadTailBuffer::default();
+         let mut exit_signal_received = cancellation_token.is_cancelled();
+@@ -1324,6 +1354,9 @@ impl UnifiedExecProcessManager {
+ 
+             collected.push_buffer(drained_output);
+ 
++            if return_on_output {
++                break;
++            }
+             exit_signal_received |= cancellation_token.is_cancelled();
+             if Instant::now() >= deadline {
+                 break;
+diff --git a/codex-rs/core/src/unified_exec/process_manager_tests.rs b/codex-rs/core/src/unified_exec/process_manager_tests.rs
+index 9163862ae7a21fab69cefd0331a8460c44aa65a4..ed13b58798c45ed15298cd253de76822b0889446 100644
+--- a/codex-rs/core/src/unified_exec/process_manager_tests.rs
++++ b/codex-rs/core/src/unified_exec/process_manager_tests.rs
+@@ -249,7 +249,7 @@ async fn output_collection_stays_bounded_across_repeated_drains() {
+         &output_closed_notify,
+         &cancellation_token,
+         /*pause_state*/ None,
+-        Instant::now() + Duration::from_secs(5),
++        OutputCollectionMode::UntilDeadline(Instant::now() + Duration::from_secs(5)),
+     );
+     let produce = async {
+         for byte in [b'a', b'b', b'c'] {
+@@ -286,6 +286,37 @@ async fn output_collection_stays_bounded_across_repeated_drains() {
+     assert_eq!(collected, expected);
+ }
+ 
++#[tokio::test]
++async fn output_collection_can_return_on_first_output() {
++    let output_buffer = Arc::new(tokio::sync::Mutex::new(HeadTailBuffer::default()));
++    let output_notify = Arc::new(Notify::new());
++    let output_closed = Arc::new(AtomicBool::new(false));
++    let output_closed_notify = Arc::new(Notify::new());
++    let cancellation_token = CancellationToken::new();
++
++    let collect = UnifiedExecProcessManager::collect_output_until_deadline(
++        &output_buffer,
++        &output_notify,
++        &output_closed,
++        &output_closed_notify,
++        &cancellation_token,
++        /*pause_state*/ None,
++        OutputCollectionMode::UntilOutput(Instant::now() + Duration::from_secs(1)),
++    );
++    let produce = async {
++        tokio::time::sleep(Duration::from_millis(25)).await;
++        output_buffer.lock().await.push_chunk(b"ready".to_vec());
++        output_notify.notify_one();
++        tokio::time::sleep(Duration::from_millis(75)).await;
++        output_buffer.lock().await.push_chunk(b"later".to_vec());
++        output_notify.notify_one();
++    };
++
++    let (collected, ()) = tokio::join!(collect, produce);
++    assert_eq!(collected.to_bytes(), b"ready");
++    assert_eq!(output_buffer.lock().await.to_bytes(), b"later");
++}
++
+ #[tokio::test]
+ async fn output_collection_preserves_omissions_from_drained_buffer() {
+     let mut buffered_output = HeadTailBuffer::default();
+@@ -314,7 +345,7 @@ async fn output_collection_preserves_omissions_from_drained_buffer() {
+         &output_closed_notify,
+         &cancellation_token,
+         /*pause_state*/ None,
+-        Instant::now() + Duration::from_secs(1),
++        OutputCollectionMode::UntilDeadline(Instant::now() + Duration::from_secs(1)),
+     )
+     .await;
+ 
 diff --git a/codex-rs/core/tests/suite/client.rs b/codex-rs/core/tests/suite/client.rs
 index c73ccf4932ad89e016ef4177fcddc21827f6ee5f..0b5564ebc705be87922e92b296f4d6686d4a13e3 100644
 --- a/codex-rs/core/tests/suite/client.rs
@@ -3117,10 +3297,110 @@ index c73ccf4932ad89e016ef4177fcddc21827f6ee5f..0b5564ebc705be87922e92b296f4d668
      pretty_assertions::assert_eq!(request_body.get("stream_options"), None);
  
 diff --git a/codex-rs/core/tests/suite/unified_exec.rs b/codex-rs/core/tests/suite/unified_exec.rs
-index 62b10cf424245eeaa34db1d2d5f855b8ddd60411..9f60d22313704ba2ba8ebad2240920368bfbaf00 100644
+index 62b10cf424245eeaa34db1d2d5f855b8ddd60411..416d76342a6b3c2eba834880d80b8e4c83ce3eaf 100644
 --- a/codex-rs/core/tests/suite/unified_exec.rs
 +++ b/codex-rs/core/tests/suite/unified_exec.rs
-@@ -1497,6 +1497,168 @@ async fn exec_command_reports_chunk_and_exit_metadata() -> Result<()> {
+@@ -1403,6 +1403,99 @@ async fn unified_exec_emits_one_begin_and_one_end_event() -> Result<()> {
+     Ok(())
+ }
+ 
++#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
++async fn event_driven_empty_poll_waits_past_requested_interval_until_silent_exit() -> Result<()> {
++    skip_if_no_network!(Ok(()));
++    skip_if_sandbox!(Ok(()));
++
++    let server = start_mock_server().await;
++    let mut builder = test_codex().with_config(|config| {
++        config
++            .features
++            .enable(Feature::UnifiedExec)
++            .expect("test config should allow feature update");
++        config
++            .features
++            .enable(Feature::CodexZeroEventDrivenWait)
++            .expect("test config should allow feature update");
++        config.background_terminal_max_timeout = 10_000;
++    });
++    let test = builder.build_with_auto_env(&server).await?;
++
++    let open_call_id = "event-driven-silent-open";
++    let poll_call_id = "event-driven-silent-poll";
++    let silent_command = if cfg!(windows) {
++        "Start-Sleep -Seconds 6"
++    } else {
++        "sleep 6"
++    };
++    let open_args = json!({
++        "cmd": silent_command,
++        "yield_time_ms": 100,
++    });
++    let poll_args = json!({
++        "chars": "",
++        "session_id": 1000,
++        "yield_time_ms": 100,
++    });
++    let responses = vec![
++        sse(vec![
++            ev_response_created("event-driven-resp-1"),
++            ev_function_call(
++                open_call_id,
++                "exec_command",
++                &serde_json::to_string(&open_args)?,
++            ),
++            ev_completed("event-driven-resp-1"),
++        ]),
++        sse(vec![
++            ev_response_created("event-driven-resp-2"),
++            ev_function_call(
++                poll_call_id,
++                "write_stdin",
++                &serde_json::to_string(&poll_args)?,
++            ),
++            ev_completed("event-driven-resp-2"),
++        ]),
++        sse(vec![
++            ev_response_created("event-driven-resp-3"),
++            ev_assistant_message("event-driven-msg", "done"),
++            ev_completed("event-driven-resp-3"),
++        ]),
++    ];
++    let request_log = mount_sse_sequence(&server, responses).await;
++
++    let started_at = std::time::Instant::now();
++    submit_unified_exec_turn(
++        &test,
++        "wait for the silent process",
++        PermissionProfile::Disabled,
++    )
++    .await?;
++    wait_for_event_with_timeout(
++        &test.codex,
++        |event| matches!(event, EventMsg::TurnComplete(_)),
++        Duration::from_secs(20),
++    )
++    .await;
++
++    assert!(
++        started_at.elapsed() >= Duration::from_millis(5_500),
++        "empty poll returned at its five-second compatibility floor instead of waiting for exit"
++    );
++    let requests = request_log.requests();
++    assert_eq!(requests.len(), 3);
++    let poll_output = requests
++        .iter()
++        .find_map(|request| request.function_call_output_text(poll_call_id))
++        .expect("poll output");
++    let parsed = parse_unified_exec_output(&poll_output)?;
++    assert_eq!(parsed.process_id, None);
++    assert_eq!(parsed.exit_code, Some(0));
++
++    Ok(())
++}
++
+ #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+ async fn exec_command_reports_chunk_and_exit_metadata() -> Result<()> {
+     // TODO(anp): Remove after unified-exec fixtures use target-native commands.
+@@ -1497,6 +1590,168 @@ async fn exec_command_reports_chunk_and_exit_metadata() -> Result<()> {
      Ok(())
  }
  
@@ -3290,10 +3570,10 @@ index 62b10cf424245eeaa34db1d2d5f855b8ddd60411..9f60d22313704ba2ba8ebad224092036
  async fn exec_command_clamps_model_requested_max_output_tokens_to_policy() -> Result<()> {
      // TODO(anp): Remove after unified-exec fixtures use target-native commands.
 diff --git a/codex-rs/features/src/lib.rs b/codex-rs/features/src/lib.rs
-index 6c9b9fb64644a011a64a91142d2df537af50f4ff..2a167458cef92785718d0d188ef95dd771e000c9 100644
+index 6c9b9fb64644a011a64a91142d2df537af50f4ff..1f6ba058e57d8e5e28143a2c8910ac2af58f151a 100644
 --- a/codex-rs/features/src/lib.rs
 +++ b/codex-rs/features/src/lib.rs
-@@ -98,6 +98,12 @@ pub enum Feature {
+@@ -98,6 +98,14 @@ pub enum Feature {
      CodeModeOnly,
      /// Use the single unified PTY-backed exec tool.
      UnifiedExec,
@@ -3303,10 +3583,12 @@ index 6c9b9fb64644a011a64a91142d2df537af50f4ff..2a167458cef92785718d0d188ef95dd7
 +    CodexZeroLosslessTerminalCodec,
 +    /// Replace a proven unchanged duplicate tool result with a smaller active-context reference.
 +    CodexZeroExactDuplicateResults,
++    /// Keep empty background-process polls local until output, exit, cancellation, or hard timeout.
++    CodexZeroEventDrivenWait,
      /// Route shell tool execution through the zsh exec bridge.
      ShellZshFork,
      /// Allow unified exec to compose with the zsh exec bridge.
-@@ -824,6 +830,24 @@ pub const FEATURES: &[FeatureSpec] = &[
+@@ -824,6 +832,30 @@ pub const FEATURES: &[FeatureSpec] = &[
          stage: Stage::Stable,
          default_enabled: !cfg!(windows),
      },
@@ -3325,6 +3607,12 @@ index 6c9b9fb64644a011a64a91142d2df537af50f4ff..2a167458cef92785718d0d188ef95dd7
 +    FeatureSpec {
 +        id: Feature::CodexZeroExactDuplicateResults,
 +        key: "codex_zero_exact_duplicate_results",
++        stage: Stage::UnderDevelopment,
++        default_enabled: false,
++    },
++    FeatureSpec {
++        id: Feature::CodexZeroEventDrivenWait,
++        key: "codex_zero_event_driven_wait",
 +        stage: Stage::UnderDevelopment,
 +        default_enabled: false,
 +    },

@@ -7,3 +7,4 @@ unified_exec = true
 codex_zero_compact_exec_output = true
 codex_zero_lossless_terminal_codec = true
 codex_zero_exact_duplicate_results = true
+codex_zero_event_driven_wait = true
