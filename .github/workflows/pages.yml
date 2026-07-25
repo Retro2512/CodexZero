@@ -26,7 +26,10 @@ jobs:
       - name: Prepare public site
         shell: bash
         run: |
-          mkdir -p _site/assets _site/reports/deepswe-sol-high-10
+          mkdir -p \
+            _site/assets \
+            _site/reports/deepswe-sol-high-10 \
+            _site/reports/terminal-bench-2.1-mini
           cp index.html styles.css app.js _site/
           cp -R assets/. _site/assets/
           cp reports/fixture-payload-report.json _site/reports/
@@ -37,6 +40,15 @@ jobs:
             reports/deepswe-sol-high-10/task-metrics.csv \
             reports/deepswe-sol-high-10/provenance.json \
             _site/reports/deepswe-sol-high-10/
+          cp \
+            reports/terminal-bench-2.1-mini/README.md \
+            reports/terminal-bench-2.1-mini/summary.json \
+            reports/terminal-bench-2.1-mini/trials.json \
+            reports/terminal-bench-2.1-mini/attempts.json \
+            reports/terminal-bench-2.1-mini/preregistration.json \
+            reports/terminal-bench-2.1-mini/PREREGISTRATION.sha256 \
+            reports/terminal-bench-2.1-mini/run-manifest.json \
+            _site/reports/terminal-bench-2.1-mini/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
