@@ -9,6 +9,14 @@ import { runChecks } from "./run-checks.mjs";
 import { maybeSuggestStar } from "./star-prompt.mjs";
 
 const execFileAsync = promisify(execFile);
+const SAFE_MODE = "safe";
+const MAX_SAVE_MODE = "max-save";
+const MODE_ALIASES = new Map([
+  [SAFE_MODE, SAFE_MODE],
+  [MAX_SAVE_MODE, MAX_SAVE_MODE],
+  ["command-output", SAFE_MODE],
+  ["full-lean", MAX_SAVE_MODE]
+]);
 
 export async function main(args) {
   const [command = "help", ...rest] = args;
@@ -132,14 +140,14 @@ async function doctor() {
   const customBinary = customBinaryPath();
   const desktopBinary = await resolveDesktopBinary();
   const mode = await selectedInstallMode();
-  const leanPrompt = mode === "full-lean" ? bundledLeanPromptPath() : null;
+  const leanPrompt = mode === MAX_SAVE_MODE ? bundledLeanPromptPath() : null;
   const checks = [
     ["Codex home", home, await exists(home)],
     ["Config", path.join(home, "config.toml"), await exists(path.join(home, "config.toml"))],
     [
       "Optimization mode",
       mode,
-      mode === "command-output" || (mode === "full-lean" && await exists(leanPrompt))
+      mode === SAFE_MODE || (mode === MAX_SAVE_MODE && await exists(leanPrompt))
     ],
     ["Custom binary", customBinary, await exists(customBinary)],
     ["Artifact store", artifactRoot(), true],
@@ -214,26 +222,7 @@ async function launch(args, stock) {
   const leanPrompt = stock ? null : await activeLeanPromptPath();
   const launchArguments = stock
     ? args
-    : [
-        "--profile",
-        "codexzero",
-        ...(leanPrompt
-          ? ["-c", `model_instructions_file=${JSON.stringify(leanPrompt)}`]
-          : []),
-        "-c",
-        "background_terminal_max_timeout=3600000",
-        "-c",
-        "features.unified_exec=true",
-        "-c",
-        "features.codex_zero_compact_exec_output=true",
-        "-c",
-        "features.codex_zero_lossless_terminal_codec=true",
-        "-c",
-        "features.codex_zero_exact_duplicate_results=true",
-        "-c",
-        "features.codex_zero_event_driven_wait=true",
-        ...args
-      ];
+    : buildLaunchArguments(args, leanPrompt);
   const child = spawn(executable, launchArguments, {
     stdio: "inherit",
     env: {
@@ -256,31 +245,56 @@ async function launch(args, stock) {
   process.exitCode = exitCode;
 }
 
+export function buildLaunchArguments(args, leanPrompt) {
+  return [
+    "--profile",
+    "codexzero",
+    ...(leanPrompt
+      ? ["-c", `model_instructions_file=${JSON.stringify(leanPrompt)}`]
+      : []),
+    "-c",
+    "background_terminal_max_timeout=3600000",
+    "-c",
+    "features.unified_exec=true",
+    "-c",
+    "features.codex_zero_compact_exec_output=true",
+    "-c",
+    "features.codex_zero_lossless_terminal_codec=true",
+    "-c",
+    "features.codex_zero_exact_duplicate_results=true",
+    "-c",
+    "features.codex_zero_event_driven_wait=true",
+    ...args
+  ];
+}
+
 async function promptMode(args) {
-  const requested = args[0];
+  const requestedInput = args[0];
   const current = await selectedInstallMode();
-  if (!requested) {
+  if (!requestedInput) {
     console.log(current);
     return;
   }
-  if (!["command-output", "full-lean"].includes(requested)) {
-    throw new Error('Mode must be "command-output" or "full-lean".');
+  const requested = normalizeMode(requestedInput);
+  if (!requested) {
+    throw new Error('Mode must be "safe" or "max-save".');
   }
   const metadataPath = path.join(codexZeroHome(), "install.json");
   const metadata = await readInstallMetadata();
   if (!metadata) {
     throw new Error("CodexZero installation metadata is missing. Re-run the installer.");
   }
-  if (requested === "full-lean") {
+  if (requested === MAX_SAVE_MODE) {
     const promptPath = bundledLeanPromptPath();
     if (!(await exists(promptPath))) {
-      throw new Error(`Bundled lean prompt is missing at ${promptPath}. Re-run the installer.`);
+      throw new Error(`Max Savings prompt is missing at ${promptPath}. Re-run the installer.`);
     }
   }
   const updated = {
     ...metadata,
+    schema: "codex-zero-install-v3",
     mode: requested,
-    lean_prompt: requested === "full-lean" ? bundledLeanPromptPath() : null,
+    lean_prompt: requested === MAX_SAVE_MODE ? bundledLeanPromptPath() : null,
     mode_updated_at: new Date().toISOString()
   };
   const temporary = `${metadataPath}.${process.pid}.tmp`;
@@ -301,7 +315,11 @@ async function readInstallMetadata() {
 }
 
 async function selectedInstallMode() {
-  return (await readInstallMetadata())?.mode || "command-output";
+  return normalizeMode((await readInstallMetadata())?.mode) || SAFE_MODE;
+}
+
+function normalizeMode(value) {
+  return typeof value === "string" ? MODE_ALIASES.get(value) || null : null;
 }
 
 function bundledLeanPromptPath() {
@@ -309,17 +327,17 @@ function bundledLeanPromptPath() {
 }
 
 async function activeLeanPromptPath() {
-  if (await selectedInstallMode() !== "full-lean") return null;
+  if (await selectedInstallMode() !== MAX_SAVE_MODE) return null;
   const promptPath = bundledLeanPromptPath();
   if (!(await exists(promptPath))) {
-    throw new Error(`Bundled lean prompt is missing at ${promptPath}. Re-run the installer.`);
+    throw new Error(`Max Savings prompt is missing at ${promptPath}. Re-run the installer.`);
   }
   return promptPath;
 }
 
 async function promptBenchmarkSummary() {
   const mode = await selectedInstallMode();
-  if (mode !== "full-lean") {
+  if (mode !== MAX_SAVE_MODE) {
     return {
       mode,
       active: false,
@@ -486,7 +504,7 @@ function help() {
     "codex-zero desktop --check         Verify the Desktop executable path",
     "codex-zero stock [codex arguments]  Run the untouched stock CLI",
     "codex-zero savings [--json]         Show measured savings",
-    "codex-zero mode [MODE]              Show or select command-output|full-lean",
+    "codex-zero mode [MODE]              Show or select safe|max-save",
     "codex-zero monitor --start|--stop   Manage the savings monitor service",
     "codex-zero monitor --status         Show monitor service status",
     "codex-zero run-checks <profile>     Run a deterministic local check batch",

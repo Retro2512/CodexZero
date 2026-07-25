@@ -5,7 +5,7 @@ Status as of 2026-07-24. “Pending” items must pass before release claims ful
 | # | Criterion | Status | Evidence |
 |---:|---|---|---|
 | 1 | Selected model and reasoning effort unchanged | Pass | Custom profile and outgoing-body regression test |
-| 2 | Prompt behavior matches the selected install mode | Pass | Command-output preserves existing model instructions; full-lean applies only the bundled per-launch override; global/project files are unchanged |
+| 2 | Prompt behavior matches the selected install mode | Pass | Safe preserves existing model instructions; Max Savings applies only the bundled per-launch override; global/project files are unchanged |
 | 3 | Capability inventories unchanged | Pass | No inventory-changing patch |
 | 4 | Raw artifacts byte-identical | Pass | SHA-256 artifact tests |
 | 5 | Every selected payload is smaller | Pass | Exact `o200k_base` strict-selection tests |

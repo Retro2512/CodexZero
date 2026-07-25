@@ -1,0 +1,27 @@
+diff --git a/src/pier/agents/installed/codex.py b/src/pier/agents/installed/codex.py
+--- a/src/pier/agents/installed/codex.py
++++ b/src/pier/agents/installed/codex.py
+@@ -1118,6 +1118,23 @@ class Codex(BaseInstalledAgent):
+                 )
+             codex_executable = remote_custom_binary
+ 
++        if model_instructions := self._get_env(
++            "CODEX_MODEL_INSTRUCTIONS_PATH"
++        ):
++            model_instructions_path = Path(model_instructions)
++            if not model_instructions_path.is_file():
++                raise ValueError(
++                    "CODEX_MODEL_INSTRUCTIONS_PATH points to non-existent "
++                    f"file: {model_instructions}"
++                )
++            remote_instructions = "/tmp/codex-model-instructions.md"
++            await environment.upload_file(
++                model_instructions_path, remote_instructions
++            )
++            await self.exec_as_root(
++                environment, command=f"chmod 0644 {remote_instructions}"
++            )
++
+         if auth_json_path:
+             self.logger.debug("Codex auth: using auth.json from %s", auth_json_path)
+             await environment.upload_file(auth_json_path, remote_auth_path)

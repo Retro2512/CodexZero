@@ -60,16 +60,16 @@ The monitor watches the telemetry directory for changes and atomically writes an
 
 ### Desktop launcher
 
-`codex-zero desktop` starts the installed signed app with its supported `CODEX_CLI_PATH` override pointing at the side-by-side core. `CODEX_APP_SERVER_FORCE_CLI=1` prevents an existing daemon from bypassing that path. A custom runtime environment switch injects the same default-off feature overrides used by the CLI launcher. In full-lean mode it also passes the installed prompt path through `CODEX_ZERO_INSTRUCTIONS_FILE`. The command refuses to launch while an existing Desktop process is active because a single-instance handoff would keep the old process environment.
+`codex-zero desktop` starts the installed signed app with its supported `CODEX_CLI_PATH` override pointing at the side-by-side core. `CODEX_APP_SERVER_FORCE_CLI=1` prevents an existing daemon from bypassing that path. A custom runtime environment switch injects the same default-off feature overrides used by the CLI launcher. In Max Savings mode it also passes the installed prompt path through `CODEX_ZERO_INSTRUCTIONS_FILE`. The command refuses to launch while an existing Desktop process is active because a single-instance handoff would keep the old process environment.
 
-### Prompt mode
+### Optimization modes
 
-The installer records either `command-output` or `full-lean` in `~/.codex/codexzero/install.json`. New installs default to `full-lean`.
+The installer records either `safe` or `max-save` in `~/.codex/codexzero/install.json`. New installs default to `safe`.
 
-- `command-output` activates only the patched result pipeline.
-- `full-lean` adds a per-launch `model_instructions_file` override.
+- `safe` is the default. It preserves Codex model instructions and activates only the patched result pipeline.
+- `max-save` is opt-in. It adds a per-launch `model_instructions_file` override.
 
-The bundled prompt is copied under the CodexZero installation. User, global, and project instruction files are neither edited nor replaced. `codex-zero mode` changes the recorded choice for new CodexZero tasks.
+The bundled prompt is copied under the CodexZero installation. User, global, and project instruction files are neither edited nor replaced. Existing `command-output` metadata normalizes to `safe`; existing `full-lean` metadata normalizes to `max-save`. `codex-zero mode` changes the recorded choice for new CodexZero tasks.
 
 ## Responsibility boundaries
 

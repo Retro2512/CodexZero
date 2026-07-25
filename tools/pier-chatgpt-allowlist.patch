@@ -1,0 +1,19 @@
+diff --git a/src/pier/agents/installed/codex.py b/src/pier/agents/installed/codex.py
+index 03483d4..959b17d 100644
+--- a/src/pier/agents/installed/codex.py
++++ b/src/pier/agents/installed/codex.py
+@@ -112,8 +112,13 @@ class Codex(BaseInstalledAgent):
+             except toml.TomlDecodeError:
+                 parsed = {}
+             urls.extend(collect_url_values(parsed))
+ 
+-        return allowlist_from_urls(urls, default_domains=["api.openai.com"])
++        return allowlist_from_urls(
++            urls,
++            default_domains=[
++                "api.openai.com", "chatgpt.com", "ab.chatgpt.com"
++            ],
++        )
+ 
+     def install_spec(self) -> AgentInstallSpec:
+         version_spec = f"@{self._version}" if self._version else "@latest"

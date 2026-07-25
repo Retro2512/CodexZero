@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('ask', 'command-output', 'full-lean')]
+    [ValidateSet('ask', 'safe', 'max-save', 'command-output', 'full-lean')]
     [string]$Mode = 'ask'
 )
 
@@ -27,7 +27,16 @@ Expand-Archive -LiteralPath $archive -DestinationPath $temp
 $installer = Join-Path $temp 'scripts\install.ps1'
 $installerCommand = Get-Command -Name $installer
 if ($installerCommand.Parameters.ContainsKey('Mode')) {
-    & $installer -PackageRoot $temp -Mode $Mode
+    $installerText = Get-Content -Raw -LiteralPath $installer
+    $resolvedMode = $Mode
+    if ($installerText -notmatch "'max-save'") {
+        $resolvedMode = switch ($Mode) {
+            'max-save' { 'full-lean' }
+            'full-lean' { 'full-lean' }
+            default { 'command-output' }
+        }
+    }
+    & $installer -PackageRoot $temp -Mode $resolvedMode
 } else {
     & $installer -PackageRoot $temp
 }

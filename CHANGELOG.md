@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0
+
+- Replaced the old mode names with **Safe** and **Max Savings**.
+- Made Safe the default for interactive, unattended, CLI, and Desktop launches.
+- Safe preserves Codex model instructions and applies only the guarded tool-result pipeline.
+- Max Savings adds the bundled 738-token model prompt.
+- Existing `command-output` and `full-lean` installations migrate to Safe and Max Savings respectively.
+- Updated installers, release checks, documentation, benchmark labels, and the public site.
+
 ## 0.2.1
 
 - Fixed the Windows bootstrap command when the latest package uses an older installer without mode selection.

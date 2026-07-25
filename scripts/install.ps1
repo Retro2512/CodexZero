@@ -2,23 +2,25 @@
 param(
     [string]$PackageRoot = (Split-Path -Parent $PSScriptRoot),
     [switch]$SkipMonitor,
-    [ValidateSet('ask', 'command-output', 'full-lean')]
+    [ValidateSet('ask', 'safe', 'max-save', 'command-output', 'full-lean')]
     [string]$Mode = 'ask'
 )
 
 $ErrorActionPreference = 'Stop'
+if ($Mode -eq 'command-output') { $Mode = 'safe' }
+if ($Mode -eq 'full-lean') { $Mode = 'max-save' }
 if ($Mode -eq 'ask') {
     Write-Host ''
-    Write-Host 'Choose how CodexZero should optimize Codex:'
-    Write-Host '  1. Full lean (default) - command output plus the bundled lean system prompt'
-    Write-Host '  2. Command output only - preserve the existing Codex system prompt'
+    Write-Host 'Choose a CodexZero mode:'
+    Write-Host '  1. Safe (default) - preserve Codex model instructions and compact eligible tool output'
+    Write-Host '  2. Max Savings - also use the bundled 738-token model prompt'
     try {
         $selection = Read-Host 'Select 1 or 2 [1]'
     } catch [System.Management.Automation.PSInvalidOperationException] {
         $selection = ''
     }
     $selection = if ($null -eq $selection) { '' } else { $selection.Trim() }
-    $Mode = if ($selection -eq '2') { 'command-output' } else { 'full-lean' }
+    $Mode = if ($selection -eq '2') { 'max-save' } else { 'safe' }
 }
 $codexHome = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $HOME '.codex' }
 $installRoot = Join-Path $codexHome 'codexzero'
@@ -27,8 +29,8 @@ $backupRoot = Join-Path $codexHome "backups\codexzero-install-$timestamp"
 $sourceRoot = (Resolve-Path -LiteralPath $PackageRoot).Path
 $sourcePromptRoot = Join-Path $sourceRoot 'prompts'
 $sourceLeanPrompt = Join-Path $sourcePromptRoot 'codex-core-lean-v1.md'
-if ($Mode -eq 'full-lean' -and -not (Test-Path -LiteralPath $sourceLeanPrompt)) {
-    throw 'The full-lean prompt is missing from this package.'
+if ($Mode -eq 'max-save' -and -not (Test-Path -LiteralPath $sourceLeanPrompt)) {
+    throw 'The Max Savings prompt is missing from this package.'
 }
 $existingShim = Join-Path $codexHome 'bin\codex-zero.cmd'
 $monitorPidPath = Join-Path $installRoot 'monitor.pid'
@@ -118,12 +120,12 @@ if ($parts -notcontains $shimRoot) {
 $env:Path = "$shimRoot;$env:Path"
 
 @{
-    schema = 'codex-zero-install-v2'
+    schema = 'codex-zero-install-v3'
     installed_at = (Get-Date).ToUniversalTime().ToString('o')
     package_root = $sourceRoot
     backup_root = $backupRoot
     mode = $Mode
-    lean_prompt = if ($Mode -eq 'full-lean') {
+    lean_prompt = if ($Mode -eq 'max-save') {
         Join-Path $promptRoot 'codex-core-lean-v1.md'
     } else {
         $null
@@ -143,7 +145,7 @@ Write-Host ''
 Write-Host 'CodexZero installed.'
 Write-Host "Mode: $Mode"
 Write-Host 'Run: codex-zero run'
-Write-Host 'Change mode: codex-zero mode command-output|full-lean'
+Write-Host 'Change mode: codex-zero mode safe|max-save'
 Write-Host 'Desktop: codex-zero desktop'
 Write-Host 'Savings: codex-zero savings'
 Write-Host 'Stock rollback: codex-zero stock'

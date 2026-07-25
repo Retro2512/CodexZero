@@ -5,10 +5,10 @@ documents what changed, why it changed, how the repository works, what was
 measured, what was deliberately left unchanged, and which verification items
 remain open.
 
-Documented implementation: **CodexZero 0.2.0 (unreleased)**
+Documented implementation: **CodexZero 0.3.0**
 Repository: <https://github.com/Retro2512/CodexZero>
 Project site: <https://retro2512.github.io/CodexZero/>
-Latest published release: <https://github.com/Retro2512/CodexZero/releases/tag/v0.1.4>
+Latest published release: <https://github.com/Retro2512/CodexZero/releases/latest>
 License: MIT
 
 ---
@@ -62,10 +62,10 @@ The implementation began against:
 | Patched upstream tag | `rust-v0.145.0-alpha.30` |
 | Patched upstream commit | `3b61fac9` |
 
-The command-output optimizer was required to preserve all of the following:
+The Safe optimizer was required to preserve all of the following:
 
 - the selected model and reasoning effort;
-- prompt content in command-output mode, and output verbosity in both modes;
+- prompt content in Safe mode, and output verbosity in both modes;
 - compaction thresholds and subagent policy;
 - tools, MCP servers, apps, skills, plugins, permissions, and review support;
 - every raw tool-output byte;
@@ -300,14 +300,14 @@ that value.
 Cache reads and writes remain separate from guaranteed token savings because
 cache accounting and plan-limit effects are service-dependent.
 
-### Phase 10 — Optional lean prompt
+### Phase 10 — Safe and Max Savings modes
 
 The one-click installer now asks for one of two modes:
 
-- `full-lean` is the default and adds the bundled 738-token model-instructions file;
-- `command-output` preserves the existing model instructions.
+- `safe` is the default and preserves the existing model instructions;
+- `max-save` is opt-in and adds the bundled 738-token model-instructions file.
 
-The full-lean prompt retains user authority, scope and authorization
+The Max Savings prompt retains user authority, scope and authorization
 boundaries, worktree protection, injection boundaries, proportional
 verification, honest reporting, and concise intermediary updates. It removes
 repeated behavior prose, permanent taste rules, response-shape rituals, fixed
@@ -423,7 +423,7 @@ Default paths are relative to `CODEX_HOME`, normally `~/.codex`:
 | `CODEX_STOCK_BINARY` | Override stock CLI path |
 | `CODEX_ZERO_DESKTOP_BINARY` | Override Desktop executable path |
 | `CODEX_ZERO_RUNTIME_OVERRIDES=1` | Enable guarded core flags for Desktop runtime |
-| `CODEX_ZERO_INSTRUCTIONS_FILE` | Optional full-lean prompt path for the side-by-side core |
+| `CODEX_ZERO_INSTRUCTIONS_FILE` | Optional Max Savings prompt path for the side-by-side core |
 | `CODEX_ZERO_INSTALL_MODE` | Non-interactive installer mode selection |
 | `CODEX_CLI_PATH` | Supported Desktop side-by-side CLI override |
 | `CODEX_APP_SERVER_FORCE_CLI=1` | Force a fresh CLI-backed Desktop app server |
@@ -436,7 +436,7 @@ Default paths are relative to `CODEX_HOME`, normally `~/.codex`:
 
 Runs the patched side-by-side CLI with the CodexZero profile, unified exec, all
 four feature flags, local artifact paths, telemetry path, and plain-terminal
-environment. In full-lean mode it also passes the installed
+environment. In Max Savings mode it also passes the installed
 `model_instructions_file`. Additional arguments are forwarded to Codex.
 
 Examples:
@@ -487,10 +487,10 @@ Reads the local telemetry stream and reports cumulative measured values:
 
 `--json` emits the `codex-zero-savings-v1` structure.
 
-In full-lean mode the command includes a separate `promptBenchmark` block based
+In Max Savings mode the command includes a separate `promptBenchmark` block based
 on the dated prompt manifest. It is not added to observed tool-result totals.
 
-### `codex-zero mode [command-output|full-lean]`
+### `codex-zero mode [safe|max-save]`
 
 Shows or changes the optimization mode recorded in
 `~/.codex/codexzero/install.json`. Changes apply to new CodexZero tasks and do
@@ -549,8 +549,8 @@ The bootstrap:
 5. extracts to a temporary directory;
 6. runs `scripts/install.ps1`.
 
-The installer asks whether to use full-lean or command-output-only mode, with
-full lean selected by default, then
+The installer asks whether to use Safe or Max Savings mode, with
+Safe selected by default, then
 stops an existing recorded monitor, waits up to 15 seconds for
 its process to release the bundled Node runtime, backs up the prior
 installation and configs, installs the release, adds `~/.codex/bin` to the
@@ -568,7 +568,7 @@ The bootstrap selects the Intel or ARM archive from `uname -m`, downloads the
 archive and checksum, verifies with SHA-256, extracts it, and runs
 `scripts/install.sh`.
 
-The installer asks for the same choice with full lean as the default, then stops and waits for an existing monitor before replacing the
+The installer asks for the same choice with Safe as the default, then stops and waits for an existing monitor before replacing the
 runtime, creates a backup, installs the platform core and bundled Node runtime,
 creates `~/.codex/bin/codex-zero`, validates the core, runs `doctor`, and
 restarts the monitor.
@@ -708,7 +708,7 @@ scenarios into guaranteed requests, dollars, rate-limit capacity, or latency.
 
 ### Prompt choice and capability preservation
 
-Command-output mode preserves the existing model prompt. Full-lean mode applies
+Safe mode preserves the existing model prompt. Max Savings mode applies
 the bundled model prompt only to CodexZero launches. Both modes preserve:
 
 - global and project instructions;
@@ -725,7 +725,7 @@ the bundled model prompt only to CodexZero launches. Both modes preserve:
 - review capability.
 
 Regression tests verify that mode switching changes installation metadata only,
-that full lean requires the installed bundled prompt, and that user instruction
+that Max Savings requires the installed bundled prompt, and that user instruction
 files are not written.
 
 ### Public versus private evidence
@@ -823,9 +823,23 @@ installers, packaging, and release verification rather than core behavior.
 - added fresh-install and active-monitor upgrade gates to all release targets;
 - added verified reuse of unchanged release cores.
 
+#### 0.3.0
+
+- renamed the active choices Safe and Max Savings;
+- made Safe the default and preserved stock model instructions in that mode;
+- kept Max Savings as an explicit opt-in to the bundled 738-token prompt;
+- normalized legacy installation metadata without modifying user instructions;
+- updated benchmark labels, harnesses, release gates, documentation, and site.
+
+#### 0.2.1
+
+- kept the raw one-line Windows bootstrap compatible with the then-current
+  release installer;
+- selected the then-default full-lean mode when input was unattended.
+
 #### 0.2.0
 
-- added command-output-only and full-lean installer choices;
+- added the original command-output and full-lean installer choices;
 - added the 738-token lean prompt with concise intermediary updates;
 - added per-launch CLI and Desktop prompt overrides;
 - added mode switching, prompt measurement, reports, tests, and site estimates.
@@ -859,9 +873,12 @@ installers, packaging, and release verification rather than core behavior.
 
 - exact SHA-256 artifact storage;
 - deterministic batched-check equivalence;
-- savings aggregation with separated cache effects.
+- savings aggregation with separated cache effects;
+- Safe and Max Savings switching;
+- legacy mode-name normalization;
+- missing-prompt and unattended-installer behavior.
 
-Current result: **3 passed, 0 failed**.
+Current result: **12 passed, 0 failed**.
 
 ### Focused Rust verification
 
@@ -1165,10 +1182,10 @@ Verified stock fallback version during implementation: `codex-cli 0.139.0`.
 ### Disable only the lean prompt
 
 ```sh
-codex-zero mode command-output
+codex-zero mode safe
 ```
 
-This keeps command-output optimization and restores the existing model
+This keeps Safe tool-output optimization and restores the existing model
 instructions for new CodexZero tasks.
 
 ### Disable individual optimizations

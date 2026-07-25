@@ -21,7 +21,7 @@ CodexZero installs side by side, so it can coexist with other stock Codex versio
 
 Core patches are version-specific. A future upstream version needs a reviewed patch refresh and regression run before CodexZero claims binary compatibility. Unsupported stock versions still remain untouched and available through the fallback.
 
-The bundled lean prompt is benchmarked against dated model-instruction snapshots. A future model can have a different baseline and should be remeasured. Command-output mode does not depend on that prompt benchmark.
+The Max Savings prompt is benchmarked against dated model-instruction snapshots. A future model can have a different baseline and should be remeasured. Safe mode does not depend on that prompt benchmark.
 
 Machine-readable details live in [`config/compatibility.json`](../config/compatibility.json).
 
@@ -34,4 +34,4 @@ For binary optimizations:
 1. Quit Codex Desktop completely.
 2. Run `codex-zero desktop`.
 
-The launcher uses Desktop’s supported `CODEX_CLI_PATH` environment override and forces a fresh CLI-backed app server. In full-lean mode the side-by-side core receives the bundled `model_instructions_file`; command-output mode omits it. The signed Desktop executable remains unchanged. `codex-zero desktop --check` resolves the current installed executable without starting it.
+The launcher uses Desktop’s supported `CODEX_CLI_PATH` environment override and forces a fresh CLI-backed app server. In Max Savings mode the side-by-side core receives the bundled `model_instructions_file`; Safe mode omits it. Safe is the install default. The signed Desktop executable remains unchanged. `codex-zero desktop --check` resolves the current installed executable without starting it.

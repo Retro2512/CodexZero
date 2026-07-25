@@ -6,7 +6,7 @@ on:
       version:
         description: CodexZero release version
         required: true
-        default: 0.2.0
+        default: 0.3.0
       reuse_core_release:
         description: Reuse cores only when patches and runtime config match this release; leave blank to rebuild
         required: false
@@ -132,19 +132,19 @@ jobs:
         run: |
           $env:CODEX_HOME = Join-Path $env:RUNNER_TEMP 'codexzero-home'
           & package\scripts\install.ps1 -PackageRoot package
-          & package\scripts\install.ps1 -PackageRoot package -Mode command-output
-          & package\scripts\install.ps1 -PackageRoot package -Mode full-lean
+          & package\scripts\install.ps1 -PackageRoot package -Mode max-save
+          & package\scripts\install.ps1 -PackageRoot package -Mode safe
           $mode = (& "$env:CODEX_HOME\bin\codex-zero.cmd" mode).Trim()
-          if ($mode -ne 'full-lean') { throw "Expected full-lean mode, got $mode" }
+          if ($mode -ne 'safe') { throw "Expected safe mode, got $mode" }
           & "$env:CODEX_HOME\bin\codex-zero.cmd" monitor --stop
       - name: Verify macOS installer and in-place upgrade
         if: runner.os == 'macOS'
         shell: bash
         run: |
           export CODEX_HOME="$RUNNER_TEMP/codexzero-home"
-          sh package/scripts/install.sh package command-output
-          sh package/scripts/install.sh package full-lean
-          test "$("$CODEX_HOME/bin/codex-zero" mode)" = "full-lean"
+          sh package/scripts/install.sh package max-save
+          sh package/scripts/install.sh package safe
+          test "$("$CODEX_HOME/bin/codex-zero" mode)" = "safe"
           "$CODEX_HOME/bin/codex-zero" monitor --stop
       - name: Archive Windows package
         if: runner.os == 'Windows'

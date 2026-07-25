@@ -8,13 +8,13 @@ codex-zero stock
 
 This launches the existing stock `codex` command. No files need to move.
 
-## Keep output optimization but restore existing prompts
+## Use Safe mode
 
 ```sh
-codex-zero mode command-output
+codex-zero mode safe
 ```
 
-New CodexZero tasks keep the command-output optimizations and stop applying the bundled lean prompt. Switch back with `codex-zero mode full-lean`.
+New CodexZero tasks keep the guarded tool-result pipeline and stop applying the bundled lean prompt. Switch to the opt-in prompt with `codex-zero mode max-save`.
 
 ## Disable individual optimizations
 

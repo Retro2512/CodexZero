@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
-  <title id="title">CodexZero weekly prompt-token comparison</title>
-  <desc id="desc">At 50 model requests per day, a dated model-prompt comparison falls from 1.24 million to 258 thousand tokens per week: 79 percent fewer and 381 percent more prompt capacity.</desc>
+  <title id="title">CodexZero Safe and Max Savings modes</title>
+  <desc id="desc">Safe keeps stock Codex model instructions. In a historical 10-task DeepSWE run, Max Savings used 4.75 percent fewer provider tokens than stock Codex. Strict resolution was 6 of 10 versus 8 of 10.</desc>
   <rect width="1200" height="630" fill="#f4f2e9"/>
   <rect width="1200" height="16" fill="#c9ff36"/>
 
@@ -8,27 +8,27 @@
   <path d="M73 69h22L84 81l11 12H73l11-12z" fill="#c9ff36"/>
   <rect x="98" y="69" width="8" height="24" fill="#ff7759"/>
   <text x="130" y="91" font-family="Arial, sans-serif" font-size="29" font-weight="700" fill="#171713">CodexZero</text>
-  <text x="1137" y="87" text-anchor="end" font-family="monospace" font-size="16" fill="#68675f">50 REQUESTS / DAY · 7 DAYS</text>
+  <text x="1137" y="87" text-anchor="end" font-family="monospace" font-size="16" fill="#68675f">SAFE DEFAULT · MAX SAVINGS MEASURED</text>
 
-  <text x="62" y="202" font-family="Arial, sans-serif" font-size="94" font-weight="800" letter-spacing="-6" fill="#171713">79% fewer</text>
-  <text x="62" y="254" font-family="Arial, sans-serif" font-size="31" font-weight="700" fill="#68675f">model-instruction tokens</text>
+  <text x="62" y="202" font-family="Arial, sans-serif" font-size="88" font-weight="800" letter-spacing="-6" fill="#171713">4.75% fewer</text>
+  <text x="62" y="254" font-family="Arial, sans-serif" font-size="31" font-weight="700" fill="#68675f">provider tokens vs stock Codex</text>
 
   <rect x="62" y="305" width="686" height="72" fill="#bba8ff"/>
-  <text x="86" y="350" font-family="monospace" font-size="17" fill="#171713">BEFORE</text>
-  <text x="719" y="354" text-anchor="end" font-family="Arial, sans-serif" font-size="38" font-weight="800" fill="#171713">1.24M / WEEK</text>
+  <text x="86" y="350" font-family="monospace" font-size="17" fill="#171713">CODEX</text>
+  <text x="719" y="354" text-anchor="end" font-family="Arial, sans-serif" font-size="38" font-weight="800" fill="#171713">67.55M</text>
 
-  <rect x="62" y="393" width="143" height="72" fill="#c9ff36"/>
-  <text x="86" y="438" font-family="monospace" font-size="17" fill="#171713">AFTER</text>
-  <text x="719" y="442" text-anchor="end" font-family="Arial, sans-serif" font-size="38" font-weight="800" fill="#171713">258K / WEEK</text>
-  <line x1="211" y1="429" x2="748" y2="429" stroke="#171713" stroke-width="2" stroke-dasharray="7 9"/>
+  <rect x="62" y="393" width="653" height="72" fill="#c9ff36"/>
+  <text x="86" y="438" font-family="monospace" font-size="17" fill="#171713">MAX SAVINGS</text>
+  <text x="719" y="442" text-anchor="end" font-family="Arial, sans-serif" font-size="38" font-weight="800" fill="#171713">64.34M</text>
+  <line x1="721" y1="429" x2="748" y2="429" stroke="#171713" stroke-width="2" stroke-dasharray="7 9"/>
 
   <rect x="791" y="150" width="347" height="315" fill="#171713"/>
-  <text x="822" y="194" font-family="monospace" font-size="15" fill="#bba8ff">SAME PROMPT-TOKEN BUDGET</text>
-  <text x="816" y="318" font-family="Arial, sans-serif" font-size="94" font-weight="800" letter-spacing="-6" fill="#c9ff36">+381%</text>
-  <text x="822" y="365" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#f4f2e9">more prompt capacity</text>
-  <text x="822" y="410" font-family="monospace" font-size="16" fill="#aaa99f">4.8× AS MANY REQUESTS*</text>
+  <text x="822" y="194" font-family="monospace" font-size="15" fill="#bba8ff">STRICT RESOLVED SCORE</text>
+  <text x="816" y="318" font-family="Arial, sans-serif" font-size="94" font-weight="800" letter-spacing="-6" fill="#c9ff36">6/10</text>
+  <text x="822" y="365" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#f4f2e9">Max Savings</text>
+  <text x="822" y="410" font-family="monospace" font-size="16" fill="#aaa99f">STOCK CODEX: 8/10</text>
 
-  <text x="62" y="537" font-family="Arial, sans-serif" font-size="26" font-weight="800" fill="#ff7759">984,900 fewer tokens every week</text>
-  <text x="62" y="584" font-family="monospace" font-size="15" fill="#68675f">DATED 3,552 → 738 PROMPT COMPARISON · TOOL-OUTPUT SAVINGS ADD ON TOP</text>
-  <text x="1138" y="584" text-anchor="end" font-family="monospace" font-size="12" fill="#68675f">*PROMPT CAPACITY, NOT PLAN QUOTA</text>
+  <text x="62" y="537" font-family="Arial, sans-serif" font-size="26" font-weight="800" fill="#ff7759">99.51% partial-score retention</text>
+  <text x="62" y="584" font-family="monospace" font-size="15" fill="#68675f">3.21M FEWER TOKENS · 78.702 CREDITS · EXACT QUALITY P=.6250</text>
+  <text x="1138" y="584" text-anchor="end" font-family="monospace" font-size="12" fill="#68675f">10-TASK SAMPLE · NOT A LEADERBOARD SCORE</text>
 </svg>

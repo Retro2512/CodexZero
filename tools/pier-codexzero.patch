@@ -1,0 +1,49 @@
+diff --git a/src/pier/agents/installed/codex.py b/src/pier/agents/installed/codex.py
+index 2d87f54..03483d4 100644
+--- a/src/pier/agents/installed/codex.py
++++ b/src/pier/agents/installed/codex.py
+@@ -1081,6 +1081,7 @@ class Codex(BaseInstalledAgent):
+ 
+         remote_codex_home = self._REMOTE_CODEX_HOME.as_posix()
+         remote_secrets_dir = self._REMOTE_CODEX_SECRETS_DIR.as_posix()
++        remote_custom_binary = "/tmp/codex-custom"
+         remote_auth_path = (self._REMOTE_CODEX_SECRETS_DIR / "auth.json").as_posix()
+ 
+         env = self.build_process_env({"CODEX_HOME": remote_codex_home})
+@@ -1092,6 +1093,26 @@ class Codex(BaseInstalledAgent):
+             env=env,
+         )
+ 
++        codex_executable = "codex"
++        if custom_binary := self._get_env("CODEX_BINARY_PATH"):
++            custom_binary_path = Path(custom_binary)
++            if not custom_binary_path.is_file():
++                raise ValueError(
++                    f"CODEX_BINARY_PATH points to non-existent file: {custom_binary}"
++                )
++            await environment.upload_file(
++                custom_binary_path, remote_custom_binary
++            )
++            if environment.default_user is not None:
++                await self.exec_as_root(
++                    environment,
++                    command=(
++                        f"chown {environment.default_user} {remote_custom_binary} "
++                        f"&& chmod 0755 {remote_custom_binary}"
++                    ),
++                )
++            codex_executable = remote_custom_binary
++
+         if auth_json_path:
+             self.logger.debug("Codex auth: using auth.json from %s", auth_json_path)
+             await environment.upload_file(auth_json_path, remote_auth_path)
+@@ -1150,7 +1167,7 @@ class Codex(BaseInstalledAgent):
+             await self.exec_as_agent(
+                 environment,
+                 command=(
+                     "if [ -s ~/.nvm/nvm.sh ]; then . ~/.nvm/nvm.sh; fi; "
+-                    "codex exec "
++                    f"{shlex.quote(codex_executable)} exec "
+                     "--dangerously-bypass-approvals-and-sandbox "
+                     "--skip-git-repo-check "
+                     f"--model {model} "

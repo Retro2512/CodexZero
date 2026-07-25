@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="CodexZero cuts a dated model prompt from 3,552 to 738 tokens—79% fewer—then saves more when tool output can be made smaller.">
+  <meta name="description" content="CodexZero Safe preserves Codex model instructions and compacts eligible tool output. Max Savings is opt-in, with its token and quality tradeoff published.">
   <meta name="theme-color" content="#171713">
-  <meta property="og:title" content="CodexZero — 79% fewer prompt tokens">
-  <meta property="og:description" content="At 50 requests a day: 1.24M prompt tokens before, 258K after, and 984,900 fewer every week.">
+  <meta property="og:title" content="CodexZero — Safe by default, Max Savings measured">
+  <meta property="og:description" content="Safe keeps stock model instructions. The public Max Savings run used 4.75% fewer provider tokens; strict resolution was 6/10 versus Codex at 8/10.">
   <meta property="og:image" content="assets/social-card.svg">
-  <title>CodexZero — 79% fewer prompt tokens</title>
+  <title>CodexZero — Safe and Max Savings modes</title>
   <link rel="icon" href="assets/codexzero-mark.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=4">
-  <script src="app.js?v=4" defer></script>
+  <link rel="stylesheet" href="styles.css?v=6">
+  <script src="app.js?v=5" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -21,8 +21,10 @@
       <span>CodexZero</span>
     </a>
     <nav aria-label="Main navigation">
+      <a href="#benchmark">DeepSWE</a>
+      <a href="#modes">Modes</a>
+      <a href="#public-benchmark">Controlled check</a>
       <a href="#projection">Calculator</a>
-      <a href="#proof">Proof</a>
       <a href="#how">How it works</a>
       <a href="#faq">FAQ</a>
       <a href="#install">Install</a>
@@ -33,81 +35,237 @@
   <main id="main">
     <section class="hero">
       <div class="hero-copy">
-        <p class="eyebrow"><span></span> A measured before and after</p>
-        <h1>Spend <em>79% fewer</em> prompt tokens.</h1>
-        <p class="lede">At 50 model requests a day, the dated comparison drops from <strong>1.24 million</strong> instruction tokens a week to <strong>258 thousand</strong>. That is 984,900 fewer tokens before tool-output savings are counted.</p>
+        <p class="eyebrow"><span></span> Safe by default · Max Savings opt-in</p>
+        <h1>Keep stock quality guidance. <em>Choose how much more to save.</em></h1>
+        <p class="lede"><strong>Safe</strong> preserves Codex model instructions and compacts eligible tool output. <strong>Max Savings</strong> adds the 738-token prompt. Its public Sol-high run used 4.75% fewer provider tokens; strict resolution was 6/10 versus 8/10.</p>
         <div class="hero-actions">
           <a class="button button-dark" href="#install">Install CodexZero</a>
-          <a class="text-link" href="#projection">Calculate your week <span aria-hidden="true">↘</span></a>
+          <a class="text-link" href="reports/deepswe-sol-high-10/README.md">Read the full report <span aria-hidden="true">↘</span></a>
         </div>
-        <ul class="trust-list" aria-label="What the comparison means">
-          <li>3,552 → 738 per request</li>
-          <li>Full lean is the default</li>
-          <li>Original tool output is kept</li>
+        <ul class="trust-list" aria-label="Benchmark highlights">
+          <li>Safe is the install default</li>
+          <li>Max Savings tradeoff published</li>
+          <li>Stock Codex stays available</li>
         </ul>
       </div>
 
-      <div class="hero-graphic" aria-label="Weekly model-instruction tokens fall from 1,243,200 to 258,300 at 50 model requests per day">
+      <div class="hero-graphic benchmark-graphic" aria-label="Five-way DeepSWE provider-token comparison">
         <div class="graphic-topline">
-          <span>One week · 50 requests/day</span>
-          <span class="live-pill">Dated comparison</span>
+          <span>Total provider tokens · 10 tasks</span>
+          <span class="live-pill">GPT-5.6 Sol · high</span>
         </div>
-        <div class="token-stage">
-          <div class="token-bar before">
-            <span class="bar-label">Before</span>
-            <strong>1.24M</strong>
-            <small>prompt tokens / week</small>
+        <div class="benchmark-board">
+          <div class="benchmark-row">
+            <span>Codex</span>
+            <i style="--size:63.4%"></i>
+            <strong>67.55M</strong>
+            <small>8/10</small>
           </div>
-          <div class="token-bar after">
-            <span class="bar-label">After</span>
-            <strong>258K</strong>
-            <small>prompt tokens / week</small>
+          <div class="benchmark-row winner">
+            <span>Max Savings</span>
+            <i style="--size:60.4%"></i>
+            <strong>64.34M</strong>
+            <small>6/10 · −4.75%</small>
           </div>
-          <div class="saved-stamp">
-            <strong>−79%</strong>
-            <span>984,900 saved</span>
+          <div class="benchmark-row">
+            <span>Codex + RTK</span>
+            <i style="--size:71.9%"></i>
+            <strong>76.58M</strong>
+            <small>7/10 · +13.37%</small>
+          </div>
+          <div class="benchmark-row">
+            <span>Codex + Caveman</span>
+            <i style="--size:64.7%"></i>
+            <strong>68.87M</strong>
+            <small>7/10 · +1.95%</small>
+          </div>
+          <div class="benchmark-row">
+            <span>Caveman + RTK</span>
+            <i style="--size:100%"></i>
+            <strong>106.51M</strong>
+            <small>8/10 · +57.68%</small>
           </div>
         </div>
         <div class="graphic-foot">
-          <span>Same prompt-token budget</span>
-          <span><b>4.8× capacity · +381%</b></span>
+          <span>50 / 50 valid trials</span>
+          <span><b>Exact quality p = .6250</b></span>
         </div>
       </div>
     </section>
 
-    <section class="ticker" aria-label="CodexZero guarantees">
-      <div>79.2% FEWER PROMPT TOKENS</div>
+    <section class="ticker" aria-label="CodexZero benchmark highlights">
+      <div>SAFE PRESERVES STOCK MODEL INSTRUCTIONS</div>
       <div aria-hidden="true">◆</div>
-      <div>984,900 FEWER PER WEEK AT 50 REQUESTS/DAY</div>
+      <div>50 / 50 COMPLETE VALID TRIALS</div>
       <div aria-hidden="true">◆</div>
-      <div>4.8× PROMPT CAPACITY · +381%</div>
+      <div>MAX SAVINGS: 4.75% FEWER PROVIDER TOKENS</div>
       <div aria-hidden="true">◆</div>
-      <div>TOOL-OUTPUT SAVINGS ADD ON TOP</div>
+      <div>STRICT SCORE 6 / 10 VS 8 / 10</div>
     </section>
 
-    <section class="number-rail" aria-label="CodexZero prompt-token comparison">
+    <section class="number-rail" aria-label="CodexZero controlled benchmark results">
       <article>
-        <span>Each model request</span>
-        <strong>−79%</strong>
-        <p>3,552 prompt tokens become 738.</p>
+        <span>Max Savings tokens vs Codex</span>
+        <strong>−4.75%</strong>
+        <p>64.34M versus 67.55M provider tokens.</p>
       </article>
       <article>
-        <span>One week at 50 requests/day</span>
-        <strong>−985K</strong>
-        <p>1,243,200 tokens become 258,300.</p>
+        <span>Max Savings partial retention</span>
+        <strong>99.51%</strong>
+        <p>0.9849 mean partial score versus 0.9898.</p>
       </article>
       <article>
-        <span>Same prompt-token budget</span>
-        <strong>4.8×</strong>
-        <p>+381% more prompt capacity.</p>
+        <span>Max Savings strict resolution</span>
+        <strong>6 / 10</strong>
+        <p>Stock Codex resolved 8 of the same 10 tasks.</p>
       </article>
+    </section>
+
+    <section class="section mode-section" id="modes">
+      <div class="section-heading">
+        <p class="eyebrow">Choose the tradeoff</p>
+        <h2>Safe first. More savings when you ask for them.</h2>
+        <p>The tool-result pipeline is the same in both modes. Only Max Savings replaces Codex’s model-instruction block.</p>
+      </div>
+      <div class="mode-grid">
+        <article class="mode-card mode-safe">
+          <span class="tag tag-lime">Default</span>
+          <h3>Safe</h3>
+          <p>Keep Codex’s stock model instructions. Compact only eligible tool results, retain the raw artifact, and fall back to stock when the candidate is not smaller.</p>
+          <dl>
+            <div><dt>Model instructions</dt><dd>Stock Codex</dd></div>
+            <div><dt>Tool-result codec</dt><dd>On</dd></div>
+            <div><dt>Command</dt><dd><code>codex-zero mode safe</code></dd></div>
+          </dl>
+        </article>
+        <article class="mode-card mode-max">
+          <span class="tag tag-violet">Opt-in</span>
+          <h3>Max Savings</h3>
+          <p>Add the bundled 738-token prompt to the same guarded tool-result pipeline. This removes more input, with the public quality result shown below.</p>
+          <dl>
+            <div><dt>Model instructions</dt><dd>738-token prompt</dd></div>
+            <div><dt>Public DeepSWE</dt><dd>6/10 vs 8/10</dd></div>
+            <div><dt>Command</dt><dd><code>codex-zero mode max-save</code></dd></div>
+          </dl>
+        </article>
+      </div>
+    </section>
+
+    <section class="section benchmark-section" id="benchmark">
+      <div class="section-heading">
+        <p class="eyebrow">01 / Public DeepSWE comparison</p>
+        <h2>Max Savings saved tokens and lost two strict solves.</h2>
+        <p>Ten published tasks, five configurations, held-out functional verifiers, isolated containers, the same model and high reasoning effort, and complete provider telemetry for every trial. Safe mode has not yet been scored on this public sample.</p>
+      </div>
+
+      <div class="benchmark-table-wrap">
+        <table class="benchmark-table">
+          <thead>
+            <tr>
+              <th scope="col">Configuration</th>
+              <th scope="col">Resolved</th>
+              <th scope="col">Partial</th>
+              <th scope="col">Provider tokens</th>
+              <th scope="col">Vs Codex</th>
+              <th scope="col">Cache tokens</th>
+              <th scope="col">Agent time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Codex</th>
+              <td>8/10</td>
+              <td>0.9898</td>
+              <td>67,547,467</td>
+              <td>Baseline</td>
+              <td>97.61%</td>
+              <td>180.1 min</td>
+            </tr>
+            <tr class="winner">
+              <th scope="row">CodexZero Max Savings</th>
+              <td>6/10</td>
+              <td>0.9849</td>
+              <td>64,337,730</td>
+              <td>4.75% fewer</td>
+              <td>97.70%</td>
+              <td>170.5 min</td>
+            </tr>
+            <tr>
+              <th scope="row">Codex + RTK</th>
+              <td>7/10</td>
+              <td>0.9951</td>
+              <td>76,577,342</td>
+              <td>13.37% more</td>
+              <td>97.41%</td>
+              <td>192.2 min</td>
+            </tr>
+            <tr>
+              <th scope="row">Codex + Caveman</th>
+              <td>7/10</td>
+              <td>0.9808</td>
+              <td>68,866,428</td>
+              <td>1.95% more</td>
+              <td>97.42%</td>
+              <td>181.0 min</td>
+            </tr>
+            <tr>
+              <th scope="row">Codex + Caveman + RTK</th>
+              <td>8/10</td>
+              <td>0.9879</td>
+              <td>106,511,492</td>
+              <td>57.68% more</td>
+              <td>97.83%</td>
+              <td>253.6 min</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="benchmark-notes">
+        <p><strong>Max Savings used fewer resources.</strong> Versus Codex: 3.21M fewer provider tokens, 78.702 fewer Sol credits, $3.15 lower API-equivalent cost, and 9.7 fewer agent minutes.</p>
+        <p><strong>It was not lossless here.</strong> Max Savings resolved 6/10 tasks versus Codex at 8/10. Partial-score retention was 99.51%; the exact paired quality test was p = .6250, with a −60 to +20 point bootstrap interval. Ten tasks are too few to establish a general quality effect.</p>
+        <p><strong>This historical harness did not activate compact exec payloads.</strong> It omitted the artifact-store environment required by that path, so the row primarily measures the lean prompt and model variance—not Safe mode or isolated codec quality.</p>
+      </div>
+      <p class="report-links"><a href="reports/deepswe-sol-high-10/README.md">Full report</a> · <a href="reports/deepswe-sol-high-10/summary.json">Aggregate statistics</a> · <a href="reports/deepswe-sol-high-10/task-metrics.csv">Every trial metric</a> · <a href="reports/deepswe-sol-high-10/provenance.json">Provenance</a></p>
+    </section>
+
+    <section class="section public-benchmark" id="public-benchmark">
+      <div class="section-heading">
+        <p class="eyebrow">02 / Controlled workload check</p>
+        <h2>Same fixed-workload quality. 13.72% fewer tokens.</h2>
+        <p>Six repeatable workloads ran three times across the same five configurations, with fresh threads, disposable workspaces, and randomized interleaving.</p>
+      </div>
+      <div class="deepswe-score">
+        <div class="deepswe-result">
+          <span class="tag tag-lime">90 isolated trials</span>
+          <strong>90 / 90</strong>
+          <h3>Quality gates passed</h3>
+          <p>Every configuration passed all 18 fixed workload checks.</p>
+        </div>
+        <div class="deepswe-comparison">
+          <div><span>Codex</span><b>46,263 mean tokens</b><small>72.1% cache tokens · 18.1s</small></div>
+          <div class="winner"><span>CodexZero Max Savings</span><b>39,915 mean tokens</b><small>76.8% cache tokens · 22.4s</small></div>
+        </div>
+      </div>
+      <p class="public-scope">Max Savings used fewer tokens in 16/18 paired trials. The exact sign test was p = .001312, with a workload-stratified 95% interval of 5,423–7,828 fewer tokens per trial. These fixed workloads test repeatability; DeepSWE above tests public software-task quality.</p>
+      <p class="report-links"><a href="reports/five-way-benchmark.md">Controlled report</a> · <a href="reports/five-way-benchmark.json">All controlled metrics</a> · <a href="https://github.com/Retro2512/CodexZero/blob/main/tools/benchmark-five-way-max-savings-v1.py">Historical harness</a> · <a href="https://github.com/Retro2512/CodexZero/blob/main/tools/benchmark-five-way.py">Current two-mode harness</a></p>
     </section>
 
     <section class="section projection" id="projection">
       <div class="projection-copy">
-        <p class="eyebrow">01 / Your week</p>
+        <p class="eyebrow">03 / Your week</p>
         <h2>Before CodexZero. After CodexZero.</h2>
-        <p>Start with the verified prompt comparison. Add your own tool-output numbers to estimate both savings together.</p>
+        <p>Choose a mode, then add your own tool-output numbers. Safe counts tool-output savings only. Max Savings also includes the dated prompt comparison.</p>
+        <fieldset class="mode-picker">
+          <legend>Mode</legend>
+          <label>
+            <input type="radio" name="projection-mode" value="safe" checked>
+            <span><b>Safe</b><small>Stock model instructions</small></span>
+          </label>
+          <label>
+            <input type="radio" name="projection-mode" value="max-save">
+            <span><b>Max Savings</b><small>738-token prompt</small></span>
+          </label>
+        </fieldset>
         <div class="slider-group">
           <div class="slider-label">
             <label for="prompt-requests">Model requests per day</label>
@@ -135,7 +293,7 @@
         <p class="projection-note">Use <code>codex-zero savings</code> for your measured tool-output reduction. The 84% maximum shown here is the public fixture result, not a typical week.</p>
       </div>
       <div class="projection-card">
-        <span class="tag tag-lime">Combined weekly estimate</span>
+        <span class="tag tag-lime" id="projection-mode-label">Safe weekly estimate</span>
         <div class="weekly-comparison">
           <div>
             <span>Before</span>
@@ -161,17 +319,17 @@
 
     <section class="section lean-section" id="lean">
       <div class="lean-copy">
-        <p class="eyebrow">02 / What the 79% means</p>
+        <p class="eyebrow">04 / Static prompt comparison</p>
         <h2>Less setup on every request.</h2>
-        <p>Codex sends its model instructions again whenever it makes a model request. Full lean replaces the dated 3,552-token instruction block with a 738-token version. The model, reasoning effort, your global instructions, and your project instructions stay the same.</p>
-        <p class="projection-note">The result is 2,814 fewer model-instruction tokens per request. Full lean is the install default. Command-output-only mode keeps the existing model prompt.</p>
+        <p>Codex sends its model instructions again whenever it makes a model request. Max Savings replaces the dated 3,552-token instruction block with a 738-token version. The model, reasoning effort, your global instructions, and your project instructions stay the same.</p>
+        <p class="projection-note">The result is 2,814 fewer model-instruction tokens per request. Max Savings is opt-in. Safe keeps the existing model prompt and remains the install default.</p>
       </div>
       <div class="lean-card">
         <span class="tag tag-violet">Exact o200k_base comparison</span>
         <div class="lean-comparison">
           <div><span>Dated reference</span><strong>3,552</strong></div>
           <i aria-hidden="true">→</i>
-          <div><span>Full lean</span><strong>738</strong></div>
+          <div><span>Max Savings</span><strong>738</strong></div>
         </div>
         <div class="combined-result">
           <strong>−79.2%</strong>
@@ -187,7 +345,7 @@
 
     <section class="section proof" id="proof">
       <div class="section-heading">
-        <p class="eyebrow">03 / Evidence</p>
+        <p class="eyebrow">05 / Tool-output evidence</p>
         <h2>Tool output only gets smaller when the math says it does.</h2>
         <p>The public fixture corpus tests the selection rule. It is proof that the gate works, not an average session forecast.</p>
       </div>
@@ -231,7 +389,7 @@
 
     <section class="section mechanics" id="how">
       <div class="section-heading">
-        <p class="eyebrow">04 / How it works</p>
+        <p class="eyebrow">06 / How it works</p>
         <h2>Less repetition.<br>Original output retained.</h2>
       </div>
       <div class="flow" aria-label="CodexZero processing flow">
@@ -286,12 +444,12 @@
 
     <section class="section boundaries">
       <div>
-        <p class="eyebrow">05 / Boundaries</p>
+        <p class="eyebrow">07 / Boundaries</p>
         <h2>What stays exactly the same.</h2>
       </div>
       <div class="boundary-list">
         <div><span>01</span><p><b>Model and reasoning</b> CodexZero does not reroute models or lower reasoning effort.</p></div>
-        <div><span>02</span><p><b>Your prompt choice</b> Output-only mode preserves model instructions. Full lean changes only the model prompt for CodexZero launches. Global and project instructions remain.</p></div>
+        <div><span>02</span><p><b>Your mode</b> Safe preserves model instructions. Max Savings changes only the model prompt for CodexZero launches. Global and project instructions remain.</p></div>
         <div><span>03</span><p><b>Installed Codex</b> Signed Desktop packages and stock CLI binaries are not modified. Launcher uses Desktop’s supported CLI-path override.</p></div>
         <div><span>04</span><p><b>Diagnostics</b> Non-identical lines, exit codes, warnings, errors, and full raw artifacts remain available.</p></div>
       </div>
@@ -299,7 +457,7 @@
 
     <section class="section faq" id="faq">
       <div class="section-heading">
-        <p class="eyebrow">06 / FAQ</p>
+        <p class="eyebrow">08 / FAQ</p>
         <h2>Where CodexZero fits.</h2>
         <p>These tools work at different layers, so their published percentages are not directly comparable.</p>
       </div>
@@ -321,7 +479,7 @@
           <p>No. It is the combined result of eleven fixed payloads, and almost all of the reduction came from two highly repetitive fixtures. Real savings depend on how often your tool results contain patterns the codec can shrink.</p>
         </details>
         <details>
-          <summary>What changes in full-lean mode?</summary>
+          <summary>What changes in Max Savings?</summary>
           <p>It replaces the model-instructions file for CodexZero launches. It removes repeated behavior scripting, permanent taste rules, response formatting rituals, fixed progress timing, and old model workarounds. Concise intermediary updates and the core authorization, preservation, verification, and reporting rules remain.</p>
         </details>
         <details>
@@ -333,9 +491,9 @@
 
     <section class="section install" id="install">
       <div class="install-copy">
-        <p class="eyebrow">07 / Install</p>
+        <p class="eyebrow">09 / Install</p>
         <h2>Side by side.<br>One command.</h2>
-        <p>Release packages include the patched core and runtime. Full lean is selected by default; command-output-only remains available. Windows x64, Intel Mac, and Apple silicon Mac are supported. Existing Codex remains available.</p>
+        <p>Release packages include the patched core and runtime. Safe is selected by default; Max Savings is opt-in. Windows x64, Intel Mac, and Apple silicon Mac are supported. Existing Codex remains available.</p>
         <div class="platform-tabs" role="tablist" aria-label="Install platform">
           <button role="tab" aria-selected="true" aria-controls="windows-install" id="windows-tab">Windows</button>
           <button role="tab" aria-selected="false" aria-controls="mac-install" id="mac-tab">macOS</button>
@@ -359,8 +517,8 @@
 <span class="lime">  Model-visible tokens eliminated: measured locally</span>
 <span class="dim">  Payloads transformed and fallbacks reported separately</span>
 
-<span class="prompt">›</span> codex-zero mode full-lean
-<span class="dim">  switch the prompt choice for new tasks</span>
+<span class="prompt">›</span> codex-zero mode max-save
+<span class="dim">  opt into the 738-token prompt</span>
 
 <span class="prompt">›</span> codex-zero desktop
 <span class="dim">  signed app + side-by-side core</span>
@@ -376,10 +534,11 @@
       <img src="assets/codexzero-mark.svg" alt="" width="34" height="34">
       <span>CodexZero</span>
     </div>
-    <p>79% fewer model-instruction tokens in the dated comparison, plus measured tool-output savings.</p>
+    <p>Safe preserves stock model instructions. Max Savings publishes its measured tradeoff: 4.75% fewer provider tokens and 6/10 strict resolution versus 8/10.</p>
     <div>
       <a href="https://github.com/Retro2512/CodexZero">GitHub</a>
-      <a href="reports/fixture-payload-report.json">Fixture report</a>
+      <a href="reports/deepswe-sol-high-10/README.md">DeepSWE benchmark</a>
+      <a href="reports/five-way-benchmark.md">Controlled benchmark</a>
       <a href="docs/measurement.md">Measurement method</a>
     </div>
   </footer>

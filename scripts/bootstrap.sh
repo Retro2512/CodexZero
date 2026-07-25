@@ -16,4 +16,11 @@ EXPECTED="$(awk '{print $1}' "$TEMP/codex-zero.tar.gz.sha256")"
 ACTUAL="$(shasum -a 256 "$TEMP/codex-zero.tar.gz" | awk '{print $1}')"
 [ "$EXPECTED" = "$ACTUAL" ] || { echo "CodexZero package checksum verification failed." >&2; exit 1; }
 tar -C "$TEMP" -xzf "$TEMP/codex-zero.tar.gz"
-sh "$TEMP/scripts/install.sh" "$TEMP" "${CODEX_ZERO_INSTALL_MODE:-ask}"
+INSTALL_MODE="${CODEX_ZERO_INSTALL_MODE:-ask}"
+if ! grep -q 'max-save' "$TEMP/scripts/install.sh"; then
+  case "$INSTALL_MODE" in
+    max-save|full-lean) INSTALL_MODE="full-lean" ;;
+    *) INSTALL_MODE="command-output" ;;
+  esac
+fi
+sh "$TEMP/scripts/install.sh" "$TEMP" "$INSTALL_MODE"

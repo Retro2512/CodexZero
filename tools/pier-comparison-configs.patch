@@ -1,0 +1,63 @@
+diff --git a/src/pier/agents/installed/codex.py b/src/pier/agents/installed/codex.py
+--- a/src/pier/agents/installed/codex.py
++++ b/src/pier/agents/installed/codex.py
+@@ -1063,6 +1063,16 @@ class Codex(BaseInstalledAgent):
+     async def run(
+         self, instruction: str, environment: BaseEnvironment, context: AgentContext
+     ) -> None:
++        if additional_path := self._get_env(
++            "CODEX_ADDITIONAL_INSTRUCTIONS_PATH"
++        ):
++            path = Path(additional_path)
++            if not path.is_file():
++                raise ValueError(
++                    "CODEX_ADDITIONAL_INSTRUCTIONS_PATH points to "
++                    f"non-existent file: {additional_path}"
++                )
++            instruction = f"{instruction.rstrip()}\n\n{path.read_text().strip()}\n"
+         escaped_instruction = shlex.quote(instruction)
+ 
+         if not self.model_name:
+@@ -1117,6 +1127,42 @@ class Codex(BaseInstalledAgent):
+                 )
+             codex_executable = remote_custom_binary
+ 
++        if rtk_binary := self._get_env("CODEX_RTK_BINARY_PATH"):
++            rtk_binary_path = Path(rtk_binary)
++            if not rtk_binary_path.is_file():
++                raise ValueError(
++                    "CODEX_RTK_BINARY_PATH points to non-existent file: "
++                    f"{rtk_binary}"
++                )
++            remote_tools_dir = "/usr/local/bin"
++            remote_rtk = f"{remote_tools_dir}/rtk"
++            await self.exec_as_root(
++                environment, command=f"mkdir -p {remote_tools_dir}"
++            )
++            await environment.upload_file(rtk_binary_path, remote_rtk)
++            await self.exec_as_root(
++                environment, command=f"chmod 0755 {remote_rtk}"
++            )
++            env["RTK_DB_PATH"] = (
++                EnvironmentPaths.agent_dir / "rtk.db"
++            ).as_posix()
++            env["RTK_TELEMETRY_DISABLED"] = "1"
++
++        if skill_path := self._get_env("CODEX_SKILL_PATH"):
++            local_skill = Path(skill_path)
++            if not local_skill.is_dir():
++                raise ValueError(
++                    f"CODEX_SKILL_PATH points to non-existent dir: {skill_path}"
++                )
++            remote_skill = f"{remote_codex_home}/skills/caveman"
++            await self.exec_as_root(
++                environment, command=f"mkdir -p {remote_codex_home}/skills"
++            )
++            await environment.upload_dir(local_skill, remote_skill)
++            await self.exec_as_root(
++                environment, command=f"chmod -R a+rX {remote_skill}"
++            )
++
+         if model_instructions := self._get_env(
+             "CODEX_MODEL_INSTRUCTIONS_PATH"
+         ):

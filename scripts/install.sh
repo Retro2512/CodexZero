@@ -4,21 +4,25 @@ set -eu
 PACKAGE_ROOT="${1:-$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)}"
 MODE="${2:-${CODEX_ZERO_INSTALL_MODE:-ask}}"
 case "$MODE" in
+  command-output) MODE="safe" ;;
+  full-lean) MODE="max-save" ;;
+esac
+case "$MODE" in
   ask)
     if [ -r /dev/tty ] && [ -w /dev/tty ]; then
-      printf '\nChoose how CodexZero should optimize Codex:\n' > /dev/tty
-      printf '  1. Full lean (default) - command output plus the bundled lean system prompt\n' > /dev/tty
-      printf '  2. Command output only - preserve the existing Codex system prompt\n' > /dev/tty
+      printf '\nChoose a CodexZero mode:\n' > /dev/tty
+      printf '  1. Safe (default) - preserve Codex model instructions and compact eligible tool output\n' > /dev/tty
+      printf '  2. Max Savings - also use the bundled 738-token model prompt\n' > /dev/tty
       printf 'Select 1 or 2 [1]: ' > /dev/tty
       IFS= read -r SELECTION < /dev/tty || SELECTION=""
-      if [ "$SELECTION" = "2" ]; then MODE="command-output"; else MODE="full-lean"; fi
+      if [ "$SELECTION" = "2" ]; then MODE="max-save"; else MODE="safe"; fi
     else
-      MODE="full-lean"
-      printf 'No interactive terminal detected; using full-lean mode.\n'
+      MODE="safe"
+      printf 'No interactive terminal detected; using Safe mode.\n'
     fi
     ;;
-  command-output|full-lean) ;;
-  *) echo "Install mode must be ask, command-output, or full-lean." >&2; exit 1 ;;
+  safe|max-save) ;;
+  *) echo "Install mode must be ask, safe, or max-save." >&2; exit 1 ;;
 esac
 CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
 INSTALL_ROOT="$CODEX_HOME/codexzero"
@@ -40,8 +44,8 @@ if [ ! -x "$CORE" ]; then
 fi
 BUNDLED_NODE="$PACKAGE_ROOT/runtime/node"
 LEAN_PROMPT_SOURCE="$PACKAGE_ROOT/prompts/codex-core-lean-v1.md"
-if [ "$MODE" = "full-lean" ] && [ ! -f "$LEAN_PROMPT_SOURCE" ]; then
-  echo "The full-lean prompt is missing from this package." >&2
+if [ "$MODE" = "max-save" ] && [ ! -f "$LEAN_PROMPT_SOURCE" ]; then
+  echo "The Max Savings prompt is missing from this package." >&2
   exit 1
 fi
 if [ -x "$BUNDLED_NODE" ]; then
@@ -99,7 +103,7 @@ chmod +x "$CODEX_HOME/bin/codex-zero"
 
 INSTALL_METADATA="$INSTALL_ROOT/install.json"
 LEAN_PROMPT_PATH=""
-if [ "$MODE" = "full-lean" ]; then
+if [ "$MODE" = "max-save" ]; then
   LEAN_PROMPT_PATH="$INSTALL_ROOT/prompts/codex-core-lean-v1.md"
 fi
 MODE="$MODE" BACKUP_ROOT="$BACKUP_ROOT" LEAN_PROMPT_PATH="$LEAN_PROMPT_PATH" \
@@ -107,7 +111,7 @@ MODE="$MODE" BACKUP_ROOT="$BACKUP_ROOT" LEAN_PROMPT_PATH="$LEAN_PROMPT_PATH" \
   "$NODE" -e '
     const fs = require("node:fs");
     fs.writeFileSync(process.env.INSTALL_METADATA, `${JSON.stringify({
-      schema: "codex-zero-install-v2",
+      schema: "codex-zero-install-v3",
       installed_at: process.env.INSTALLED_AT,
       backup_root: process.env.BACKUP_ROOT,
       mode: process.env.MODE,
@@ -125,4 +129,4 @@ MODE="$MODE" BACKUP_ROOT="$BACKUP_ROOT" LEAN_PROMPT_PATH="$LEAN_PROMPT_PATH" \
 printf '\nCodexZero installed.\n'
 printf 'Mode: %s\n' "$MODE"
 printf 'Add %s to PATH if needed.\n' "$CODEX_HOME/bin"
-printf 'Run: codex-zero run\nChange mode: codex-zero mode command-output|full-lean\nDesktop: codex-zero desktop\nSavings: codex-zero savings\nStock rollback: codex-zero stock\n'
+printf 'Run: codex-zero run\nChange mode: codex-zero mode safe|max-save\nDesktop: codex-zero desktop\nSavings: codex-zero savings\nStock rollback: codex-zero stock\n'

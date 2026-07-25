@@ -66,7 +66,7 @@
   },
   "notes": [
     "Prompt figures are exact tokenizer comparisons against dated snapshots, not production telemetry.",
-    "The active installer changes only model_instructions_file in full-lean mode and preserves global and project instructions.",
+    "Safe is the install default and preserves model instructions. Max Savings changes only model_instructions_file and preserves global and project instructions.",
     "Prompt and tool-result reductions are reported separately because they measure different payload surfaces.",
     "Provider caching and plan accounting can change the practical effect; no request-limit conversion is claimed."
   ]

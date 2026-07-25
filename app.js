@@ -16,13 +16,19 @@ const combinedSavedValue = document.querySelector("#combined-saved-value");
 const combinedPercentValue = document.querySelector("#combined-percent-value");
 const capacityValue = document.querySelector("#capacity-value");
 const capacityPercentValue = document.querySelector("#capacity-percent-value");
+const projectionModes = [...document.querySelectorAll('input[name="projection-mode"]')];
+const projectionModeLabel = document.querySelector("#projection-mode-label");
 const promptBeforePerRequest = 3552;
-const promptAfterPerRequest = 738;
+const maxSavePromptAfterPerRequest = 738;
 
 function updateProjection() {
+  const mode = projectionModes.find((input) => input.checked)?.value || "safe";
   const requestsPerDay = Number(promptRequests.value);
   const toolTokensPerDay = Number(dailyResults.value);
   const toolReduction = Number(eligible.value) / 100;
+  const promptAfterPerRequest = mode === "max-save"
+    ? maxSavePromptAfterPerRequest
+    : promptBeforePerRequest;
   const beforeWeek = (requestsPerDay * promptBeforePerRequest * 7) + (toolTokensPerDay * 7);
   const afterWeek = (requestsPerDay * promptAfterPerRequest * 7) + (toolTokensPerDay * (1 - toolReduction) * 7);
   const savedWeek = beforeWeek - afterWeek;
@@ -39,11 +45,15 @@ function updateProjection() {
   combinedPercentValue.textContent = `${Math.round(reductionPercent)}%`;
   capacityValue.textContent = `${capacity.toFixed(1)}×`;
   capacityPercentValue.textContent = `+${Math.round(capacityIncrease)}%`;
+  projectionModeLabel.textContent = mode === "max-save"
+    ? "Max Savings weekly estimate"
+    : "Safe weekly estimate";
 }
 
 dailyResults.addEventListener("input", updateProjection);
 eligible.addEventListener("input", updateProjection);
 promptRequests.addEventListener("input", updateProjection);
+for (const mode of projectionModes) mode.addEventListener("change", updateProjection);
 updateProjection();
 
 const tabs = [...document.querySelectorAll('[role="tab"]')];
