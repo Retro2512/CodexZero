@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="CodexZero Safe preserves Codex model instructions and compacts eligible tool output. Max Savings is opt-in, with its token and quality tradeoff published.">
+  <meta name="description" content="CodexZero Safe matched stock Codex task-for-task in a sealed six-way Terminal-Bench 2.1 mini-panel while using 7.65% less API-equivalent cost in this run.">
   <meta name="theme-color" content="#171713">
-  <meta property="og:title" content="CodexZero — Safe by default, Max Savings measured">
-  <meta property="og:description" content="Safe keeps stock model instructions. The public Max Savings run used 4.75% fewer provider tokens; strict resolution was 6/10 versus Codex at 8/10.">
+  <meta property="og:title" content="CodexZero Safe matched stock Codex: 7/10 vs 7/10">
+  <meta property="og:description" content="A sealed six-way Terminal-Bench mini-panel measured equal task quality and 7.65% lower API-equivalent cost for CodexZero Safe.">
   <meta property="og:image" content="assets/social-card.svg">
-  <title>CodexZero — Safe and Max Savings modes</title>
+  <title>CodexZero — Same measured task score, lower observed cost</title>
   <link rel="icon" href="assets/codexzero-mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css?v=6">
   <script src="app.js?v=5" defer></script>
@@ -21,7 +21,7 @@
       <span>CodexZero</span>
     </a>
     <nav aria-label="Main navigation">
-      <a href="#benchmark">DeepSWE</a>
+      <a href="#benchmark">Terminal-Bench</a>
       <a href="#modes">Modes</a>
       <a href="#public-benchmark">Controlled check</a>
       <a href="#projection">Calculator</a>
@@ -35,105 +35,112 @@
   <main id="main">
     <section class="hero">
       <div class="hero-copy">
-        <p class="eyebrow"><span></span> Safe by default · Max Savings opt-in</p>
-        <h1>Keep stock quality guidance. <em>Choose how much more to save.</em></h1>
-        <p class="lede"><strong>Safe</strong> preserves Codex model instructions and compacts eligible tool output. <strong>Max Savings</strong> adds the 738-token prompt. Its public Sol-high run used 4.75% fewer provider tokens; strict resolution was 6/10 versus 8/10.</p>
+        <p class="eyebrow"><span></span> Terminal-Bench score matched · Safe by default</p>
+        <h1>Keep Codex quality guidance. <em>Measure every token.</em></h1>
+        <p class="lede"><strong>CodexZero Safe matched stock Codex on every scorable task: 7/10 vs 7/10.</strong> It used 2.53% fewer provider tokens and 7.65% less API-equivalent cost in this run. The paired efficiency interval includes zero.</p>
         <div class="hero-actions">
           <a class="button button-dark" href="#install">Install CodexZero</a>
-          <a class="text-link" href="reports/deepswe-sol-high-10/README.md">Read the full report <span aria-hidden="true">↘</span></a>
+          <a class="text-link" href="reports/terminal-bench-2.1-mini/README.md">Read the full report <span aria-hidden="true">↘</span></a>
         </div>
         <ul class="trust-list" aria-label="Benchmark highlights">
-          <li>Safe is the install default</li>
-          <li>Max Savings tradeoff published</li>
-          <li>Stock Codex stays available</li>
+          <li>72/72 final matrix cells retained</li>
+          <li>Tokens, cache, calls, turns, time, and cost tracked</li>
+          <li>Stock Codex installation left untouched</li>
         </ul>
       </div>
 
-      <div class="hero-graphic benchmark-graphic" aria-label="Five-way DeepSWE provider-token comparison">
+      <div class="hero-graphic benchmark-graphic" aria-label="Six-way Terminal-Bench provider-token comparison">
         <div class="graphic-topline">
-          <span>Total provider tokens · 10 tasks</span>
-          <span class="live-pill">GPT-5.6 Sol · high</span>
+          <span>Scorable-task provider tokens · 10 tasks</span>
+          <span class="live-pill">GPT-5.6 Sol · medium</span>
         </div>
         <div class="benchmark-board">
           <div class="benchmark-row">
             <span>Codex</span>
-            <i style="--size:63.4%"></i>
-            <strong>67.55M</strong>
-            <small>8/10</small>
+            <i style="--size:63.9%"></i>
+            <strong>3.51M</strong>
+            <small>7/10</small>
           </div>
           <div class="benchmark-row winner">
+            <span>CodexZero Safe</span>
+            <i style="--size:62.3%"></i>
+            <strong>3.42M</strong>
+            <small>7/10 · −2.53%</small>
+          </div>
+          <div class="benchmark-row">
             <span>Max Savings</span>
-            <i style="--size:60.4%"></i>
-            <strong>64.34M</strong>
-            <small>6/10 · −4.75%</small>
+            <i style="--size:77.4%"></i>
+            <strong>4.24M</strong>
+            <small>7/10 · +21.05%</small>
           </div>
           <div class="benchmark-row">
             <span>Codex + RTK</span>
-            <i style="--size:71.9%"></i>
-            <strong>76.58M</strong>
-            <small>7/10 · +13.37%</small>
+            <i style="--size:58.8%"></i>
+            <strong>3.23M</strong>
+            <small>7/10 · −8.01%</small>
           </div>
           <div class="benchmark-row">
             <span>Codex + Caveman</span>
-            <i style="--size:64.7%"></i>
-            <strong>68.87M</strong>
-            <small>7/10 · +1.95%</small>
+            <i style="--size:100%"></i>
+            <strong>5.48M</strong>
+            <small>8/10 · +56.39%</small>
           </div>
           <div class="benchmark-row">
             <span>Caveman + RTK</span>
-            <i style="--size:100%"></i>
-            <strong>106.51M</strong>
-            <small>8/10 · +57.68%</small>
+            <i style="--size:72.6%"></i>
+            <strong>3.98M</strong>
+            <small>7/10 · +13.47%</small>
           </div>
         </div>
         <div class="graphic-foot">
-          <span>50 / 50 valid trials</span>
-          <span><b>Exact quality p = .6250</b></span>
+          <span>72 / 72 final cells</span>
+          <span><b>84 attempts retained</b></span>
         </div>
       </div>
     </section>
 
     <section class="ticker" aria-label="CodexZero benchmark highlights">
-      <div>SAFE PRESERVES STOCK MODEL INSTRUCTIONS</div>
+      <div>SAFE MATCHED CODEX ON EVERY SCORABLE TASK</div>
       <div aria-hidden="true">◆</div>
-      <div>50 / 50 COMPLETE VALID TRIALS</div>
+      <div>72 / 72 FINAL MATRIX CELLS</div>
       <div aria-hidden="true">◆</div>
-      <div>MAX SAVINGS: 4.75% FEWER PROVIDER TOKENS</div>
+      <div>SAFE: 7.65% LOWER OBSERVED API-EQUIVALENT COST</div>
       <div aria-hidden="true">◆</div>
-      <div>STRICT SCORE 6 / 10 VS 8 / 10</div>
+      <div>EFFICIENCY CONFIDENCE INTERVAL INCLUDES ZERO</div>
     </section>
 
     <section class="number-rail" aria-label="CodexZero controlled benchmark results">
       <article>
-        <span>Max Savings tokens vs Codex</span>
-        <strong>−4.75%</strong>
-        <p>64.34M versus 67.55M provider tokens.</p>
+        <span>Safe quality vs Codex</span>
+        <strong>7 / 10</strong>
+        <p>Same result on every scorable task.</p>
       </article>
       <article>
-        <span>Max Savings partial retention</span>
-        <strong>99.51%</strong>
-        <p>0.9849 mean partial score versus 0.9898.</p>
+        <span>Observed API-equivalent cost</span>
+        <strong>−7.65%</strong>
+        <p>$4.0756 versus $4.4133 on scorable tasks.</p>
       </article>
       <article>
-        <span>Max Savings strict resolution</span>
-        <strong>6 / 10</strong>
-        <p>Stock Codex resolved 8 of the same 10 tasks.</p>
+        <span>CodexZero payload gate</span>
+        <strong>0 / 187</strong>
+        <p>No payload changed when no candidate was safely smaller.</p>
       </article>
     </section>
 
     <section class="section mode-section" id="modes">
       <div class="section-heading">
         <p class="eyebrow">Choose the tradeoff</p>
-        <h2>Safe first. More savings when you ask for them.</h2>
+        <h2>Safe first. A leaner prompt only when you ask.</h2>
         <p>The tool-result pipeline is the same in both modes. Only Max Savings replaces Codex’s model-instruction block.</p>
       </div>
       <div class="mode-grid">
         <article class="mode-card mode-safe">
           <span class="tag tag-lime">Default</span>
           <h3>Safe</h3>
-          <p>Keep Codex’s stock model instructions. Compact only eligible tool results, retain the raw artifact, and fall back to stock when the candidate is not smaller.</p>
+          <p>Keep Codex’s stock model instructions. Compact only eligible tool results, retain the raw artifact, and fall back to stock when the candidate is not smaller. Safe matched Codex task-for-task in this mini-panel.</p>
           <dl>
             <div><dt>Model instructions</dt><dd>Stock Codex</dd></div>
+            <div><dt>Terminal-Bench</dt><dd>7/10 vs 7/10</dd></div>
             <div><dt>Tool-result codec</dt><dd>On</dd></div>
             <div><dt>Command</dt><dd><code>codex-zero mode safe</code></dd></div>
           </dl>
@@ -141,10 +148,10 @@
         <article class="mode-card mode-max">
           <span class="tag tag-violet">Opt-in</span>
           <h3>Max Savings</h3>
-          <p>Add the bundled 738-token prompt to the same guarded tool-result pipeline. This removes more input, with the public quality result shown below.</p>
+          <p>Add the bundled 738-token prompt to the same guarded tool-result pipeline. It matched Codex’s task score here, but used more total tokens and cost. Results vary with the workload.</p>
           <dl>
             <div><dt>Model instructions</dt><dd>738-token prompt</dd></div>
-            <div><dt>Public DeepSWE</dt><dd>6/10 vs 8/10</dd></div>
+            <div><dt>Terminal-Bench</dt><dd>7/10 · 21.05% more tokens</dd></div>
             <div><dt>Command</dt><dd><code>codex-zero mode max-save</code></dd></div>
           </dl>
         </article>
@@ -153,9 +160,9 @@
 
     <section class="section benchmark-section" id="benchmark">
       <div class="section-heading">
-        <p class="eyebrow">01 / Public DeepSWE comparison</p>
-        <h2>Max Savings saved tokens and lost two strict solves.</h2>
-        <p>Ten published tasks, five configurations, held-out functional verifiers, isolated containers, the same model and high reasoning effort, and complete provider telemetry for every trial. Safe mode has not yet been scored on this public sample.</p>
+        <p class="eyebrow">01 / Public Terminal-Bench comparison</p>
+        <h2>Safe matched Codex task-for-task.</h2>
+        <p>A sealed 12-task Terminal-Bench 2.1 mini-panel compared six configurations through official Harbor verifiers in isolated containers. Every run used GPT-5.6 Sol at medium reasoning.</p>
       </div>
 
       <div class="benchmark-table-wrap">
@@ -163,69 +170,78 @@
           <thead>
             <tr>
               <th scope="col">Configuration</th>
-              <th scope="col">Resolved</th>
-              <th scope="col">Partial</th>
+              <th scope="col">Strict</th>
+              <th scope="col">Scorable</th>
               <th scope="col">Provider tokens</th>
               <th scope="col">Vs Codex</th>
-              <th scope="col">Cache tokens</th>
+              <th scope="col">API-equivalent</th>
               <th scope="col">Agent time</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <th scope="row">Codex</th>
-              <td>8/10</td>
-              <td>0.9898</td>
-              <td>67,547,467</td>
+              <td>7/12</td>
+              <td>7/10</td>
+              <td>3,506,044</td>
               <td>Baseline</td>
-              <td>97.61%</td>
-              <td>180.1 min</td>
+              <td>$4.4133</td>
+              <td>29.0 min</td>
             </tr>
             <tr class="winner">
+              <th scope="row">CodexZero Safe</th>
+              <td>7/12</td>
+              <td>7/10</td>
+              <td>3,417,215</td>
+              <td>2.53% less</td>
+              <td>$4.0756 · 7.65% less</td>
+              <td>27.0 min</td>
+            </tr>
+            <tr>
               <th scope="row">CodexZero Max Savings</th>
-              <td>6/10</td>
-              <td>0.9849</td>
-              <td>64,337,730</td>
-              <td>4.75% fewer</td>
-              <td>97.70%</td>
-              <td>170.5 min</td>
+              <td>7/12</td>
+              <td>7/10</td>
+              <td>4,243,972</td>
+              <td>21.05% more</td>
+              <td>$4.8911 · 10.83% more</td>
+              <td>30.5 min</td>
             </tr>
             <tr>
               <th scope="row">Codex + RTK</th>
+              <td>7/12</td>
               <td>7/10</td>
-              <td>0.9951</td>
-              <td>76,577,342</td>
-              <td>13.37% more</td>
-              <td>97.41%</td>
-              <td>192.2 min</td>
+              <td>3,225,158</td>
+              <td>8.01% less</td>
+              <td>$3.9873 · 9.65% less</td>
+              <td>23.7 min</td>
             </tr>
             <tr>
               <th scope="row">Codex + Caveman</th>
-              <td>7/10</td>
-              <td>0.9808</td>
-              <td>68,866,428</td>
-              <td>1.95% more</td>
-              <td>97.42%</td>
-              <td>181.0 min</td>
+              <td>8/12</td>
+              <td>8/10</td>
+              <td>5,483,196</td>
+              <td>56.39% more</td>
+              <td>$5.8272 · 32.04% more</td>
+              <td>33.0 min</td>
             </tr>
             <tr>
               <th scope="row">Codex + Caveman + RTK</th>
-              <td>8/10</td>
-              <td>0.9879</td>
-              <td>106,511,492</td>
-              <td>57.68% more</td>
-              <td>97.83%</td>
-              <td>253.6 min</td>
+              <td>7/12</td>
+              <td>7/10</td>
+              <td>3,978,272</td>
+              <td>13.47% more</td>
+              <td>$4.6057 · 4.36% more</td>
+              <td>26.6 min</td>
             </tr>
           </tbody>
         </table>
       </div>
       <div class="benchmark-notes">
-        <p><strong>Max Savings used fewer resources.</strong> Versus Codex: 3.21M fewer provider tokens, 78.702 fewer Sol credits, $3.15 lower API-equivalent cost, and 9.7 fewer agent minutes.</p>
-        <p><strong>It was not lossless here.</strong> Max Savings resolved 6/10 tasks versus Codex at 8/10. Partial-score retention was 99.51%; the exact paired quality test was p = .6250, with a −60 to +20 point bootstrap interval. Ten tasks are too few to establish a general quality effect.</p>
-        <p><strong>This historical harness did not activate compact exec payloads.</strong> It omitted the artifact-store environment required by that path, so the row primarily measures the lean prompt and model variance—not Safe mode or isolated codec quality.</p>
+        <p><strong>Safe matched stock Codex on every scorable task.</strong> Its point estimates were 2.53% fewer provider tokens, 7.65% lower API-equivalent cost, and 2.0 fewer agent minutes. The paired efficiency confidence intervals include zero.</p>
+        <p><strong>Two tasks were provider-incompatible in this run.</strong> Both failed identically across all six configurations in the original wave and controlled rerun, then failed again in stock-Codex probes. The strict score counts them as zero; the scorable comparison excludes only those two tasks.</p>
+        <p><strong>The codec did not create the observed gap.</strong> Safe and Max Savings inspected 187 execution payloads and transformed none because no candidate was safely smaller. Max Savings matched Codex’s task score but used more tokens and cost here.</p>
       </div>
-      <p class="report-links"><a href="reports/deepswe-sol-high-10/README.md">Full report</a> · <a href="reports/deepswe-sol-high-10/summary.json">Aggregate statistics</a> · <a href="reports/deepswe-sol-high-10/task-metrics.csv">Every trial metric</a> · <a href="reports/deepswe-sol-high-10/provenance.json">Provenance</a></p>
+      <p class="report-links"><a href="reports/terminal-bench-2.1-mini/README.md">Full report</a> · <a href="reports/terminal-bench-2.1-mini/summary.json">Aggregate statistics</a> · <a href="reports/terminal-bench-2.1-mini/trials.json">Every final trial</a> · <a href="reports/terminal-bench-2.1-mini/attempts.json">Every attempt</a> · <a href="reports/terminal-bench-2.1-mini/preregistration.json">Sealed design</a></p>
     </section>
 
     <section class="section public-benchmark" id="public-benchmark">
@@ -246,7 +262,7 @@
           <div class="winner"><span>CodexZero Max Savings</span><b>39,915 mean tokens</b><small>76.8% cache tokens · 22.4s</small></div>
         </div>
       </div>
-      <p class="public-scope">Max Savings used fewer tokens in 16/18 paired trials. The exact sign test was p = .001312, with a workload-stratified 95% interval of 5,423–7,828 fewer tokens per trial. These fixed workloads test repeatability; DeepSWE above tests public software-task quality.</p>
+      <p class="public-scope">Max Savings used fewer tokens in 16/18 paired trials. The exact sign test was p = .001312, with a workload-stratified 95% interval of 5,423–7,828 fewer tokens per trial. These fixed workloads test repeatability; the Terminal-Bench panel above tests public software-task quality.</p>
       <p class="report-links"><a href="reports/five-way-benchmark.md">Controlled report</a> · <a href="reports/five-way-benchmark.json">All controlled metrics</a> · <a href="https://github.com/Retro2512/CodexZero/blob/main/tools/benchmark-five-way-max-savings-v1.py">Historical harness</a> · <a href="https://github.com/Retro2512/CodexZero/blob/main/tools/benchmark-five-way.py">Current two-mode harness</a></p>
     </section>
 
@@ -534,10 +550,11 @@
       <img src="assets/codexzero-mark.svg" alt="" width="34" height="34">
       <span>CodexZero</span>
     </div>
-    <p>Safe preserves stock model instructions. Max Savings publishes its measured tradeoff: 4.75% fewer provider tokens and 6/10 strict resolution versus 8/10.</p>
+    <p>Safe preserved stock model instructions and matched Codex on every scorable task in the sealed Terminal-Bench mini-panel.</p>
     <div>
       <a href="https://github.com/Retro2512/CodexZero">GitHub</a>
-      <a href="reports/deepswe-sol-high-10/README.md">DeepSWE benchmark</a>
+      <a href="reports/terminal-bench-2.1-mini/README.md">Terminal-Bench report</a>
+      <a href="reports/deepswe-sol-high-10/README.md">Historical DeepSWE</a>
       <a href="reports/five-way-benchmark.md">Controlled benchmark</a>
       <a href="docs/measurement.md">Measurement method</a>
     </div>

@@ -7,6 +7,7 @@
 - Safe preserves Codex model instructions and applies only the guarded tool-result pipeline.
 - Max Savings adds the bundled 738-token model prompt.
 - Existing `command-output` and `full-lean` installations migrate to Safe and Max Savings respectively.
+- Published a sealed six-way Terminal-Bench 2.1 mini-panel with task scores, tokens, cache hits, calls, turns, time, cost, optimizer telemetry, uncertainty, and evidence hashes.
 - Updated installers, release checks, documentation, benchmark labels, and the public site.
 
 ## 0.2.1

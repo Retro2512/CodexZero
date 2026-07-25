@@ -829,6 +829,8 @@ installers, packaging, and release verification rather than core behavior.
 - made Safe the default and preserved stock model instructions in that mode;
 - kept Max Savings as an explicit opt-in to the bundled 738-token prompt;
 - normalized legacy installation metadata without modifying user instructions;
+- published a sealed six-way Terminal-Bench 2.1 mini-panel with complete
+  quality, token, cache, call, turn, timing, cost, and integrity records;
 - updated benchmark labels, harnesses, release gates, documentation, and site.
 
 #### 0.2.1
