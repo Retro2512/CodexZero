@@ -1,0 +1,700 @@
+{
+  "schema": "codexzero-terminal-bench-replication-preregistration-v1",
+  "sealed_at_utc": "2026-07-25T23:23:54.303104+00:00",
+  "purpose": "Fresh three-way replication to separate optimizer effects from single-run trajectory variance and increase score resolution.",
+  "benchmark": {
+    "name": "Terminal-Bench 2.1 public Harbor package",
+    "package": "terminal-bench/terminal-bench-2@latest",
+    "dataset_digest": "sha256:c6fc2e2382c1dbae99b2d5ecd2f4f4a60c3c01e0d84642d69b4afd92e99d078b",
+    "dataset_git_commit": "69671fbaac6d67a7ef0dfec016cc38a64ef7a77c",
+    "population_tasks": 89,
+    "selection": "Remove the 12 first-run tasks, then random.Random(2513).sample(remaining_registry_order, 12).",
+    "seed": 2513,
+    "fresh_relative_to_first_run": true,
+    "excluded_first_run_tasks": [
+      "openssl-selfsigned-cert",
+      "nginx-request-logging",
+      "hf-model-inference",
+      "financial-document-processor",
+      "large-scale-text-editing",
+      "mailman",
+      "video-processing",
+      "custom-memory-heap-crash",
+      "vulnerable-secret",
+      "count-dataset-tokens",
+      "fix-code-vulnerability",
+      "adaptive-rejection-sampler"
+    ],
+    "tasks": [
+      {
+        "order": 1,
+        "name": "path-tracing",
+        "tree_sha256": "4ea7bbe481454b89516d19e2528c30b678d131f458476195f401cfce49765a9c",
+        "difficulty": "hard",
+        "category": "software-engineering",
+        "agent_timeout_sec_original": 1800.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "verifier_timeout_sec": 1800.0,
+        "cpus": 1,
+        "memory_mb": null,
+        "gpus": null
+      },
+      {
+        "order": 2,
+        "name": "headless-terminal",
+        "tree_sha256": "cb9bd3012490483e1bda1a9d86a19b7ee6c83b59141eaff459e91c03b6e6188f",
+        "difficulty": "medium",
+        "category": "software-engineering",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "verifier_timeout_sec": 900.0,
+        "cpus": 1,
+        "memory_mb": null,
+        "gpus": null
+      },
+      {
+        "order": 3,
+        "name": "polyglot-rust-c",
+        "tree_sha256": "74442c59cd82be0b36afa96ba41e80402d5290e747fcaaac08264f7f14b9ae53",
+        "difficulty": "hard",
+        "category": "software-engineering",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "verifier_timeout_sec": 900.0,
+        "cpus": 1,
+        "memory_mb": null,
+        "gpus": null
+      },
+      {
+        "order": 4,
+        "name": "log-summary-date-ranges",
+        "tree_sha256": "d539e3f2934a6ed2d262ef8ed3178cce9a62bc27fcf27d747b8dc14769c0b708",
+        "difficulty": "medium",
+        "category": "data-processing",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "verifier_timeout_sec": 900.0,
+        "cpus": 1,
+        "memory_mb": null,
+        "gpus": null
+      },
+      {
+        "order": 5,
+        "name": "pytorch-model-recovery",
+        "tree_sha256": "5e085478fd7e97e1e12a32f953d0825a249b3dc05f75edc8c4ca6e4b895b6a1c",
+        "difficulty": "medium",
+        "category": "model-training",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "verifier_timeout_sec": 900.0,
+        "cpus": 1,
+        "memory_mb": null,
+        "gpus": null
+      },
+      {
+        "order": 6,
+        "name": "qemu-startup",
+        "tree_sha256": "b0a4abb6db86613335f9387caaf60a971c51ef333b5e7c7dd970ec9aa4aaa609",
+        "difficulty": "medium",
+        "category": "system-administration",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "verifier_timeout_sec": 900.0,
+        "cpus": 1,
+        "memory_mb": null,
+        "gpus": null
+      },
+      {
+        "order": 7,
+        "name": "sqlite-with-gcov",
+        "tree_sha256": "68845c9575d2fbe90b202f3e63216b56d12b7ef5db89d964186e18f1ba3be804",
+        "difficulty": "medium",
+        "category": "system-administration",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "verifier_timeout_sec": 900.0,
+        "cpus": 1,
+        "memory_mb": null,
+        "gpus": null
+      },
+      {
+        "order": 8,
+        "name": "crack-7z-hash",
+        "tree_sha256": "3e07ed221a3505b89ab86093a1e222b5347c11981f3105edfffe5289b18e3b77",
+        "difficulty": "medium",
+        "category": "security",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "verifier_timeout_sec": 900.0,
+        "cpus": 1,
+        "memory_mb": null,
+        "gpus": null
+      },
+      {
+        "order": 9,
+        "name": "compile-compcert",
+        "tree_sha256": "6c4d460a23376fd16ed2761a6d55a98d5ba77df4e00316cd715c9abbe7f49448",
+        "difficulty": "medium",
+        "category": "system-administration",
+        "agent_timeout_sec_original": 2400.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "verifier_timeout_sec": 2400.0,
+        "cpus": 2,
+        "memory_mb": null,
+        "gpus": null
+      },
+      {
+        "order": 10,
+        "name": "fix-git",
+        "tree_sha256": "cb185f31c84a92fe38f0e01f2f61270ab77c607469e4c2a68a9517edd8ff050e",
+        "difficulty": "easy",
+        "category": "software-engineering",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "verifier_timeout_sec": 900.0,
+        "cpus": 1,
+        "memory_mb": null,
+        "gpus": null
+      },
+      {
+        "order": 11,
+        "name": "cobol-modernization",
+        "tree_sha256": "2f6a6312c196794d62305d01d5ea955dda13c88c2b61761df4f52813cad1abc0",
+        "difficulty": "easy",
+        "category": "software-engineering",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "verifier_timeout_sec": 900.0,
+        "cpus": 1,
+        "memory_mb": null,
+        "gpus": null
+      },
+      {
+        "order": 12,
+        "name": "regex-log",
+        "tree_sha256": "50e8b63097c28cf2ade07d9c07e9e9c9810affb8e8d8184218eb0735be2e1126",
+        "difficulty": "medium",
+        "category": "data-processing",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "verifier_timeout_sec": 900.0,
+        "cpus": 1,
+        "memory_mb": null,
+        "gpus": null
+      }
+    ]
+  },
+  "design": {
+    "configurations": [
+      "codex",
+      "codexzero_safe",
+      "codex_rtk"
+    ],
+    "unique_tasks": 12,
+    "repetitions_per_task_config": 3,
+    "final_cells": 108,
+    "quality_denominator_per_config": 36,
+    "score_resolution_percentage_points": 2.777778,
+    "pairing": "Each configuration runs on every task in every repetition.",
+    "replication_jobs": [
+      {
+        "repetition": 1,
+        "task_order": [
+          "path-tracing",
+          "headless-terminal",
+          "polyglot-rust-c",
+          "log-summary-date-ranges",
+          "pytorch-model-recovery",
+          "qemu-startup",
+          "sqlite-with-gcov",
+          "crack-7z-hash",
+          "compile-compcert",
+          "fix-git",
+          "cobol-modernization",
+          "regex-log"
+        ],
+        "agent_order": [
+          "codex",
+          "codexzero_safe",
+          "codex_rtk"
+        ]
+      },
+      {
+        "repetition": 2,
+        "task_order": [
+          "pytorch-model-recovery",
+          "qemu-startup",
+          "sqlite-with-gcov",
+          "crack-7z-hash",
+          "compile-compcert",
+          "fix-git",
+          "cobol-modernization",
+          "regex-log",
+          "path-tracing",
+          "headless-terminal",
+          "polyglot-rust-c",
+          "log-summary-date-ranges"
+        ],
+        "agent_order": [
+          "codexzero_safe",
+          "codex_rtk",
+          "codex"
+        ]
+      },
+      {
+        "repetition": 3,
+        "task_order": [
+          "compile-compcert",
+          "fix-git",
+          "cobol-modernization",
+          "regex-log",
+          "path-tracing",
+          "headless-terminal",
+          "polyglot-rust-c",
+          "log-summary-date-ranges",
+          "pytorch-model-recovery",
+          "qemu-startup",
+          "sqlite-with-gcov",
+          "crack-7z-hash"
+        ],
+        "agent_order": [
+          "codex_rtk",
+          "codex",
+          "codexzero_safe"
+        ]
+      }
+    ],
+    "order_control": "Task order rotates by four and configuration order rotates each repetition.",
+    "parallelism": "12 trials within each repetition; repetitions run sequentially.",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "medium",
+    "agent_timeout_cap_sec": 900,
+    "verifier_timeouts": "Official values unchanged.",
+    "quality_retries": 0,
+    "stop_rule": "Quality outcomes never alter tasks, repetitions, or configuration order.",
+    "invalid_run_policy": "Only infrastructure-invalid trials may be repeated, preserving and superseding the original attempt. Model failures and timeouts remain scored outcomes."
+  },
+  "quality_reporting": {
+    "primary": "Official verifier pass rate across 36 task-repetition cells per configuration.",
+    "secondary": [
+      "12-task majority pass score using at least 2 of 3 repetitions",
+      "per-task 0/3 to 3/3 stability",
+      "Wilson 95% confidence interval",
+      "task-cluster paired bootstrap 95% interval for score differences",
+      "paired discordance tests",
+      "raw verifier reward distribution"
+    ],
+    "granular_verifier": "Extract verifier subtest/assertion counts where the official logs expose them. Report task-normalized macro and raw micro rates as secondary diagnostics; never substitute them for official reward.",
+    "interpretation": "Three repetitions improve repeatability precision. Twelve fresh tasks still do not estimate the full benchmark with leaderboard precision."
+  },
+  "metrics": {
+    "quality": [
+      "official rewards",
+      "36-cell pass rate",
+      "majority task score",
+      "per-task stability",
+      "verifier subtests if exposed",
+      "errors/timeouts",
+      "Wilson and paired task-cluster bootstrap intervals",
+      "paired discordance tests"
+    ],
+    "provider_usage": [
+      "input",
+      "cached input",
+      "uncached input",
+      "output",
+      "reasoning output",
+      "total tokens",
+      "cache ratio",
+      "cache-hit/miss requests"
+    ],
+    "activity": [
+      "requests",
+      "assistant messages",
+      "agent steps",
+      "tool calls",
+      "shell commands and exits",
+      "compactions",
+      "retries"
+    ],
+    "time": [
+      "setup",
+      "agent",
+      "verifier",
+      "full trial",
+      "job wall time"
+    ],
+    "tool_efficiency": [
+      "tool-output bytes/tokens",
+      "RTK input/output/saved tokens, commands, fallbacks",
+      "CodexZero payloads, transforms, tokens eliminated, artifacts"
+    ],
+    "cost": [
+      "request-level official API-equivalent price",
+      "Codex credits",
+      "paired cost differences"
+    ],
+    "integrity": [
+      "binary/task/config hashes",
+      "token identities",
+      "artifact hashes",
+      "complete matrix",
+      "all attempts retained"
+    ]
+  },
+  "provenance": {
+    "project_commit": "43d3079d7bf83088471c5c3de4a11bd66474a1ed",
+    "product_version": "0.3.0",
+    "harbor_version": "0.20.0",
+    "harbor_commit": "ff69e554fac1c751aa608e03de027db9043a2eac",
+    "harbor_adapter_patch_sha256": "b4cc131815110e1a72582742fb165318078307bc10ddc481ba17634c96cbca7a",
+    "stock_codex_version": "0.145.0-alpha.30",
+    "stock_codex_sha256": "7ae3bc2df080e0368ea7bb768088685467295a1e155ee71e5c0989ecb5285165",
+    "codexzero_version": "0.145.0-alpha.30",
+    "codexzero_sha256": "657fe9452f05a5d5b5905b84bbe581d97a55f8fa1988306546a639ab201de50b",
+    "rtk_version": "0.42.4",
+    "rtk_sha256": "6d3f0a6356f1ab44383814a5f16e6a98747e78e130ab99760a4c13780480d2ec",
+    "rtk_instructions_sha256": "c310d777f50cd653007e9783c0d52c03e6afc4e1d0306d5fe5d118cc7f388020"
+  },
+  "live_configs_sanitized": [
+    {
+      "job_name": "tb21-replication-r1",
+      "jobs_dir": "${ISOLATED_REPLICATION_ROOT}/jobs",
+      "n_attempts": 1,
+      "install_only": false,
+      "timeout_multiplier": 1.0,
+      "n_concurrent_trials": 12,
+      "quiet": false,
+      "retry": {
+        "max_retries": 0
+      },
+      "environment": {
+        "type": "docker",
+        "force_build": false,
+        "delete": true,
+        "mounts": [
+          {
+            "type": "bind",
+            "source": "${ISOLATED_ORIGINAL_ROOT}/stock-package/codex",
+            "target": "/opt/bench/codex-stock",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${CODEXZERO_BINARY}",
+            "target": "/opt/bench/codexzero",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${RTK_BINARY}",
+            "target": "/usr/local/bin/rtk",
+            "read_only": true
+          }
+        ]
+      },
+      "verifier": {
+        "disable": false
+      },
+      "agents": [
+        {
+          "name": "codex",
+          "model_name": "gpt-5.6-sol",
+          "override_timeout_sec": 900,
+          "max_timeout_sec": 900,
+          "kwargs": {
+            "version": "0.145.0-alpha.30",
+            "reasoning_effort": "medium"
+          },
+          "env": {
+            "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+            "CODEX_BENCHMARK_LABEL": "codex",
+            "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codex-stock"
+          }
+        },
+        {
+          "name": "codex",
+          "model_name": "gpt-5.6-sol",
+          "override_timeout_sec": 900,
+          "max_timeout_sec": 900,
+          "kwargs": {
+            "version": "0.145.0-alpha.30",
+            "reasoning_effort": "medium",
+            "config_toml": "suppress_unstable_features_warning = true\n[features]\ncodex_zero_compact_exec_output = true\ncodex_zero_lossless_terminal_codec = true\ncodex_zero_exact_duplicate_results = true\ncodex_zero_event_driven_wait = true\n"
+          },
+          "env": {
+            "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+            "CODEX_BENCHMARK_LABEL": "codexzero_safe",
+            "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codexzero",
+            "CODEX_ZERO_HOME": "/tmp/codexzero-home",
+            "CODEX_ZERO_ARTIFACT_DIR": "/logs/agent/codexzero-artifacts",
+            "CODEX_ZERO_TELEMETRY_FILE": "/logs/agent/codexzero-telemetry.jsonl"
+          }
+        },
+        {
+          "name": "codex",
+          "model_name": "gpt-5.6-sol",
+          "override_timeout_sec": 900,
+          "max_timeout_sec": 900,
+          "kwargs": {
+            "version": "0.145.0-alpha.30",
+            "reasoning_effort": "medium"
+          },
+          "env": {
+            "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+            "CODEX_BENCHMARK_LABEL": "codex_rtk",
+            "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codex-stock",
+            "CODEX_ADDITIONAL_INSTRUCTIONS_PATH": "${ISOLATED_REPLICATION_ROOT}/sealed/rtk-instructions.md",
+            "RTK_DB_PATH": "/logs/agent/rtk.db",
+            "RTK_TELEMETRY_DISABLED": "1"
+          }
+        }
+      ],
+      "datasets": [
+        {
+          "path": "${ISOLATED_REPLICATION_ROOT}/terminal-bench-2",
+          "task_names": [
+            "path-tracing",
+            "headless-terminal",
+            "polyglot-rust-c",
+            "log-summary-date-ranges",
+            "pytorch-model-recovery",
+            "qemu-startup",
+            "sqlite-with-gcov",
+            "crack-7z-hash",
+            "compile-compcert",
+            "fix-git",
+            "cobol-modernization",
+            "regex-log"
+          ]
+        }
+      ]
+    },
+    {
+      "job_name": "tb21-replication-r2",
+      "jobs_dir": "${ISOLATED_REPLICATION_ROOT}/jobs",
+      "n_attempts": 1,
+      "install_only": false,
+      "timeout_multiplier": 1.0,
+      "n_concurrent_trials": 12,
+      "quiet": false,
+      "retry": {
+        "max_retries": 0
+      },
+      "environment": {
+        "type": "docker",
+        "force_build": false,
+        "delete": true,
+        "mounts": [
+          {
+            "type": "bind",
+            "source": "${ISOLATED_ORIGINAL_ROOT}/stock-package/codex",
+            "target": "/opt/bench/codex-stock",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${CODEXZERO_BINARY}",
+            "target": "/opt/bench/codexzero",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${RTK_BINARY}",
+            "target": "/usr/local/bin/rtk",
+            "read_only": true
+          }
+        ]
+      },
+      "verifier": {
+        "disable": false
+      },
+      "agents": [
+        {
+          "name": "codex",
+          "model_name": "gpt-5.6-sol",
+          "override_timeout_sec": 900,
+          "max_timeout_sec": 900,
+          "kwargs": {
+            "version": "0.145.0-alpha.30",
+            "reasoning_effort": "medium",
+            "config_toml": "suppress_unstable_features_warning = true\n[features]\ncodex_zero_compact_exec_output = true\ncodex_zero_lossless_terminal_codec = true\ncodex_zero_exact_duplicate_results = true\ncodex_zero_event_driven_wait = true\n"
+          },
+          "env": {
+            "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+            "CODEX_BENCHMARK_LABEL": "codexzero_safe",
+            "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codexzero",
+            "CODEX_ZERO_HOME": "/tmp/codexzero-home",
+            "CODEX_ZERO_ARTIFACT_DIR": "/logs/agent/codexzero-artifacts",
+            "CODEX_ZERO_TELEMETRY_FILE": "/logs/agent/codexzero-telemetry.jsonl"
+          }
+        },
+        {
+          "name": "codex",
+          "model_name": "gpt-5.6-sol",
+          "override_timeout_sec": 900,
+          "max_timeout_sec": 900,
+          "kwargs": {
+            "version": "0.145.0-alpha.30",
+            "reasoning_effort": "medium"
+          },
+          "env": {
+            "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+            "CODEX_BENCHMARK_LABEL": "codex_rtk",
+            "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codex-stock",
+            "CODEX_ADDITIONAL_INSTRUCTIONS_PATH": "${ISOLATED_REPLICATION_ROOT}/sealed/rtk-instructions.md",
+            "RTK_DB_PATH": "/logs/agent/rtk.db",
+            "RTK_TELEMETRY_DISABLED": "1"
+          }
+        },
+        {
+          "name": "codex",
+          "model_name": "gpt-5.6-sol",
+          "override_timeout_sec": 900,
+          "max_timeout_sec": 900,
+          "kwargs": {
+            "version": "0.145.0-alpha.30",
+            "reasoning_effort": "medium"
+          },
+          "env": {
+            "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+            "CODEX_BENCHMARK_LABEL": "codex",
+            "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codex-stock"
+          }
+        }
+      ],
+      "datasets": [
+        {
+          "path": "${ISOLATED_REPLICATION_ROOT}/terminal-bench-2",
+          "task_names": [
+            "pytorch-model-recovery",
+            "qemu-startup",
+            "sqlite-with-gcov",
+            "crack-7z-hash",
+            "compile-compcert",
+            "fix-git",
+            "cobol-modernization",
+            "regex-log",
+            "path-tracing",
+            "headless-terminal",
+            "polyglot-rust-c",
+            "log-summary-date-ranges"
+          ]
+        }
+      ]
+    },
+    {
+      "job_name": "tb21-replication-r3",
+      "jobs_dir": "${ISOLATED_REPLICATION_ROOT}/jobs",
+      "n_attempts": 1,
+      "install_only": false,
+      "timeout_multiplier": 1.0,
+      "n_concurrent_trials": 12,
+      "quiet": false,
+      "retry": {
+        "max_retries": 0
+      },
+      "environment": {
+        "type": "docker",
+        "force_build": false,
+        "delete": true,
+        "mounts": [
+          {
+            "type": "bind",
+            "source": "${ISOLATED_ORIGINAL_ROOT}/stock-package/codex",
+            "target": "/opt/bench/codex-stock",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${CODEXZERO_BINARY}",
+            "target": "/opt/bench/codexzero",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${RTK_BINARY}",
+            "target": "/usr/local/bin/rtk",
+            "read_only": true
+          }
+        ]
+      },
+      "verifier": {
+        "disable": false
+      },
+      "agents": [
+        {
+          "name": "codex",
+          "model_name": "gpt-5.6-sol",
+          "override_timeout_sec": 900,
+          "max_timeout_sec": 900,
+          "kwargs": {
+            "version": "0.145.0-alpha.30",
+            "reasoning_effort": "medium"
+          },
+          "env": {
+            "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+            "CODEX_BENCHMARK_LABEL": "codex_rtk",
+            "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codex-stock",
+            "CODEX_ADDITIONAL_INSTRUCTIONS_PATH": "${ISOLATED_REPLICATION_ROOT}/sealed/rtk-instructions.md",
+            "RTK_DB_PATH": "/logs/agent/rtk.db",
+            "RTK_TELEMETRY_DISABLED": "1"
+          }
+        },
+        {
+          "name": "codex",
+          "model_name": "gpt-5.6-sol",
+          "override_timeout_sec": 900,
+          "max_timeout_sec": 900,
+          "kwargs": {
+            "version": "0.145.0-alpha.30",
+            "reasoning_effort": "medium"
+          },
+          "env": {
+            "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+            "CODEX_BENCHMARK_LABEL": "codex",
+            "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codex-stock"
+          }
+        },
+        {
+          "name": "codex",
+          "model_name": "gpt-5.6-sol",
+          "override_timeout_sec": 900,
+          "max_timeout_sec": 900,
+          "kwargs": {
+            "version": "0.145.0-alpha.30",
+            "reasoning_effort": "medium",
+            "config_toml": "suppress_unstable_features_warning = true\n[features]\ncodex_zero_compact_exec_output = true\ncodex_zero_lossless_terminal_codec = true\ncodex_zero_exact_duplicate_results = true\ncodex_zero_event_driven_wait = true\n"
+          },
+          "env": {
+            "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+            "CODEX_BENCHMARK_LABEL": "codexzero_safe",
+            "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codexzero",
+            "CODEX_ZERO_HOME": "/tmp/codexzero-home",
+            "CODEX_ZERO_ARTIFACT_DIR": "/logs/agent/codexzero-artifacts",
+            "CODEX_ZERO_TELEMETRY_FILE": "/logs/agent/codexzero-telemetry.jsonl"
+          }
+        }
+      ],
+      "datasets": [
+        {
+          "path": "${ISOLATED_REPLICATION_ROOT}/terminal-bench-2",
+          "task_names": [
+            "compile-compcert",
+            "fix-git",
+            "cobol-modernization",
+            "regex-log",
+            "path-tracing",
+            "headless-terminal",
+            "polyglot-rust-c",
+            "log-summary-date-ranges",
+            "pytorch-model-recovery",
+            "qemu-startup",
+            "sqlite-with-gcov",
+            "crack-7z-hash"
+          ]
+        }
+      ]
+    }
+  ]
+}
