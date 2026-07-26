@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="CodexZero used 14.63% fewer tokens and matched Codex’s 29/36 score in a repeated Terminal-Bench comparison.">
+  <meta name="description" content="CodexZero recorded the largest token reduction in our completed comparisons. Its repeated benchmark used 15% fewer tokens with the same task score as Codex.">
   <meta name="theme-color" content="#171713">
   <link rel="canonical" href="https://retro2512.github.io/CodexZero/">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://retro2512.github.io/CodexZero/">
   <meta property="og:title" content="CodexZero — fewer tokens, same task score">
-  <meta property="og:description" content="CodexZero used 14.63% fewer tokens and matched Codex’s 29/36 score in a repeated Terminal-Bench comparison.">
+  <meta property="og:description" content="CodexZero used 15% fewer tokens with the same task score as Codex in a repeated benchmark.">
   <meta property="og:image" content="https://retro2512.github.io/CodexZero/assets/social-card.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="CodexZero — fewer tokens, same task score">
-  <meta name="twitter:description" content="CodexZero used 14.63% fewer tokens and matched Codex’s 29/36 score in a repeated Terminal-Bench comparison.">
+  <meta name="twitter:description" content="CodexZero used 15% fewer tokens with the same task score as Codex in a repeated benchmark.">
   <meta name="twitter:image" content="https://retro2512.github.io/CodexZero/assets/social-card.png">
   <title>CodexZero — fewer tokens, same task score</title>
   <link rel="icon" href="assets/codexzero-mark.svg" type="image/svg+xml">
@@ -37,6 +37,7 @@
       <span>Menu</span>
     </button>
     <nav id="site-nav" aria-label="Main navigation">
+      <a href="#results">Results</a>
       <a href="#how">How it works</a>
       <a href="#install">Install</a>
       <a class="nav-cta" href="https://github.com/Retro2512/CodexZero">GitHub</a>
@@ -48,9 +49,10 @@
       <div class="hero-copy">
         <p class="eyebrow"><span></span> Less input. Same task score.</p>
         <h1>CodexZero saves more tokens.</h1>
-        <p class="lede">In a repeated Terminal-Bench comparison, CodexZero used <strong>14.63% fewer tokens</strong> and matched Codex’s <strong>29/36 score</strong>.</p>
+        <p class="lede">CodexZero recorded the largest token reduction in our completed comparisons. In the strongest repeated test, it used <strong>15% fewer tokens</strong> and matched Codex’s task score.</p>
         <div class="hero-actions">
           <a class="button button-dark" href="#install">Install CodexZero</a>
+          <a class="text-link" href="#results">See the result <span aria-hidden="true">↓</span></a>
         </div>
         <ul class="trust-list" aria-label="Product highlights">
           <li>Free and open source</li>
@@ -61,10 +63,33 @@
 
       <figure class="hero-chart">
         <picture>
-          <source media="(max-width: 720px)" srcset="assets/benchmarks/terminal-bench-repeated-mobile.svg">
-          <img src="assets/benchmarks/terminal-bench-repeated.svg" width="1200" height="520" alt="Regular Codex processed 26.58 million tokens and scored 29 out of 36. CodexZero processed 22.69 million tokens and also scored 29 out of 36, a 14.63 percent reduction.">
+          <source media="(max-width: 720px)" srcset="assets/benchmarks/benchmark-overview-mobile.svg">
+          <img src="assets/benchmarks/benchmark-overview.svg" width="1200" height="700" alt="Highest recorded token reduction for each setup: CodexZero Max used 31 percent fewer tokens, CodexZero 15 percent fewer, RTK 8 percent fewer, regular Codex is the standard baseline, Caveman used 2 percent more, and RTK plus Caveman used 13 percent more.">
         </picture>
-        <figcaption>12 tasks · three repetitions per setup. <a href="reports/terminal-bench-2.1-replication/">Methods and data</a></figcaption>
+        <figcaption>Highest recorded reduction for each setup across completed benchmark runs. <a href="reports/terminal-bench-2.1-replication/">Methods and data</a></figcaption>
+      </figure>
+    </section>
+
+    <section class="proof-strip" aria-label="Repeated benchmark summary">
+      <div><strong>15%</strong><span>fewer tokens</span></div>
+      <div><strong>Same</strong><span>task score</span></div>
+      <div><strong>3.89M</strong><span>tokens avoided</span></div>
+    </section>
+
+    <section class="section results" id="results">
+      <div class="section-heading">
+        <p class="eyebrow">Repeated benchmark</p>
+        <h2>Less to process. No score lost.</h2>
+        <p>Codex and CodexZero each completed the same 12 software tasks three times. CodexZero matched the final score while processing 3.89 million fewer tokens.</p>
+      </div>
+      <figure class="primary-result">
+        <picture>
+          <source media="(max-width: 720px)" srcset="assets/benchmarks/terminal-bench-repeated-mobile.svg">
+          <img src="assets/benchmarks/terminal-bench-repeated.svg" width="1200" height="520" alt="Regular Codex processed 26.58 million tokens and scored 29 out of 36. CodexZero processed 22.69 million tokens and also scored 29 out of 36, a 15 percent reduction.">
+        </picture>
+        <figcaption>
+          <span>12 tasks · three runs each · 36 outcomes per setup</span>
+        </figcaption>
       </figure>
     </section>
 

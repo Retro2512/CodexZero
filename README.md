@@ -3,22 +3,18 @@
   <p><strong>Zero Wasted Tokens, Same Benchmark Scores &amp; Quality, More Usage Limits, Less Cost</strong></p>
 </div>
 
-![Regular Codex processed 26.58 million tokens and CodexZero processed 22.69 million while both scored 29 out of 36](assets/benchmarks/terminal-bench-repeated.svg)
+![Highest recorded token reduction for CodexZero Max, CodexZero, RTK, standard Codex, Caveman, and RTK plus Caveman](assets/benchmarks/benchmark-overview.svg)
 
 [![CI](https://github.com/Retro2512/CodexZero/actions/workflows/ci.yml/badge.svg)](https://github.com/Retro2512/CodexZero/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/Retro2512/CodexZero?display_name=tag)](https://github.com/Retro2512/CodexZero/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-171713.svg)](LICENSE)
 
-## Benchmark summary
+CodexZero recorded the largest token reduction in our completed comparisons. In the strongest repeated benchmark, it:
 
-| Setup | Score | Total tokens | Reduction |
-|---|---:|---:|---:|
-| Codex | 29/36 | 26,580,391 | Baseline |
-| CodexZero | 29/36 | 22,691,418 | **14.63% fewer** |
-
-**12 tasks · 3 repetitions per setup**
-
-[Methods and data](reports/terminal-bench-2.1-replication/README.md)
+- used **15% fewer tokens**
+- matched Codex’s **29/36 task score**
+- processed **3.89 million fewer tokens**
+- ran the same 12 software tasks three times per setup
 
 CodexZero installs beside Codex. Your regular CLI remains available, and the full command result stays available whenever Codex needs it.
 
@@ -59,6 +55,14 @@ codex-zero stock
 ```
 
 Open regular Codex at any time.
+
+## The repeated result
+
+![Regular Codex processed 26.58 million tokens and CodexZero processed 22.69 million while both scored 29 out of 36](assets/benchmarks/terminal-bench-repeated.svg)
+
+Codex and CodexZero each completed 12 software tasks three times. CodexZero matched the final task score while processing 22.69 million tokens instead of 26.58 million.
+
+[Methods and data](reports/terminal-bench-2.1-replication/README.md)
 
 ## How it works
 

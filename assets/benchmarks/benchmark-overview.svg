@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+  <title id="title">Measured stats across Terminal-Bench and DeepSWE</title>
+  <desc id="desc">CodexZero Max recorded 31 percent fewer tokens, CodexZero 15 percent fewer, RTK 8 percent fewer, standard Codex is the zero percent baseline, Caveman used 2 percent more, and RTK plus Caveman used 13 percent more.</desc>
+
+  <rect width="1200" height="700" fill="#171713"/>
+
+  <text x="58" y="70" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="800">Measured stats across Terminal-Bench + DeepSWE</text>
+  <text x="58" y="105" fill="#aaa99f" font-family="Arial, Helvetica, sans-serif" font-size="15">Highest recorded reduction for each setup across completed benchmarks</text>
+
+  <rect x="40" y="142" width="1120" height="486" fill="#20201c" stroke="#4a4a42"/>
+  <text x="72" y="181" fill="#8f8e85" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" letter-spacing="1.4">SETUP</text>
+  <text x="530" y="181" fill="#8f8e85" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" letter-spacing="1.4" text-anchor="middle">STANDARD CODEX</text>
+  <text x="1108" y="181" fill="#8f8e85" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" letter-spacing="1.4" text-anchor="end">RESULT</text>
+
+  <line x1="530" y1="196" x2="530" y2="590" stroke="#fffef8" stroke-width="2"/>
+  <line x1="415" y1="196" x2="415" y2="590" stroke="#3d3d36" stroke-dasharray="4 6"/>
+  <line x1="645" y1="196" x2="645" y2="590" stroke="#3d3d36" stroke-dasharray="4 6"/>
+  <line x1="760" y1="196" x2="760" y2="590" stroke="#3d3d36" stroke-dasharray="4 6"/>
+  <line x1="875" y1="196" x2="875" y2="590" stroke="#3d3d36" stroke-dasharray="4 6"/>
+  <line x1="990" y1="196" x2="990" y2="590" stroke="#3d3d36" stroke-dasharray="4 6"/>
+
+  <rect x="54" y="202" width="1092" height="58" fill="#29321b"/>
+  <rect x="54" y="202" width="6" height="58" fill="#c9ff36"/>
+  <text x="72" y="238" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="800">CodexZero Max</text>
+  <rect x="530" y="220" width="450" height="22" fill="#aeea16"/>
+  <rect x="975" y="226" width="10" height="10" fill="#fffef8"/>
+  <text x="1124" y="238" fill="#c9ff36" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="800" text-anchor="end">31% fewer</text>
+
+  <rect x="54" y="266" width="1092" height="58" fill="#24201d"/>
+  <rect x="54" y="266" width="6" height="58" fill="#d94f35"/>
+  <text x="72" y="302" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="800">CodexZero</text>
+  <rect x="530" y="284" width="210" height="22" fill="#d94f35"/>
+  <rect x="735" y="290" width="10" height="10" fill="#fffef8"/>
+  <text x="1124" y="302" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="800" text-anchor="end">15% fewer</text>
+
+  <line x1="72" y1="330" x2="1128" y2="330" stroke="#3d3d36"/>
+  <text x="72" y="366" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">RTK</text>
+  <rect x="530" y="348" width="115" height="20" fill="#9b85ed"/>
+  <rect x="641" y="354" width="8" height="8" fill="#fffef8"/>
+  <text x="1124" y="366" fill="#bba8ff" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="700" text-anchor="end">8% fewer</text>
+
+  <rect x="54" y="394" width="1092" height="58" fill="#fffef8"/>
+  <text x="72" y="430" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="800">Regular Codex</text>
+  <text x="224" y="430" fill="#68675f" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700">STANDARD</text>
+  <rect x="523" y="416" width="14" height="14" fill="#171713"/>
+  <text x="1124" y="430" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="800" text-anchor="end">Baseline · 0%</text>
+
+  <line x1="72" y1="458" x2="1128" y2="458" stroke="#3d3d36"/>
+  <text x="72" y="494" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">Caveman</text>
+  <rect x="502" y="476" width="28" height="20" fill="#77766f"/>
+  <rect x="498" y="482" width="8" height="8" fill="#fffef8"/>
+  <text x="1124" y="494" fill="#aaa99f" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="700" text-anchor="end">2% more</text>
+
+  <line x1="72" y1="522" x2="1128" y2="522" stroke="#3d3d36"/>
+  <text x="72" y="558" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">RTK + Caveman</text>
+  <rect x="336" y="540" width="194" height="20" fill="#77766f"/>
+  <rect x="332" y="546" width="8" height="8" fill="#fffef8"/>
+  <text x="1124" y="558" fill="#aaa99f" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="700" text-anchor="end">13% more</text>
+
+  <text x="336" y="610" fill="#8f8e85" font-family="Arial, Helvetica, sans-serif" font-size="11" text-anchor="middle">MORE TOKENS</text>
+  <text x="530" y="610" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" text-anchor="middle">0</text>
+  <text x="980" y="610" fill="#c9ff36" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" text-anchor="middle">FEWER TOKENS</text>
+
+  <text x="58" y="668" fill="#8f8e85" font-family="Arial, Helvetica, sans-serif" font-size="12">Rounded figures. Full task scores, benchmark scope, and methods are linked below.</text>
+</svg>
