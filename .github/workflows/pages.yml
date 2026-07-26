@@ -36,6 +36,12 @@ jobs:
           cp reports/fixture-payload-report.json _site/reports/
           cp reports/five-way-benchmark.md reports/five-way-benchmark.json _site/reports/
           cp \
+            reports/combination-benchmark.md \
+            reports/combination-benchmark.json \
+            reports/deepswe-pilot.md \
+            reports/deepswe-pilot.json \
+            _site/reports/
+          cp \
             reports/deepswe-sol-high-10/README.md \
             reports/deepswe-sol-high-10/summary.json \
             reports/deepswe-sol-high-10/task-metrics.csv \

@@ -1,65 +1,81 @@
 <div align="center">
   <img src="assets/codexzero-mark.svg" width="76" alt="CodexZero">
   <h1>CodexZero</h1>
-  <p><strong>Safe by default. Max Savings is opt-in and publishes its quality tradeoff.</strong></p>
+  <p><strong>Run Codex with fewer tokens.</strong></p>
 
   [![CI](https://github.com/Retro2512/CodexZero/actions/workflows/ci.yml/badge.svg)](https://github.com/Retro2512/CodexZero/actions/workflows/ci.yml)
   [![Release](https://img.shields.io/github/v/release/Retro2512/CodexZero?display_name=tag)](https://github.com/Retro2512/CodexZero/releases/latest)
   [![License: MIT](https://img.shields.io/badge/license-MIT-171713.svg)](LICENSE)
 </div>
 
-![CodexZero Safe matched stock Codex across 36 repeated Terminal-Bench outcomes](assets/social-card.svg)
+![CodexZero repeated Terminal-Bench comparison](assets/benchmarks/terminal-bench-repeated.svg)
 
-## Public benchmark first
+## Same task score. 14.63% fewer tokens.
 
-Twelve fresh [Terminal-Bench 2.1](https://www.tbench.ai/news/terminal-bench-2-1) tasks ran three times through official [Harbor](https://www.harborframework.com/docs/run-jobs/run-evals) verifiers for each configuration. All **108 final cells** used `gpt-5.6-sol` at medium reasoning in isolated containers.
+CodexZero sits beside Codex and can shorten repeated tool output before the model has to read it again. In the newest repeated public benchmark, **Safe finished with the same 29/36 score as regular Codex while using 3.89 million fewer provider tokens**.
 
-| Configuration | Official score | Wilson 95% | Majority tasks | Verifier assertions | Provider tokens | Difference vs Codex | API-equivalent cost | Agent time |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| Codex | **29/36 (80.56%)** | 64.97%–90.25% | 10/12 | 92/105 | 26,580,391 | Baseline | $25.1385 | 168.3 min |
-| **CodexZero Safe** | **29/36 (80.56%)** | **64.97%–90.25%** | **10/12** | **91/105** | **22,691,418** | **14.63% less** | **$23.2770 · 7.40% less** | **172.4 min** |
-| Codex + RTK | **32/36 (88.89%)** | 74.69%–95.59% | 11/12 | 95/105 | 31,550,572 | 18.70% more | $28.9572 · 15.19% more | 180.8 min |
+Think of tokens as the amount of text the model has to read. Less repeated reading means less model work while the original command result stays available.
 
-**CodexZero Safe exactly matched Codex: 29/36 (80.56%) each.** It used **14.63% fewer provider tokens** and **7.40% less API-equivalent cost** in this run. The 36-outcome score resolves to **2.78 percentage points**, replacing the earlier panel’s coarse 10-point steps.
+- **12 fresh software tasks**, each run three times
+- **29/36 for Codex and 29/36 for CodexZero Safe**
+- **22.69M tokens instead of 26.58M**
+- **7.40% lower API-equivalent cost in this run**
+- Every configuration started in its own fresh workspace and Codex home
 
-RTK’s quality point estimate was 8.33 points higher, but the paired exact result was **p = 0.25** and the task-cluster interval includes zero. RTK used 18.70% more tokens in this replication, reversing its efficiency result from the earlier one-attempt panel.
+[See the complete repeated run](reports/terminal-bench-2.1-replication/README.md) · [Inspect all 108 final trials](reports/terminal-bench-2.1-replication/trials.json) · [Open the machine-readable totals](reports/terminal-bench-2.1-replication/summary.json)
 
-The task sample and analysis were sealed before model calls. Two validation waves exposed container certificate and runtime defects; the correction was sealed before replacement calls, and the entire 108-cell matrix was rerun rather than selectively keeping successes. All 72 discarded attempts remain available for audit.
+## Every completed comparison
 
-[Full repeated-run report](reports/terminal-bench-2.1-replication/README.md) · [Aggregate statistics](reports/terminal-bench-2.1-replication/summary.json) · [All 108 final trials](reports/terminal-bench-2.1-replication/trials.json) · [All 180 attempts](reports/terminal-bench-2.1-replication/attempts.json) · [Sealed preregistration](reports/terminal-bench-2.1-replication/preregistration.json) · [Sealed infrastructure correction](reports/terminal-bench-2.1-replication/infrastructure-addendum.json)
+Each chart uses Codex as its own baseline. Shorter bars mean the model processed fewer provider tokens. The quality column uses the scoring system for that test.
 
-### Earlier six-way breadth check
+### Controlled repeatable workloads
 
-The first sealed panel compared Codex, Safe, Max Savings, RTK, Caveman, and Caveman + RTK once across 12 tasks. Safe, Codex, and RTK each scored 7/10 scorable tasks. It was useful for breadth, but its 10-point score steps and single attempts were not precise enough to rank close configurations.
+![Controlled workload token and quality comparison](assets/benchmarks/controlled-workloads.svg)
 
-[Earlier six-way report](reports/terminal-bench-2.1-mini/README.md) · [Earlier aggregate statistics](reports/terminal-bench-2.1-mini/summary.json)
+All five setups passed all 18 checks. CodexZero Max used **13.72% fewer tokens** than Codex across the same fixed workloads.
 
-Historical context: an earlier 10-task [DeepSWE run](reports/deepswe-sol-high-10/README.md) tested what is now Max Savings at high reasoning. It used 4.75% fewer tokens but resolved 6/10 tasks versus stock Codex at 8/10. It did not test Safe mode.
+[Full controlled report](reports/five-way-benchmark.md) · [All controlled metrics](reports/five-way-benchmark.json)
 
-### Controlled repeatable-workload check
+### Earlier six-way Terminal-Bench check
 
-Across **90 isolated `gpt-5.6-sol` medium trials** on six fixed workloads, every configuration passed all 18 quality gates:
+![Six-way Terminal-Bench token and quality comparison](assets/benchmarks/terminal-bench-six-way.svg)
 
-| Configuration | Quality | Mean provider tokens | Difference vs Codex | Cache token hit | Mean time |
-|---|---:|---:|---:|---:|---:|
-| Codex | 18/18 | 46,263 | Baseline | 72.1% | 18.1s |
-| **CodexZero Max Savings** | **18/18** | **39,915** | **13.72% fewer** | **76.8%** | 22.4s |
-| Codex + RTK | 18/18 | 49,763 | 7.56% more | 76.3% | 19.8s |
-| Codex + Caveman | 18/18 | 67,482 | 45.87% more | 77.5% | 25.8s |
-| Codex + Caveman + RTK | 18/18 | 70,707 | 52.84% more | 79.6% | 29.9s |
+This first public panel tested more combinations once per task. The repeated three-way run above is the stronger measurement for Codex, Safe, and RTK.
 
-CodexZero was lower-token in **16 of 18** paired trials. The exact two-sided sign-test result was **p = 0.001312**; the workload-stratified 95% confidence interval was **5,423 to 7,828 fewer tokens per trial**. Its mean wall time was 4.3 seconds longer than stock Codex.
+[Full six-way report](reports/terminal-bench-2.1-mini/README.md) · [Machine-readable totals](reports/terminal-bench-2.1-mini/summary.json)
 
-[Full controlled report](reports/five-way-benchmark.md) · [All controlled-trial metrics](reports/five-way-benchmark.json) · [Historical Max Savings harness](tools/benchmark-five-way-max-savings-v1.py) · [Safe/Max Savings harness](tools/benchmark-five-way.py)
+### DeepSWE at high reasoning
+
+![DeepSWE high-reasoning token and quality comparison](assets/benchmarks/deepswe-high.svg)
+
+This earlier run tested the leaner Max setup. It saved **4.75%** of provider tokens and resolved 6/10 tasks, compared with Codex at 8/10. Safe was created after this run and was not part of it.
+
+[Full DeepSWE report](reports/deepswe-sol-high-10/README.md) · [Machine-readable totals](reports/deepswe-sol-high-10/summary.json)
+
+### Every mode combination
+
+![Full-factorial mode-combination token and quality comparison](assets/benchmarks/full-factorial.svg)
+
+All 36 runs passed the fixed task. **Max + RTK used 19.14% fewer tokens** than stock Codex in this low-reasoning check.
+
+[Full combination report](reports/combination-benchmark.md) · [Machine-readable totals](reports/combination-benchmark.json)
+
+### One-task DeepSWE pilot
+
+![DeepSWE one-task pilot token and quality comparison](assets/benchmarks/deepswe-pilot.svg)
+
+Both setups resolved the task. The historical Max setup used **31.30% fewer tokens**. This is a one-task result, so the larger runs above carry more weight.
+
+[Full pilot report](reports/deepswe-pilot.md) · [Machine-readable totals](reports/deepswe-pilot.json)
 
 ## Two modes
 
-| Mode | Model instructions | Tool-result pipeline | Default |
+| Mode | What it does | Best fit | Default |
 |---|---|---|---|
-| **Safe** | Stock Codex instructions | Guarded compact payloads with raw artifacts and stock fallback | **Yes** |
-| **Max Savings** | Bundled 738-token prompt | Same guarded pipeline | No |
+| **Safe** | Keeps Codex’s normal instructions and shortens eligible command results | Everyday work | **Yes** |
+| **Max Savings** | Also replaces the long built-in instruction sheet with a 738-token version | Repeatable work | No |
 
-Safe targets quality parity by leaving Codex’s model instructions alone. It matched stock Codex at 29/36 in the repeated Terminal-Bench run. Max Savings was not included in that replication; it matched Codex at 7/10 in the earlier six-way panel but used 21.05% more tokens there. Existing `command-output` installs map to Safe; existing `full-lean` installs map to Max Savings.
+Safe matched stock Codex at 29/36 in the repeated public run. Max produced the lowest token total in several fixed-workload checks. Switch any time with `codex-zero mode safe` or `codex-zero mode max-save`.
 
 ## Install
 
