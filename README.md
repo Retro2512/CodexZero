@@ -62,7 +62,7 @@ Open regular Codex at any time.
 
 Codex and CodexZero each completed 12 software tasks three times. CodexZero matched the final task score while processing 22.69 million tokens instead of 26.58 million.
 
-[Methods and data](reports/terminal-bench-2.1-replication/README.md)
+[Benchmark summary](reports/terminal-bench-2.1-replication/README.md)
 
 ## How it works
 

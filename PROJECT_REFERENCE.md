@@ -1139,7 +1139,7 @@ The upstream clone under `/work/` is local build material and is not tracked.
 | `reports/release-verification.json` | Release assets, checksums, CI, installation |
 | `reports/archive/prompt-benchmark.md` | Superseded human-readable dated prompt comparison |
 | `reports/archive/prompt-benchmark.json` | Superseded machine-readable prompt comparison and scenarios |
-| `reports/terminal-bench-2.1-replication/README.md` | Current public benchmark summary, methodology, and appendix |
+| `reports/terminal-bench-2.1-replication/README.md` | Current public benchmark summary |
 
 Local verification, prompt-metadata, and past-usage reports are generated when
 needed and ignored by Git.
