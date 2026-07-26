@@ -1,6 +1,7 @@
-# CodexZero
-
-**Use fewer tokens in Codex without replacing your current setup.**
+<div align="center">
+  <h1>CodexZero</h1>
+  <p><strong>Zero Wasted Tokens, Same Benchmark Scores &amp; Quality, More Usage Limits, Less Cost</strong></p>
+</div>
 
 ![Highest recorded token reduction for CodexZero Max, CodexZero, RTK, standard Codex, Caveman, and RTK plus Caveman](assets/benchmarks/benchmark-overview.svg)
 
