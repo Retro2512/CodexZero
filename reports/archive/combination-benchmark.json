@@ -1,0 +1,2990 @@
+{
+  "schema": "codexzero-combination-benchmark-v1",
+  "captured_at": "2026-07-24T20:01:32.857089+00:00",
+  "model": "gpt-5.6-sol",
+  "reasoning_effort": "low",
+  "tokenizer": "o200k_base",
+  "repetitions": 3,
+  "seed": 2512,
+  "binary": {
+    "name": "codex-zero-core.exe",
+    "version": "codex-cli 0.145.0-alpha.30",
+    "sha256": "eb0cc8bb522510ef51f281ae386c18f432ac2f24303223aa12f8a7f37c219956"
+  },
+  "task_sha256": {
+    "rtk-false-caveman-false": "b46bc8c5fa23054a93e03d93361a9b7120f39a7ec2a0b1cbad564ceb423061ed",
+    "rtk-false-caveman-true": "a26d8cbdbf510ebecaf19b359e583acb4780eb2d42e80eb626559751b691653b",
+    "rtk-true-caveman-false": "89e1438d54c85c1cde319d7131404a59ab362c732ae0d616a4a8def9013960b5",
+    "rtk-true-caveman-true": "48e833b2ec1e1a0f4df1d4b39e01902e38633becf9aa734923cda256578fe3e3"
+  },
+  "instruction_tokens": {
+    "rtk": 186,
+    "caveman_skill": 1178,
+    "caveman_activation": 13,
+    "lean_prompt": 738
+  },
+  "prompt_reference": {
+    "id": "gpt-5.6-sol-instructions-snapshot-2026-07-24",
+    "baseline_tokens": 3552,
+    "lean_tokens": 738,
+    "tokens_removed_per_request": 2814,
+    "reduction_percent": 79.2
+  },
+  "deterministic_payload": {
+    "captures": {
+      "git-diff": {
+        "false": {
+          "command": [
+            "git",
+            "diff",
+            "--",
+            "benchmark-data.txt"
+          ],
+          "exit_code": 0,
+          "sha256": "1fce135431603cf2b6a34cec539ba2b3eabed5f37080dfedebbba649e6a573c3",
+          "bytes": 6175,
+          "raw_tokens": 1905
+        },
+        "true": {
+          "command": [
+            "rtk",
+            "git",
+            "diff",
+            "--",
+            "benchmark-data.txt"
+          ],
+          "exit_code": 0,
+          "sha256": "13c38cdf99df0d10060a2fefa24af3bea6344398f09a00f7d66015294ac3cee8",
+          "bytes": 4698,
+          "raw_tokens": 1500
+        }
+      },
+      "npm-test": {
+        "false": {
+          "command": [
+            "npm.cmd",
+            "test"
+          ],
+          "exit_code": 0,
+          "sha256": "d4f13502b17d32240221194ab15db1665f39c569c13e862c8be3e0ed1b7cb95f",
+          "bytes": 3597,
+          "raw_tokens": 662
+        },
+        "true": {
+          "command": [
+            "rtk",
+            "npm",
+            "test"
+          ],
+          "exit_code": 0,
+          "sha256": "96d0aca2fa122f302519abe7338d45d31a3b7c2a563cacc34fec66f49c39a95a",
+          "bytes": 3595,
+          "raw_tokens": 661
+        }
+      },
+      "repeated-output": {
+        "false": {
+          "command": [
+            "node",
+            "repeated-output.mjs",
+            "600"
+          ],
+          "exit_code": 0,
+          "sha256": "b432c7cba00fd4b869085dc713aa8ca282f86375e1db2b4862bbb00f266ffd3d",
+          "bytes": 36042,
+          "raw_tokens": 7208
+        },
+        "true": {
+          "command": [
+            "node",
+            "repeated-output.mjs",
+            "600"
+          ],
+          "exit_code": 0,
+          "sha256": "b432c7cba00fd4b869085dc713aa8ca282f86375e1db2b4862bbb00f266ffd3d",
+          "bytes": 36042,
+          "raw_tokens": 7208
+        }
+      }
+    },
+    "matrix": [
+      {
+        "rtk": false,
+        "codexzero": false,
+        "model_visible_tool_tokens": 9849,
+        "by_command": {
+          "git-diff": 1930,
+          "npm-test": 686,
+          "repeated-output": 7233
+        },
+        "tokens_saved_vs_baseline": 0,
+        "reduction_percent_vs_baseline": 0.0
+      },
+      {
+        "rtk": false,
+        "codexzero": true,
+        "model_visible_tool_tokens": 2761,
+        "by_command": {
+          "git-diff": 1930,
+          "npm-test": 686,
+          "repeated-output": 145
+        },
+        "tokens_saved_vs_baseline": 7088,
+        "reduction_percent_vs_baseline": 71.97
+      },
+      {
+        "rtk": true,
+        "codexzero": false,
+        "model_visible_tool_tokens": 9444,
+        "by_command": {
+          "git-diff": 1525,
+          "npm-test": 686,
+          "repeated-output": 7233
+        },
+        "tokens_saved_vs_baseline": 405,
+        "reduction_percent_vs_baseline": 4.11
+      },
+      {
+        "rtk": true,
+        "codexzero": true,
+        "model_visible_tool_tokens": 2356,
+        "by_command": {
+          "git-diff": 1525,
+          "npm-test": 686,
+          "repeated-output": 145
+        },
+        "tokens_saved_vs_baseline": 7493,
+        "reduction_percent_vs_baseline": 76.08
+      }
+    ],
+    "non_repetitive_control_matrix": [
+      {
+        "rtk": false,
+        "codexzero": false,
+        "model_visible_tool_tokens": 2616,
+        "tokens_saved_vs_baseline": 0,
+        "reduction_percent_vs_baseline": 0.0
+      },
+      {
+        "rtk": false,
+        "codexzero": true,
+        "model_visible_tool_tokens": 2616,
+        "tokens_saved_vs_baseline": 0,
+        "reduction_percent_vs_baseline": 0.0
+      },
+      {
+        "rtk": true,
+        "codexzero": false,
+        "model_visible_tool_tokens": 2211,
+        "tokens_saved_vs_baseline": 405,
+        "reduction_percent_vs_baseline": 15.48
+      },
+      {
+        "rtk": true,
+        "codexzero": true,
+        "model_visible_tool_tokens": 2211,
+        "tokens_saved_vs_baseline": 405,
+        "reduction_percent_vs_baseline": 15.48
+      }
+    ]
+  },
+  "aggregates": [
+    {
+      "configuration": "stock",
+      "prompt_mode": "stock",
+      "rtk": false,
+      "caveman": false,
+      "trials": 3,
+      "quality_passes": 3,
+      "means": {
+        "inference_requests": 2.0,
+        "input_tokens": 40449.3,
+        "cached_input_tokens": 23466.7,
+        "output_tokens": 1277.3,
+        "total_tokens": 41726.7,
+        "tool_output_tokens": 8699.0,
+        "assistant_tokens": 857.0,
+        "wall_time_ms": 42112.8
+      },
+      "ranges": {
+        "inference_requests": [
+          2,
+          2
+        ],
+        "input_tokens": [
+          39880,
+          40737
+        ],
+        "cached_input_tokens": [
+          15104,
+          30208
+        ],
+        "output_tokens": [
+          1231,
+          1306
+        ],
+        "total_tokens": [
+          41175,
+          42043
+        ],
+        "tool_output_tokens": [
+          8690,
+          8710
+        ],
+        "assistant_tokens": [
+          810,
+          908
+        ],
+        "wall_time_ms": [
+          38793.6,
+          44735.1
+        ]
+      },
+      "codexzero_measured_tokens_eliminated": 0.0,
+      "mean_savings_vs_paired_stock": {
+        "inference_requests": 0.0,
+        "input_tokens": 0.0,
+        "cached_input_tokens": 0.0,
+        "output_tokens": 0.0,
+        "total_tokens": 0.0,
+        "tool_output_tokens": 0.0,
+        "assistant_tokens": 0.0,
+        "wall_time_ms": 0.0
+      },
+      "paired_savings_ranges": {
+        "inference_requests": [
+          0,
+          0
+        ],
+        "input_tokens": [
+          0,
+          0
+        ],
+        "cached_input_tokens": [
+          0,
+          0
+        ],
+        "output_tokens": [
+          0,
+          0
+        ],
+        "total_tokens": [
+          0,
+          0
+        ],
+        "tool_output_tokens": [
+          0,
+          0
+        ],
+        "assistant_tokens": [
+          0,
+          0
+        ],
+        "wall_time_ms": [
+          0.0,
+          0.0
+        ]
+      },
+      "total_token_reduction_percent_vs_stock": 0.0
+    },
+    {
+      "configuration": "stock+caveman",
+      "prompt_mode": "stock",
+      "rtk": false,
+      "caveman": true,
+      "trials": 3,
+      "quality_passes": 3,
+      "means": {
+        "inference_requests": 3.0,
+        "input_tokens": 59080.3,
+        "cached_input_tokens": 34560.0,
+        "output_tokens": 1286.0,
+        "total_tokens": 60366.3,
+        "tool_output_tokens": 9920.3,
+        "assistant_tokens": 650.7,
+        "wall_time_ms": 45592.7
+      },
+      "ranges": {
+        "inference_requests": [
+          3,
+          3
+        ],
+        "input_tokens": [
+          58645,
+          59907
+        ],
+        "cached_input_tokens": [
+          28160,
+          44288
+        ],
+        "output_tokens": [
+          1205,
+          1359
+        ],
+        "total_tokens": [
+          59939,
+          61112
+        ],
+        "tool_output_tokens": [
+          9918,
+          9924
+        ],
+        "assistant_tokens": [
+          638,
+          659
+        ],
+        "wall_time_ms": [
+          42193.8,
+          48374.0
+        ]
+      },
+      "codexzero_measured_tokens_eliminated": 0.0,
+      "mean_savings_vs_paired_stock": {
+        "inference_requests": -1.0,
+        "input_tokens": -18631.0,
+        "cached_input_tokens": -11093.3,
+        "output_tokens": -8.7,
+        "total_tokens": -18639.7,
+        "tool_output_tokens": -1221.3,
+        "assistant_tokens": 206.3,
+        "wall_time_ms": -3479.9
+      },
+      "paired_savings_ranges": {
+        "inference_requests": [
+          -1,
+          -1
+        ],
+        "input_tokens": [
+          -19170,
+          -17958
+        ],
+        "cached_input_tokens": [
+          -29184,
+          2048
+        ],
+        "output_tokens": [
+          -128,
+          101
+        ],
+        "total_tokens": [
+          -19069,
+          -18086
+        ],
+        "tool_output_tokens": [
+          -1234,
+          -1208
+        ],
+        "assistant_tokens": [
+          155,
+          270
+        ],
+        "wall_time_ms": [
+          -7416.6,
+          2541.3
+        ]
+      },
+      "total_token_reduction_percent_vs_stock": -44.67
+    },
+    {
+      "configuration": "stock+rtk",
+      "prompt_mode": "stock",
+      "rtk": true,
+      "caveman": false,
+      "trials": 3,
+      "quality_passes": 3,
+      "means": {
+        "inference_requests": 2.0,
+        "input_tokens": 40828.3,
+        "cached_input_tokens": 19456.0,
+        "output_tokens": 1182.0,
+        "total_tokens": 42010.3,
+        "tool_output_tokens": 8593.7,
+        "assistant_tokens": 824.7,
+        "wall_time_ms": 40261.7
+      },
+      "ranges": {
+        "inference_requests": [
+          2,
+          2
+        ],
+        "input_tokens": [
+          40080,
+          41208
+        ],
+        "cached_input_tokens": [
+          15104,
+          28160
+        ],
+        "output_tokens": [
+          1036,
+          1324
+        ],
+        "total_tokens": [
+          41116,
+          42521
+        ],
+        "tool_output_tokens": [
+          8578,
+          8602
+        ],
+        "assistant_tokens": [
+          733,
+          952
+        ],
+        "wall_time_ms": [
+          36646.5,
+          44560.8
+        ]
+      },
+      "codexzero_measured_tokens_eliminated": 0.0,
+      "mean_savings_vs_paired_stock": {
+        "inference_requests": 0.0,
+        "input_tokens": -379.0,
+        "cached_input_tokens": 4010.7,
+        "output_tokens": 95.3,
+        "total_tokens": -283.7,
+        "tool_output_tokens": 105.3,
+        "assistant_tokens": 32.3,
+        "wall_time_ms": 1851.1
+      },
+      "paired_savings_ranges": {
+        "inference_requests": [
+          0,
+          0
+        ],
+        "input_tokens": [
+          -1317,
+          657
+        ],
+        "cached_input_tokens": [
+          -3072,
+          15104
+        ],
+        "output_tokens": [
+          -29,
+          270
+        ],
+        "total_tokens": [
+          -1346,
+          927
+        ],
+        "tool_output_tokens": [
+          88,
+          119
+        ],
+        "assistant_tokens": [
+          -44,
+          77
+        ],
+        "wall_time_ms": [
+          -5767.2,
+          6163.2
+        ]
+      },
+      "total_token_reduction_percent_vs_stock": -0.68
+    },
+    {
+      "configuration": "stock+rtk+caveman",
+      "prompt_mode": "stock",
+      "rtk": true,
+      "caveman": true,
+      "trials": 3,
+      "quality_passes": 3,
+      "means": {
+        "inference_requests": 3.0,
+        "input_tokens": 60230.7,
+        "cached_input_tokens": 45653.3,
+        "output_tokens": 1371.0,
+        "total_tokens": 61601.7,
+        "tool_output_tokens": 9815.3,
+        "assistant_tokens": 690.0,
+        "wall_time_ms": 51276.1
+      },
+      "ranges": {
+        "inference_requests": [
+          3,
+          3
+        ],
+        "input_tokens": [
+          59233,
+          60860
+        ],
+        "cached_input_tokens": [
+          44288,
+          46336
+        ],
+        "output_tokens": [
+          1345,
+          1410
+        ],
+        "total_tokens": [
+          60578,
+          62270
+        ],
+        "tool_output_tokens": [
+          9814,
+          9816
+        ],
+        "assistant_tokens": [
+          670,
+          708
+        ],
+        "wall_time_ms": [
+          49983.9,
+          53756.2
+        ]
+      },
+      "codexzero_measured_tokens_eliminated": 0.0,
+      "mean_savings_vs_paired_stock": {
+        "inference_requests": -1.0,
+        "input_tokens": -19781.3,
+        "cached_input_tokens": -22186.7,
+        "output_tokens": -93.7,
+        "total_tokens": -19875.0,
+        "tool_output_tokens": -1116.3,
+        "assistant_tokens": 167.0,
+        "wall_time_ms": -9163.3
+      },
+      "paired_savings_ranges": {
+        "inference_requests": [
+          -1,
+          -1
+        ],
+        "input_tokens": [
+          -20719,
+          -18496
+        ],
+        "cached_input_tokens": [
+          -31232,
+          -14080
+        ],
+        "output_tokens": [
+          -179,
+          -39
+        ],
+        "total_tokens": [
+          -20782,
+          -18535
+        ],
+        "tool_output_tokens": [
+          -1126,
+          -1106
+        ],
+        "assistant_tokens": [
+          102,
+          216
+        ],
+        "wall_time_ms": [
+          -11190.3,
+          -7278.6
+        ]
+      },
+      "total_token_reduction_percent_vs_stock": -47.63
+    },
+    {
+      "configuration": "command-output",
+      "prompt_mode": "command-output",
+      "rtk": false,
+      "caveman": false,
+      "trials": 3,
+      "quality_passes": 3,
+      "means": {
+        "inference_requests": 2.0,
+        "input_tokens": 37742.0,
+        "cached_input_tokens": 15104.0,
+        "output_tokens": 1381.7,
+        "total_tokens": 39123.7,
+        "tool_output_tokens": 5968.7,
+        "assistant_tokens": 889.0,
+        "wall_time_ms": 49207.9
+      },
+      "ranges": {
+        "inference_requests": [
+          2,
+          2
+        ],
+        "input_tokens": [
+          36891,
+          38488
+        ],
+        "cached_input_tokens": [
+          15104,
+          15104
+        ],
+        "output_tokens": [
+          1185,
+          1632
+        ],
+        "total_tokens": [
+          38076,
+          39816
+        ],
+        "tool_output_tokens": [
+          5775,
+          6350
+        ],
+        "assistant_tokens": [
+          806,
+          984
+        ],
+        "wall_time_ms": [
+          42155.9,
+          59293.5
+        ]
+      },
+      "codexzero_measured_tokens_eliminated": 2680.7,
+      "mean_savings_vs_paired_stock": {
+        "inference_requests": 0.0,
+        "input_tokens": 2707.3,
+        "cached_input_tokens": 8362.7,
+        "output_tokens": -104.3,
+        "total_tokens": 2603.0,
+        "tool_output_tokens": 2730.3,
+        "assistant_tokens": -32.0,
+        "wall_time_ms": -7095.1
+      },
+      "paired_savings_ranges": {
+        "inference_requests": [
+          0,
+          0
+        ],
+        "input_tokens": [
+          1392,
+          3840
+        ],
+        "cached_input_tokens": [
+          0,
+          15104
+        ],
+        "output_tokens": [
+          -326,
+          46
+        ],
+        "total_tokens": [
+          1359,
+          3886
+        ],
+        "tool_output_tokens": [
+          2360,
+          2922
+        ],
+        "assistant_tokens": [
+          -174,
+          47
+        ],
+        "wall_time_ms": [
+          -14558.4,
+          653.8
+        ]
+      },
+      "total_token_reduction_percent_vs_stock": 6.24
+    },
+    {
+      "configuration": "command-output+caveman",
+      "prompt_mode": "command-output",
+      "rtk": false,
+      "caveman": true,
+      "trials": 3,
+      "quality_passes": 3,
+      "means": {
+        "inference_requests": 3.0,
+        "input_tokens": 57033.3,
+        "cached_input_tokens": 43264.0,
+        "output_tokens": 1276.3,
+        "total_tokens": 58309.7,
+        "tool_output_tokens": 7000.0,
+        "assistant_tokens": 642.7,
+        "wall_time_ms": 49028.2
+      },
+      "ranges": {
+        "inference_requests": [
+          3,
+          3
+        ],
+        "input_tokens": [
+          57010,
+          57046
+        ],
+        "cached_input_tokens": [
+          42240,
+          45312
+        ],
+        "output_tokens": [
+          1223,
+          1377
+        ],
+        "total_tokens": [
+          58269,
+          58387
+        ],
+        "tool_output_tokens": [
+          6998,
+          7001
+        ],
+        "assistant_tokens": [
+          615,
+          697
+        ],
+        "wall_time_ms": [
+          48051.0,
+          50279.8
+        ]
+      },
+      "codexzero_measured_tokens_eliminated": 2918.7,
+      "mean_savings_vs_paired_stock": {
+        "inference_requests": -1.0,
+        "input_tokens": -16584.0,
+        "cached_input_tokens": -19797.3,
+        "output_tokens": 1.0,
+        "total_tokens": -16583.0,
+        "tool_output_tokens": 1699.0,
+        "assistant_tokens": 214.3,
+        "wall_time_ms": -6915.4
+      },
+      "paired_savings_ranges": {
+        "inference_requests": [
+          -1,
+          -1
+        ],
+        "input_tokens": [
+          -17164,
+          -16273
+        ],
+        "cached_input_tokens": [
+          -27136,
+          -12032
+        ],
+        "output_tokens": [
+          -71,
+          66
+        ],
+        "total_tokens": [
+          -17098,
+          -16307
+        ],
+        "tool_output_tokens": [
+          1689,
+          1712
+        ],
+        "assistant_tokens": [
+          113,
+          293
+        ],
+        "wall_time_ms": [
+          -9257.4,
+          -5544.7
+        ]
+      },
+      "total_token_reduction_percent_vs_stock": -39.74
+    },
+    {
+      "configuration": "command-output+rtk",
+      "prompt_mode": "command-output",
+      "rtk": true,
+      "caveman": false,
+      "trials": 3,
+      "quality_passes": 3,
+      "means": {
+        "inference_requests": 2.0,
+        "input_tokens": 36975.7,
+        "cached_input_tokens": 15104.0,
+        "output_tokens": 1143.0,
+        "total_tokens": 38118.7,
+        "tool_output_tokens": 4747.0,
+        "assistant_tokens": 746.7,
+        "wall_time_ms": 40666.4
+      },
+      "ranges": {
+        "inference_requests": [
+          2,
+          2
+        ],
+        "input_tokens": [
+          36358,
+          37379
+        ],
+        "cached_input_tokens": [
+          15104,
+          15104
+        ],
+        "output_tokens": [
+          939,
+          1372
+        ],
+        "total_tokens": [
+          37476,
+          38751
+        ],
+        "tool_output_tokens": [
+          4694,
+          4774
+        ],
+        "assistant_tokens": [
+          653,
+          859
+        ],
+        "wall_time_ms": [
+          35213.5,
+          43802.6
+        ]
+      },
+      "codexzero_measured_tokens_eliminated": 3841.0,
+      "mean_savings_vs_paired_stock": {
+        "inference_requests": 0.0,
+        "input_tokens": 3473.7,
+        "cached_input_tokens": 8362.7,
+        "output_tokens": 134.3,
+        "total_tokens": 3608.0,
+        "tool_output_tokens": 3952.0,
+        "assistant_tokens": 110.3,
+        "wall_time_ms": 1446.4
+      },
+      "paired_savings_ranges": {
+        "inference_requests": [
+          0,
+          0
+        ],
+        "input_tokens": [
+          2501,
+          4373
+        ],
+        "cached_input_tokens": [
+          0,
+          15104
+        ],
+        "output_tokens": [
+          -77,
+          367
+        ],
+        "total_tokens": [
+          2424,
+          4486
+        ],
+        "tool_output_tokens": [
+          3916,
+          4003
+        ],
+        "assistant_tokens": [
+          49,
+          157
+        ],
+        "wall_time_ms": [
+          -5009.0,
+          9521.6
+        ]
+      },
+      "total_token_reduction_percent_vs_stock": 8.65
+    },
+    {
+      "configuration": "command-output+rtk+caveman",
+      "prompt_mode": "command-output",
+      "rtk": true,
+      "caveman": true,
+      "trials": 3,
+      "quality_passes": 3,
+      "means": {
+        "inference_requests": 3.0,
+        "input_tokens": 56409.7,
+        "cached_input_tokens": 42922.7,
+        "output_tokens": 1364.3,
+        "total_tokens": 57774.0,
+        "tool_output_tokens": 5992.3,
+        "assistant_tokens": 653.0,
+        "wall_time_ms": 54463.7
+      },
+      "ranges": {
+        "inference_requests": [
+          3,
+          3
+        ],
+        "input_tokens": [
+          55392,
+          56933
+        ],
+        "cached_input_tokens": [
+          39168,
+          46336
+        ],
+        "output_tokens": [
+          1316,
+          1410
+        ],
+        "total_tokens": [
+          56708,
+          58314
+        ],
+        "tool_output_tokens": [
+          5984,
+          5997
+        ],
+        "assistant_tokens": [
+          640,
+          665
+        ],
+        "wall_time_ms": [
+          48085.4,
+          58429.6
+        ]
+      },
+      "codexzero_measured_tokens_eliminated": 3822.0,
+      "mean_savings_vs_paired_stock": {
+        "inference_requests": -1.0,
+        "input_tokens": -15960.3,
+        "cached_input_tokens": -19456.0,
+        "output_tokens": -87.0,
+        "total_tokens": -16047.3,
+        "tool_output_tokens": 2706.7,
+        "assistant_tokens": 204.0,
+        "wall_time_ms": -12350.9
+      },
+      "paired_savings_ranges": {
+        "inference_requests": [
+          -1,
+          -1
+        ],
+        "input_tokens": [
+          -16202,
+          -15512
+        ],
+        "cached_input_tokens": [
+          -24064,
+          -16128
+        ],
+        "output_tokens": [
+          -136,
+          -21
+        ],
+        "total_tokens": [
+          -16338,
+          -15533
+        ],
+        "tool_output_tokens": [
+          2694,
+          2713
+        ],
+        "assistant_tokens": [
+          156,
+          243
+        ],
+        "wall_time_ms": [
+          -15619.9,
+          -9291.8
+        ]
+      },
+      "total_token_reduction_percent_vs_stock": -38.46
+    },
+    {
+      "configuration": "full-lean",
+      "prompt_mode": "full-lean",
+      "rtk": false,
+      "caveman": false,
+      "trials": 3,
+      "quality_passes": 3,
+      "means": {
+        "inference_requests": 2.0,
+        "input_tokens": 32419.0,
+        "cached_input_tokens": 19029.3,
+        "output_tokens": 1410.0,
+        "total_tokens": 33829.0,
+        "tool_output_tokens": 5788.0,
+        "assistant_tokens": 872.0,
+        "wall_time_ms": 49133.0
+      },
+      "ranges": {
+        "inference_requests": [
+          2,
+          2
+        ],
+        "input_tokens": [
+          32066,
+          33046
+        ],
+        "cached_input_tokens": [
+          12032,
+          23040
+        ],
+        "output_tokens": [
+          1314,
+          1517
+        ],
+        "total_tokens": [
+          33380,
+          34563
+        ],
+        "tool_output_tokens": [
+          5777,
+          5807
+        ],
+        "assistant_tokens": [
+          839,
+          918
+        ],
+        "wall_time_ms": [
+          42072.5,
+          53955.0
+        ]
+      },
+      "codexzero_measured_tokens_eliminated": 2912.0,
+      "mean_savings_vs_paired_stock": {
+        "inference_requests": 0.0,
+        "input_tokens": 8030.3,
+        "cached_input_tokens": 4437.3,
+        "output_tokens": -132.7,
+        "total_tokens": 7897.7,
+        "tool_output_tokens": 2911.0,
+        "assistant_tokens": -15.0,
+        "wall_time_ms": -7020.2
+      },
+      "paired_savings_ranges": {
+        "inference_requests": [
+          0,
+          0
+        ],
+        "input_tokens": [
+          7691,
+          8586
+        ],
+        "cached_input_tokens": [
+          3072,
+          7168
+        ],
+        "output_tokens": [
+          -211,
+          -19
+        ],
+        "total_tokens": [
+          7480,
+          8418
+        ],
+        "tool_output_tokens": [
+          2903,
+          2920
+        ],
+        "assistant_tokens": [
+          -108,
+          49
+        ],
+        "wall_time_ms": [
+          -11145.3,
+          -3278.9
+        ]
+      },
+      "total_token_reduction_percent_vs_stock": 18.93
+    },
+    {
+      "configuration": "full-lean+caveman",
+      "prompt_mode": "full-lean",
+      "rtk": false,
+      "caveman": true,
+      "trials": 3,
+      "quality_passes": 3,
+      "means": {
+        "inference_requests": 2.3,
+        "input_tokens": 38081.3,
+        "cached_input_tokens": 23722.7,
+        "output_tokens": 1257.7,
+        "total_tokens": 39339.0,
+        "tool_output_tokens": 6195.0,
+        "assistant_tokens": 671.3,
+        "wall_time_ms": 50369.5
+      },
+      "ranges": {
+        "inference_requests": [
+          2,
+          3
+        ],
+        "input_tokens": [
+          32453,
+          48375
+        ],
+        "cached_input_tokens": [
+          12032,
+          36096
+        ],
+        "output_tokens": [
+          1174,
+          1379
+        ],
+        "total_tokens": [
+          33673,
+          49754
+        ],
+        "tool_output_tokens": [
+          5778,
+          7001
+        ],
+        "assistant_tokens": [
+          608,
+          727
+        ],
+        "wall_time_ms": [
+          41768.6,
+          58424.4
+        ]
+      },
+      "codexzero_measured_tokens_eliminated": 2912.3,
+      "mean_savings_vs_paired_stock": {
+        "inference_requests": -0.3,
+        "input_tokens": 2368.0,
+        "cached_input_tokens": -256.0,
+        "output_tokens": 19.7,
+        "total_tokens": 2387.7,
+        "tool_output_tokens": 2504.0,
+        "assistant_tokens": 185.7,
+        "wall_time_ms": -8256.7
+      },
+      "paired_savings_ranges": {
+        "inference_requests": [
+          -1,
+          0
+        ],
+        "input_tokens": [
+          -8495,
+          8278
+        ],
+        "cached_input_tokens": [
+          -20992,
+          13056
+        ],
+        "output_tokens": [
+          -84,
+          132
+        ],
+        "total_tokens": [
+          -8579,
+          8289
+        ],
+        "tool_output_tokens": [
+          1709,
+          2912
+        ],
+        "assistant_tokens": [
+          83,
+          300
+        ],
+        "wall_time_ms": [
+          -19630.8,
+          2966.5
+        ]
+      },
+      "total_token_reduction_percent_vs_stock": 5.72
+    },
+    {
+      "configuration": "full-lean+rtk",
+      "prompt_mode": "full-lean",
+      "rtk": true,
+      "caveman": false,
+      "trials": 3,
+      "quality_passes": 3,
+      "means": {
+        "inference_requests": 2.0,
+        "input_tokens": 32533.3,
+        "cached_input_tokens": 19712.0,
+        "output_tokens": 1208.7,
+        "total_tokens": 33742.0,
+        "tool_output_tokens": 4793.3,
+        "assistant_tokens": 746.7,
+        "wall_time_ms": 40667.6
+      },
+      "ranges": {
+        "inference_requests": [
+          2,
+          2
+        ],
+        "input_tokens": [
+          32497,
+          32561
+        ],
+        "cached_input_tokens": [
+          13056,
+          23040
+        ],
+        "output_tokens": [
+          1193,
+          1240
+        ],
+        "total_tokens": [
+          33690,
+          33782
+        ],
+        "tool_output_tokens": [
+          4767,
+          4807
+        ],
+        "assistant_tokens": [
+          697,
+          814
+        ],
+        "wall_time_ms": [
+          39627.8,
+          41243.6
+        ]
+      },
+      "codexzero_measured_tokens_eliminated": 3803.3,
+      "mean_savings_vs_paired_stock": {
+        "inference_requests": 0.0,
+        "input_tokens": 7916.0,
+        "cached_input_tokens": 3754.7,
+        "output_tokens": 68.7,
+        "total_tokens": 7984.7,
+        "tool_output_tokens": 3905.7,
+        "assistant_tokens": 110.3,
+        "wall_time_ms": 1445.2
+      },
+      "paired_savings_ranges": {
+        "inference_requests": [
+          0,
+          0
+        ],
+        "input_tokens": [
+          7338,
+          8240
+        ],
+        "cached_input_tokens": [
+          -7936,
+          17152
+        ],
+        "output_tokens": [
+          38,
+          113
+        ],
+        "total_tokens": [
+          7393,
+          8353
+        ],
+        "tool_output_tokens": [
+          3883,
+          3930
+        ],
+        "assistant_tokens": [
+          81,
+          156
+        ],
+        "wall_time_ms": [
+          -834.2,
+          3491.5
+        ]
+      },
+      "total_token_reduction_percent_vs_stock": 19.14
+    },
+    {
+      "configuration": "full-lean+rtk+caveman",
+      "prompt_mode": "full-lean",
+      "rtk": true,
+      "caveman": true,
+      "trials": 3,
+      "quality_passes": 3,
+      "means": {
+        "inference_requests": 2.3,
+        "input_tokens": 38410.7,
+        "cached_input_tokens": 25429.3,
+        "output_tokens": 1250.7,
+        "total_tokens": 39661.3,
+        "tool_output_tokens": 5148.3,
+        "assistant_tokens": 643.0,
+        "wall_time_ms": 46099.6
+      },
+      "ranges": {
+        "inference_requests": [
+          2,
+          3
+        ],
+        "input_tokens": [
+          32820,
+          49487
+        ],
+        "cached_input_tokens": [
+          13056,
+          38144
+        ],
+        "output_tokens": [
+          1217,
+          1300
+        ],
+        "total_tokens": [
+          34120,
+          50722
+        ],
+        "tool_output_tokens": [
+          4692,
+          5985
+        ],
+        "assistant_tokens": [
+          634,
+          650
+        ],
+        "wall_time_ms": [
+          42467.6,
+          50790.9
+        ]
+      },
+      "codexzero_measured_tokens_eliminated": 3847.3,
+      "mean_savings_vs_paired_stock": {
+        "inference_requests": -0.3,
+        "input_tokens": 2038.7,
+        "cached_input_tokens": -1962.7,
+        "output_tokens": 26.7,
+        "total_tokens": 2065.3,
+        "tool_output_tokens": 3550.7,
+        "assistant_tokens": 214.0,
+        "wall_time_ms": -3986.8
+      },
+      "paired_savings_ranges": {
+        "inference_requests": [
+          -1,
+          0
+        ],
+        "input_tokens": [
+          -9607,
+          7917
+        ],
+        "cached_input_tokens": [
+          -23040,
+          12032
+        ],
+        "output_tokens": [
+          6,
+          60
+        ],
+        "total_tokens": [
+          -9547,
+          7923
+        ],
+        "tool_output_tokens": [
+          2725,
+          4005
+        ],
+        "assistant_tokens": [
+          160,
+          263
+        ],
+        "wall_time_ms": [
+          -6246.6,
+          342.1
+        ]
+      },
+      "total_token_reduction_percent_vs_stock": 4.95
+    }
+  ],
+  "trials": [
+    {
+      "id": "r1-full-lean",
+      "repetition": 1,
+      "configuration": "full-lean",
+      "prompt_mode": "full-lean",
+      "rtk": false,
+      "caveman": false,
+      "exit_code": 0,
+      "wall_time_ms": 42072.5,
+      "quality_pass": true,
+      "inference_requests": 2,
+      "usage": {
+        "input_tokens": 32066,
+        "cached_input_tokens": 12032,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1314,
+        "reasoning_output_tokens": 204,
+        "total_tokens": 33380
+      },
+      "tool_outputs": [
+        {
+          "sha256": "03377acf4ce0fdf2b0c08c3560407a4c4a7c3959679e105efaead5d62c9398b7",
+          "bytes": 19493,
+          "tokens": 5807
+        }
+      ],
+      "tool_output_tokens": 5807,
+      "assistant_tokens": 859,
+      "final_answer_tokens": 859,
+      "rtk_observed": false,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 8704,
+        "selected_tokens": 5807,
+        "tokens_eliminated": 2897,
+        "events": 1,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r1-full-lean+caveman",
+      "repetition": 1,
+      "configuration": "full-lean+caveman",
+      "prompt_mode": "full-lean",
+      "rtk": false,
+      "caveman": true,
+      "exit_code": 0,
+      "wall_time_ms": 58424.4,
+      "quality_pass": true,
+      "inference_requests": 3,
+      "usage": {
+        "input_tokens": 48375,
+        "cached_input_tokens": 36096,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1379,
+        "reasoning_output_tokens": 365,
+        "total_tokens": 49754
+      },
+      "tool_outputs": [
+        {
+          "sha256": "b14bf0a434f1d73e7a0ce35c4aa8aa81259689e95fe79b503cd18e9977976f19",
+          "bytes": 5193,
+          "tokens": 1222
+        },
+        {
+          "sha256": "420e45163a0a3bbd18760a96b7ee1fa0416b1d1935ed4f666ae569b3867b16c6",
+          "bytes": 19401,
+          "tokens": 5779
+        }
+      ],
+      "tool_output_tokens": 7001,
+      "assistant_tokens": 608,
+      "final_answer_tokens": 596,
+      "rtk_observed": false,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 9918,
+        "selected_tokens": 7001,
+        "tokens_eliminated": 2917,
+        "events": 2,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r1-stock+rtk",
+      "repetition": 1,
+      "configuration": "stock+rtk",
+      "prompt_mode": "stock",
+      "rtk": true,
+      "caveman": false,
+      "exit_code": 0,
+      "wall_time_ms": 44560.8,
+      "quality_pass": true,
+      "inference_requests": 2,
+      "usage": {
+        "input_tokens": 41197,
+        "cached_input_tokens": 15104,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1324,
+        "reasoning_output_tokens": 88,
+        "total_tokens": 42521
+      },
+      "tool_outputs": [
+        {
+          "sha256": "f930997370979c18d85e397fe5434d9fd8f353960bdcc0300a19fa8f754bae0f",
+          "bytes": 40214,
+          "tokens": 8601
+        }
+      ],
+      "tool_output_tokens": 8601,
+      "assistant_tokens": 952,
+      "final_answer_tokens": 917,
+      "rtk_observed": true,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "events": 0,
+        "transformed_events": 0
+      }
+    },
+    {
+      "id": "r1-stock+rtk+caveman",
+      "repetition": 1,
+      "configuration": "stock+rtk+caveman",
+      "prompt_mode": "stock",
+      "rtk": true,
+      "caveman": true,
+      "exit_code": 0,
+      "wall_time_ms": 49983.9,
+      "quality_pass": true,
+      "inference_requests": 3,
+      "usage": {
+        "input_tokens": 60599,
+        "cached_input_tokens": 46336,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1358,
+        "reasoning_output_tokens": 277,
+        "total_tokens": 61957
+      },
+      "tool_outputs": [
+        {
+          "sha256": "fa16bea9b44ab7ff461fc55e0921effe95694147384320a0d163b5794d337079",
+          "bytes": 5193,
+          "tokens": 1222
+        },
+        {
+          "sha256": "d18548889f20e2a902e1698cd59364cd336e97bd4e9b96816b5fdd38ad2e952d",
+          "bytes": 40214,
+          "tokens": 8594
+        }
+      ],
+      "tool_output_tokens": 9816,
+      "assistant_tokens": 692,
+      "final_answer_tokens": 638,
+      "rtk_observed": true,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "events": 0,
+        "transformed_events": 0
+      }
+    },
+    {
+      "id": "r1-command-output+rtk",
+      "repetition": 1,
+      "configuration": "command-output+rtk",
+      "prompt_mode": "command-output",
+      "rtk": true,
+      "caveman": false,
+      "exit_code": 0,
+      "wall_time_ms": 43802.6,
+      "quality_pass": true,
+      "inference_requests": 2,
+      "usage": {
+        "input_tokens": 37379,
+        "cached_input_tokens": 15104,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1372,
+        "reasoning_output_tokens": 227,
+        "total_tokens": 38751
+      },
+      "tool_outputs": [
+        {
+          "sha256": "c8f07f01660a0fda9521a968dc9bbb13d3da384d11af1055fb5f3f584390c72d",
+          "bytes": 16191,
+          "tokens": 4773
+        }
+      ],
+      "tool_output_tokens": 4773,
+      "assistant_tokens": 859,
+      "final_answer_tokens": 816,
+      "rtk_observed": true,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 8591,
+        "selected_tokens": 4773,
+        "tokens_eliminated": 3818,
+        "events": 1,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r1-full-lean+rtk",
+      "repetition": 1,
+      "configuration": "full-lean+rtk",
+      "prompt_mode": "full-lean",
+      "rtk": true,
+      "caveman": false,
+      "exit_code": 0,
+      "wall_time_ms": 39627.8,
+      "quality_pass": true,
+      "inference_requests": 2,
+      "usage": {
+        "input_tokens": 32542,
+        "cached_input_tokens": 23040,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1240,
+        "reasoning_output_tokens": 170,
+        "total_tokens": 33782
+      },
+      "tool_outputs": [
+        {
+          "sha256": "1b5040ed291928d8eb40ce48f955f3cff382ac3f76aae9058911e27230aec972",
+          "bytes": 16283,
+          "tokens": 4806
+        }
+      ],
+      "tool_output_tokens": 4806,
+      "assistant_tokens": 814,
+      "final_answer_tokens": 814,
+      "rtk_observed": true,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 8600,
+        "selected_tokens": 4806,
+        "tokens_eliminated": 3794,
+        "events": 1,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r1-stock",
+      "repetition": 1,
+      "configuration": "stock",
+      "prompt_mode": "stock",
+      "rtk": false,
+      "caveman": false,
+      "exit_code": 0,
+      "wall_time_ms": 38793.6,
+      "quality_pass": true,
+      "inference_requests": 2,
+      "usage": {
+        "input_tokens": 39880,
+        "cached_input_tokens": 15104,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1295,
+        "reasoning_output_tokens": 94,
+        "total_tokens": 41175
+      },
+      "tool_outputs": [
+        {
+          "sha256": "ea881f06d99dea02f2b715a9059d53c345d21dfbe654fb1fc38ab9547ec18eb5",
+          "bytes": 40214,
+          "tokens": 8710
+        }
+      ],
+      "tool_output_tokens": 8710,
+      "assistant_tokens": 908,
+      "final_answer_tokens": 866,
+      "rtk_observed": false,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "events": 0,
+        "transformed_events": 0
+      }
+    },
+    {
+      "id": "r1-command-output",
+      "repetition": 1,
+      "configuration": "command-output",
+      "prompt_mode": "command-output",
+      "rtk": false,
+      "caveman": false,
+      "exit_code": 0,
+      "wall_time_ms": 46174.4,
+      "quality_pass": true,
+      "inference_requests": 2,
+      "usage": {
+        "input_tokens": 38488,
+        "cached_input_tokens": 15104,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1328,
+        "reasoning_output_tokens": 154,
+        "total_tokens": 39816
+      },
+      "tool_outputs": [
+        {
+          "sha256": "a96f25c9bbcce343ae6ddd4a3582d93a0f0d597e08205db5b48bd662d83986e0",
+          "bytes": 20265,
+          "tokens": 6350
+        }
+      ],
+      "tool_output_tokens": 6350,
+      "assistant_tokens": 877,
+      "final_answer_tokens": 845,
+      "rtk_observed": false,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 8546,
+        "selected_tokens": 6350,
+        "tokens_eliminated": 2196,
+        "events": 1,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r1-command-output+rtk+caveman",
+      "repetition": 1,
+      "configuration": "command-output+rtk+caveman",
+      "prompt_mode": "command-output",
+      "rtk": true,
+      "caveman": true,
+      "exit_code": 0,
+      "wall_time_ms": 48085.4,
+      "quality_pass": true,
+      "inference_requests": 3,
+      "usage": {
+        "input_tokens": 55392,
+        "cached_input_tokens": 39168,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1316,
+        "reasoning_output_tokens": 284,
+        "total_tokens": 56708
+      },
+      "tool_outputs": [
+        {
+          "sha256": "8f3641deaa2762d40de68d9dca1679b7101b13feb758ec0fce21e624a8d95e01",
+          "bytes": 5193,
+          "tokens": 1222
+        },
+        {
+          "sha256": "0ded6ebafa5380408b060bb05328e61bb8c71147928fb61cd8627aa2abfd9fcf",
+          "bytes": 16191,
+          "tokens": 4775
+        }
+      ],
+      "tool_output_tokens": 5997,
+      "assistant_tokens": 665,
+      "final_answer_tokens": 622,
+      "rtk_observed": true,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 9814,
+        "selected_tokens": 5997,
+        "tokens_eliminated": 3817,
+        "events": 2,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r1-command-output+caveman",
+      "repetition": 1,
+      "configuration": "command-output+caveman",
+      "prompt_mode": "command-output",
+      "rtk": false,
+      "caveman": true,
+      "exit_code": 0,
+      "wall_time_ms": 48051.0,
+      "quality_pass": true,
+      "inference_requests": 3,
+      "usage": {
+        "input_tokens": 57044,
+        "cached_input_tokens": 42240,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1229,
+        "reasoning_output_tokens": 269,
+        "total_tokens": 58273
+      },
+      "tool_outputs": [
+        {
+          "sha256": "37b563764882ab594db408687fe25827241a646d64a3fb11e41dc526a5127f21",
+          "bytes": 5193,
+          "tokens": 1223
+        },
+        {
+          "sha256": "79372d3a8b1c86b66d79f9aa1e94c2ecf5d25aeefe860bac7b4707e28d36d519",
+          "bytes": 19401,
+          "tokens": 5775
+        }
+      ],
+      "tool_output_tokens": 6998,
+      "assistant_tokens": 615,
+      "final_answer_tokens": 573,
+      "rtk_observed": false,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 9921,
+        "selected_tokens": 6998,
+        "tokens_eliminated": 2923,
+        "events": 2,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r1-stock+caveman",
+      "repetition": 1,
+      "configuration": "stock+caveman",
+      "prompt_mode": "stock",
+      "rtk": false,
+      "caveman": true,
+      "exit_code": 0,
+      "wall_time_ms": 46210.2,
+      "quality_pass": true,
+      "inference_requests": 3,
+      "usage": {
+        "input_tokens": 58645,
+        "cached_input_tokens": 44288,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1294,
+        "reasoning_output_tokens": 317,
+        "total_tokens": 59939
+      },
+      "tool_outputs": [
+        {
+          "sha256": "54207111548dd27291f5270ef3343de55be9d1b2752d4040f1977d85c13ae6a4",
+          "bytes": 5193,
+          "tokens": 1223
+        },
+        {
+          "sha256": "bd4498619e4f089d561d6c58a97d79a02573be12b4411b472a430430a50fc120",
+          "bytes": 40214,
+          "tokens": 8695
+        }
+      ],
+      "tool_output_tokens": 9918,
+      "assistant_tokens": 638,
+      "final_answer_tokens": 590,
+      "rtk_observed": false,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "events": 0,
+        "transformed_events": 0
+      }
+    },
+    {
+      "id": "r1-full-lean+rtk+caveman",
+      "repetition": 1,
+      "configuration": "full-lean+rtk+caveman",
+      "prompt_mode": "full-lean",
+      "rtk": true,
+      "caveman": true,
+      "exit_code": 0,
+      "wall_time_ms": 45040.2,
+      "quality_pass": true,
+      "inference_requests": 3,
+      "usage": {
+        "input_tokens": 49487,
+        "cached_input_tokens": 38144,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1235,
+        "reasoning_output_tokens": 203,
+        "total_tokens": 50722
+      },
+      "tool_outputs": [
+        {
+          "sha256": "ffeef2736f3c05a909468c595e252da7456f368dd5b0731cba4a065625d3e025",
+          "bytes": 5193,
+          "tokens": 1222
+        },
+        {
+          "sha256": "488cd471a3486e4c3194ff153dfb95c22a82109a52a3822627a8995e51a87ed3",
+          "bytes": 16130,
+          "tokens": 4763
+        }
+      ],
+      "tool_output_tokens": 5985,
+      "assistant_tokens": 645,
+      "final_answer_tokens": 632,
+      "rtk_observed": true,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 9818,
+        "selected_tokens": 5985,
+        "tokens_eliminated": 3833,
+        "events": 2,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r2-stock+rtk",
+      "repetition": 2,
+      "configuration": "stock+rtk",
+      "prompt_mode": "stock",
+      "rtk": true,
+      "caveman": false,
+      "exit_code": 0,
+      "wall_time_ms": 39577.9,
+      "quality_pass": true,
+      "inference_requests": 2,
+      "usage": {
+        "input_tokens": 40080,
+        "cached_input_tokens": 15104,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1036,
+        "reasoning_output_tokens": 132,
+        "total_tokens": 41116
+      },
+      "tool_outputs": [
+        {
+          "sha256": "b26d471b7a3e53c79499934c5bd658b20535eabbf7fd0d878c4b10fc9e349223",
+          "bytes": 40214,
+          "tokens": 8578
+        }
+      ],
+      "tool_output_tokens": 8578,
+      "assistant_tokens": 733,
+      "final_answer_tokens": 705,
+      "rtk_observed": true,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "events": 0,
+        "transformed_events": 0
+      }
+    },
+    {
+      "id": "r2-stock+rtk+caveman",
+      "repetition": 2,
+      "configuration": "stock+rtk+caveman",
+      "prompt_mode": "stock",
+      "rtk": true,
+      "caveman": true,
+      "exit_code": 0,
+      "wall_time_ms": 53756.2,
+      "quality_pass": true,
+      "inference_requests": 3,
+      "usage": {
+        "input_tokens": 59233,
+        "cached_input_tokens": 44288,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1345,
+        "reasoning_output_tokens": 235,
+        "total_tokens": 60578
+      },
+      "tool_outputs": [
+        {
+          "sha256": "605c12b07b580891a8695be2dc1a0f0dad5b508b92ff39911da7b6ab41e04564",
+          "bytes": 5193,
+          "tokens": 1223
+        },
+        {
+          "sha256": "29c50d11c17cb8ce1d768dfd82ef261937ab6eb4ec98c8b0e8fd9b4c92376db9",
+          "bytes": 40214,
+          "tokens": 8591
+        }
+      ],
+      "tool_output_tokens": 9814,
+      "assistant_tokens": 708,
+      "final_answer_tokens": 661,
+      "rtk_observed": true,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "events": 0,
+        "transformed_events": 0
+      }
+    },
+    {
+      "id": "r2-command-output+rtk+caveman",
+      "repetition": 2,
+      "configuration": "command-output+rtk+caveman",
+      "prompt_mode": "command-output",
+      "rtk": true,
+      "caveman": true,
+      "exit_code": 0,
+      "wall_time_ms": 56876.0,
+      "quality_pass": true,
+      "inference_requests": 3,
+      "usage": {
+        "input_tokens": 56904,
+        "cached_input_tokens": 46336,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1410,
+        "reasoning_output_tokens": 392,
+        "total_tokens": 58314
+      },
+      "tool_outputs": [
+        {
+          "sha256": "68f3a6dc83b9612c7c5a0faeab47bb4e4f7a2eeb845878be5cebdfac3df00b1c",
+          "bytes": 5193,
+          "tokens": 1223
+        },
+        {
+          "sha256": "cd7764992f09dfcfb5b51865499c28aeb5743148937b82e76736e56da6fe10b6",
+          "bytes": 16131,
+          "tokens": 4761
+        }
+      ],
+      "tool_output_tokens": 5984,
+      "assistant_tokens": 654,
+      "final_answer_tokens": 611,
+      "rtk_observed": true,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 9816,
+        "selected_tokens": 5984,
+        "tokens_eliminated": 3832,
+        "events": 2,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r2-command-output+rtk",
+      "repetition": 2,
+      "configuration": "command-output+rtk",
+      "prompt_mode": "command-output",
+      "rtk": true,
+      "caveman": false,
+      "exit_code": 0,
+      "wall_time_ms": 35213.5,
+      "quality_pass": true,
+      "inference_requests": 2,
+      "usage": {
+        "input_tokens": 37190,
+        "cached_input_tokens": 15104,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 939,
+        "reasoning_output_tokens": 102,
+        "total_tokens": 38129
+      },
+      "tool_outputs": [
+        {
+          "sha256": "0697efab82b735e642a9a22de86dc589ac82d75d597747185c599464a482aff2",
+          "bytes": 15915,
+          "tokens": 4694
+        }
+      ],
+      "tool_output_tokens": 4694,
+      "assistant_tokens": 653,
+      "final_answer_tokens": 618,
+      "rtk_observed": true,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 8581,
+        "selected_tokens": 4694,
+        "tokens_eliminated": 3887,
+        "events": 1,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r2-stock+caveman",
+      "repetition": 2,
+      "configuration": "stock+caveman",
+      "prompt_mode": "stock",
+      "rtk": false,
+      "caveman": true,
+      "exit_code": 0,
+      "wall_time_ms": 42193.8,
+      "quality_pass": true,
+      "inference_requests": 3,
+      "usage": {
+        "input_tokens": 59907,
+        "cached_input_tokens": 28160,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1205,
+        "reasoning_output_tokens": 216,
+        "total_tokens": 61112
+      },
+      "tool_outputs": [
+        {
+          "sha256": "e6c57ab8b315b5355a13ce7c9d237ce38d2e21751235efd3cf48b0da0b33cf54",
+          "bytes": 5193,
+          "tokens": 1223
+        },
+        {
+          "sha256": "1998bcab82d07bc02dcc60ee4dea717b7fcd2747f9ed662a63a61ad6cc950cd9",
+          "bytes": 40214,
+          "tokens": 8696
+        }
+      ],
+      "tool_output_tokens": 9919,
+      "assistant_tokens": 655,
+      "final_answer_tokens": 616,
+      "rtk_observed": false,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "events": 0,
+        "transformed_events": 0
+      }
+    },
+    {
+      "id": "r2-full-lean",
+      "repetition": 2,
+      "configuration": "full-lean",
+      "prompt_mode": "full-lean",
+      "rtk": false,
+      "caveman": false,
+      "exit_code": 0,
+      "wall_time_ms": 51371.5,
+      "quality_pass": true,
+      "inference_requests": 2,
+      "usage": {
+        "input_tokens": 33046,
+        "cached_input_tokens": 23040,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1517,
+        "reasoning_output_tokens": 372,
+        "total_tokens": 34563
+      },
+      "tool_outputs": [
+        {
+          "sha256": "de4b858a5945efb2ee777ac975b0c890fd11bc4732c604641ec36ed7c95fc4b8",
+          "bytes": 19401,
+          "tokens": 5777
+        }
+      ],
+      "tool_output_tokens": 5777,
+      "assistant_tokens": 918,
+      "final_answer_tokens": 893,
+      "rtk_observed": false,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 8694,
+        "selected_tokens": 5777,
+        "tokens_eliminated": 2917,
+        "events": 1,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r2-full-lean+rtk",
+      "repetition": 2,
+      "configuration": "full-lean+rtk",
+      "prompt_mode": "full-lean",
+      "rtk": true,
+      "caveman": false,
+      "exit_code": 0,
+      "wall_time_ms": 41243.6,
+      "quality_pass": true,
+      "inference_requests": 2,
+      "usage": {
+        "input_tokens": 32497,
+        "cached_input_tokens": 13056,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1193,
+        "reasoning_output_tokens": 201,
+        "total_tokens": 33690
+      },
+      "tool_outputs": [
+        {
+          "sha256": "8c298a173442e4c6e3df61234d10b0787c5c17e2d4a11b93dfe39560084c089e",
+          "bytes": 16191,
+          "tokens": 4767
+        }
+      ],
+      "tool_output_tokens": 4767,
+      "assistant_tokens": 729,
+      "final_answer_tokens": 729,
+      "rtk_observed": true,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 8588,
+        "selected_tokens": 4767,
+        "tokens_eliminated": 3821,
+        "events": 1,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r2-full-lean+rtk+caveman",
+      "repetition": 2,
+      "configuration": "full-lean+rtk+caveman",
+      "prompt_mode": "full-lean",
+      "rtk": true,
+      "caveman": true,
+      "exit_code": 0,
+      "wall_time_ms": 50790.9,
+      "quality_pass": true,
+      "inference_requests": 2,
+      "usage": {
+        "input_tokens": 32820,
+        "cached_input_tokens": 25088,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1300,
+        "reasoning_output_tokens": 470,
+        "total_tokens": 34120
+      },
+      "tool_outputs": [
+        {
+          "sha256": "ed1f5f49d1c6acddb3a247d11b8c6cd2136ed10515f3ab3881f07e3fa54be048",
+          "bytes": 15915,
+          "tokens": 4692
+        }
+      ],
+      "tool_output_tokens": 4692,
+      "assistant_tokens": 650,
+      "final_answer_tokens": 633,
+      "rtk_observed": true,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 8579,
+        "selected_tokens": 4692,
+        "tokens_eliminated": 3887,
+        "events": 1,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r2-full-lean+caveman",
+      "repetition": 2,
+      "configuration": "full-lean+caveman",
+      "prompt_mode": "full-lean",
+      "rtk": false,
+      "caveman": true,
+      "exit_code": 0,
+      "wall_time_ms": 41768.6,
+      "quality_pass": true,
+      "inference_requests": 2,
+      "usage": {
+        "input_tokens": 33416,
+        "cached_input_tokens": 23040,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1174,
+        "reasoning_output_tokens": 192,
+        "total_tokens": 34590
+      },
+      "tool_outputs": [
+        {
+          "sha256": "3f1d9d9348e987b64016f7fa1fd22109e8955dc13e01421d25689948cf1beab2",
+          "bytes": 19493,
+          "tokens": 5806
+        }
+      ],
+      "tool_output_tokens": 5806,
+      "assistant_tokens": 727,
+      "final_answer_tokens": 711,
+      "rtk_observed": false,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 8702,
+        "selected_tokens": 5806,
+        "tokens_eliminated": 2896,
+        "events": 1,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r2-stock",
+      "repetition": 2,
+      "configuration": "stock",
+      "prompt_mode": "stock",
+      "rtk": false,
+      "caveman": false,
+      "exit_code": 0,
+      "wall_time_ms": 44735.1,
+      "quality_pass": true,
+      "inference_requests": 2,
+      "usage": {
+        "input_tokens": 40737,
+        "cached_input_tokens": 30208,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1306,
+        "reasoning_output_tokens": 291,
+        "total_tokens": 42043
+      },
+      "tool_outputs": [
+        {
+          "sha256": "69619ce0ff475980449ec226979838f78fd549739cac2b6a90ee7e5553cb5a43",
+          "bytes": 40214,
+          "tokens": 8697
+        }
+      ],
+      "tool_output_tokens": 8697,
+      "assistant_tokens": 810,
+      "final_answer_tokens": 784,
+      "rtk_observed": false,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "events": 0,
+        "transformed_events": 0
+      }
+    },
+    {
+      "id": "r2-command-output",
+      "repetition": 2,
+      "configuration": "command-output",
+      "prompt_mode": "command-output",
+      "rtk": false,
+      "caveman": false,
+      "exit_code": 0,
+      "wall_time_ms": 59293.5,
+      "quality_pass": true,
+      "inference_requests": 2,
+      "usage": {
+        "input_tokens": 37847,
+        "cached_input_tokens": 15104,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1632,
+        "reasoning_output_tokens": 417,
+        "total_tokens": 39479
+      },
+      "tool_outputs": [
+        {
+          "sha256": "a26316794e4d732d773001ca92a7b954db0c50ab7641336dcd48dfd5efcc1eec",
+          "bytes": 19400,
+          "tokens": 5775
+        }
+      ],
+      "tool_output_tokens": 5775,
+      "assistant_tokens": 984,
+      "final_answer_tokens": 952,
+      "rtk_observed": false,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 8700,
+        "selected_tokens": 5775,
+        "tokens_eliminated": 2925,
+        "events": 1,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r2-command-output+caveman",
+      "repetition": 2,
+      "configuration": "command-output+caveman",
+      "prompt_mode": "command-output",
+      "rtk": false,
+      "caveman": true,
+      "exit_code": 0,
+      "wall_time_ms": 50279.8,
+      "quality_pass": true,
+      "inference_requests": 3,
+      "usage": {
+        "input_tokens": 57010,
+        "cached_input_tokens": 42240,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1377,
+        "reasoning_output_tokens": 332,
+        "total_tokens": 58387
+      },
+      "tool_outputs": [
+        {
+          "sha256": "721dbbc962b6d3441fbfcd584c73827858346dd6ff33d199d92db0f27668ac95",
+          "bytes": 5193,
+          "tokens": 1223
+        },
+        {
+          "sha256": "ee7543a1e4a2719725c7fcc624d926afe207eb4a79021a88e5778a22aae10d18",
+          "bytes": 19401,
+          "tokens": 5778
+        }
+      ],
+      "tool_output_tokens": 7001,
+      "assistant_tokens": 697,
+      "final_answer_tokens": 656,
+      "rtk_observed": false,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 9918,
+        "selected_tokens": 7001,
+        "tokens_eliminated": 2917,
+        "events": 2,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r3-command-output",
+      "repetition": 3,
+      "configuration": "command-output",
+      "prompt_mode": "command-output",
+      "rtk": false,
+      "caveman": false,
+      "exit_code": 0,
+      "wall_time_ms": 42155.9,
+      "quality_pass": true,
+      "inference_requests": 2,
+      "usage": {
+        "input_tokens": 36891,
+        "cached_input_tokens": 15104,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1185,
+        "reasoning_output_tokens": 150,
+        "total_tokens": 38076
+      },
+      "tool_outputs": [
+        {
+          "sha256": "99afdc49d2cf8614e2f5f99a715ab2f4e41637b46cae6b409a0be1e6e8133acd",
+          "bytes": 19401,
+          "tokens": 5781
+        }
+      ],
+      "tool_output_tokens": 5781,
+      "assistant_tokens": 806,
+      "final_answer_tokens": 770,
+      "rtk_observed": false,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 8702,
+        "selected_tokens": 5781,
+        "tokens_eliminated": 2921,
+        "events": 1,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r3-full-lean+rtk",
+      "repetition": 3,
+      "configuration": "full-lean+rtk",
+      "prompt_mode": "full-lean",
+      "rtk": true,
+      "caveman": false,
+      "exit_code": 0,
+      "wall_time_ms": 41131.4,
+      "quality_pass": true,
+      "inference_requests": 2,
+      "usage": {
+        "input_tokens": 32561,
+        "cached_input_tokens": 23040,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1193,
+        "reasoning_output_tokens": 243,
+        "total_tokens": 33754
+      },
+      "tool_outputs": [
+        {
+          "sha256": "eb115d25925c8773a73fb5443f07e11d25f256dda3aa76b59ea10ed06480c534",
+          "bytes": 16283,
+          "tokens": 4807
+        }
+      ],
+      "tool_output_tokens": 4807,
+      "assistant_tokens": 697,
+      "final_answer_tokens": 697,
+      "rtk_observed": true,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 8602,
+        "selected_tokens": 4807,
+        "tokens_eliminated": 3795,
+        "events": 1,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r3-full-lean+caveman",
+      "repetition": 3,
+      "configuration": "full-lean+caveman",
+      "prompt_mode": "full-lean",
+      "rtk": false,
+      "caveman": true,
+      "exit_code": 0,
+      "wall_time_ms": 50915.4,
+      "quality_pass": true,
+      "inference_requests": 2,
+      "usage": {
+        "input_tokens": 32453,
+        "cached_input_tokens": 12032,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1220,
+        "reasoning_output_tokens": 270,
+        "total_tokens": 33673
+      },
+      "tool_outputs": [
+        {
+          "sha256": "c707476b19ec85a40d3f3a6f3eff6948e1a811b11ed00f49688d2317622a834d",
+          "bytes": 19401,
+          "tokens": 5778
+        }
+      ],
+      "tool_output_tokens": 5778,
+      "assistant_tokens": 679,
+      "final_answer_tokens": 664,
+      "rtk_observed": false,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 8702,
+        "selected_tokens": 5778,
+        "tokens_eliminated": 2924,
+        "events": 1,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r3-command-output+rtk+caveman",
+      "repetition": 3,
+      "configuration": "command-output+rtk+caveman",
+      "prompt_mode": "command-output",
+      "rtk": true,
+      "caveman": true,
+      "exit_code": 0,
+      "wall_time_ms": 58429.6,
+      "quality_pass": true,
+      "inference_requests": 3,
+      "usage": {
+        "input_tokens": 56933,
+        "cached_input_tokens": 43264,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1367,
+        "reasoning_output_tokens": 357,
+        "total_tokens": 58300
+      },
+      "tool_outputs": [
+        {
+          "sha256": "764e29b00b54166dadd4c91a793698f473d1e584efacbddfaa8323a794b1b171",
+          "bytes": 5193,
+          "tokens": 1222
+        },
+        {
+          "sha256": "81f6fb017554aa77f347a1ecf74061e7e19eca9f14670cc600881fb0f202eae0",
+          "bytes": 16191,
+          "tokens": 4774
+        }
+      ],
+      "tool_output_tokens": 5996,
+      "assistant_tokens": 640,
+      "final_answer_tokens": 596,
+      "rtk_observed": true,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 9813,
+        "selected_tokens": 5996,
+        "tokens_eliminated": 3817,
+        "events": 2,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r3-stock",
+      "repetition": 3,
+      "configuration": "stock",
+      "prompt_mode": "stock",
+      "rtk": false,
+      "caveman": false,
+      "exit_code": 0,
+      "wall_time_ms": 42809.7,
+      "quality_pass": true,
+      "inference_requests": 2,
+      "usage": {
+        "input_tokens": 40731,
+        "cached_input_tokens": 25088,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1231,
+        "reasoning_output_tokens": 198,
+        "total_tokens": 41962
+      },
+      "tool_outputs": [
+        {
+          "sha256": "f86b66f04841f680544a82467b6aab5dbbb0d2201674ba2e0ce8c975a441461b",
+          "bytes": 40214,
+          "tokens": 8690
+        }
+      ],
+      "tool_output_tokens": 8690,
+      "assistant_tokens": 853,
+      "final_answer_tokens": 819,
+      "rtk_observed": false,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "events": 0,
+        "transformed_events": 0
+      }
+    },
+    {
+      "id": "r3-full-lean",
+      "repetition": 3,
+      "configuration": "full-lean",
+      "prompt_mode": "full-lean",
+      "rtk": false,
+      "caveman": false,
+      "exit_code": 0,
+      "wall_time_ms": 53955.0,
+      "quality_pass": true,
+      "inference_requests": 2,
+      "usage": {
+        "input_tokens": 32145,
+        "cached_input_tokens": 22016,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1399,
+        "reasoning_output_tokens": 295,
+        "total_tokens": 33544
+      },
+      "tool_outputs": [
+        {
+          "sha256": "5efa421331f0dd9b0c44623f1886284479bcfef0a3e4921a503404c923590670",
+          "bytes": 19401,
+          "tokens": 5780
+        }
+      ],
+      "tool_output_tokens": 5780,
+      "assistant_tokens": 839,
+      "final_answer_tokens": 812,
+      "rtk_observed": false,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 8702,
+        "selected_tokens": 5780,
+        "tokens_eliminated": 2922,
+        "events": 1,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r3-stock+caveman",
+      "repetition": 3,
+      "configuration": "stock+caveman",
+      "prompt_mode": "stock",
+      "rtk": false,
+      "caveman": true,
+      "exit_code": 0,
+      "wall_time_ms": 48374.0,
+      "quality_pass": true,
+      "inference_requests": 3,
+      "usage": {
+        "input_tokens": 58689,
+        "cached_input_tokens": 31232,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1359,
+        "reasoning_output_tokens": 349,
+        "total_tokens": 60048
+      },
+      "tool_outputs": [
+        {
+          "sha256": "60690b098c559ae449700a4ed78393b53a3a6a25365c4e0db394f095d3f22e78",
+          "bytes": 5193,
+          "tokens": 1223
+        },
+        {
+          "sha256": "745dad15636cb1b8c2323f77d0a05928050ea0ea8fa1f819a4ccdc018df1b55b",
+          "bytes": 40214,
+          "tokens": 8701
+        }
+      ],
+      "tool_output_tokens": 9924,
+      "assistant_tokens": 659,
+      "final_answer_tokens": 610,
+      "rtk_observed": false,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "events": 0,
+        "transformed_events": 0
+      }
+    },
+    {
+      "id": "r3-command-output+rtk",
+      "repetition": 3,
+      "configuration": "command-output+rtk",
+      "prompt_mode": "command-output",
+      "rtk": true,
+      "caveman": false,
+      "exit_code": 0,
+      "wall_time_ms": 42983.2,
+      "quality_pass": true,
+      "inference_requests": 2,
+      "usage": {
+        "input_tokens": 36358,
+        "cached_input_tokens": 15104,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1118,
+        "reasoning_output_tokens": 154,
+        "total_tokens": 37476
+      },
+      "tool_outputs": [
+        {
+          "sha256": "e561cc9e62b3c84664e9985840b1fdf0da7aeacdb7b466d32e6f986c1b0f133d",
+          "bytes": 16191,
+          "tokens": 4774
+        }
+      ],
+      "tool_output_tokens": 4774,
+      "assistant_tokens": 728,
+      "final_answer_tokens": 693,
+      "rtk_observed": true,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 8592,
+        "selected_tokens": 4774,
+        "tokens_eliminated": 3818,
+        "events": 1,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r3-stock+rtk",
+      "repetition": 3,
+      "configuration": "stock+rtk",
+      "prompt_mode": "stock",
+      "rtk": true,
+      "caveman": false,
+      "exit_code": 0,
+      "wall_time_ms": 36646.5,
+      "quality_pass": true,
+      "inference_requests": 2,
+      "usage": {
+        "input_tokens": 41208,
+        "cached_input_tokens": 28160,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1186,
+        "reasoning_output_tokens": 113,
+        "total_tokens": 42394
+      },
+      "tool_outputs": [
+        {
+          "sha256": "408d8aee400a265a4901820b4cd95b8c96d58298540271eaf044fc952da272cc",
+          "bytes": 40214,
+          "tokens": 8602
+        }
+      ],
+      "tool_output_tokens": 8602,
+      "assistant_tokens": 789,
+      "final_answer_tokens": 762,
+      "rtk_observed": true,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "events": 0,
+        "transformed_events": 0
+      }
+    },
+    {
+      "id": "r3-command-output+caveman",
+      "repetition": 3,
+      "configuration": "command-output+caveman",
+      "prompt_mode": "command-output",
+      "rtk": false,
+      "caveman": true,
+      "exit_code": 0,
+      "wall_time_ms": 48753.8,
+      "quality_pass": true,
+      "inference_requests": 3,
+      "usage": {
+        "input_tokens": 57046,
+        "cached_input_tokens": 45312,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1223,
+        "reasoning_output_tokens": 231,
+        "total_tokens": 58269
+      },
+      "tool_outputs": [
+        {
+          "sha256": "dd287669d1001908cece15ba8d77ed4da9958902b2d54e0f8eda945abab8e051",
+          "bytes": 5193,
+          "tokens": 1222
+        },
+        {
+          "sha256": "6b69dc20aff08060b12f4a2ea0b3e38fba40ead1b9cac35907945477fbdcbd19",
+          "bytes": 19401,
+          "tokens": 5779
+        }
+      ],
+      "tool_output_tokens": 7001,
+      "assistant_tokens": 616,
+      "final_answer_tokens": 577,
+      "rtk_observed": false,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 9917,
+        "selected_tokens": 7001,
+        "tokens_eliminated": 2916,
+        "events": 2,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r3-full-lean+rtk+caveman",
+      "repetition": 3,
+      "configuration": "full-lean+rtk+caveman",
+      "prompt_mode": "full-lean",
+      "rtk": true,
+      "caveman": true,
+      "exit_code": 0,
+      "wall_time_ms": 42467.6,
+      "quality_pass": true,
+      "inference_requests": 2,
+      "usage": {
+        "input_tokens": 32925,
+        "cached_input_tokens": 13056,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1217,
+        "reasoning_output_tokens": 307,
+        "total_tokens": 34142
+      },
+      "tool_outputs": [
+        {
+          "sha256": "41c58d29283945ac5e69489172466dccf581d573f092ab33a42a5df9ca7446c5",
+          "bytes": 16191,
+          "tokens": 4768
+        }
+      ],
+      "tool_output_tokens": 4768,
+      "assistant_tokens": 634,
+      "final_answer_tokens": 618,
+      "rtk_observed": true,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 8590,
+        "selected_tokens": 4768,
+        "tokens_eliminated": 3822,
+        "events": 1,
+        "transformed_events": 1
+      }
+    },
+    {
+      "id": "r3-stock+rtk+caveman",
+      "repetition": 3,
+      "configuration": "stock+rtk+caveman",
+      "prompt_mode": "stock",
+      "rtk": true,
+      "caveman": true,
+      "exit_code": 0,
+      "wall_time_ms": 50088.3,
+      "quality_pass": true,
+      "inference_requests": 3,
+      "usage": {
+        "input_tokens": 60860,
+        "cached_input_tokens": 46336,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1410,
+        "reasoning_output_tokens": 313,
+        "total_tokens": 62270
+      },
+      "tool_outputs": [
+        {
+          "sha256": "65241d4375fcbdd83fe3ec7d5ffdde392402f84dfe894a01579a42dc8d57ae66",
+          "bytes": 5193,
+          "tokens": 1223
+        },
+        {
+          "sha256": "8d8c149c50d0ec8758e06ef885664cc3c4b0170395988f7d648d42c06fa1f914",
+          "bytes": 40214,
+          "tokens": 8593
+        }
+      ],
+      "tool_output_tokens": 9816,
+      "assistant_tokens": 670,
+      "final_answer_tokens": 624,
+      "rtk_observed": true,
+      "command_coverage": {
+        "git_diff": true,
+        "npm_test": true,
+        "repeated_output": true
+      },
+      "codexzero_telemetry": {
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "events": 0,
+        "transformed_events": 0
+      }
+    }
+  ],
+  "private_artifacts": "private-artifacts/combination-benchmark-20260724T192736Z"
+}

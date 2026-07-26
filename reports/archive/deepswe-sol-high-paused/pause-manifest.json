@@ -1,0 +1,198 @@
+{
+  "schema": "codexzero-deepswe-pause-manifest-v1",
+  "created_at": "2026-07-25T06:25:54.474852+00:00",
+  "completed_paired_tasks": 5,
+  "completed_trials": 25,
+  "planned_tasks": 113,
+  "planned_trials": 565,
+  "resume_task": "arcane-drift-detection-baselines",
+  "core_files": [
+    {
+      "path": "benchmark-workspace/deepswe-sol-high-fiveway-full/checkpoint.json",
+      "bytes": 54042,
+      "sha256": "9dad9d3b4494d5925a9b8f7673548365c5d1a238e24b39b4918991859c406976"
+    },
+    {
+      "path": "benchmark-workspace/deepswe-sol-high-fiveway-full/analysis/README.md",
+      "bytes": 2753,
+      "sha256": "c826f6886fc4d505e233071fe9d3c5065ae04724c8edda89e5cb692593446efb"
+    },
+    {
+      "path": "benchmark-workspace/deepswe-sol-high-fiveway-full/analysis/summary.json",
+      "bytes": 27324,
+      "sha256": "ea52fd04735a798bbb16f45820fcd089282f3c49a852168f9e84a6ea31d15e72"
+    },
+    {
+      "path": "benchmark-workspace/deepswe-sol-high-fiveway-full/analysis/task-metrics.csv",
+      "bytes": 16285,
+      "sha256": "604a0892b56ab76ac3563fa3b36523cc9af580d9128f237752547aa89e03e9d3"
+    },
+    {
+      "path": "benchmark-workspace/deepswe-sol-high-fiveway-full/provenance.json",
+      "bytes": 5689,
+      "sha256": "0a53752f4d51a83d8a38f950317beea6bd8e4c6e1d8de1032d6e790391debc7f"
+    },
+    {
+      "path": "benchmark-workspace/deepswe-sol-high-fiveway-full/resume.sh",
+      "bytes": 1171,
+      "sha256": "7fd4122461bf06ebecd913c9a50cccbd630c107edde58cd0fce03358bd4b40b6"
+    }
+  ],
+  "interrupted_job_files": [
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__3SmQYLy/agent/codex.txt",
+      "bytes": 337628,
+      "sha256": "f48ddc9e3322eb15ebd48ae3a36062446d93158882470303cffc8fd77f231a8b"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__3SmQYLy/agent-build-context/Dockerfile",
+      "bytes": 1499,
+      "sha256": "f8d6d8c4fd02897e4f0414b5c27a2024e3f5fc30db3ee0d2a58d248ff3790902"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__3SmQYLy/config.json",
+      "bytes": 2027,
+      "sha256": "bb993bc9043be8b8002d697729ad30caa3b5f0c3e19fe3a50dd57a170a05a945"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__3SmQYLy/docker-compose-mounts.json",
+      "bytes": 797,
+      "sha256": "c05fb5bc3f887aa260719579354973de84fcb8adb5f409c08003e9785ba36302"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__3SmQYLy/trial.log",
+      "bytes": 6384,
+      "sha256": "ecc293c4a38f7db95d8b0d69e23781100be85fc580d3cc62601b4a285fb63abe"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__9BnWDSp/agent/codex.txt",
+      "bytes": 255723,
+      "sha256": "c6701900875db3e1d8303ec781c520b68bdd117d8982166b6fdfb2503c971fef"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__9BnWDSp/agent/rtk.db",
+      "bytes": 24576,
+      "sha256": "d982cc200e4855310f5f9d49633a1bbad6a3f33c39b9ec9d8a018df9509db10a"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__9BnWDSp/agent-build-context/Dockerfile",
+      "bytes": 1499,
+      "sha256": "f8d6d8c4fd02897e4f0414b5c27a2024e3f5fc30db3ee0d2a58d248ff3790902"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__9BnWDSp/config.json",
+      "bytes": 2068,
+      "sha256": "bfa1a25d9729092f1664a9ca5b4bb6067ce2e6561180184412f6d1c614e462de"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__9BnWDSp/docker-compose-mounts.json",
+      "bytes": 797,
+      "sha256": "7409463ca37ff8b3f81b6e4e6d9ce4836b5cf9ac400942eadb90d1ddd9fb5b49"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__9BnWDSp/trial.log",
+      "bytes": 6827,
+      "sha256": "11bebbf2ee8fe85e2d2dc50df763bd037a50db121f4def7a99203a60acc448f6"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__A239vxz/agent/codex.txt",
+      "bytes": 332397,
+      "sha256": "c42790b33046fabe2eca010b7e80fd3b9c2c3cab521b7da14591edeaa1cbebb5"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__A239vxz/agent-build-context/Dockerfile",
+      "bytes": 1499,
+      "sha256": "f8d6d8c4fd02897e4f0414b5c27a2024e3f5fc30db3ee0d2a58d248ff3790902"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__A239vxz/config.json",
+      "bytes": 1818,
+      "sha256": "4c5be4cc8f514c3260c983f17454807806acb846f1c91038af132bd971bc690f"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__A239vxz/docker-compose-mounts.json",
+      "bytes": 797,
+      "sha256": "ec2b4307d893289811234cb4044dd1e3af54301defd9aa7dbf53f5e1cc5a213e"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__A239vxz/trial.log",
+      "bytes": 6163,
+      "sha256": "08cb76e486daae15582e0758fd0319a11f67e19844fd3cd346d4d2347200e8d6"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__ftZvppG/agent/codex.txt",
+      "bytes": 286188,
+      "sha256": "727f29179f5066c8aba1f977572ced284c374998984332d3a6d848e2ed978f26"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__ftZvppG/agent/rtk.db",
+      "bytes": 24576,
+      "sha256": "b1a068c4e51ed76bf4ab0ebe3d0cee360bb186c7fb92286a8fac7855e75e6ffd"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__ftZvppG/agent-build-context/Dockerfile",
+      "bytes": 1499,
+      "sha256": "f8d6d8c4fd02897e4f0414b5c27a2024e3f5fc30db3ee0d2a58d248ff3790902"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__ftZvppG/config.json",
+      "bytes": 2157,
+      "sha256": "6e0047a9cb9fd1d2ebd4769a9aff5feea587c8dd0457eed2fb7eccbdf8a385a2"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__ftZvppG/docker-compose-mounts.json",
+      "bytes": 797,
+      "sha256": "e26efde95a78cd7d09882352a814d60a35677064ad6c370f48be19aac29400e0"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__ftZvppG/trial.log",
+      "bytes": 7048,
+      "sha256": "18208ad8972d02005038a2fd71991c2838f4bcd937b87bbbfe0dbe3100d33840"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__mDYvqPb/agent/codex.txt",
+      "bytes": 324832,
+      "sha256": "b4793ddce12fe0984b5081079c3e4dd3a0c0a08bf479e99792822c9c0d8a2726"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__mDYvqPb/agent-build-context/Dockerfile",
+      "bytes": 1499,
+      "sha256": "f8d6d8c4fd02897e4f0414b5c27a2024e3f5fc30db3ee0d2a58d248ff3790902"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__mDYvqPb/config.json",
+      "bytes": 2326,
+      "sha256": "d08c93a9065586e94e645280ca96565de296d39ed34cf30f48ec6588745361ab"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__mDYvqPb/docker-compose-mounts.json",
+      "bytes": 797,
+      "sha256": "7ed9e131a71d8c7802549a7e01eaed27c679e780eb2b0eefc7e5bb1c2f034337"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/arcane-drift-detection-baselines__mDYvqPb/trial.log",
+      "bytes": 6580,
+      "sha256": "bb781624ff8a95e28a2da4a8f28a96c39ff2e1631a1cbb2a4a30ea72f1caf8a4"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/config.json",
+      "bytes": 5963,
+      "sha256": "96fd549acb68f58e6a53e6733a0a0f9e202887d2a1f0196d6fc950520dd1ac93"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/job.log",
+      "bytes": 33002,
+      "sha256": "4396cddca8513618cc82bd16db9de23806d72fe5819519513613bd851a75e205"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/lock.json",
+      "bytes": 8671,
+      "sha256": "5da706a79f760a20c33b5ce93abe7de9e9f01af815bfc74886cdaac43461c1e0"
+    },
+    {
+      "path": "benchmark-workspace/jobs/sol-high-fiveway-004-arcane-drift-detection-baselines-a1/result.json",
+      "bytes": 547,
+      "sha256": "8d766684f7262c479a8e56d7cd542c91e05a0472826a23283452f6a61a8b2531"
+    }
+  ]
+}

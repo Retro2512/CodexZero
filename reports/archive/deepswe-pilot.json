@@ -1,0 +1,158 @@
+{
+  "schema": "codexzero-deepswe-pilot-v1",
+  "captured_at": "2026-07-25T01:12:10.018082+00:00",
+  "benchmark": "DeepSWE",
+  "runner": "Pier",
+  "model": "gpt-5.6-sol",
+  "reasoning_effort": "medium",
+  "sample_size": 1,
+  "resolved_rate": {
+    "codex": 1.0,
+    "codexzero": 1.0
+  },
+  "trials": [
+    {
+      "configuration": "codex",
+      "task": "datacurve/arktype-json-schema-refs-dependencies",
+      "task_checksum": "c76f0c8ec2f874858c6db78320769f2da362bbeee864d7dd33794af9bc00c635",
+      "resolved": true,
+      "reward": 1,
+      "feature_tests": {
+        "passed": 25,
+        "total": 25,
+        "rate": 1.0
+      },
+      "regression_tests": {
+        "passed": 1679,
+        "total": 1679,
+        "rate": 1.0
+      },
+      "partial_score": 1.0,
+      "configuration_evidence": {
+        "trial_config_sha256": "f84c3d2792e684c0ed01932942397de8658b6dbdd8634f3177561572d60fb73c",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "medium",
+        "codex_version": "0.145.0-alpha.30",
+        "custom_binary": false,
+        "lean_model_instructions": false,
+        "enabled_codexzero_features": []
+      },
+      "provider_tokens": {
+        "input": 6150409,
+        "cached_input": 5989888,
+        "uncached_input": 160521,
+        "output": 21505,
+        "reasoning_output": 7043,
+        "total": 6171914,
+        "cache_token_ratio": 0.973901
+      },
+      "peak_context_tokens": 118313,
+      "summarization_count": 0,
+      "agent_steps": 75,
+      "agent_time_seconds": 666.053,
+      "patch": {
+        "bytes": 306623,
+        "sha256": "4349ef8ce6308c23cbde5a7dc926bc291ff7fd98ab9422349830c49b30ef0d32"
+      },
+      "evidence": {
+        "result_sha256": "e9c69245b72f072fec89144248e3394ebda69dfdd85c26258e44b44116661023",
+        "reward_sha256": "c575d4a96aa97a21a8b16184df275c0d93bcaeb79faaa8f82d1b8865e6aad20a",
+        "trajectory_sha256": "f7b2b8b76eb56858abd3d2094ce9de41ee42c96b2284806a2fffd1b406918c8b"
+      }
+    },
+    {
+      "configuration": "codexzero",
+      "task": "datacurve/arktype-json-schema-refs-dependencies",
+      "task_checksum": "c76f0c8ec2f874858c6db78320769f2da362bbeee864d7dd33794af9bc00c635",
+      "resolved": true,
+      "reward": 1,
+      "feature_tests": {
+        "passed": 25,
+        "total": 25,
+        "rate": 1.0
+      },
+      "regression_tests": {
+        "passed": 1679,
+        "total": 1679,
+        "rate": 1.0
+      },
+      "partial_score": 1.0,
+      "configuration_evidence": {
+        "trial_config_sha256": "b46568f0d9504c7857a2a4fa823d6488e730ef499701cb33f27026f36d0ea47d",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "medium",
+        "codex_version": "0.145.0-alpha.30",
+        "custom_binary": true,
+        "lean_model_instructions": true,
+        "enabled_codexzero_features": [
+          "codex_zero_compact_exec_output",
+          "codex_zero_lossless_terminal_codec",
+          "codex_zero_exact_duplicate_results",
+          "codex_zero_event_driven_wait"
+        ]
+      },
+      "provider_tokens": {
+        "input": 4219819,
+        "cached_input": 4095744,
+        "uncached_input": 124075,
+        "output": 19672,
+        "reasoning_output": 6821,
+        "total": 4239491,
+        "cache_token_ratio": 0.970597
+      },
+      "peak_context_tokens": 77703,
+      "summarization_count": 0,
+      "agent_steps": 70,
+      "agent_time_seconds": 643.909,
+      "patch": {
+        "bytes": 27695,
+        "sha256": "e1fd5a0357d7400f852b29802a38ba42e833d396a31787609b21d4c17688eb3e"
+      },
+      "evidence": {
+        "result_sha256": "eae529dda90e9a32b31d9b6674f9cf72d6085c23c370a67148492c66b1f01a66",
+        "reward_sha256": "c575d4a96aa97a21a8b16184df275c0d93bcaeb79faaa8f82d1b8865e6aad20a",
+        "trajectory_sha256": "d087f2d3fd75f52cf7a1f2a47029520dae6d1ccb128b85476049cc958b523d38"
+      }
+    }
+  ],
+  "comparison": {
+    "quality_delta": 0,
+    "provider_total_tokens": {
+      "absolute": 1932423,
+      "percent": 31.31
+    },
+    "provider_uncached_input_tokens": {
+      "absolute": 36446,
+      "percent": 22.705
+    },
+    "provider_output_tokens": {
+      "absolute": 1833,
+      "percent": 8.524
+    },
+    "peak_context_tokens": {
+      "absolute": 40610,
+      "percent": 34.324
+    },
+    "agent_time_seconds": {
+      "absolute": 22.144,
+      "percent": 3.325
+    }
+  },
+  "provenance": {
+    "deep_swe_commit": "e016041a6ccf8da29906afc9a3f5a8df940a1f78",
+    "pier_commit": "fefa7475a32bb05271abdea378e8083c83eb5c35",
+    "codex_version": "0.145.0-alpha.30",
+    "codexzero_binary_sha256": "657fe9452f05a5d5b5905b84bbe581d97a55f8fa1988306546a639ab201de50b",
+    "lean_prompt_sha256": "662cd8a870cc720068cba44982a0d27d73ddb18dcedb0fe623c0300917185952",
+    "runner_patch_sha256": {
+      "pier-chatgpt-allowlist.patch": "652ff4fbfc03262a68f1827c30ba534cd7c6ac5ab13a746cd22463c0067283b8",
+      "pier-codexzero-prompt.patch": "5bfaf1df832b872966d57707a022da557cb6329717598d550191a8259223b52e",
+      "pier-codexzero.patch": "e7d13f4b3b7a2d88766b18e7c78a1d48ddbe2f036134e4a9a09786ad6f878217"
+    }
+  },
+  "limitations": [
+    "One paired task cannot estimate full-corpus resolved rate.",
+    "The five-task expansion was stopped by the account usage limit.",
+    "No interrupted or incomplete attempt is counted as a quality result."
+  ]
+}

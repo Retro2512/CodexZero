@@ -1,0 +1,147 @@
+{
+  "schema": "codexzero-terminal-bench-run-manifest-v1",
+  "created_at_utc": "2026-07-25T21:54:27.1091089Z",
+  "preregistration": {
+    "git_commit": "e524272049737085da1e0030bc6e8fac3a2bf342",
+    "sha256": "dcd3bd63e84ab4b6de26a8f14e5980ae8344687ee3e9c6e3a941ec0c5289054d"
+  },
+  "execution": {
+    "install_check_elapsed_sec": 24,
+    "pilot": {
+      "start_utc": "2026-07-25T20:45:11Z",
+      "end_utc": "2026-07-25T20:59:06Z",
+      "elapsed_sec": 835,
+      "trials": 18
+    },
+    "remainder": {
+      "start_utc": "2026-07-25T21:01:15Z",
+      "end_utc": "2026-07-25T21:22:48Z",
+      "elapsed_sec": 1293,
+      "trials": 54
+    },
+    "controlled_infrastructure_rerun": {
+      "start_utc": "2026-07-25T21:26:19Z",
+      "end_utc": "2026-07-25T21:30:19Z",
+      "elapsed_sec": 240,
+      "attempts": 12
+    },
+    "single_container_probes": {
+      "adaptive_rejection_sampler_elapsed_sec": 119,
+      "financial_document_processor_elapsed_sec": 110
+    },
+    "main_matrix_wall_time_sec": 2128,
+    "matrix_plus_controlled_rerun_wall_time_sec": 2368,
+    "matrix_rerun_and_probe_runtime_sec": 2597,
+    "parallelism_max": 12
+  },
+  "diagnostics": {
+    "simple_isolated_model_smoke": {
+      "exit_code": 0,
+      "output": "OK",
+      "log_sha256": "8fe8dfebbe5b2556f4799d6d24df181d89fa6325b885ff56de1be3403a158e01"
+    },
+    "adaptive_single_probe": {
+      "job": "tb21-cz-adaptive-single-probe",
+      "exception_type": "NonZeroAgentExitCodeError",
+      "transport_disconnect": true,
+      "normalized_exception_sha256": "e6d1ed1d229e66359b2a95b9b4f5b23095d370921bb671d6af9426681de5641d",
+      "result_sha256": "36d784a60bd565e687a6c35bf96d2d21e18c2dbbe6f0fe16ed0da232967c3a0a"
+    },
+    "financial_single_probe": {
+      "job": "tb21-cz-financial-single-probe",
+      "exception_type": "NonZeroAgentExitCodeError",
+      "transport_disconnect": true,
+      "normalized_exception_sha256": "1a341bc16b4c41016ff45568ee806b396f48f3ac4ae8ada6d57ef28b1a42bfa3",
+      "result_sha256": "bc56e00083a7895af038749bc6db7c85766348de47a02c72eaaf5c3e7d607e93"
+    },
+    "classification": "Both tasks were provider-incompatible in this run: every six-way original and rerun cell plus a single-container Codex probe ended with the same transport-disconnect class while the simple model smoke succeeded."
+  },
+  "raw_jobs": {
+    "tb21-cz-install-check": {
+      "root": "${ISOLATED_ROOT}/jobs/tb21-cz-install-check",
+      "files": 28,
+      "bytes": 92658,
+      "tree_sha256": "602814943987c3ab790b0512118fb5e4b9202c0bd3cdc961e32b89dcd7234dbc"
+    },
+    "tb21-cz-pilot": {
+      "root": "${ISOLATED_ROOT}/jobs/tb21-cz-pilot",
+      "files": 257,
+      "bytes": 4485811,
+      "tree_sha256": "17cc371c8b27708d5701051bb17fd2d1a070e050e672bf1b90fa1ade42941a80"
+    },
+    "tb21-cz-remainder": {
+      "root": "${ISOLATED_ROOT}/jobs/tb21-cz-remainder",
+      "files": 786,
+      "bytes": 56930077,
+      "tree_sha256": "80b6a4cd0b29807e154ab1049010daf5b7feb8230d3dea4118829351f7c5caba"
+    },
+    "tb21-cz-infra-rerun-1": {
+      "root": "${ISOLATED_ROOT}/jobs/tb21-cz-infra-rerun-1",
+      "files": 152,
+      "bytes": 1980134,
+      "tree_sha256": "4e619a78b94db5377180103314fb98d293dd27f76597b6e73e9588c74188d340"
+    },
+    "tb21-cz-adaptive-single-probe": {
+      "root": "${ISOLATED_ROOT}/jobs/tb21-cz-adaptive-single-probe",
+      "files": 16,
+      "bytes": 199662,
+      "tree_sha256": "fecf93c8671df887bb771080011ae439bb933974a993d07c659ab54d68585bd5"
+    },
+    "tb21-cz-financial-single-probe": {
+      "root": "${ISOLATED_ROOT}/jobs/tb21-cz-financial-single-probe",
+      "files": 16,
+      "bytes": 133983,
+      "tree_sha256": "89e7619d37a4be66938be4a86899ac6c726c0fafdeacbd02849d9a261708caba"
+    }
+  },
+  "private_raw_file_manifest": {
+    "path": "private-artifacts/terminal-bench-2.1-mini/raw-file-manifest.json",
+    "sha256": "d99b2c2218641816b2ec1bb3e101837ea5e0d93ef122a214fff8668186886fce",
+    "committed": false
+  },
+  "public_artifacts": {
+    "preregistration.json": {
+      "bytes": 15236,
+      "sha256": "dcd3bd63e84ab4b6de26a8f14e5980ae8344687ee3e9c6e3a941ec0c5289054d"
+    },
+    "PREREGISTRATION.sha256": {
+      "bytes": 87,
+      "sha256": "35468072fe504826be8df1d5adf90b422d37bf4f3806c8f492dfe28bbd6a7ae6"
+    },
+    "summary.json": {
+      "bytes": 77207,
+      "sha256": "07e7c67fccafd036211b20638a9bd9ee4113a76bdc188fbb0fea31e545332eb8"
+    },
+    "trials.json": {
+      "bytes": 202743,
+      "sha256": "c4103f4fff8ad4f30f32cc090f3b43dde2af7ffff56d502c8d79c4f9c352bad0"
+    },
+    "attempts.json": {
+      "bytes": 235716,
+      "sha256": "dbdeb53752f304abfdbf135ae44304872662404fc32c5169c63e6e7ce8973f43"
+    },
+    "README.md": {
+      "bytes": 8142,
+      "sha256": "aa9cbfbf52432b9604ab0483835e7198f7dfe189886af317607f61215a4b4d54"
+    }
+  },
+  "analysis_script": {
+    "path": "tools/analyze-terminal-bench.py",
+    "sha256": "46486d1788f8716bb773146406e679abfc0386ad98af9653ba3a6250cd363e8d"
+  },
+  "integrity": {
+    "trials_expected": 72,
+    "trials_observed": 72,
+    "complete_matrix": true,
+    "provider_session_identities": 54,
+    "trials_with_provider_usage": 54,
+    "codexzero_trials_expected": 24,
+    "codexzero_telemetry_files": 24,
+    "codexzero_accounting_valid": true,
+    "codexzero_artifacts_verified": true,
+    "rtk_trials_expected": 24,
+    "rtk_databases": 15,
+    "attempts_observed": 84,
+    "superseded_attempts": 12
+  }
+}

@@ -3,18 +3,22 @@
   <p><strong>Zero Wasted Tokens, Same Benchmark Scores &amp; Quality, More Usage Limits, Less Cost</strong></p>
 </div>
 
-![Highest recorded token reduction for CodexZero Max, CodexZero, RTK, standard Codex, Caveman, and RTK plus Caveman](assets/benchmarks/benchmark-overview.svg)
+![Regular Codex processed 26.58 million tokens and CodexZero processed 22.69 million while both scored 29 out of 36](assets/benchmarks/terminal-bench-repeated.svg)
 
 [![CI](https://github.com/Retro2512/CodexZero/actions/workflows/ci.yml/badge.svg)](https://github.com/Retro2512/CodexZero/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/Retro2512/CodexZero?display_name=tag)](https://github.com/Retro2512/CodexZero/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-171713.svg)](LICENSE)
 
-CodexZero recorded the largest token reduction in our completed comparisons. In the strongest repeated benchmark, it:
+## Benchmark summary
 
-- used **15% fewer tokens**
-- matched Codex’s **29/36 task score**
-- processed **3.89 million fewer tokens**
-- ran the same 12 software tasks three times per setup
+| Setup | Score | Total tokens | Reduction |
+|---|---:|---:|---:|
+| Codex | 29/36 | 26,580,391 | Baseline |
+| CodexZero | 29/36 | 22,691,418 | **14.63% fewer** |
+
+**12 tasks · 3 repetitions per setup**
+
+[Methods and data](reports/terminal-bench-2.1-replication/README.md)
 
 CodexZero installs beside Codex. Your regular CLI remains available, and the full command result stays available whenever Codex needs it.
 
@@ -55,14 +59,6 @@ codex-zero stock
 ```
 
 Open regular Codex at any time.
-
-## The repeated result
-
-![Regular Codex processed 26.58 million tokens and CodexZero processed 22.69 million while both scored 29 out of 36](assets/benchmarks/terminal-bench-repeated.svg)
-
-Codex and CodexZero each completed 12 software tasks three times. CodexZero matched the final task score while processing 22.69 million tokens instead of 26.58 million.
-
-[Read the benchmark report](reports/terminal-bench-2.1-replication/README.md) · [Inspect all trials](reports/terminal-bench-2.1-replication/trials.json) · [Open the totals](reports/terminal-bench-2.1-replication/summary.json)
 
 ## How it works
 
@@ -115,12 +111,10 @@ Token reductions do not translate directly into the same percentage reduction on
 
 ## More information
 
-- [Complete benchmark methodology](docs/measurement.md)
 - [Architecture](docs/architecture.md)
 - [Compatibility details](docs/compatibility.md)
 - [Security](SECURITY.md)
 - [Uninstall and rollback](docs/rollback.md)
 - [Contributing](CONTRIBUTING.md)
-- [Complete project reference](PROJECT_REFERENCE.md)
 
 CodexZero is an independent project and is not an official OpenAI product.

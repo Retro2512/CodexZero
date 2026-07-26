@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="416" viewBox="0 0 1200 416" role="img" aria-labelledby="title desc">
+<title id="title">DeepSWE one-task pilot</title>
+<desc id="desc">Codex: 6.17M tokens, Baseline, quality 1/1; CodexZero Max: 4.24M tokens, 31.31% fewer, quality 1/1</desc>
+<style>
+text{font-family:Arial,Helvetica,sans-serif;fill:#171713}
+.mono{font-family:Consolas,'Liberation Mono',monospace}
+.head{font-size:32px;font-weight:800;letter-spacing:-1px;fill:#fffef8}
+.sub{font-size:15px;fill:#d7d4c8}
+.col{font-size:11px;font-weight:700;letter-spacing:1px;fill:#68675f}
+.label{font-size:16px;font-weight:700}
+.value{font-size:15px;font-weight:700}
+.small{font-size:13px}
+.foot{font-size:12px;fill:#68675f}
+</style>
+<rect width="1200" height="416" fill="#f4f2e9"/>
+<rect width="1200" height="130" fill="#171713"/>
+<text class="head" x="48" y="58">DeepSWE one-task pilot</text>
+<text class="sub" x="48" y="91">1 software task · GPT-5.6 Sol medium · historical Max configuration</text>
+<text class="col mono" x="48" y="163">CONFIGURATION</text>
+<text class="col mono" x="330" y="163">PROVIDER TOKENS · SHORTER IS BETTER</text>
+<text class="col mono" x="792" y="163">TOTAL / MEAN</text>
+<text class="col mono" x="945" y="163">VS CODEX</text>
+<text class="col mono" x="1090" y="163">QUALITY</text>
+<rect x="0" y="182" width="1200" height="82" fill="#fffef8"/>
+<line x1="48" y1="264" x2="1152" y2="264" stroke="#d7d4c8"/>
+<text class="label" x="48" y="231">Codex</text>
+<rect x="330" y="212" width="440" height="21" rx="3" fill="#e4e1d7"/>
+<line x1="770.0" y1="206" x2="770.0" y2="240" stroke="#171713" stroke-width="1" opacity=".35"/>
+<rect x="330" y="212" width="440.0" height="21" rx="3" fill="#171713"/>
+<text class="value mono" x="792" y="231">6.17M</text>
+<text class="small mono" x="945" y="231">Baseline</text>
+<text class="value mono" x="1090" y="231">1/1</text>
+<rect x="0" y="264" width="1200" height="82" fill="#efffc0"/>
+<line x1="48" y1="346" x2="1152" y2="346" stroke="#d7d4c8"/>
+<text class="label" x="48" y="313">CodexZero Max</text>
+<rect x="330" y="294" width="440" height="21" rx="3" fill="#e4e1d7"/>
+<line x1="770.0" y1="288" x2="770.0" y2="322" stroke="#171713" stroke-width="1" opacity=".35"/>
+<rect x="330" y="294" width="302.2" height="21" rx="3" fill="#ff7759"/>
+<text class="value mono" x="792" y="313">4.24M</text>
+<text class="small mono" x="945" y="313">31.31% fewer</text>
+<text class="value mono" x="1090" y="313">1/1</text>
+<text class="foot mono" x="48" y="386">Both resolved the task; CodexZero Max used 31.30% fewer provider tokens.</text>
+</svg>

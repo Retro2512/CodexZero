@@ -1,0 +1,2355 @@
+{
+  "schema": "codexzero-terminal-bench-summary-v1",
+  "benchmark": {
+    "name": "Terminal-Bench 2 public Harbor package (corrected 89-task lineage)",
+    "package": "terminal-bench/terminal-bench-2@latest",
+    "dataset_digest": "sha256:c6fc2e2382c1dbae99b2d5ecd2f4f4a60c3c01e0d84642d69b4afd92e99d078b",
+    "population_tasks": 89,
+    "selection": "Python random.Random(2512).sample(registry_order, 12)",
+    "seed": 2512,
+    "attempts_per_cell": 1,
+    "tasks": [
+      {
+        "order": 1,
+        "name": "openssl-selfsigned-cert",
+        "package_digest": "sha256:43b288549abe880ce4a3c735f30e746c4440c0159c5411e9ae5aafb547ba2d8c",
+        "difficulty": "medium",
+        "category": "security",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 2048
+      },
+      {
+        "order": 2,
+        "name": "nginx-request-logging",
+        "package_digest": "sha256:f5eaf57c493462fbeaa8a7b5c4155739ee4ce8e8fab037eae6512788885014f6",
+        "difficulty": "medium",
+        "category": "system-administration",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 2048
+      },
+      {
+        "order": 3,
+        "name": "hf-model-inference",
+        "package_digest": "sha256:649831c4d9cef15fcbccbdd5639c7d4357b3061a32d9bd449d954d23370880b4",
+        "difficulty": "medium",
+        "category": "data-science",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 2048
+      },
+      {
+        "order": 4,
+        "name": "financial-document-processor",
+        "package_digest": "sha256:415ba44ca6ce86c68ffd3933735282e4e3d1523543a706352f68a22716e6da4f",
+        "difficulty": "medium",
+        "category": "data-processing",
+        "agent_timeout_sec_original": 1200.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 4096
+      },
+      {
+        "order": 5,
+        "name": "large-scale-text-editing",
+        "package_digest": "sha256:f1196bcc75f57494f04617c635c7d23a8f231d25e68136dae02615eaa846ad90",
+        "difficulty": "medium",
+        "category": "file-operations",
+        "agent_timeout_sec_original": 1200.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 2048
+      },
+      {
+        "order": 6,
+        "name": "mailman",
+        "package_digest": "sha256:b0590a96642e689fc79571934ac533d24cd6de4210a151331ff07def7e8d1d26",
+        "difficulty": "medium",
+        "category": "system-administration",
+        "agent_timeout_sec_original": 1800.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 2048
+      },
+      {
+        "order": 7,
+        "name": "video-processing",
+        "package_digest": "sha256:59730f0ccdc323eb45aa433d094cd7c2f29a0084d3670ce7cc93acee9b516ade",
+        "difficulty": "hard",
+        "category": "video-processing",
+        "agent_timeout_sec_original": 3600.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 2048
+      },
+      {
+        "order": 8,
+        "name": "custom-memory-heap-crash",
+        "package_digest": "sha256:72cdc9cf98c822a1449935ca32efc6612fe3d14928c9465c11285e95dcdf60cb",
+        "difficulty": "medium",
+        "category": "debugging",
+        "agent_timeout_sec_original": 1800.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 2048
+      },
+      {
+        "order": 9,
+        "name": "vulnerable-secret",
+        "package_digest": "sha256:2a8a7b743f4f42fe70c6aadfde5621fceaf8ceb343331586f4479485bc1f8da0",
+        "difficulty": "medium",
+        "category": "security",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 2048
+      },
+      {
+        "order": 10,
+        "name": "count-dataset-tokens",
+        "package_digest": "sha256:c9b237360affc7d6aabb1b910f41b291e578d8952d325641cd53f73e3483c979",
+        "difficulty": "medium",
+        "category": "model-training",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 2048
+      },
+      {
+        "order": 11,
+        "name": "fix-code-vulnerability",
+        "package_digest": "sha256:e73a9bc59e041584ecaf1884f01e2b055d824c2f30ada540917e1ce5c4493408",
+        "difficulty": "hard",
+        "category": "security",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 2048
+      },
+      {
+        "order": 12,
+        "name": "adaptive-rejection-sampler",
+        "package_digest": "sha256:a3cc947ba81ea6be1e7255c7b398a30f8017e280d586c2e09eccfaf67a18d35d",
+        "difficulty": "medium",
+        "category": "scientific-computing",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 2048
+      }
+    ]
+  },
+  "scoring": {
+    "strict_task_count": 12,
+    "scorable_task_count": 10,
+    "unscorable_tasks": [
+      "adaptive-rejection-sampler",
+      "financial-document-processor"
+    ],
+    "strict_score_note": "Official Harbor-style score counts every preregistered task and treats provider exceptions as zero.",
+    "comparison_score_note": "The comparison score excludes only tasks that produced the same provider transport failure for every configuration across the original and controlled rerun."
+  },
+  "design": {
+    "configs": 6,
+    "total_trials": 72,
+    "pilot_trials": 18,
+    "remaining_trials": 54,
+    "pairing": "All six configurations run once on each identical task package.",
+    "parallelism": "Up to 12 trials; configurations for a task launch in the same wave.",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "medium",
+    "agent_timeout_cap_sec": 900,
+    "verifier_timeouts": "Official task values unchanged.",
+    "retries": 0,
+    "stop_rule": "Pilot stops expansion only for invalid telemetry, auth/quota/infrastructure failure, or a material harness defect; quality outcomes never alter the task list.",
+    "invalid_run_policy": "Infrastructure-invalid trials are rerun and reported; model failures/timeouts remain score-zero outcomes."
+  },
+  "pricing": {
+    "as_of": "2026-07-25",
+    "model": "gpt-5.6-sol",
+    "usd_per_million_tokens": {
+      "uncached_input": 5.0,
+      "cached_input": 0.5,
+      "cache_write_input": 6.25,
+      "output": 30.0
+    },
+    "codex_credits_per_million_tokens": {
+      "uncached_input": 125.0,
+      "cached_input": 12.5,
+      "cache_write_input": 156.25,
+      "output": 750.0
+    },
+    "long_context_threshold_input_tokens": 272000,
+    "long_context_multipliers": {
+      "input": 2.0,
+      "output": 1.5
+    },
+    "api_source": "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
+    "codex_rate_card_source": "https://help.openai.com/en/articles/20001106-codex-rate-card",
+    "note": "Computed per model request. API-equivalent dollars are not a claim that ChatGPT-plan usage incurred an API invoice."
+  },
+  "config_order": [
+    "codex",
+    "codexzero_safe",
+    "codexzero_max",
+    "codex_rtk",
+    "codex_caveman",
+    "codex_caveman_rtk"
+  ],
+  "configs": {
+    "codex": {
+      "trials": 12,
+      "strict_passes": 7,
+      "strict_score": 0.5833333333333334,
+      "strict_score_wilson_95": [
+        0.31951131254954973,
+        0.8067396863412435
+      ],
+      "scorable_trials": 10,
+      "passes": 7,
+      "score": 0.7,
+      "score_wilson_95": [
+        0.39677814746114537,
+        0.8922087325936989
+      ],
+      "exceptions": {
+        "AgentSafetyRefusalError": 1,
+        "NonZeroAgentExitCodeError": 2
+      },
+      "totals": {
+        "provider.input_tokens": 3469696,
+        "provider.cached_input_tokens": 3116800,
+        "provider.uncached_input_tokens": 352896,
+        "provider.output_tokens": 36348,
+        "provider.reasoning_output_tokens": 11929,
+        "provider.total_tokens": 3506044,
+        "activity.inference_requests": 137,
+        "activity.cache_hit_requests": 133,
+        "activity.cache_miss_requests": 4,
+        "activity.long_context_requests": 0,
+        "activity.assistant_messages": 49,
+        "activity.assistant_tokens": 3041,
+        "activity.session_tool_calls": 128,
+        "activity.session_tool_output_bytes": 4032160,
+        "activity.session_tool_output_tokens": 2661131,
+        "activity.agent_steps": 137,
+        "activity.shell_commands": 84,
+        "activity.successful_shell_commands": 73,
+        "activity.failed_shell_commands": 11,
+        "activity.shell_command_output_bytes": 191363,
+        "activity.shell_command_output_tokens": 55390,
+        "activity.compaction_events": 0,
+        "activity.retry_events": 0,
+        "codexzero.events": 0,
+        "codexzero.transformed_events": 0,
+        "codexzero.raw_bytes": 0,
+        "codexzero.original_tokens": 0,
+        "codexzero.selected_tokens": 0,
+        "codexzero.tokens_eliminated": 0,
+        "rtk.commands": 0,
+        "rtk.input_tokens": 0,
+        "rtk.output_tokens": 0,
+        "rtk.tokens_saved": 0,
+        "rtk.exec_time_ms": 0,
+        "rtk.parse_failures": 0,
+        "rtk.fallback_successes": 0
+      },
+      "all_selected_task_attempt_totals": {
+        "provider.input_tokens": 3469696,
+        "provider.cached_input_tokens": 3116800,
+        "provider.uncached_input_tokens": 352896,
+        "provider.output_tokens": 36348,
+        "provider.reasoning_output_tokens": 11929,
+        "provider.total_tokens": 3506044,
+        "activity.inference_requests": 137,
+        "activity.cache_hit_requests": 133,
+        "activity.cache_miss_requests": 4,
+        "activity.long_context_requests": 0,
+        "activity.assistant_messages": 49,
+        "activity.assistant_tokens": 3041,
+        "activity.session_tool_calls": 128,
+        "activity.session_tool_output_bytes": 4032160,
+        "activity.session_tool_output_tokens": 2661131,
+        "activity.agent_steps": 137,
+        "activity.shell_commands": 84,
+        "activity.successful_shell_commands": 73,
+        "activity.failed_shell_commands": 11,
+        "activity.shell_command_output_bytes": 191363,
+        "activity.shell_command_output_tokens": 55390,
+        "activity.compaction_events": 0,
+        "activity.retry_events": 0,
+        "codexzero.events": 0,
+        "codexzero.transformed_events": 0,
+        "codexzero.raw_bytes": 0,
+        "codexzero.original_tokens": 0,
+        "codexzero.selected_tokens": 0,
+        "codexzero.tokens_eliminated": 0,
+        "rtk.commands": 0,
+        "rtk.input_tokens": 0,
+        "rtk.output_tokens": 0,
+        "rtk.tokens_saved": 0,
+        "rtk.exec_time_ms": 0,
+        "rtk.parse_failures": 0,
+        "rtk.fallback_successes": 0
+      },
+      "means": {
+        "provider.input_tokens": 346969.6,
+        "provider.cached_input_tokens": 311680.0,
+        "provider.uncached_input_tokens": 35289.6,
+        "provider.output_tokens": 3634.8,
+        "provider.reasoning_output_tokens": 1192.9,
+        "provider.total_tokens": 350604.4,
+        "activity.inference_requests": 13.7,
+        "activity.cache_hit_requests": 13.3,
+        "activity.cache_miss_requests": 0.4,
+        "activity.long_context_requests": 0.0,
+        "activity.assistant_messages": 4.9,
+        "activity.assistant_tokens": 304.1,
+        "activity.session_tool_calls": 12.8,
+        "activity.session_tool_output_bytes": 403216.0,
+        "activity.session_tool_output_tokens": 266113.1,
+        "activity.agent_steps": 13.7,
+        "activity.shell_commands": 8.4,
+        "activity.successful_shell_commands": 7.3,
+        "activity.failed_shell_commands": 1.1,
+        "activity.shell_command_output_bytes": 19136.3,
+        "activity.shell_command_output_tokens": 5539.0,
+        "activity.compaction_events": 0.0,
+        "activity.retry_events": 0.0,
+        "codexzero.events": 0.0,
+        "codexzero.transformed_events": 0.0,
+        "codexzero.raw_bytes": 0.0,
+        "codexzero.original_tokens": 0.0,
+        "codexzero.selected_tokens": 0.0,
+        "codexzero.tokens_eliminated": 0.0,
+        "rtk.commands": 0.0,
+        "rtk.input_tokens": 0.0,
+        "rtk.output_tokens": 0.0,
+        "rtk.tokens_saved": 0.0,
+        "rtk.exec_time_ms": 0.0,
+        "rtk.parse_failures": 0.0,
+        "rtk.fallback_successes": 0.0
+      },
+      "cache_token_ratio": 0.898291954107795,
+      "cache_request_hit_rate": 0.9708029197080292,
+      "harbor_estimated_cost_usd": {
+        "coverage_trials": 9,
+        "total": 4.41332,
+        "mean": 0.49036888888888885
+      },
+      "official_api_equivalent_cost_usd": {
+        "total": 4.41332,
+        "mean": 0.44133199999999995
+      },
+      "codex_rate_card_credits": {
+        "total": 110.333,
+        "mean": 11.0333
+      },
+      "timing_sec": {
+        "environment_setup": {
+          "total": 616.418194,
+          "mean": 61.641819399999996,
+          "median": 18.8081725
+        },
+        "agent_setup": {
+          "total": 5.295797,
+          "mean": 0.5295797,
+          "median": 0.512559
+        },
+        "agent_execution": {
+          "total": 1737.3158369999999,
+          "mean": 173.7315837,
+          "median": 126.2441795
+        },
+        "verifier": {
+          "total": 360.606669,
+          "mean": 36.0606669,
+          "median": 28.3805765
+        },
+        "full_trial": {
+          "total": 2920.5149690000003,
+          "mean": 292.0514969,
+          "median": 199.185609
+        },
+        "trajectory_event_span": {
+          "total": 1661.497,
+          "mean": 166.1497,
+          "median": 119.889
+        }
+      }
+    },
+    "codexzero_safe": {
+      "trials": 12,
+      "strict_passes": 7,
+      "strict_score": 0.5833333333333334,
+      "strict_score_wilson_95": [
+        0.31951131254954973,
+        0.8067396863412435
+      ],
+      "scorable_trials": 10,
+      "passes": 7,
+      "score": 0.7,
+      "score_wilson_95": [
+        0.39677814746114537,
+        0.8922087325936989
+      ],
+      "exceptions": {
+        "AgentSafetyRefusalError": 1,
+        "NonZeroAgentExitCodeError": 2
+      },
+      "totals": {
+        "provider.input_tokens": 3385226,
+        "provider.cached_input_tokens": 3068928,
+        "provider.uncached_input_tokens": 316298,
+        "provider.output_tokens": 31989,
+        "provider.reasoning_output_tokens": 9449,
+        "provider.total_tokens": 3417215,
+        "activity.inference_requests": 132,
+        "activity.cache_hit_requests": 128,
+        "activity.cache_miss_requests": 4,
+        "activity.long_context_requests": 0,
+        "activity.assistant_messages": 39,
+        "activity.assistant_tokens": 2379,
+        "activity.session_tool_calls": 123,
+        "activity.session_tool_output_bytes": 2344812,
+        "activity.session_tool_output_tokens": 1493132,
+        "activity.agent_steps": 132,
+        "activity.shell_commands": 79,
+        "activity.successful_shell_commands": 70,
+        "activity.failed_shell_commands": 9,
+        "activity.shell_command_output_bytes": 211136,
+        "activity.shell_command_output_tokens": 66789,
+        "activity.compaction_events": 0,
+        "activity.retry_events": 0,
+        "codexzero.events": 86,
+        "codexzero.transformed_events": 0,
+        "codexzero.raw_bytes": 245590,
+        "codexzero.original_tokens": 79318,
+        "codexzero.selected_tokens": 79318,
+        "codexzero.tokens_eliminated": 0,
+        "rtk.commands": 0,
+        "rtk.input_tokens": 0,
+        "rtk.output_tokens": 0,
+        "rtk.tokens_saved": 0,
+        "rtk.exec_time_ms": 0,
+        "rtk.parse_failures": 0,
+        "rtk.fallback_successes": 0
+      },
+      "all_selected_task_attempt_totals": {
+        "provider.input_tokens": 3385226,
+        "provider.cached_input_tokens": 3068928,
+        "provider.uncached_input_tokens": 316298,
+        "provider.output_tokens": 31989,
+        "provider.reasoning_output_tokens": 9449,
+        "provider.total_tokens": 3417215,
+        "activity.inference_requests": 132,
+        "activity.cache_hit_requests": 128,
+        "activity.cache_miss_requests": 4,
+        "activity.long_context_requests": 0,
+        "activity.assistant_messages": 39,
+        "activity.assistant_tokens": 2379,
+        "activity.session_tool_calls": 123,
+        "activity.session_tool_output_bytes": 2344812,
+        "activity.session_tool_output_tokens": 1493132,
+        "activity.agent_steps": 132,
+        "activity.shell_commands": 79,
+        "activity.successful_shell_commands": 70,
+        "activity.failed_shell_commands": 9,
+        "activity.shell_command_output_bytes": 211136,
+        "activity.shell_command_output_tokens": 66789,
+        "activity.compaction_events": 0,
+        "activity.retry_events": 0,
+        "codexzero.events": 86,
+        "codexzero.transformed_events": 0,
+        "codexzero.raw_bytes": 245590,
+        "codexzero.original_tokens": 79318,
+        "codexzero.selected_tokens": 79318,
+        "codexzero.tokens_eliminated": 0,
+        "rtk.commands": 0,
+        "rtk.input_tokens": 0,
+        "rtk.output_tokens": 0,
+        "rtk.tokens_saved": 0,
+        "rtk.exec_time_ms": 0,
+        "rtk.parse_failures": 0,
+        "rtk.fallback_successes": 0
+      },
+      "means": {
+        "provider.input_tokens": 338522.6,
+        "provider.cached_input_tokens": 306892.8,
+        "provider.uncached_input_tokens": 31629.8,
+        "provider.output_tokens": 3198.9,
+        "provider.reasoning_output_tokens": 944.9,
+        "provider.total_tokens": 341721.5,
+        "activity.inference_requests": 13.2,
+        "activity.cache_hit_requests": 12.8,
+        "activity.cache_miss_requests": 0.4,
+        "activity.long_context_requests": 0.0,
+        "activity.assistant_messages": 3.9,
+        "activity.assistant_tokens": 237.9,
+        "activity.session_tool_calls": 12.3,
+        "activity.session_tool_output_bytes": 234481.2,
+        "activity.session_tool_output_tokens": 149313.2,
+        "activity.agent_steps": 13.2,
+        "activity.shell_commands": 7.9,
+        "activity.successful_shell_commands": 7.0,
+        "activity.failed_shell_commands": 0.9,
+        "activity.shell_command_output_bytes": 21113.6,
+        "activity.shell_command_output_tokens": 6678.9,
+        "activity.compaction_events": 0.0,
+        "activity.retry_events": 0.0,
+        "codexzero.events": 8.6,
+        "codexzero.transformed_events": 0.0,
+        "codexzero.raw_bytes": 24559.0,
+        "codexzero.original_tokens": 7931.8,
+        "codexzero.selected_tokens": 7931.8,
+        "codexzero.tokens_eliminated": 0.0,
+        "rtk.commands": 0.0,
+        "rtk.input_tokens": 0.0,
+        "rtk.output_tokens": 0.0,
+        "rtk.tokens_saved": 0.0,
+        "rtk.exec_time_ms": 0.0,
+        "rtk.parse_failures": 0.0,
+        "rtk.fallback_successes": 0.0
+      },
+      "cache_token_ratio": 0.9065651746737146,
+      "cache_request_hit_rate": 0.9696969696969697,
+      "harbor_estimated_cost_usd": {
+        "coverage_trials": 9,
+        "total": 4.075624,
+        "mean": 0.45284711111111114
+      },
+      "official_api_equivalent_cost_usd": {
+        "total": 4.075624,
+        "mean": 0.40756240000000005
+      },
+      "codex_rate_card_credits": {
+        "total": 101.8906,
+        "mean": 10.189060000000001
+      },
+      "timing_sec": {
+        "environment_setup": {
+          "total": 592.282104,
+          "mean": 59.2282104,
+          "median": 17.6898455
+        },
+        "agent_setup": {
+          "total": 5.219547,
+          "mean": 0.5219547,
+          "median": 0.49342600000000003
+        },
+        "agent_execution": {
+          "total": 1622.423337,
+          "mean": 162.2423337,
+          "median": 146.88832100000002
+        },
+        "verifier": {
+          "total": 350.557916,
+          "mean": 35.0557916,
+          "median": 33.338071
+        },
+        "full_trial": {
+          "total": 2779.929153,
+          "mean": 277.9929153,
+          "median": 220.97689400000002
+        },
+        "trajectory_event_span": {
+          "total": 1529.932,
+          "mean": 152.9932,
+          "median": 139.98149999999998
+        }
+      }
+    },
+    "codexzero_max": {
+      "trials": 12,
+      "strict_passes": 7,
+      "strict_score": 0.5833333333333334,
+      "strict_score_wilson_95": [
+        0.31951131254954973,
+        0.8067396863412435
+      ],
+      "scorable_trials": 10,
+      "passes": 7,
+      "score": 0.7,
+      "score_wilson_95": [
+        0.39677814746114537,
+        0.8922087325936989
+      ],
+      "exceptions": {
+        "AgentSafetyRefusalError": 1,
+        "NonZeroAgentExitCodeError": 2
+      },
+      "totals": {
+        "provider.input_tokens": 4203712,
+        "provider.cached_input_tokens": 3852288,
+        "provider.uncached_input_tokens": 351424,
+        "provider.output_tokens": 40260,
+        "provider.reasoning_output_tokens": 13229,
+        "provider.total_tokens": 4243972,
+        "activity.inference_requests": 142,
+        "activity.cache_hit_requests": 140,
+        "activity.cache_miss_requests": 2,
+        "activity.long_context_requests": 0,
+        "activity.assistant_messages": 30,
+        "activity.assistant_tokens": 1981,
+        "activity.session_tool_calls": 133,
+        "activity.session_tool_output_bytes": 4038087,
+        "activity.session_tool_output_tokens": 2659328,
+        "activity.agent_steps": 142,
+        "activity.shell_commands": 87,
+        "activity.successful_shell_commands": 75,
+        "activity.failed_shell_commands": 12,
+        "activity.shell_command_output_bytes": 284692,
+        "activity.shell_command_output_tokens": 97689,
+        "activity.compaction_events": 0,
+        "activity.retry_events": 0,
+        "codexzero.events": 101,
+        "codexzero.transformed_events": 0,
+        "codexzero.raw_bytes": 320262,
+        "codexzero.original_tokens": 108431,
+        "codexzero.selected_tokens": 108431,
+        "codexzero.tokens_eliminated": 0,
+        "rtk.commands": 0,
+        "rtk.input_tokens": 0,
+        "rtk.output_tokens": 0,
+        "rtk.tokens_saved": 0,
+        "rtk.exec_time_ms": 0,
+        "rtk.parse_failures": 0,
+        "rtk.fallback_successes": 0
+      },
+      "all_selected_task_attempt_totals": {
+        "provider.input_tokens": 4203712,
+        "provider.cached_input_tokens": 3852288,
+        "provider.uncached_input_tokens": 351424,
+        "provider.output_tokens": 40260,
+        "provider.reasoning_output_tokens": 13229,
+        "provider.total_tokens": 4243972,
+        "activity.inference_requests": 142,
+        "activity.cache_hit_requests": 140,
+        "activity.cache_miss_requests": 2,
+        "activity.long_context_requests": 0,
+        "activity.assistant_messages": 30,
+        "activity.assistant_tokens": 1981,
+        "activity.session_tool_calls": 133,
+        "activity.session_tool_output_bytes": 4038087,
+        "activity.session_tool_output_tokens": 2659328,
+        "activity.agent_steps": 142,
+        "activity.shell_commands": 87,
+        "activity.successful_shell_commands": 75,
+        "activity.failed_shell_commands": 12,
+        "activity.shell_command_output_bytes": 284692,
+        "activity.shell_command_output_tokens": 97689,
+        "activity.compaction_events": 0,
+        "activity.retry_events": 0,
+        "codexzero.events": 101,
+        "codexzero.transformed_events": 0,
+        "codexzero.raw_bytes": 320262,
+        "codexzero.original_tokens": 108431,
+        "codexzero.selected_tokens": 108431,
+        "codexzero.tokens_eliminated": 0,
+        "rtk.commands": 0,
+        "rtk.input_tokens": 0,
+        "rtk.output_tokens": 0,
+        "rtk.tokens_saved": 0,
+        "rtk.exec_time_ms": 0,
+        "rtk.parse_failures": 0,
+        "rtk.fallback_successes": 0
+      },
+      "means": {
+        "provider.input_tokens": 420371.2,
+        "provider.cached_input_tokens": 385228.8,
+        "provider.uncached_input_tokens": 35142.4,
+        "provider.output_tokens": 4026.0,
+        "provider.reasoning_output_tokens": 1322.9,
+        "provider.total_tokens": 424397.2,
+        "activity.inference_requests": 14.2,
+        "activity.cache_hit_requests": 14.0,
+        "activity.cache_miss_requests": 0.2,
+        "activity.long_context_requests": 0.0,
+        "activity.assistant_messages": 3.0,
+        "activity.assistant_tokens": 198.1,
+        "activity.session_tool_calls": 13.3,
+        "activity.session_tool_output_bytes": 403808.7,
+        "activity.session_tool_output_tokens": 265932.8,
+        "activity.agent_steps": 14.2,
+        "activity.shell_commands": 8.7,
+        "activity.successful_shell_commands": 7.5,
+        "activity.failed_shell_commands": 1.2,
+        "activity.shell_command_output_bytes": 28469.2,
+        "activity.shell_command_output_tokens": 9768.9,
+        "activity.compaction_events": 0.0,
+        "activity.retry_events": 0.0,
+        "codexzero.events": 10.1,
+        "codexzero.transformed_events": 0.0,
+        "codexzero.raw_bytes": 32026.2,
+        "codexzero.original_tokens": 10843.1,
+        "codexzero.selected_tokens": 10843.1,
+        "codexzero.tokens_eliminated": 0.0,
+        "rtk.commands": 0.0,
+        "rtk.input_tokens": 0.0,
+        "rtk.output_tokens": 0.0,
+        "rtk.tokens_saved": 0.0,
+        "rtk.exec_time_ms": 0.0,
+        "rtk.parse_failures": 0.0,
+        "rtk.fallback_successes": 0.0
+      },
+      "cache_token_ratio": 0.9164015041943882,
+      "cache_request_hit_rate": 0.9859154929577465,
+      "harbor_estimated_cost_usd": {
+        "coverage_trials": 9,
+        "total": 4.891064,
+        "mean": 0.5434515555555556
+      },
+      "official_api_equivalent_cost_usd": {
+        "total": 4.891064,
+        "mean": 0.4891064
+      },
+      "codex_rate_card_credits": {
+        "total": 122.2766,
+        "mean": 12.22766
+      },
+      "timing_sec": {
+        "environment_setup": {
+          "total": 568.584214,
+          "mean": 56.8584214,
+          "median": 13.7081915
+        },
+        "agent_setup": {
+          "total": 5.218636,
+          "mean": 0.5218636,
+          "median": 0.5061279999999999
+        },
+        "agent_execution": {
+          "total": 1830.366156,
+          "mean": 183.0366156,
+          "median": 141.9638765
+        },
+        "verifier": {
+          "total": 333.157413,
+          "mean": 33.3157413,
+          "median": 28.8255175
+        },
+        "full_trial": {
+          "total": 2917.045537,
+          "mean": 291.7045537,
+          "median": 206.1386975
+        },
+        "trajectory_event_span": {
+          "total": 1738.951,
+          "mean": 173.8951,
+          "median": 135.2955
+        }
+      }
+    },
+    "codex_rtk": {
+      "trials": 12,
+      "strict_passes": 7,
+      "strict_score": 0.5833333333333334,
+      "strict_score_wilson_95": [
+        0.31951131254954973,
+        0.8067396863412435
+      ],
+      "scorable_trials": 10,
+      "passes": 7,
+      "score": 0.7,
+      "score_wilson_95": [
+        0.39677814746114537,
+        0.8922087325936989
+      ],
+      "exceptions": {
+        "AgentSafetyRefusalError": 1,
+        "NonZeroAgentExitCodeError": 2
+      },
+      "totals": {
+        "provider.input_tokens": 3190871,
+        "provider.cached_input_tokens": 2887936,
+        "provider.uncached_input_tokens": 302935,
+        "provider.output_tokens": 34287,
+        "provider.reasoning_output_tokens": 12253,
+        "provider.total_tokens": 3225158,
+        "activity.inference_requests": 123,
+        "activity.cache_hit_requests": 119,
+        "activity.cache_miss_requests": 4,
+        "activity.long_context_requests": 0,
+        "activity.assistant_messages": 42,
+        "activity.assistant_tokens": 2658,
+        "activity.session_tool_calls": 114,
+        "activity.session_tool_output_bytes": 3591410,
+        "activity.session_tool_output_tokens": 2396748,
+        "activity.agent_steps": 123,
+        "activity.shell_commands": 77,
+        "activity.successful_shell_commands": 68,
+        "activity.failed_shell_commands": 9,
+        "activity.shell_command_output_bytes": 171265,
+        "activity.shell_command_output_tokens": 59894,
+        "activity.compaction_events": 0,
+        "activity.retry_events": 0,
+        "codexzero.events": 0,
+        "codexzero.transformed_events": 0,
+        "codexzero.raw_bytes": 0,
+        "codexzero.original_tokens": 0,
+        "codexzero.selected_tokens": 0,
+        "codexzero.tokens_eliminated": 0,
+        "rtk.commands": 31,
+        "rtk.input_tokens": 6930,
+        "rtk.output_tokens": 819,
+        "rtk.tokens_saved": 6111,
+        "rtk.exec_time_ms": 120959,
+        "rtk.parse_failures": 25,
+        "rtk.fallback_successes": 25
+      },
+      "all_selected_task_attempt_totals": {
+        "provider.input_tokens": 3190871,
+        "provider.cached_input_tokens": 2887936,
+        "provider.uncached_input_tokens": 302935,
+        "provider.output_tokens": 34287,
+        "provider.reasoning_output_tokens": 12253,
+        "provider.total_tokens": 3225158,
+        "activity.inference_requests": 123,
+        "activity.cache_hit_requests": 119,
+        "activity.cache_miss_requests": 4,
+        "activity.long_context_requests": 0,
+        "activity.assistant_messages": 42,
+        "activity.assistant_tokens": 2658,
+        "activity.session_tool_calls": 114,
+        "activity.session_tool_output_bytes": 3591410,
+        "activity.session_tool_output_tokens": 2396748,
+        "activity.agent_steps": 123,
+        "activity.shell_commands": 77,
+        "activity.successful_shell_commands": 68,
+        "activity.failed_shell_commands": 9,
+        "activity.shell_command_output_bytes": 171265,
+        "activity.shell_command_output_tokens": 59894,
+        "activity.compaction_events": 0,
+        "activity.retry_events": 0,
+        "codexzero.events": 0,
+        "codexzero.transformed_events": 0,
+        "codexzero.raw_bytes": 0,
+        "codexzero.original_tokens": 0,
+        "codexzero.selected_tokens": 0,
+        "codexzero.tokens_eliminated": 0,
+        "rtk.commands": 31,
+        "rtk.input_tokens": 6930,
+        "rtk.output_tokens": 819,
+        "rtk.tokens_saved": 6111,
+        "rtk.exec_time_ms": 120959,
+        "rtk.parse_failures": 25,
+        "rtk.fallback_successes": 25
+      },
+      "means": {
+        "provider.input_tokens": 319087.1,
+        "provider.cached_input_tokens": 288793.6,
+        "provider.uncached_input_tokens": 30293.5,
+        "provider.output_tokens": 3428.7,
+        "provider.reasoning_output_tokens": 1225.3,
+        "provider.total_tokens": 322515.8,
+        "activity.inference_requests": 12.3,
+        "activity.cache_hit_requests": 11.9,
+        "activity.cache_miss_requests": 0.4,
+        "activity.long_context_requests": 0.0,
+        "activity.assistant_messages": 4.2,
+        "activity.assistant_tokens": 265.8,
+        "activity.session_tool_calls": 11.4,
+        "activity.session_tool_output_bytes": 359141.0,
+        "activity.session_tool_output_tokens": 239674.8,
+        "activity.agent_steps": 12.3,
+        "activity.shell_commands": 7.7,
+        "activity.successful_shell_commands": 6.8,
+        "activity.failed_shell_commands": 0.9,
+        "activity.shell_command_output_bytes": 17126.5,
+        "activity.shell_command_output_tokens": 5989.4,
+        "activity.compaction_events": 0.0,
+        "activity.retry_events": 0.0,
+        "codexzero.events": 0.0,
+        "codexzero.transformed_events": 0.0,
+        "codexzero.raw_bytes": 0.0,
+        "codexzero.original_tokens": 0.0,
+        "codexzero.selected_tokens": 0.0,
+        "codexzero.tokens_eliminated": 0.0,
+        "rtk.commands": 3.1,
+        "rtk.input_tokens": 693.0,
+        "rtk.output_tokens": 81.9,
+        "rtk.tokens_saved": 611.1,
+        "rtk.exec_time_ms": 12095.9,
+        "rtk.parse_failures": 2.5,
+        "rtk.fallback_successes": 2.5
+      },
+      "cache_token_ratio": 0.9050619721073023,
+      "cache_request_hit_rate": 0.967479674796748,
+      "harbor_estimated_cost_usd": {
+        "coverage_trials": 9,
+        "total": 3.987253,
+        "mean": 0.4430281111111111
+      },
+      "official_api_equivalent_cost_usd": {
+        "total": 3.987253,
+        "mean": 0.3987253
+      },
+      "codex_rate_card_credits": {
+        "total": 99.681325,
+        "mean": 9.9681325
+      },
+      "timing_sec": {
+        "environment_setup": {
+          "total": 517.551117,
+          "mean": 51.7551117,
+          "median": 10.381966499999999
+        },
+        "agent_setup": {
+          "total": 5.182035,
+          "mean": 0.5182035,
+          "median": 0.5020985
+        },
+        "agent_execution": {
+          "total": 1421.4089099999999,
+          "mean": 142.14089099999998,
+          "median": 100.7377625
+        },
+        "verifier": {
+          "total": 352.290895,
+          "mean": 35.2290895,
+          "median": 28.6211105
+        },
+        "full_trial": {
+          "total": 2513.1141390000003,
+          "mean": 251.31141390000002,
+          "median": 180.675819
+        },
+        "trajectory_event_span": {
+          "total": 1342.924,
+          "mean": 134.2924,
+          "median": 93.98349999999999
+        }
+      }
+    },
+    "codex_caveman": {
+      "trials": 12,
+      "strict_passes": 8,
+      "strict_score": 0.6666666666666666,
+      "strict_score_wilson_95": [
+        0.39062208887279953,
+        0.8618799089087867
+      ],
+      "scorable_trials": 10,
+      "passes": 8,
+      "score": 0.8,
+      "score_wilson_95": [
+        0.49016247153664183,
+        0.9433178485456247
+      ],
+      "exceptions": {
+        "AgentSafetyRefusalError": 1,
+        "NonZeroAgentExitCodeError": 2
+      },
+      "totals": {
+        "provider.input_tokens": 5437312,
+        "provider.cached_input_tokens": 5052416,
+        "provider.uncached_input_tokens": 384896,
+        "provider.output_tokens": 45884,
+        "provider.reasoning_output_tokens": 19144,
+        "provider.total_tokens": 5483196,
+        "activity.inference_requests": 175,
+        "activity.cache_hit_requests": 172,
+        "activity.cache_miss_requests": 3,
+        "activity.long_context_requests": 0,
+        "activity.assistant_messages": 56,
+        "activity.assistant_tokens": 2230,
+        "activity.session_tool_calls": 166,
+        "activity.session_tool_output_bytes": 3039559,
+        "activity.session_tool_output_tokens": 1937284,
+        "activity.agent_steps": 175,
+        "activity.shell_commands": 107,
+        "activity.successful_shell_commands": 102,
+        "activity.failed_shell_commands": 5,
+        "activity.shell_command_output_bytes": 1323664,
+        "activity.shell_command_output_tokens": 705714,
+        "activity.compaction_events": 0,
+        "activity.retry_events": 0,
+        "codexzero.events": 0,
+        "codexzero.transformed_events": 0,
+        "codexzero.raw_bytes": 0,
+        "codexzero.original_tokens": 0,
+        "codexzero.selected_tokens": 0,
+        "codexzero.tokens_eliminated": 0,
+        "rtk.commands": 0,
+        "rtk.input_tokens": 0,
+        "rtk.output_tokens": 0,
+        "rtk.tokens_saved": 0,
+        "rtk.exec_time_ms": 0,
+        "rtk.parse_failures": 0,
+        "rtk.fallback_successes": 0
+      },
+      "all_selected_task_attempt_totals": {
+        "provider.input_tokens": 5437312,
+        "provider.cached_input_tokens": 5052416,
+        "provider.uncached_input_tokens": 384896,
+        "provider.output_tokens": 45884,
+        "provider.reasoning_output_tokens": 19144,
+        "provider.total_tokens": 5483196,
+        "activity.inference_requests": 175,
+        "activity.cache_hit_requests": 172,
+        "activity.cache_miss_requests": 3,
+        "activity.long_context_requests": 0,
+        "activity.assistant_messages": 56,
+        "activity.assistant_tokens": 2230,
+        "activity.session_tool_calls": 166,
+        "activity.session_tool_output_bytes": 3039559,
+        "activity.session_tool_output_tokens": 1937284,
+        "activity.agent_steps": 175,
+        "activity.shell_commands": 107,
+        "activity.successful_shell_commands": 102,
+        "activity.failed_shell_commands": 5,
+        "activity.shell_command_output_bytes": 1323664,
+        "activity.shell_command_output_tokens": 705714,
+        "activity.compaction_events": 0,
+        "activity.retry_events": 0,
+        "codexzero.events": 0,
+        "codexzero.transformed_events": 0,
+        "codexzero.raw_bytes": 0,
+        "codexzero.original_tokens": 0,
+        "codexzero.selected_tokens": 0,
+        "codexzero.tokens_eliminated": 0,
+        "rtk.commands": 0,
+        "rtk.input_tokens": 0,
+        "rtk.output_tokens": 0,
+        "rtk.tokens_saved": 0,
+        "rtk.exec_time_ms": 0,
+        "rtk.parse_failures": 0,
+        "rtk.fallback_successes": 0
+      },
+      "means": {
+        "provider.input_tokens": 543731.2,
+        "provider.cached_input_tokens": 505241.6,
+        "provider.uncached_input_tokens": 38489.6,
+        "provider.output_tokens": 4588.4,
+        "provider.reasoning_output_tokens": 1914.4,
+        "provider.total_tokens": 548319.6,
+        "activity.inference_requests": 17.5,
+        "activity.cache_hit_requests": 17.2,
+        "activity.cache_miss_requests": 0.3,
+        "activity.long_context_requests": 0.0,
+        "activity.assistant_messages": 5.6,
+        "activity.assistant_tokens": 223.0,
+        "activity.session_tool_calls": 16.6,
+        "activity.session_tool_output_bytes": 303955.9,
+        "activity.session_tool_output_tokens": 193728.4,
+        "activity.agent_steps": 17.5,
+        "activity.shell_commands": 10.7,
+        "activity.successful_shell_commands": 10.2,
+        "activity.failed_shell_commands": 0.5,
+        "activity.shell_command_output_bytes": 132366.4,
+        "activity.shell_command_output_tokens": 70571.4,
+        "activity.compaction_events": 0.0,
+        "activity.retry_events": 0.0,
+        "codexzero.events": 0.0,
+        "codexzero.transformed_events": 0.0,
+        "codexzero.raw_bytes": 0.0,
+        "codexzero.original_tokens": 0.0,
+        "codexzero.selected_tokens": 0.0,
+        "codexzero.tokens_eliminated": 0.0,
+        "rtk.commands": 0.0,
+        "rtk.input_tokens": 0.0,
+        "rtk.output_tokens": 0.0,
+        "rtk.tokens_saved": 0.0,
+        "rtk.exec_time_ms": 0.0,
+        "rtk.parse_failures": 0.0,
+        "rtk.fallback_successes": 0.0
+      },
+      "cache_token_ratio": 0.9292120812636833,
+      "cache_request_hit_rate": 0.9828571428571429,
+      "harbor_estimated_cost_usd": {
+        "coverage_trials": 9,
+        "total": 5.827208,
+        "mean": 0.6474675555555556
+      },
+      "official_api_equivalent_cost_usd": {
+        "total": 5.827208,
+        "mean": 0.5827207999999999
+      },
+      "codex_rate_card_credits": {
+        "total": 145.6802,
+        "mean": 14.56802
+      },
+      "timing_sec": {
+        "environment_setup": {
+          "total": 510.234993,
+          "mean": 51.0234993,
+          "median": 10.342541
+        },
+        "agent_setup": {
+          "total": 5.111398,
+          "mean": 0.5111398,
+          "median": 0.4958135
+        },
+        "agent_execution": {
+          "total": 1978.361062,
+          "mean": 197.8361062,
+          "median": 125.4682525
+        },
+        "verifier": {
+          "total": 313.489484,
+          "mean": 31.3489484,
+          "median": 30.974767
+        },
+        "full_trial": {
+          "total": 3023.266062,
+          "mean": 302.3266062,
+          "median": 216.521285
+        },
+        "trajectory_event_span": {
+          "total": 1903.903,
+          "mean": 190.3903,
+          "median": 119.755
+        }
+      }
+    },
+    "codex_caveman_rtk": {
+      "trials": 12,
+      "strict_passes": 7,
+      "strict_score": 0.5833333333333334,
+      "strict_score_wilson_95": [
+        0.31951131254954973,
+        0.8067396863412435
+      ],
+      "scorable_trials": 10,
+      "passes": 7,
+      "score": 0.7,
+      "score_wilson_95": [
+        0.39677814746114537,
+        0.8922087325936989
+      ],
+      "exceptions": {
+        "AgentSafetyRefusalError": 1,
+        "NonZeroAgentExitCodeError": 2
+      },
+      "totals": {
+        "provider.input_tokens": 3941122,
+        "provider.cached_input_tokens": 3603200,
+        "provider.uncached_input_tokens": 337922,
+        "provider.output_tokens": 37150,
+        "provider.reasoning_output_tokens": 16329,
+        "provider.total_tokens": 3978272,
+        "activity.inference_requests": 145,
+        "activity.cache_hit_requests": 141,
+        "activity.cache_miss_requests": 4,
+        "activity.long_context_requests": 0,
+        "activity.assistant_messages": 47,
+        "activity.assistant_tokens": 1878,
+        "activity.session_tool_calls": 136,
+        "activity.session_tool_output_bytes": 3695630,
+        "activity.session_tool_output_tokens": 2427973,
+        "activity.agent_steps": 145,
+        "activity.shell_commands": 96,
+        "activity.successful_shell_commands": 89,
+        "activity.failed_shell_commands": 7,
+        "activity.shell_command_output_bytes": 286873,
+        "activity.shell_command_output_tokens": 76663,
+        "activity.compaction_events": 0,
+        "activity.retry_events": 0,
+        "codexzero.events": 0,
+        "codexzero.transformed_events": 0,
+        "codexzero.raw_bytes": 0,
+        "codexzero.original_tokens": 0,
+        "codexzero.selected_tokens": 0,
+        "codexzero.tokens_eliminated": 0,
+        "rtk.commands": 48,
+        "rtk.input_tokens": 6225,
+        "rtk.output_tokens": 132,
+        "rtk.tokens_saved": 6093,
+        "rtk.exec_time_ms": 252718,
+        "rtk.parse_failures": 43,
+        "rtk.fallback_successes": 43
+      },
+      "all_selected_task_attempt_totals": {
+        "provider.input_tokens": 3941122,
+        "provider.cached_input_tokens": 3603200,
+        "provider.uncached_input_tokens": 337922,
+        "provider.output_tokens": 37150,
+        "provider.reasoning_output_tokens": 16329,
+        "provider.total_tokens": 3978272,
+        "activity.inference_requests": 145,
+        "activity.cache_hit_requests": 141,
+        "activity.cache_miss_requests": 4,
+        "activity.long_context_requests": 0,
+        "activity.assistant_messages": 47,
+        "activity.assistant_tokens": 1878,
+        "activity.session_tool_calls": 136,
+        "activity.session_tool_output_bytes": 3695630,
+        "activity.session_tool_output_tokens": 2427973,
+        "activity.agent_steps": 145,
+        "activity.shell_commands": 96,
+        "activity.successful_shell_commands": 89,
+        "activity.failed_shell_commands": 7,
+        "activity.shell_command_output_bytes": 286873,
+        "activity.shell_command_output_tokens": 76663,
+        "activity.compaction_events": 0,
+        "activity.retry_events": 0,
+        "codexzero.events": 0,
+        "codexzero.transformed_events": 0,
+        "codexzero.raw_bytes": 0,
+        "codexzero.original_tokens": 0,
+        "codexzero.selected_tokens": 0,
+        "codexzero.tokens_eliminated": 0,
+        "rtk.commands": 48,
+        "rtk.input_tokens": 6225,
+        "rtk.output_tokens": 132,
+        "rtk.tokens_saved": 6093,
+        "rtk.exec_time_ms": 252718,
+        "rtk.parse_failures": 43,
+        "rtk.fallback_successes": 43
+      },
+      "means": {
+        "provider.input_tokens": 394112.2,
+        "provider.cached_input_tokens": 360320.0,
+        "provider.uncached_input_tokens": 33792.2,
+        "provider.output_tokens": 3715.0,
+        "provider.reasoning_output_tokens": 1632.9,
+        "provider.total_tokens": 397827.2,
+        "activity.inference_requests": 14.5,
+        "activity.cache_hit_requests": 14.1,
+        "activity.cache_miss_requests": 0.4,
+        "activity.long_context_requests": 0.0,
+        "activity.assistant_messages": 4.7,
+        "activity.assistant_tokens": 187.8,
+        "activity.session_tool_calls": 13.6,
+        "activity.session_tool_output_bytes": 369563.0,
+        "activity.session_tool_output_tokens": 242797.3,
+        "activity.agent_steps": 14.5,
+        "activity.shell_commands": 9.6,
+        "activity.successful_shell_commands": 8.9,
+        "activity.failed_shell_commands": 0.7,
+        "activity.shell_command_output_bytes": 28687.3,
+        "activity.shell_command_output_tokens": 7666.3,
+        "activity.compaction_events": 0.0,
+        "activity.retry_events": 0.0,
+        "codexzero.events": 0.0,
+        "codexzero.transformed_events": 0.0,
+        "codexzero.raw_bytes": 0.0,
+        "codexzero.original_tokens": 0.0,
+        "codexzero.selected_tokens": 0.0,
+        "codexzero.tokens_eliminated": 0.0,
+        "rtk.commands": 4.8,
+        "rtk.input_tokens": 622.5,
+        "rtk.output_tokens": 13.2,
+        "rtk.tokens_saved": 609.3,
+        "rtk.exec_time_ms": 25271.8,
+        "rtk.parse_failures": 4.3,
+        "rtk.fallback_successes": 4.3
+      },
+      "cache_token_ratio": 0.9142574119755744,
+      "cache_request_hit_rate": 0.9724137931034482,
+      "harbor_estimated_cost_usd": {
+        "coverage_trials": 9,
+        "total": 4.605709999999999,
+        "mean": 0.5117455555555555
+      },
+      "official_api_equivalent_cost_usd": {
+        "total": 4.60571,
+        "mean": 0.460571
+      },
+      "codex_rate_card_credits": {
+        "total": 115.14275,
+        "mean": 11.514275000000001
+      },
+      "timing_sec": {
+        "environment_setup": {
+          "total": 432.004721,
+          "mean": 43.2004721,
+          "median": 5.5726375
+        },
+        "agent_setup": {
+          "total": 5.034753,
+          "mean": 0.5034753000000001,
+          "median": 0.5010779999999999
+        },
+        "agent_execution": {
+          "total": 1593.36007,
+          "mean": 159.336007,
+          "median": 108.846385
+        },
+        "verifier": {
+          "total": 345.378622,
+          "mean": 34.5378622,
+          "median": 25.238156500000002
+        },
+        "full_trial": {
+          "total": 2641.031398,
+          "mean": 264.1031398,
+          "median": 188.206306
+        },
+        "trajectory_event_span": {
+          "total": 1517.2640000000001,
+          "mean": 151.7264,
+          "median": 102.87700000000001
+        }
+      }
+    }
+  },
+  "comparisons_vs_codex": {
+    "codexzero_safe": {
+      "score_delta": 0.0,
+      "score_delta_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "paired_outcomes": {
+        "both_pass": 7,
+        "both_fail": 3,
+        "baseline_only_pass": 0,
+        "candidate_only_pass": 0
+      },
+      "mcnemar_exact_two_sided_p": null,
+      "harbor_estimated_cost_usd": {
+        "baseline_total": 4.41332,
+        "candidate_total": 4.075624,
+        "saved_total": 0.33769599999999933,
+        "reduction_percent": 7.651745171435549
+      },
+      "official_api_equivalent_cost_usd": {
+        "baseline_total": 4.41332,
+        "candidate_total": 4.075624,
+        "saved_total": 0.33769599999999933,
+        "reduction_percent": 7.651745171435549,
+        "paired_bootstrap_mean_saved_95": [
+          -0.04416040000000014,
+          0.13030470000000008
+        ]
+      },
+      "codex_rate_card_credits": {
+        "baseline_total": 110.333,
+        "candidate_total": 101.8906,
+        "saved_total": 8.442399999999992,
+        "reduction_percent": 7.651745171435556,
+        "paired_bootstrap_mean_saved_95": [
+          -1.104010000000001,
+          3.2576175000000007
+        ]
+      },
+      "metrics": {
+        "provider.input_tokens": {
+          "baseline_total": 3469696.0,
+          "candidate_total": 3385226.0,
+          "saved_total": 84470.0,
+          "saved_mean_per_task": 8447.0,
+          "reduction_percent": 2.434507230604641,
+          "paired_range": [
+            -223879.0,
+            278014.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -64323.5,
+            86145.8
+          ]
+        },
+        "provider.cached_input_tokens": {
+          "baseline_total": 3116800.0,
+          "candidate_total": 3068928.0,
+          "saved_total": 47872.0,
+          "saved_mean_per_task": 4787.2,
+          "reduction_percent": 1.5359342915811087,
+          "paired_range": [
+            -214784.0,
+            239360.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -62720.0,
+            74982.4
+          ]
+        },
+        "provider.uncached_input_tokens": {
+          "baseline_total": 352896.0,
+          "candidate_total": 316298.0,
+          "saved_total": 36598.0,
+          "saved_mean_per_task": 3659.8,
+          "reduction_percent": 10.370760790714545,
+          "paired_range": [
+            -14530.0,
+            38654.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -5250.7,
+            14021.4
+          ]
+        },
+        "provider.output_tokens": {
+          "baseline_total": 36348.0,
+          "candidate_total": 31989.0,
+          "saved_total": 4359.0,
+          "saved_mean_per_task": 435.9,
+          "reduction_percent": 11.992406734896004,
+          "paired_range": [
+            -291.0,
+            2817.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            18.2,
+            1038.7
+          ]
+        },
+        "provider.total_tokens": {
+          "baseline_total": 3506044.0,
+          "candidate_total": 3417215.0,
+          "saved_total": 88829.0,
+          "saved_mean_per_task": 8882.9,
+          "reduction_percent": 2.5335962697558845,
+          "paired_range": [
+            -223900.0,
+            280831.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -64221.6,
+            87162.3
+          ]
+        },
+        "activity.inference_requests": {
+          "baseline_total": 137.0,
+          "candidate_total": 132.0,
+          "saved_total": 5.0,
+          "saved_mean_per_task": 0.5,
+          "reduction_percent": 3.64963503649635,
+          "paired_range": [
+            -3.0,
+            5.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -0.9,
+            2.1
+          ]
+        },
+        "activity.session_tool_calls": {
+          "baseline_total": 128.0,
+          "candidate_total": 123.0,
+          "saved_total": 5.0,
+          "saved_mean_per_task": 0.5,
+          "reduction_percent": 3.90625,
+          "paired_range": [
+            -3.0,
+            5.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -0.9,
+            2.1
+          ]
+        },
+        "activity.session_tool_output_tokens": {
+          "baseline_total": 2661131.0,
+          "candidate_total": 1493132.0,
+          "saved_total": 1167999.0,
+          "saved_mean_per_task": 116799.9,
+          "reduction_percent": 43.89107488507706,
+          "paired_range": [
+            -7463.0,
+            1172392.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -1889.5,
+            351997.4
+          ]
+        },
+        "activity.shell_commands": {
+          "baseline_total": 84.0,
+          "candidate_total": 79.0,
+          "saved_total": 5.0,
+          "saved_mean_per_task": 0.5,
+          "reduction_percent": 5.952380952380952,
+          "paired_range": [
+            -1.0,
+            3.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -0.2,
+            1.3
+          ]
+        },
+        "timing_sec.agent_execution": {
+          "baseline_total": 1737.3158369999999,
+          "candidate_total": 1622.423337,
+          "saved_total": 114.89249999999993,
+          "saved_mean_per_task": 11.489249999999993,
+          "reduction_percent": 6.613218941145238,
+          "paired_range": [
+            -44.00640600000001,
+            79.94246600000002
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -7.733124200000009,
+            32.295790100000005
+          ]
+        },
+        "timing_sec.full_trial": {
+          "baseline_total": 2920.5149690000003,
+          "candidate_total": 2779.929153,
+          "saved_total": 140.58581600000025,
+          "saved_mean_per_task": 14.058581600000025,
+          "reduction_percent": 4.813733793261042,
+          "paired_range": [
+            -45.69556399999999,
+            91.76164700000004
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -6.118160499999988,
+            36.58888850000003
+          ]
+        }
+      }
+    },
+    "codexzero_max": {
+      "score_delta": 0.0,
+      "score_delta_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "paired_outcomes": {
+        "both_pass": 7,
+        "both_fail": 3,
+        "baseline_only_pass": 0,
+        "candidate_only_pass": 0
+      },
+      "mcnemar_exact_two_sided_p": null,
+      "harbor_estimated_cost_usd": {
+        "baseline_total": 4.41332,
+        "candidate_total": 4.891064,
+        "saved_total": -0.4777440000000004,
+        "reduction_percent": -10.825047809812125
+      },
+      "official_api_equivalent_cost_usd": {
+        "baseline_total": 4.41332,
+        "candidate_total": 4.891064,
+        "saved_total": -0.4777440000000004,
+        "reduction_percent": -10.825047809812125,
+        "paired_bootstrap_mean_saved_95": [
+          -0.22334520000000016,
+          0.08800949999999999
+        ]
+      },
+      "codex_rate_card_credits": {
+        "baseline_total": 110.333,
+        "candidate_total": 122.2766,
+        "saved_total": -11.943600000000004,
+        "reduction_percent": -10.825047809812117,
+        "paired_bootstrap_mean_saved_95": [
+          -5.583629999999999,
+          2.2002374999999996
+        ]
+      },
+      "metrics": {
+        "provider.input_tokens": {
+          "baseline_total": 3469696.0,
+          "candidate_total": 4203712.0,
+          "saved_total": -734016.0,
+          "saved_mean_per_task": -73401.6,
+          "reduction_percent": -21.155052200538606,
+          "paired_range": [
+            -857765.0,
+            166717.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -281040.7,
+            73249.8
+          ]
+        },
+        "provider.cached_input_tokens": {
+          "baseline_total": 3116800.0,
+          "candidate_total": 3852288.0,
+          "saved_total": -735488.0,
+          "saved_mean_per_task": -73548.8,
+          "reduction_percent": -23.59753593429158,
+          "paired_range": [
+            -813056.0,
+            148480.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -269465.6,
+            65152.0
+          ]
+        },
+        "provider.uncached_input_tokens": {
+          "baseline_total": 352896.0,
+          "candidate_total": 351424.0,
+          "saved_total": 1472.0,
+          "saved_mean_per_task": 147.2,
+          "reduction_percent": 0.4171200580340951,
+          "paired_range": [
+            -44709.0,
+            23939.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -12420.7,
+            10805.2
+          ]
+        },
+        "provider.output_tokens": {
+          "baseline_total": 36348.0,
+          "candidate_total": 40260.0,
+          "saved_total": -3912.0,
+          "saved_mean_per_task": -391.2,
+          "reduction_percent": -10.762627930009906,
+          "paired_range": [
+            -2515.0,
+            1293.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -1192.1,
+            375.0
+          ]
+        },
+        "provider.total_tokens": {
+          "baseline_total": 3506044.0,
+          "candidate_total": 4243972.0,
+          "saved_total": -737928.0,
+          "saved_mean_per_task": -73792.8,
+          "reduction_percent": -21.047311442754285,
+          "paired_range": [
+            -859852.0,
+            168010.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -282176.4,
+            73591.3
+          ]
+        },
+        "activity.inference_requests": {
+          "baseline_total": 137.0,
+          "candidate_total": 142.0,
+          "saved_total": -5.0,
+          "saved_mean_per_task": -0.5,
+          "reduction_percent": -3.64963503649635,
+          "paired_range": [
+            -11.0,
+            5.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -3.6,
+            2.2
+          ]
+        },
+        "activity.session_tool_calls": {
+          "baseline_total": 128.0,
+          "candidate_total": 133.0,
+          "saved_total": -5.0,
+          "saved_mean_per_task": -0.5,
+          "reduction_percent": -3.90625,
+          "paired_range": [
+            -11.0,
+            5.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -3.6,
+            2.2
+          ]
+        },
+        "activity.session_tool_output_tokens": {
+          "baseline_total": 2661131.0,
+          "candidate_total": 2659328.0,
+          "saved_total": 1803.0,
+          "saved_mean_per_task": 180.3,
+          "reduction_percent": 0.06775314706416183,
+          "paired_range": [
+            -29028.0,
+            26064.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -8203.6,
+            8036.3
+          ]
+        },
+        "activity.shell_commands": {
+          "baseline_total": 84.0,
+          "candidate_total": 87.0,
+          "saved_total": -3.0,
+          "saved_mean_per_task": -0.3,
+          "reduction_percent": -3.571428571428571,
+          "paired_range": [
+            -8.0,
+            4.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -2.5,
+            1.7
+          ]
+        },
+        "timing_sec.agent_execution": {
+          "baseline_total": 1737.3158369999999,
+          "candidate_total": 1830.366156,
+          "saved_total": -93.05031900000017,
+          "saved_mean_per_task": -9.305031900000017,
+          "reduction_percent": -5.35598174023899,
+          "paired_range": [
+            -117.387609,
+            169.01156099999997
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -51.9220604,
+            39.76993179999999
+          ]
+        },
+        "timing_sec.full_trial": {
+          "baseline_total": 2920.5149690000003,
+          "candidate_total": 2917.045537,
+          "saved_total": 3.4694320000003245,
+          "saved_mean_per_task": 0.3469432000000324,
+          "reduction_percent": 0.11879521374917917,
+          "paired_range": [
+            -147.86922099999992,
+            169.26351
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -49.203810499999975,
+            52.21123950000001
+          ]
+        }
+      }
+    },
+    "codex_rtk": {
+      "score_delta": 0.0,
+      "score_delta_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "paired_outcomes": {
+        "both_pass": 7,
+        "both_fail": 3,
+        "baseline_only_pass": 0,
+        "candidate_only_pass": 0
+      },
+      "mcnemar_exact_two_sided_p": null,
+      "harbor_estimated_cost_usd": {
+        "baseline_total": 4.41332,
+        "candidate_total": 3.987253,
+        "saved_total": 0.42606699999999975,
+        "reduction_percent": 9.654115269230417
+      },
+      "official_api_equivalent_cost_usd": {
+        "baseline_total": 4.41332,
+        "candidate_total": 3.987253,
+        "saved_total": 0.42606699999999975,
+        "reduction_percent": 9.654115269230417,
+        "paired_bootstrap_mean_saved_95": [
+          -0.02717740000000008,
+          0.11533889999999998
+        ]
+      },
+      "codex_rate_card_credits": {
+        "baseline_total": 110.333,
+        "candidate_total": 99.681325,
+        "saved_total": 10.651674999999997,
+        "reduction_percent": 9.654115269230418,
+        "paired_bootstrap_mean_saved_95": [
+          -0.6794350000000019,
+          2.8834725
+        ]
+      },
+      "metrics": {
+        "provider.input_tokens": {
+          "baseline_total": 3469696.0,
+          "candidate_total": 3190871.0,
+          "saved_total": 278825.0,
+          "saved_mean_per_task": 27882.5,
+          "reduction_percent": 8.036006612683071,
+          "paired_range": [
+            -89840.0,
+            121649.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -12608.3,
+            67396.1
+          ]
+        },
+        "provider.cached_input_tokens": {
+          "baseline_total": 3116800.0,
+          "candidate_total": 2887936.0,
+          "saved_total": 228864.0,
+          "saved_mean_per_task": 22886.4,
+          "reduction_percent": 7.342915811088295,
+          "paired_range": [
+            -71680.0,
+            89856.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -10368.0,
+            53862.4
+          ]
+        },
+        "provider.uncached_input_tokens": {
+          "baseline_total": 352896.0,
+          "candidate_total": 302935.0,
+          "saved_total": 49961.0,
+          "saved_mean_per_task": 4996.1,
+          "reduction_percent": 14.157428817555315,
+          "paired_range": [
+            -18160.0,
+            31793.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -5195.9,
+            15671.3
+          ]
+        },
+        "provider.output_tokens": {
+          "baseline_total": 36348.0,
+          "candidate_total": 34287.0,
+          "saved_total": 2061.0,
+          "saved_mean_per_task": 206.1,
+          "reduction_percent": 5.670188180917795,
+          "paired_range": [
+            -885.0,
+            1412.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -139.9,
+            565.7
+          ]
+        },
+        "provider.total_tokens": {
+          "baseline_total": 3506044.0,
+          "candidate_total": 3225158.0,
+          "saved_total": 280886.0,
+          "saved_mean_per_task": 28088.6,
+          "reduction_percent": 8.011479604933653,
+          "paired_range": [
+            -90725.0,
+            123061.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -12635.5,
+            67805.8
+          ]
+        },
+        "activity.inference_requests": {
+          "baseline_total": 137.0,
+          "candidate_total": 123.0,
+          "saved_total": 14.0,
+          "saved_mean_per_task": 1.4,
+          "reduction_percent": 10.218978102189782,
+          "paired_range": [
+            -1.0,
+            4.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            0.6,
+            2.3
+          ]
+        },
+        "activity.session_tool_calls": {
+          "baseline_total": 128.0,
+          "candidate_total": 114.0,
+          "saved_total": 14.0,
+          "saved_mean_per_task": 1.4,
+          "reduction_percent": 10.9375,
+          "paired_range": [
+            -1.0,
+            4.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            0.6,
+            2.3
+          ]
+        },
+        "activity.session_tool_output_tokens": {
+          "baseline_total": 2661131.0,
+          "candidate_total": 2396748.0,
+          "saved_total": 264383.0,
+          "saved_mean_per_task": 26438.3,
+          "reduction_percent": 9.934986289664057,
+          "paired_range": [
+            -11144.0,
+            252211.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -1914.7,
+            78153.7
+          ]
+        },
+        "activity.shell_commands": {
+          "baseline_total": 84.0,
+          "candidate_total": 77.0,
+          "saved_total": 7.0,
+          "saved_mean_per_task": 0.7,
+          "reduction_percent": 8.333333333333332,
+          "paired_range": [
+            -2.0,
+            5.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -0.3,
+            1.9
+          ]
+        },
+        "timing_sec.agent_execution": {
+          "baseline_total": 1737.3158369999999,
+          "candidate_total": 1421.4089099999999,
+          "saved_total": 315.906927,
+          "saved_mean_per_task": 31.590692699999998,
+          "reduction_percent": 18.183620978526776,
+          "paired_range": [
+            -20.009698,
+            219.41547799999998
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            3.263777599999993,
+            76.48938739999998
+          ]
+        },
+        "timing_sec.full_trial": {
+          "baseline_total": 2920.5149690000003,
+          "candidate_total": 2513.1141390000003,
+          "saved_total": 407.40083000000004,
+          "saved_mean_per_task": 40.740083000000006,
+          "reduction_percent": 13.949623074162712,
+          "paired_range": [
+            -0.47596299999999303,
+            213.56095000000005
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            10.084968700000003,
+            84.37901530000002
+          ]
+        }
+      }
+    },
+    "codex_caveman": {
+      "score_delta": 0.10000000000000009,
+      "score_delta_bootstrap_95": [
+        0.0,
+        0.3
+      ],
+      "paired_outcomes": {
+        "both_pass": 7,
+        "both_fail": 2,
+        "baseline_only_pass": 0,
+        "candidate_only_pass": 1
+      },
+      "mcnemar_exact_two_sided_p": 1.0,
+      "harbor_estimated_cost_usd": {
+        "baseline_total": 4.41332,
+        "candidate_total": 5.827208,
+        "saved_total": -1.413888,
+        "reduction_percent": -32.03683394813882
+      },
+      "official_api_equivalent_cost_usd": {
+        "baseline_total": 4.41332,
+        "candidate_total": 5.827208,
+        "saved_total": -1.413888,
+        "reduction_percent": -32.03683394813882,
+        "paired_bootstrap_mean_saved_95": [
+          -0.4557683,
+          0.08117780000000009
+        ]
+      },
+      "codex_rate_card_credits": {
+        "baseline_total": 110.333,
+        "candidate_total": 145.6802,
+        "saved_total": -35.347200000000015,
+        "reduction_percent": -32.036833948138835,
+        "paired_bootstrap_mean_saved_95": [
+          -11.394207500000002,
+          2.0294449999999995
+        ]
+      },
+      "metrics": {
+        "provider.input_tokens": {
+          "baseline_total": 3469696.0,
+          "candidate_total": 5437312.0,
+          "saved_total": -1967616.0,
+          "saved_mean_per_task": -196761.6,
+          "reduction_percent": -56.70859925480504,
+          "paired_range": [
+            -1511733.0,
+            154763.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -534685.0,
+            39626.1
+          ]
+        },
+        "provider.cached_input_tokens": {
+          "baseline_total": 3116800.0,
+          "candidate_total": 5052416.0,
+          "saved_total": -1935616.0,
+          "saved_mean_per_task": -193561.6,
+          "reduction_percent": -62.10266940451745,
+          "paired_range": [
+            -1456128.0,
+            124160.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -515660.8,
+            29593.6
+          ]
+        },
+        "provider.uncached_input_tokens": {
+          "baseline_total": 352896.0,
+          "candidate_total": 384896.0,
+          "saved_total": -32000.0,
+          "saved_mean_per_task": -3200.0,
+          "reduction_percent": -9.067827348567285,
+          "paired_range": [
+            -55605.0,
+            30603.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -19310.4,
+            11164.9
+          ]
+        },
+        "provider.output_tokens": {
+          "baseline_total": 36348.0,
+          "candidate_total": 45884.0,
+          "saved_total": -9536.0,
+          "saved_mean_per_task": -953.6,
+          "reduction_percent": -26.23528117090349,
+          "paired_range": [
+            -12028.0,
+            1147.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -3522.6,
+            506.9
+          ]
+        },
+        "provider.total_tokens": {
+          "baseline_total": 3506044.0,
+          "candidate_total": 5483196.0,
+          "saved_total": -1977152.0,
+          "saved_mean_per_task": -197715.2,
+          "reduction_percent": -56.392675049143705,
+          "paired_range": [
+            -1523761.0,
+            155213.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -538218.3,
+            40078.0
+          ]
+        },
+        "activity.inference_requests": {
+          "baseline_total": 137.0,
+          "candidate_total": 175.0,
+          "saved_total": -38.0,
+          "saved_mean_per_task": -3.8,
+          "reduction_percent": -27.73722627737226,
+          "paired_range": [
+            -40.0,
+            5.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -12.6,
+            2.0
+          ]
+        },
+        "activity.session_tool_calls": {
+          "baseline_total": 128.0,
+          "candidate_total": 166.0,
+          "saved_total": -38.0,
+          "saved_mean_per_task": -3.8,
+          "reduction_percent": -29.6875,
+          "paired_range": [
+            -40.0,
+            5.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -12.6,
+            2.0
+          ]
+        },
+        "activity.session_tool_output_tokens": {
+          "baseline_total": 2661131.0,
+          "candidate_total": 1937284.0,
+          "saved_total": 723847.0,
+          "saved_mean_per_task": 72384.7,
+          "reduction_percent": 27.200727810844338,
+          "paired_range": [
+            -15834.0,
+            745844.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -5669.2,
+            223498.7
+          ]
+        },
+        "activity.shell_commands": {
+          "baseline_total": 84.0,
+          "candidate_total": 107.0,
+          "saved_total": -23.0,
+          "saved_mean_per_task": -2.3,
+          "reduction_percent": -27.380952380952383,
+          "paired_range": [
+            -20.0,
+            2.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -6.6,
+            0.4
+          ]
+        },
+        "timing_sec.agent_execution": {
+          "baseline_total": 1737.3158369999999,
+          "candidate_total": 1978.361062,
+          "saved_total": -241.04522500000007,
+          "saved_mean_per_task": -24.10452250000001,
+          "reduction_percent": -13.874577084166653,
+          "paired_range": [
+            -482.28603,
+            150.25098099999997
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -138.5098162,
+            53.23183439999999
+          ]
+        },
+        "timing_sec.full_trial": {
+          "baseline_total": 2920.5149690000003,
+          "candidate_total": 3023.266062,
+          "saved_total": -102.75109299999986,
+          "saved_mean_per_task": -10.275109299999986,
+          "reduction_percent": -3.518252571572416,
+          "paired_range": [
+            -437.22687399999995,
+            149.5982570000001
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -118.22186359999996,
+            64.80297330000003
+          ]
+        }
+      }
+    },
+    "codex_caveman_rtk": {
+      "score_delta": 0.0,
+      "score_delta_bootstrap_95": [
+        0.0,
+        0.0
+      ],
+      "paired_outcomes": {
+        "both_pass": 7,
+        "both_fail": 3,
+        "baseline_only_pass": 0,
+        "candidate_only_pass": 0
+      },
+      "mcnemar_exact_two_sided_p": null,
+      "harbor_estimated_cost_usd": {
+        "baseline_total": 4.41332,
+        "candidate_total": 4.605709999999999,
+        "saved_total": -0.19238999999999962,
+        "reduction_percent": -4.359303200311775
+      },
+      "official_api_equivalent_cost_usd": {
+        "baseline_total": 4.41332,
+        "candidate_total": 4.60571,
+        "saved_total": -0.1923900000000005,
+        "reduction_percent": -4.359303200311795,
+        "paired_bootstrap_mean_saved_95": [
+          -0.1524865000000001,
+          0.08655279999999994
+        ]
+      },
+      "codex_rate_card_credits": {
+        "baseline_total": 110.333,
+        "candidate_total": 115.14275,
+        "saved_total": -4.809750000000008,
+        "reduction_percent": -4.359303200311791,
+        "paired_bootstrap_mean_saved_95": [
+          -3.812162500000003,
+          2.1638199999999994
+        ]
+      },
+      "metrics": {
+        "provider.input_tokens": {
+          "baseline_total": 3469696.0,
+          "candidate_total": 3941122.0,
+          "saved_total": -471426.0,
+          "saved_mean_per_task": -47142.6,
+          "reduction_percent": -13.586954015567935,
+          "paired_range": [
+            -644821.0,
+            123327.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -193479.4,
+            47204.6
+          ]
+        },
+        "provider.cached_input_tokens": {
+          "baseline_total": 3116800.0,
+          "candidate_total": 3603200.0,
+          "saved_total": -486400.0,
+          "saved_mean_per_task": -48640.0,
+          "reduction_percent": -15.605749486652979,
+          "paired_range": [
+            -608512.0,
+            97024.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -183526.4,
+            35353.6
+          ]
+        },
+        "provider.uncached_input_tokens": {
+          "baseline_total": 352896.0,
+          "candidate_total": 337922.0,
+          "saved_total": 14974.0,
+          "saved_mean_per_task": 1497.4,
+          "reduction_percent": 4.243176459920203,
+          "paired_range": [
+            -42367.0,
+            26303.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -13609.8,
+            14639.1
+          ]
+        },
+        "provider.output_tokens": {
+          "baseline_total": 36348.0,
+          "candidate_total": 37150.0,
+          "saved_total": -802.0,
+          "saved_mean_per_task": -80.2,
+          "reduction_percent": -2.206448772972378,
+          "paired_range": [
+            -1528.0,
+            887.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -517.3,
+            314.6
+          ]
+        },
+        "provider.total_tokens": {
+          "baseline_total": 3506044.0,
+          "candidate_total": 3978272.0,
+          "saved_total": -472228.0,
+          "saved_mean_per_task": -47222.8,
+          "reduction_percent": -13.468969585093626,
+          "paired_range": [
+            -644894.0,
+            122784.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -193556.2,
+            47176.9
+          ]
+        },
+        "activity.inference_requests": {
+          "baseline_total": 137.0,
+          "candidate_total": 145.0,
+          "saved_total": -8.0,
+          "saved_mean_per_task": -0.8,
+          "reduction_percent": -5.839416058394161,
+          "paired_range": [
+            -12.0,
+            2.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -3.6,
+            1.1
+          ]
+        },
+        "activity.session_tool_calls": {
+          "baseline_total": 128.0,
+          "candidate_total": 136.0,
+          "saved_total": -8.0,
+          "saved_mean_per_task": -0.8,
+          "reduction_percent": -6.25,
+          "paired_range": [
+            -12.0,
+            2.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -3.6,
+            1.1
+          ]
+        },
+        "activity.session_tool_output_tokens": {
+          "baseline_total": 2661131.0,
+          "candidate_total": 2427973.0,
+          "saved_total": 233158.0,
+          "saved_mean_per_task": 23315.8,
+          "reduction_percent": 8.761613013414221,
+          "paired_range": [
+            -4776.0,
+            224137.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -1487.9,
+            68974.0
+          ]
+        },
+        "activity.shell_commands": {
+          "baseline_total": 84.0,
+          "candidate_total": 96.0,
+          "saved_total": -12.0,
+          "saved_mean_per_task": -1.2,
+          "reduction_percent": -14.285714285714285,
+          "paired_range": [
+            -3.0,
+            1.0
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -2.1,
+            -0.3
+          ]
+        },
+        "timing_sec.agent_execution": {
+          "baseline_total": 1737.3158369999999,
+          "candidate_total": 1593.36007,
+          "saved_total": 143.95576699999992,
+          "saved_mean_per_task": 14.395576699999992,
+          "reduction_percent": 8.286102269612819,
+          "paired_range": [
+            -69.38489899999996,
+            206.29767299999997
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -22.320990899999995,
+            63.56847169999999
+          ]
+        },
+        "timing_sec.full_trial": {
+          "baseline_total": 2920.5149690000003,
+          "candidate_total": 2641.031398,
+          "saved_total": 279.4835710000002,
+          "saved_mean_per_task": 27.94835710000002,
+          "reduction_percent": 9.569667471887565,
+          "paired_range": [
+            -142.33485299999995,
+            207.21668
+          ],
+          "paired_bootstrap_mean_saved_95": [
+            -30.01480889999998,
+            90.1983541
+          ]
+        }
+      }
+    }
+  },
+  "integrity": {
+    "trials_expected": 72,
+    "trials_observed": 72,
+    "complete_matrix": true,
+    "provider_session_identities": 54,
+    "trials_with_provider_usage": 54,
+    "codexzero_trials_expected": 24,
+    "codexzero_telemetry_files": 24,
+    "codexzero_accounting_valid": true,
+    "codexzero_artifacts_verified": true,
+    "rtk_trials_expected": 24,
+    "rtk_databases": 15,
+    "attempts_observed": 84,
+    "superseded_attempts": 12
+  }
+}

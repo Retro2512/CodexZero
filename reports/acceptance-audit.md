@@ -17,7 +17,7 @@ Status as of 2026-07-24. “Pending” items must pass before release claims ful
 | 11 | Task success not lower on fixtures | Pass | Exit statuses and complete diagnostics preserved |
 | 12 | Polling/batch wall time lower or equal | Partial | Polling equal; batch command execution equal, model wake count structurally reduced |
 | 13 | One-command stock rollback | Pass | `codex-zero stock` wrapper and install tests |
-| 14 | Calls/tokens/cache/latency/no-gain separated | Pass | `before-after.md` and savings output |
+| 14 | Calls/tokens/cache/latency/no-gain separated | Pass | `archive/before-after.md` and savings output |
 | 15 | Projections never reported as observed | Pass | Separate telemetry, replay, and scenario sections |
 
 Desktop launcher tests cover executable resolution and runtime feature overrides. A published release still needs a clean end-to-end Desktop smoke test on each supported target.

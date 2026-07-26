@@ -1,0 +1,139 @@
+{
+  "schema": "codex-zero-fixture-payload-report-v1",
+  "measurement_type": "deterministic fixture replay",
+  "tokenizer": "o200k_base",
+  "results": [
+    {
+      "fixture": "silent-60",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_byte_count": 0,
+      "original_model_payload_tokens": 31,
+      "candidate_model_payload_tokens": 80,
+      "selected_model_payload_tokens": 31,
+      "tokens_eliminated": 0,
+      "transformed": false,
+      "codec": null
+    },
+    {
+      "fixture": "repeated-lines",
+      "raw_sha256": "8f64a0293da69d1bc491e8bbd359cf0b59fb5214aeafffd383c9203f62669037",
+      "raw_byte_count": 11037,
+      "original_model_payload_tokens": 2291,
+      "candidate_model_payload_tokens": 145,
+      "selected_model_payload_tokens": 145,
+      "tokens_eliminated": 2146,
+      "transformed": true,
+      "codec": "line-rle-v1"
+    },
+    {
+      "fixture": "ansi-output",
+      "raw_sha256": "9abc96404667f07f3a0505f75b597322b91510f682d72d5a0cec9f1c5d28a4ae",
+      "raw_byte_count": 127,
+      "original_model_payload_tokens": 77,
+      "candidate_model_payload_tokens": 117,
+      "selected_model_payload_tokens": 77,
+      "tokens_eliminated": 0,
+      "transformed": false,
+      "codec": null
+    },
+    {
+      "fixture": "unchanged-read-1",
+      "raw_sha256": "c89fde239525547432c576b41c02d69c84d9dd299d78eba633446f9cdea8f88d",
+      "raw_byte_count": 88,
+      "original_model_payload_tokens": 47,
+      "candidate_model_payload_tokens": 100,
+      "selected_model_payload_tokens": 47,
+      "tokens_eliminated": 0,
+      "transformed": false,
+      "codec": null
+    },
+    {
+      "fixture": "unchanged-read-2",
+      "raw_sha256": "c89fde239525547432c576b41c02d69c84d9dd299d78eba633446f9cdea8f88d",
+      "raw_byte_count": 88,
+      "original_model_payload_tokens": 47,
+      "candidate_model_payload_tokens": 100,
+      "selected_model_payload_tokens": 47,
+      "tokens_eliminated": 0,
+      "transformed": false,
+      "codec": null
+    },
+    {
+      "fixture": "git-status-1",
+      "raw_sha256": "36d4d0374e8077a3585b59c618aa7537f47ca8539f7a0056283ea1b0a054ef76",
+      "raw_byte_count": 45,
+      "original_model_payload_tokens": 45,
+      "candidate_model_payload_tokens": 105,
+      "selected_model_payload_tokens": 45,
+      "tokens_eliminated": 0,
+      "transformed": false,
+      "codec": null
+    },
+    {
+      "fixture": "git-status-2",
+      "raw_sha256": "36d4d0374e8077a3585b59c618aa7537f47ca8539f7a0056283ea1b0a054ef76",
+      "raw_byte_count": 45,
+      "original_model_payload_tokens": 45,
+      "candidate_model_payload_tokens": 102,
+      "selected_model_payload_tokens": 45,
+      "tokens_eliminated": 0,
+      "transformed": false,
+      "codec": null
+    },
+    {
+      "fixture": "validation-1",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_byte_count": 0,
+      "original_model_payload_tokens": 31,
+      "candidate_model_payload_tokens": 80,
+      "selected_model_payload_tokens": 31,
+      "tokens_eliminated": 0,
+      "transformed": false,
+      "codec": null
+    },
+    {
+      "fixture": "validation-2",
+      "raw_sha256": "226bb7ae7dde4751608648ffd12b0814d3e1c010833dd8c9a9ed78e861bcb887",
+      "raw_byte_count": 103,
+      "original_model_payload_tokens": 56,
+      "candidate_model_payload_tokens": 108,
+      "selected_model_payload_tokens": 56,
+      "tokens_eliminated": 0,
+      "transformed": false,
+      "codec": null
+    },
+    {
+      "fixture": "validation-3",
+      "raw_sha256": "f2ac68ba927d537e3799dff46e8ce9a2c9610a788e53b2e31c8efa45ffc96797",
+      "raw_byte_count": 169,
+      "original_model_payload_tokens": 67,
+      "candidate_model_payload_tokens": 122,
+      "selected_model_payload_tokens": 67,
+      "tokens_eliminated": 0,
+      "transformed": false,
+      "codec": null
+    },
+    {
+      "fixture": "failing-stack",
+      "raw_sha256": "d2e89396737d4ba25118d4a1bc6aa81f72e9d0d7d02ffaa529ad2038b64b0a03",
+      "raw_byte_count": 12594,
+      "original_model_payload_tokens": 3962,
+      "candidate_model_payload_tokens": 481,
+      "selected_model_payload_tokens": 481,
+      "tokens_eliminated": 3481,
+      "transformed": true,
+      "codec": "line-rle-v1"
+    }
+  ],
+  "totals": {
+    "original_model_payload_tokens": 6699,
+    "selected_model_payload_tokens": 1072,
+    "tokens_eliminated": 5627,
+    "reduction_percent": 84.0
+  },
+  "notes": [
+    "Every row uses the original payload when the candidate is equal-sized or larger.",
+    "These fixture replay results are not observed production savings.",
+    "Raw bytes are referenced by SHA-256 and remain in the private artifact store."
+  ]
+}

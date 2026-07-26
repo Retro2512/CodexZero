@@ -1133,12 +1133,13 @@ The upstream clone under `/work/` is local build material and is not tracked.
 
 | File | Purpose |
 |---|---|
-| `reports/before-after.md` | Fixture replay, fallbacks, and scope limits |
+| `reports/archive/before-after.md` | Superseded fixture replay, fallbacks, and scope limits |
 | `reports/acceptance-audit.md` | Status of all 15 acceptance criteria |
-| `reports/fixture-payload-report.json` | Machine-readable fixture replay |
+| `reports/archive/fixture-payload-report.json` | Superseded machine-readable fixture replay |
 | `reports/release-verification.json` | Release assets, checksums, CI, installation |
-| `reports/prompt-benchmark.md` | Human-readable dated prompt comparison |
-| `reports/prompt-benchmark.json` | Machine-readable prompt comparison and scenarios |
+| `reports/archive/prompt-benchmark.md` | Superseded human-readable dated prompt comparison |
+| `reports/archive/prompt-benchmark.json` | Superseded machine-readable prompt comparison and scenarios |
+| `reports/terminal-bench-2.1-replication/README.md` | Current public benchmark summary, methodology, and appendix |
 
 Local verification, prompt-metadata, and past-usage reports are generated when
 needed and ignored by Git.

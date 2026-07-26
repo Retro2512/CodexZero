@@ -1,0 +1,437 @@
+{
+  "schema": "codexzero-terminal-bench-preregistration-v1",
+  "sealed_at_utc": "2026-07-25T20:43:14.558960+00:00",
+  "purpose": "Paired quality and efficiency comparison; no result-dependent task selection.",
+  "benchmark": {
+    "name": "Terminal-Bench 2 public Harbor package (corrected 89-task lineage)",
+    "package": "terminal-bench/terminal-bench-2@latest",
+    "dataset_digest": "sha256:c6fc2e2382c1dbae99b2d5ecd2f4f4a60c3c01e0d84642d69b4afd92e99d078b",
+    "population_tasks": 89,
+    "selection": "Python random.Random(2512).sample(registry_order, 12)",
+    "seed": 2512,
+    "attempts_per_cell": 1,
+    "tasks": [
+      {
+        "order": 1,
+        "name": "openssl-selfsigned-cert",
+        "package_digest": "sha256:43b288549abe880ce4a3c735f30e746c4440c0159c5411e9ae5aafb547ba2d8c",
+        "difficulty": "medium",
+        "category": "security",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 2048
+      },
+      {
+        "order": 2,
+        "name": "nginx-request-logging",
+        "package_digest": "sha256:f5eaf57c493462fbeaa8a7b5c4155739ee4ce8e8fab037eae6512788885014f6",
+        "difficulty": "medium",
+        "category": "system-administration",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 2048
+      },
+      {
+        "order": 3,
+        "name": "hf-model-inference",
+        "package_digest": "sha256:649831c4d9cef15fcbccbdd5639c7d4357b3061a32d9bd449d954d23370880b4",
+        "difficulty": "medium",
+        "category": "data-science",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 2048
+      },
+      {
+        "order": 4,
+        "name": "financial-document-processor",
+        "package_digest": "sha256:415ba44ca6ce86c68ffd3933735282e4e3d1523543a706352f68a22716e6da4f",
+        "difficulty": "medium",
+        "category": "data-processing",
+        "agent_timeout_sec_original": 1200.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 4096
+      },
+      {
+        "order": 5,
+        "name": "large-scale-text-editing",
+        "package_digest": "sha256:f1196bcc75f57494f04617c635c7d23a8f231d25e68136dae02615eaa846ad90",
+        "difficulty": "medium",
+        "category": "file-operations",
+        "agent_timeout_sec_original": 1200.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 2048
+      },
+      {
+        "order": 6,
+        "name": "mailman",
+        "package_digest": "sha256:b0590a96642e689fc79571934ac533d24cd6de4210a151331ff07def7e8d1d26",
+        "difficulty": "medium",
+        "category": "system-administration",
+        "agent_timeout_sec_original": 1800.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 2048
+      },
+      {
+        "order": 7,
+        "name": "video-processing",
+        "package_digest": "sha256:59730f0ccdc323eb45aa433d094cd7c2f29a0084d3670ce7cc93acee9b516ade",
+        "difficulty": "hard",
+        "category": "video-processing",
+        "agent_timeout_sec_original": 3600.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 2048
+      },
+      {
+        "order": 8,
+        "name": "custom-memory-heap-crash",
+        "package_digest": "sha256:72cdc9cf98c822a1449935ca32efc6612fe3d14928c9465c11285e95dcdf60cb",
+        "difficulty": "medium",
+        "category": "debugging",
+        "agent_timeout_sec_original": 1800.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 2048
+      },
+      {
+        "order": 9,
+        "name": "vulnerable-secret",
+        "package_digest": "sha256:2a8a7b743f4f42fe70c6aadfde5621fceaf8ceb343331586f4479485bc1f8da0",
+        "difficulty": "medium",
+        "category": "security",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 2048
+      },
+      {
+        "order": 10,
+        "name": "count-dataset-tokens",
+        "package_digest": "sha256:c9b237360affc7d6aabb1b910f41b291e578d8952d325641cd53f73e3483c979",
+        "difficulty": "medium",
+        "category": "model-training",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 2048
+      },
+      {
+        "order": 11,
+        "name": "fix-code-vulnerability",
+        "package_digest": "sha256:e73a9bc59e041584ecaf1884f01e2b055d824c2f30ada540917e1ce5c4493408",
+        "difficulty": "hard",
+        "category": "security",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 2048
+      },
+      {
+        "order": 12,
+        "name": "adaptive-rejection-sampler",
+        "package_digest": "sha256:a3cc947ba81ea6be1e7255c7b398a30f8017e280d586c2e09eccfaf67a18d35d",
+        "difficulty": "medium",
+        "category": "scientific-computing",
+        "agent_timeout_sec_original": 900.0,
+        "agent_timeout_sec_benchmark_cap": 900,
+        "gpus": 0,
+        "cpus": 1,
+        "memory_mb": 2048
+      }
+    ]
+  },
+  "design": {
+    "configs": 6,
+    "total_trials": 72,
+    "pilot_trials": 18,
+    "remaining_trials": 54,
+    "pairing": "All six configurations run once on each identical task package.",
+    "parallelism": "Up to 12 trials; configurations for a task launch in the same wave.",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "medium",
+    "agent_timeout_cap_sec": 900,
+    "verifier_timeouts": "Official task values unchanged.",
+    "retries": 0,
+    "stop_rule": "Pilot stops expansion only for invalid telemetry, auth/quota/infrastructure failure, or a material harness defect; quality outcomes never alter the task list.",
+    "invalid_run_policy": "Infrastructure-invalid trials are rerun and reported; model failures/timeouts remain score-zero outcomes."
+  },
+  "configurations": [
+    "codex",
+    "codexzero_safe",
+    "codexzero_max",
+    "codex_rtk",
+    "codex_caveman",
+    "codex_caveman_rtk"
+  ],
+  "provenance": {
+    "project_commit": "1adde96fc58839cd0a1d96422b04f69e39fddd2b",
+    "product_version": "0.3.0",
+    "harbor_version": "0.20.0",
+    "harbor_commit": "ff69e554fac1c751aa608e03de027db9043a2eac",
+    "harbor_adapter_patch_sha256": "b4cc131815110e1a72582742fb165318078307bc10ddc481ba17634c96cbca7a",
+    "stock_codex_version": "0.145.0-alpha.30",
+    "stock_codex_sha256": "7ae3bc2df080e0368ea7bb768088685467295a1e155ee71e5c0989ecb5285165",
+    "codexzero_version": "0.145.0-alpha.30",
+    "codexzero_sha256": "657fe9452f05a5d5b5905b84bbe581d97a55f8fa1988306546a639ab201de50b",
+    "rtk_version": "0.42.4",
+    "rtk_sha256": "6d3f0a6356f1ab44383814a5f16e6a98747e78e130ab99760a4c13780480d2ec",
+    "caveman_skill_sha256": "a884fb58460c608c3c6d870e16968eebd959e76d212ddce99f73ad9c4d6362d7",
+    "lean_prompt_sha256": "662cd8a870cc720068cba44982a0d27d73ddb18dcedb0fe623c0300917185952",
+    "rtk_instructions_sha256": "c310d777f50cd653007e9783c0d52c03e6afc4e1d0306d5fe5d118cc7f388020",
+    "caveman_activation_sha256": "e103711432de4fd944dae122f058bb945fc4d0343aa77ba658b666a676063148",
+    "caveman_rtk_instructions_sha256": "d156a0b6ff958ed2c0a714b6a273cc28febbbd971c54b6e0f7e8ea707521945e"
+  },
+  "metrics": {
+    "quality": [
+      "official reward",
+      "pass rate",
+      "per-task paired outcome",
+      "errors/timeouts",
+      "Wilson 95% CI",
+      "paired bootstrap score-delta 95% CI",
+      "exact McNemar test where defined"
+    ],
+    "provider_usage": [
+      "input tokens",
+      "cached input tokens",
+      "uncached input tokens",
+      "output tokens",
+      "reasoning output tokens",
+      "total tokens",
+      "cache-token ratio",
+      "cache-hit requests",
+      "cache-miss requests"
+    ],
+    "agent_activity": [
+      "model turns/requests",
+      "agent steps",
+      "tool calls by type",
+      "command calls",
+      "command exit status",
+      "compactions",
+      "retries"
+    ],
+    "time": [
+      "environment build",
+      "agent setup",
+      "agent execution",
+      "verifier",
+      "full trial",
+      "wall-clock job",
+      "time to first/last agent event"
+    ],
+    "tool_efficiency": [
+      "model-visible tool-output bytes/tokens",
+      "command-output bytes/tokens",
+      "RTK input/output/saved tokens and invocations",
+      "CodexZero original/selected/eliminated bytes/tokens by codec/dedup feature"
+    ],
+    "cost": [
+      "observed plan credits if exposed",
+      "declared API-price proxy for uncached input, cached input, and output",
+      "paired estimated cost savings versus Codex"
+    ],
+    "integrity": [
+      "token accounting identities",
+      "artifact hashes",
+      "task/config/binary hashes",
+      "missing telemetry fields",
+      "trial completeness"
+    ]
+  },
+  "live_config_sanitized": {
+    "job_name": "tb21-cz-full",
+    "jobs_dir": "${ISOLATED_ROOT}/jobs",
+    "n_attempts": 1,
+    "install_only": false,
+    "timeout_multiplier": 1.0,
+    "n_concurrent_trials": 12,
+    "quiet": false,
+    "retry": {
+      "max_retries": 0
+    },
+    "environment": {
+      "type": "docker",
+      "force_build": false,
+      "delete": true,
+      "mounts": [
+        {
+          "type": "bind",
+          "source": "${ISOLATED_ROOT}/stock-package/codex",
+          "target": "/opt/bench/codex-stock",
+          "read_only": true
+        },
+        {
+          "type": "bind",
+          "source": "${CODEXZERO_BINARY}",
+          "target": "/opt/bench/codexzero",
+          "read_only": true
+        },
+        {
+          "type": "bind",
+          "source": "${RTK_BINARY}",
+          "target": "/usr/local/bin/rtk",
+          "read_only": true
+        },
+        {
+          "type": "bind",
+          "source": "${ISOLATED_ROOT}/sealed/codex-core-lean-v1.md",
+          "target": "/opt/bench/codex-core-lean-v1.md",
+          "read_only": true
+        }
+      ]
+    },
+    "verifier": {
+      "disable": false
+    },
+    "agents": [
+      {
+        "name": "codex",
+        "model_name": "gpt-5.6-sol",
+        "override_timeout_sec": 900,
+        "max_timeout_sec": 900,
+        "kwargs": {
+          "version": "0.145.0-alpha.30",
+          "reasoning_effort": "medium"
+        },
+        "env": {
+          "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+          "CODEX_BENCHMARK_LABEL": "codex",
+          "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codex-stock"
+        }
+      },
+      {
+        "name": "codex",
+        "model_name": "gpt-5.6-sol",
+        "override_timeout_sec": 900,
+        "max_timeout_sec": 900,
+        "kwargs": {
+          "version": "0.145.0-alpha.30",
+          "reasoning_effort": "medium",
+          "config_toml": "suppress_unstable_features_warning = true\n[features]\ncodex_zero_compact_exec_output = true\ncodex_zero_lossless_terminal_codec = true\ncodex_zero_exact_duplicate_results = true\ncodex_zero_event_driven_wait = true\n"
+        },
+        "env": {
+          "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+          "CODEX_BENCHMARK_LABEL": "codexzero_safe",
+          "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codexzero",
+          "CODEX_ZERO_HOME": "/tmp/codexzero-home",
+          "CODEX_ZERO_ARTIFACT_DIR": "/logs/agent/codexzero-artifacts",
+          "CODEX_ZERO_TELEMETRY_FILE": "/logs/agent/codexzero-telemetry.jsonl"
+        }
+      },
+      {
+        "name": "codex",
+        "model_name": "gpt-5.6-sol",
+        "override_timeout_sec": 900,
+        "max_timeout_sec": 900,
+        "kwargs": {
+          "version": "0.145.0-alpha.30",
+          "reasoning_effort": "medium",
+          "config_toml": "model_instructions_file = \"/opt/bench/codex-core-lean-v1.md\"\nsuppress_unstable_features_warning = true\n[features]\ncodex_zero_compact_exec_output = true\ncodex_zero_lossless_terminal_codec = true\ncodex_zero_exact_duplicate_results = true\ncodex_zero_event_driven_wait = true\n"
+        },
+        "env": {
+          "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+          "CODEX_BENCHMARK_LABEL": "codexzero_max",
+          "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codexzero",
+          "CODEX_ZERO_HOME": "/tmp/codexzero-home",
+          "CODEX_ZERO_ARTIFACT_DIR": "/logs/agent/codexzero-artifacts",
+          "CODEX_ZERO_TELEMETRY_FILE": "/logs/agent/codexzero-telemetry.jsonl"
+        }
+      },
+      {
+        "name": "codex",
+        "model_name": "gpt-5.6-sol",
+        "override_timeout_sec": 900,
+        "max_timeout_sec": 900,
+        "kwargs": {
+          "version": "0.145.0-alpha.30",
+          "reasoning_effort": "medium"
+        },
+        "env": {
+          "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+          "CODEX_BENCHMARK_LABEL": "codex_rtk",
+          "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codex-stock",
+          "CODEX_ADDITIONAL_INSTRUCTIONS_PATH": "${ISOLATED_ROOT}/sealed/rtk-instructions.md",
+          "RTK_DB_PATH": "/logs/agent/rtk.db",
+          "RTK_TELEMETRY_DISABLED": "1"
+        }
+      },
+      {
+        "name": "codex",
+        "model_name": "gpt-5.6-sol",
+        "override_timeout_sec": 900,
+        "max_timeout_sec": 900,
+        "kwargs": {
+          "version": "0.145.0-alpha.30",
+          "reasoning_effort": "medium"
+        },
+        "env": {
+          "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+          "CODEX_BENCHMARK_LABEL": "codex_caveman",
+          "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codex-stock",
+          "CODEX_ADDITIONAL_INSTRUCTIONS_PATH": "${ISOLATED_ROOT}/sealed/caveman-activation.md"
+        },
+        "skills": [
+          "${CAVEMAN_SKILL}"
+        ]
+      },
+      {
+        "name": "codex",
+        "model_name": "gpt-5.6-sol",
+        "override_timeout_sec": 900,
+        "max_timeout_sec": 900,
+        "kwargs": {
+          "version": "0.145.0-alpha.30",
+          "reasoning_effort": "medium"
+        },
+        "env": {
+          "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+          "CODEX_BENCHMARK_LABEL": "codex_caveman_rtk",
+          "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codex-stock",
+          "CODEX_ADDITIONAL_INSTRUCTIONS_PATH": "${ISOLATED_ROOT}/sealed/caveman-rtk-instructions.md",
+          "RTK_DB_PATH": "/logs/agent/rtk.db",
+          "RTK_TELEMETRY_DISABLED": "1"
+        },
+        "skills": [
+          "${CAVEMAN_SKILL}"
+        ]
+      }
+    ],
+    "datasets": [
+      {
+        "path": "${ISOLATED_ROOT}/candidate-tasks",
+        "task_names": [
+          "openssl-selfsigned-cert",
+          "nginx-request-logging",
+          "hf-model-inference",
+          "financial-document-processor",
+          "large-scale-text-editing",
+          "mailman",
+          "video-processing",
+          "custom-memory-heap-crash",
+          "vulnerable-secret",
+          "count-dataset-tokens",
+          "fix-code-vulnerability",
+          "adaptive-rejection-sampler"
+        ]
+      }
+    ]
+  }
+}

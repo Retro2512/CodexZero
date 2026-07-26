@@ -1,0 +1,178 @@
+{
+  "schema": "codexzero-deepswe-provenance-v1",
+  "captured_at": "2026-07-25T06:24:42.892065+00:00",
+  "benchmark": {
+    "name": "DeepSWE",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "stock_codex_version": "0.145.0-alpha.30",
+    "planned_tasks": 113,
+    "configurations": [
+      "codex",
+      "codexzero",
+      "codex_rtk",
+      "codex_caveman",
+      "codex_caveman_rtk"
+    ]
+  },
+  "repositories": {
+    "codexzero": {
+      "commit": "721cec18638bee960416a5959bf9e5aff01bae8c",
+      "origin": "https://github.com/Retro2512/CodexZero.git",
+      "dirty": true,
+      "tracked_diff_sha256": "a2fa5b0910a0d1b7cd9c85ff1249f8947311d653cb58af158afd8c6e8c78e4bd"
+    },
+    "pier": {
+      "commit": "fefa7475a32bb05271abdea378e8083c83eb5c35",
+      "origin": "https://github.com/datacurve-ai/pier.git",
+      "dirty": true,
+      "tracked_diff_sha256": "b30083a7a55d430a3d56828ee179eeee9fb74d23db0017ace91dc53702361a17"
+    },
+    "deepswe": {
+      "commit": "e016041a6ccf8da29906afc9a3f5a8df940a1f78",
+      "origin": "https://github.com/datacurve-ai/deep-swe.git",
+      "dirty": false,
+      "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "rtk": {
+      "commit": "bee2178ad2308d3d697f6c5e759af6374a921528",
+      "origin": "https://github.com/rtk-ai/rtk.git",
+      "dirty": false,
+      "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "binaries": {
+    "codexzero": {
+      "bytes": 1357061448,
+      "sha256": "657fe9452f05a5d5b5905b84bbe581d97a55f8fa1988306546a639ab201de50b",
+      "version": "codex-cli 0.145.0-alpha.30"
+    },
+    "rtk": {
+      "bytes": 8573312,
+      "sha256": "6d3f0a6356f1ab44383814a5f16e6a98747e78e130ab99760a4c13780480d2ec",
+      "version": "rtk 0.42.4"
+    }
+  },
+  "caveman_skill": {
+    "bytes": 5086,
+    "sha256": "2ce11c37750d6f0ed534cadae88e44866d572123b31f781c19c7b9f21c23df4e"
+  },
+  "benchmark_tools": {
+    "analyze-deepswe-five-way.py": {
+      "bytes": 25812,
+      "sha256": "b483ae8142a047d0e000851fe98538b74032f7a751e3253d86271902139d584c"
+    },
+    "pause-deepswe-five-way.py": {
+      "bytes": 3984,
+      "sha256": "217d610217e5a9d8f84415dd2ad25b1f15a0e43480b6e5b3b5ca242be19ede97"
+    },
+    "run-deepswe-five-way.py": {
+      "bytes": 15686,
+      "sha256": "81072a5b00f381ba157586b8089745d4689ab61dcb24906796fe0bfe23bc1231"
+    },
+    "pier-codexzero.patch": {
+      "bytes": 2234,
+      "sha256": "e7d13f4b3b7a2d88766b18e7c78a1d48ddbe2f036134e4a9a09786ad6f878217"
+    },
+    "pier-codexzero-prompt.patch": {
+      "bytes": 1215,
+      "sha256": "5bfaf1df832b872966d57707a022da557cb6329717598d550191a8259223b52e"
+    },
+    "pier-chatgpt-allowlist.patch": {
+      "bytes": 763,
+      "sha256": "652ff4fbfc03262a68f1827c30ba534cd7c6ac5ab13a746cd22463c0067283b8"
+    },
+    "pier-comparison-configs.patch": {
+      "bytes": 2707,
+      "sha256": "731136b0a5cd062c95cb3207a140061d736a2b90ce0d3889a614cc77529d6821"
+    },
+    "pier-balanced-agent-order.patch": {
+      "bytes": 1370,
+      "sha256": "7f236377f8c303ea732e960c842d927e4e444b73dbcd72a2990ed7c443c09772"
+    },
+    "deepswe-rtk-instructions.md": {
+      "bytes": 525,
+      "sha256": "c310d777f50cd653007e9783c0d52c03e6afc4e1d0306d5fe5d118cc7f388020"
+    },
+    "deepswe-caveman-activation.md": {
+      "bytes": 59,
+      "sha256": "e103711432de4fd944dae122f058bb945fc4d0343aa77ba658b666a676063148"
+    },
+    "deepswe-caveman-rtk-instructions.md": {
+      "bytes": 585,
+      "sha256": "d156a0b6ff958ed2c0a714b6a273cc28febbbd971c54b6e0f7e8ea707521945e"
+    }
+  },
+  "runtime": {
+    "python": "3.12.3 (main, Jun 19 2026, 12:46:00) [GCC 13.3.0]",
+    "platform": "Linux-5.15.167.4-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "processor": "x86_64",
+    "logical_cpu_count": 32,
+    "docker": {
+      "Client": {
+        "Version": "29.1.3",
+        "ApiVersion": "1.52",
+        "DefaultAPIVersion": "1.52",
+        "GitCommit": "29.1.3-0ubuntu3~24.04.2",
+        "GoVersion": "go1.24.4",
+        "Os": "linux",
+        "Arch": "amd64",
+        "BuildTime": "Wed Apr 29 16:41:06 2026",
+        "Context": "default"
+      },
+      "Server": {
+        "Platform": {
+          "Name": ""
+        },
+        "Version": "29.1.3",
+        "ApiVersion": "1.52",
+        "MinAPIVersion": "1.44",
+        "Os": "linux",
+        "Arch": "amd64",
+        "Components": [
+          {
+            "Name": "Engine",
+            "Version": "29.1.3",
+            "Details": {
+              "ApiVersion": "1.52",
+              "Arch": "amd64",
+              "BuildTime": "Wed Apr 29 16:41:06 2026",
+              "Experimental": "false",
+              "GitCommit": "29.1.3-0ubuntu3~24.04.2",
+              "GoVersion": "go1.24.4",
+              "KernelVersion": "5.15.167.4-microsoft-standard-WSL2",
+              "MinAPIVersion": "1.44",
+              "Os": "linux"
+            }
+          },
+          {
+            "Name": "containerd",
+            "Version": "2.2.1",
+            "Details": {
+              "GitCommit": ""
+            }
+          },
+          {
+            "Name": "runc",
+            "Version": "1.3.4-0ubuntu1~24.04.1",
+            "Details": {
+              "GitCommit": ""
+            }
+          },
+          {
+            "Name": "docker-init",
+            "Version": "0.19.0",
+            "Details": {
+              "GitCommit": ""
+            }
+          }
+        ],
+        "GitCommit": "29.1.3-0ubuntu3~24.04.2",
+        "GoVersion": "go1.24.4",
+        "KernelVersion": "5.15.167.4-microsoft-standard-WSL2",
+        "BuildTime": "2026-04-29T16:41:06.000000000+00:00"
+      }
+    }
+  }
+}

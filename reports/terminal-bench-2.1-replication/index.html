@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CodexZero Terminal-Bench methodology and data.">
+  <meta name="theme-color" content="#171713">
+  <title>Methods and data — CodexZero</title>
+  <link rel="icon" href="../../assets/codexzero-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles.css?v=9">
+  <style>
+    .report-shell {
+      margin: 0 auto;
+      max-width: 1080px;
+      padding: clamp(56px, 8vw, 110px) 5vw;
+    }
+    .report-back {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 54px;
+      text-underline-offset: 5px;
+    }
+    .report-shell h1 {
+      font-size: clamp(48px, 7vw, 82px);
+      max-width: 850px;
+    }
+    .summary-table,
+    .appendix-table {
+      border-collapse: collapse;
+      margin: 34px 0 20px;
+      width: 100%;
+    }
+    .summary-table th,
+    .summary-table td,
+    .appendix-table th,
+    .appendix-table td {
+      border-bottom: 1px solid var(--line);
+      padding: 16px 12px;
+      text-align: right;
+      vertical-align: top;
+    }
+    .summary-table th:first-child,
+    .summary-table td:first-child,
+    .appendix-table th:first-child,
+    .appendix-table td:first-child {
+      padding-left: 0;
+      text-align: left;
+    }
+    .summary-table th:last-child,
+    .summary-table td:last-child,
+    .appendix-table th:last-child,
+    .appendix-table td:last-child {
+      padding-right: 0;
+    }
+    .summary-table th,
+    .appendix-table th {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .summary-table td {
+      font-size: clamp(17px, 2vw, 22px);
+      font-weight: 700;
+    }
+    .report-scope {
+      font-family: var(--mono);
+      font-size: 13px;
+      margin: 22px 0 60px;
+    }
+    details {
+      border-top: 1px solid var(--ink);
+      padding: 0;
+    }
+    details:last-child {
+      border-bottom: 1px solid var(--ink);
+    }
+    summary {
+      cursor: pointer;
+      font-size: 19px;
+      font-weight: 800;
+      list-style: none;
+      padding: 24px 42px 24px 0;
+      position: relative;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::after {
+      content: "+";
+      font-family: var(--mono);
+      font-size: 26px;
+      position: absolute;
+      right: 4px;
+      top: 18px;
+    }
+    details[open] summary::after { content: "−"; }
+    .details-body {
+      max-width: 900px;
+      padding: 0 0 34px;
+    }
+    .details-body h2 {
+      font-size: 24px;
+      margin: 38px 0 12px;
+    }
+    .details-body li { margin-bottom: 8px; }
+    .hash {
+      font-family: var(--mono);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+    @media (max-width: 700px) {
+      .summary-table,
+      .appendix-table {
+        display: block;
+        overflow-x: auto;
+      }
+      .report-shell h1 { letter-spacing: -.055em; }
+    }
+  </style>
+</head>
+<body>
+  <main class="report-shell">
+    <a class="report-back" href="../../">← CodexZero</a>
+    <h1>Terminal-Bench repeated comparison</h1>
+
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>Setup</th>
+          <th>Score</th>
+          <th>Total tokens</th>
+          <th>Reduction</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Codex</td>
+          <td>29/36</td>
+          <td>26,580,391</td>
+          <td>Baseline</td>
+        </tr>
+        <tr>
+          <td>CodexZero</td>
+          <td>29/36</td>
+          <td>22,691,418</td>
+          <td><strong>14.63% fewer</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="report-scope">12 tasks · 3 repetitions per setup</p>
+
+    <details>
+      <summary>Methodology</summary>
+      <div class="details-body">
+        <ul>
+          <li>Benchmark: Terminal-Bench 2.1.</li>
+          <li>Model: <code>gpt-5.6-sol</code> with medium reasoning.</li>
+          <li>Sample: 12 tasks selected from the 77 tasks not used in the earlier mini-panel.</li>
+          <li>Repetitions: three per task and setup, with task and setup order rotated each repetition.</li>
+          <li>Quality measure: the official verifier outcome, producing 36 paired outcomes per setup.</li>
+          <li>Token measure: end-to-end provider-counted input and output tokens.</li>
+          <li>Comparison: CodexZero Safe against stock Codex using the same task set and repetition schedule.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>Technical appendix</summary>
+      <div class="details-body">
+        <h2>Paired quality</h2>
+        <table class="appendix-table">
+          <thead>
+            <tr>
+              <th>Comparison</th>
+              <th>Score difference</th>
+              <th>95% interval</th>
+              <th>Exact paired p</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>CodexZero vs Codex</td>
+              <td>0.00 points</td>
+              <td>−8.33% to 8.33%</td>
+              <td>1.0000</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Token and cache accounting</h2>
+        <table class="appendix-table">
+          <thead>
+            <tr>
+              <th>Setup</th>
+              <th>Input</th>
+              <th>Cached</th>
+              <th>Uncached</th>
+              <th>Output</th>
+              <th>Cache ratio</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Codex</td>
+              <td>26,381,402</td>
+              <td>25,052,928</td>
+              <td>1,328,474</td>
+              <td>198,989</td>
+              <td>95.0%</td>
+            </tr>
+            <tr>
+              <td>CodexZero</td>
+              <td>22,498,634</td>
+              <td>21,111,040</td>
+              <td>1,387,594</td>
+              <td>192,784</td>
+              <td>93.8%</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Efficiency uncertainty</h2>
+        <ul>
+          <li>Mean tokens saved per paired outcome: 108,027.</li>
+          <li>Task-cluster 95% interval: 6,687 to 246,248 tokens saved.</li>
+          <li>Lower-token outcomes: 22. Higher-token outcomes: 14.</li>
+          <li>Two-sided sign-test p: 0.2430.</li>
+        </ul>
+
+        <h2>Optimizer telemetry</h2>
+        <ul>
+          <li>Payloads inspected: 623.</li>
+          <li>Payloads transformed: 1.</li>
+          <li>Optimizer-native tokens removed: 39.</li>
+          <li>Most of the provider-level difference came from shorter model trajectories rather than payload transformation.</li>
+        </ul>
+
+        <h2>Infrastructure correction</h2>
+        <p>Two initial validation waves exposed shared container problems: missing certificate bundles in four images and a binary compatibility problem in one QEMU image. The correction was sealed before replacement calls. All 108 final cells were rerun under the corrected setup; no successful cells from the earlier waves were selectively retained.</p>
+
+        <h2>Integrity</h2>
+        <table class="appendix-table">
+          <thead>
+            <tr>
+              <th>Evidence</th>
+              <th>SHA-256</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Preregistration</td>
+              <td class="hash">f82462d02256d100694fcd3d500cea501e8f882ae11dc7dd66dda817b74212b6</td>
+            </tr>
+            <tr>
+              <td>Infrastructure addendum</td>
+              <td class="hash">8151c7e7eba7f5e14c0e2c2e2dc3b447ebd7edec08c144874fe73c1044483f53</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>Normalized trials, attempts, manifests, preregistration records, and integrity files remain in the GitHub repository. They are not published on the product site.</p>
+      </div>
+    </details>
+  </main>
+</body>
+</html>

@@ -19,7 +19,7 @@ No prompt, command output, repository path, or conversation text is required. Lo
 
 ## Fixture replay
 
-`tools/evaluate-fixture-payloads.py` replays fixed fixture output through equivalent deterministic rules. Results in `reports/fixture-payload-report.json` are test evidence, not production telemetry.
+`tools/evaluate-fixture-payloads.py` replays fixed fixture output through equivalent deterministic rules. Historical results in `reports/archive/fixture-payload-report.json` are test evidence, not production telemetry.
 
 The fixture corpus includes:
 
@@ -68,12 +68,12 @@ Interrupted or extended runs can resume from the public report:
 
 ```sh
 python tools/benchmark-combinations.py \
-  --resume reports/combination-benchmark.json \
+  --resume reports/archive/combination-benchmark.json \
   --repetitions 3
 ```
 
 The aggregate report is committed at
-[`reports/combination-benchmark.md`](../reports/combination-benchmark.md).
+[`reports/archive/combination-benchmark.md`](../reports/archive/combination-benchmark.md).
 Exact command output and per-run logs remain under ignored
 `private-artifacts/`. The benchmark copies authentication only into temporary
 homes and removes those homes when the run finishes.
@@ -113,8 +113,8 @@ python tools/benchmark-five-way.py \
   --repetitions 3
 ```
 
-Read the [five-way report](../reports/five-way-benchmark.md) for the concise
-results and [`five-way-benchmark.json`](../reports/five-way-benchmark.json) for
+Read the [archived five-way report](../reports/archive/five-way-benchmark.md) for the
+historical results and [`five-way-benchmark.json`](../reports/archive/five-way-benchmark.json) for
 every trial, distribution, paired difference, and cache counter. Raw command
 streams and exact tool payloads stay under ignored `private-artifacts/`.
 
@@ -188,11 +188,11 @@ retained. The classifier now requires provider-specific quota text and checks
 valid result artifacts first; all five Arcane trials were revalidated against
 complete trajectories, provider metrics, and held-out rewards.
 
-The committed [10-task report](../reports/deepswe-sol-high-10/README.md) includes
+The archived [10-task report](../reports/archive/deepswe-sol-high-10/README.md) includes
 aggregate results and task-by-task scores.
-[`task-metrics.csv`](../reports/deepswe-sol-high-10/task-metrics.csv) contains
+[`task-metrics.csv`](../reports/archive/deepswe-sol-high-10/task-metrics.csv) contains
 every recorded trial metric and evidence hash, while
-[`provenance.json`](../reports/deepswe-sol-high-10/provenance.json) records
+[`provenance.json`](../reports/archive/deepswe-sol-high-10/provenance.json) records
 repository commits, binary hashes, tool hashes, and runtime versions.
 
 ## Projections

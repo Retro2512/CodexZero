@@ -1,0 +1,78 @@
+{
+  "schema": "codex-zero-prompt-report-v1",
+  "tokenizer": "o200k_base",
+  "active_full_lean_comparison": {
+    "reference": "GPT-5.6-sol model-instruction snapshot, 2026-07-24",
+    "baseline_tokens": 3552,
+    "bundled_tokens": 738,
+    "tokens_removed_per_model_request": 2814,
+    "reduction_percent": 79.2
+  },
+  "historical_lineage": [
+    {
+      "reference": "GPT-5.5 hotfix instruction snapshot, 2026-07-05",
+      "baseline_tokens": 4069,
+      "bundled_tokens": 738,
+      "tokens_removed_per_model_request": 3331,
+      "reduction_percent": 81.9
+    },
+    {
+      "reference": "Model plus global instructions before the 2026-07-22 refactor",
+      "baseline_tokens": 5099,
+      "bundled_tokens": 1004,
+      "tokens_removed_per_model_request": 4095,
+      "reduction_percent": 80.3,
+      "installer_applies_this_combined_stack": false
+    }
+  ],
+  "july_22_original_refactor": {
+    "model_instructions": {
+      "baseline_tokens": 4069,
+      "lean_tokens": 680,
+      "tokens_removed": 3389,
+      "reduction_percent": 83.3
+    },
+    "global_instructions": {
+      "baseline_tokens": 1030,
+      "lean_tokens": 266,
+      "tokens_removed": 764,
+      "reduction_percent": 74.2
+    },
+    "combined": {
+      "baseline_tokens": 5099,
+      "lean_tokens": 946,
+      "tokens_removed": 4153,
+      "reduction_percent": 81.4
+    },
+    "active_in_installer": false,
+    "note": "The current bundled model prompt is 58 tokens larger because concise intermediary updates were restored."
+  },
+  "scenarios_for_active_comparison": [
+    {
+      "model_requests_per_day": 10,
+      "day_tokens": 28140,
+      "week_tokens": 196980,
+      "month_tokens": 844200,
+      "year_tokens": 10271100
+    },
+    {
+      "model_requests_per_day": 50,
+      "day_tokens": 140700,
+      "week_tokens": 984900,
+      "month_tokens": 4221000,
+      "year_tokens": 51355500
+    },
+    {
+      "model_requests_per_day": 100,
+      "day_tokens": 281400,
+      "week_tokens": 1969800,
+      "month_tokens": 8442000,
+      "year_tokens": 102711000
+    }
+  ],
+  "boundaries": [
+    "Full lean changes model instructions only; it preserves global and project instructions.",
+    "Safe-mode tool-output savings and prompt-reference differences are not added together.",
+    "Scenarios are arithmetic projections, not observed usage or guaranteed quota gains."
+  ]
+}
