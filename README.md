@@ -8,16 +8,16 @@
   [![License: MIT](https://img.shields.io/badge/license-MIT-171713.svg)](LICENSE)
 </div>
 
-![CodexZero repeated Terminal-Bench comparison](assets/benchmarks/terminal-bench-repeated.svg)
+![Best observed provider-token result for Codex, CodexZero, CodexZero Max, RTK, Caveman, and RTK plus Caveman](assets/benchmarks/benchmark-overview.svg)
 
 ## Same task score. 14.63% fewer tokens.
 
-CodexZero sits beside Codex and can shorten repeated tool output before the model has to read it again. In the newest repeated public benchmark, **Safe finished with the same 29/36 score as regular Codex while using 3.89 million fewer provider tokens**.
+CodexZero sits beside Codex and can shorten repeated tool output before the model has to read it again. In the newest repeated public benchmark, **CodexZero finished with the same 29/36 score as regular Codex while using 3.89 million fewer provider tokens**.
 
 Think of tokens as the amount of text the model has to read. Less repeated reading means less model work while the original command result stays available.
 
 - **12 fresh software tasks**, each run three times
-- **29/36 for Codex and 29/36 for CodexZero Safe**
+- **29/36 for Codex and 29/36 for CodexZero**
 - **22.69M tokens instead of 26.58M**
 - **7.40% lower API-equivalent cost in this run**
 - Every configuration started in its own fresh workspace and Codex home

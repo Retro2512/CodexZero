@@ -136,6 +136,195 @@ def chart(
     (ASSETS / filename).write_text("\n".join(out) + "\n", encoding="utf-8")
 
 
+def savings_percent(value: float, baseline: float) -> float:
+    return (baseline - value) / baseline * 100
+
+
+def best_observed_overview() -> None:
+    repeated = load("terminal-bench-2.1-replication/summary.json")
+    mini = load("terminal-bench-2.1-mini/summary.json")
+    controlled = load("five-way-benchmark.json")
+    factorial = load("combination-benchmark.json")
+    deepswe = load("deepswe-sol-high-10/summary.json")
+    pilot = load("deepswe-pilot.json")
+
+    repeated_base = repeated["configs"]["codex"]["provider"]["total_tokens"]
+    mini_base = mini["configs"]["codex"]["totals"]["provider.total_tokens"]
+    controlled_by_id = {row["configuration"]: row for row in controlled["overall"]}
+    controlled_base = controlled_by_id["codex"]["metrics"]["provider_total_tokens"]["mean"]
+    factorial_by_id = {row["configuration"]: row for row in factorial["aggregates"]}
+    factorial_base = factorial_by_id["stock"]["means"]["total_tokens"]
+    deepswe_base = (
+        deepswe["configurations"]["codex"]["input_tokens"]
+        + deepswe["configurations"]["codex"]["output_tokens"]
+    )
+    pilot_by_id = {row["configuration"]: row for row in pilot["trials"]}
+    pilot_base = pilot_by_id["codex"]["provider_tokens"]["total"]
+
+    observed = {
+        "CodexZero": [
+            savings_percent(
+                repeated["configs"]["codexzero_safe"]["provider"]["total_tokens"],
+                repeated_base,
+            ),
+            savings_percent(
+                mini["configs"]["codexzero_safe"]["totals"]["provider.total_tokens"],
+                mini_base,
+            ),
+            savings_percent(
+                factorial_by_id["command-output"]["means"]["total_tokens"],
+                factorial_base,
+            ),
+        ],
+        "CodexZero Max": [
+            savings_percent(
+                mini["configs"]["codexzero_max"]["totals"]["provider.total_tokens"],
+                mini_base,
+            ),
+            savings_percent(
+                controlled_by_id["codexzero"]["metrics"]["provider_total_tokens"]["mean"],
+                controlled_base,
+            ),
+            savings_percent(
+                deepswe["configurations"]["codexzero"]["input_tokens"]
+                + deepswe["configurations"]["codexzero"]["output_tokens"],
+                deepswe_base,
+            ),
+            savings_percent(
+                factorial_by_id["full-lean"]["means"]["total_tokens"],
+                factorial_base,
+            ),
+            savings_percent(
+                pilot_by_id["codexzero"]["provider_tokens"]["total"],
+                pilot_base,
+            ),
+        ],
+        "RTK": [
+            savings_percent(
+                repeated["configs"]["codex_rtk"]["provider"]["total_tokens"],
+                repeated_base,
+            ),
+            savings_percent(
+                mini["configs"]["codex_rtk"]["totals"]["provider.total_tokens"],
+                mini_base,
+            ),
+            savings_percent(
+                controlled_by_id["codex_rtk"]["metrics"]["provider_total_tokens"]["mean"],
+                controlled_base,
+            ),
+            savings_percent(
+                deepswe["configurations"]["codex_rtk"]["input_tokens"]
+                + deepswe["configurations"]["codex_rtk"]["output_tokens"],
+                deepswe_base,
+            ),
+            savings_percent(
+                factorial_by_id["stock+rtk"]["means"]["total_tokens"],
+                factorial_base,
+            ),
+        ],
+        "Caveman": [
+            savings_percent(
+                mini["configs"]["codex_caveman"]["totals"]["provider.total_tokens"],
+                mini_base,
+            ),
+            savings_percent(
+                controlled_by_id["codex_caveman"]["metrics"]["provider_total_tokens"]["mean"],
+                controlled_base,
+            ),
+            savings_percent(
+                deepswe["configurations"]["codex_caveman"]["input_tokens"]
+                + deepswe["configurations"]["codex_caveman"]["output_tokens"],
+                deepswe_base,
+            ),
+            savings_percent(
+                factorial_by_id["stock+caveman"]["means"]["total_tokens"],
+                factorial_base,
+            ),
+        ],
+        "RTK + Caveman": [
+            savings_percent(
+                mini["configs"]["codex_caveman_rtk"]["totals"]["provider.total_tokens"],
+                mini_base,
+            ),
+            savings_percent(
+                controlled_by_id["codex_caveman_rtk"]["metrics"]["provider_total_tokens"]["mean"],
+                controlled_base,
+            ),
+            savings_percent(
+                deepswe["configurations"]["codex_caveman_rtk"]["input_tokens"]
+                + deepswe["configurations"]["codex_caveman_rtk"]["output_tokens"],
+                deepswe_base,
+            ),
+            savings_percent(
+                factorial_by_id["stock+rtk+caveman"]["means"]["total_tokens"],
+                factorial_base,
+            ),
+        ],
+    }
+    best = {label: max(values) for label, values in observed.items()}
+
+    width, height = 1200, 920
+    cards = [
+        ("CodexZero", best["CodexZero"], COLORS["lime"]),
+        ("CodexZero Max", best["CodexZero Max"], COLORS["orange"]),
+        ("Codex", 0.0, COLORS["white"]),
+        ("RTK", best["RTK"], COLORS["violet"]),
+        ("Caveman", best["Caveman"], COLORS["white"]),
+        ("RTK + Caveman", best["RTK + Caveman"], COLORS["cyan"]),
+    ]
+    out = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
+        f'viewBox="0 0 {width} {height}" role="img" aria-labelledby="title desc">',
+        '<title id="title">Best observed provider-token result for every tested setup</title>',
+        '<desc id="desc">Codex baseline; CodexZero 14.63 percent fewer; '
+        'CodexZero Max 31.31 percent fewer; RTK 8.01 percent fewer; '
+        'Caveman 1.95 percent more; RTK plus Caveman 13.47 percent more.</desc>',
+        "<style>",
+        "text{font-family:Arial,Helvetica,sans-serif;fill:#171713}",
+        ".mono{font-family:Consolas,'Liberation Mono',monospace}",
+        ".head{font-size:42px;font-weight:800;letter-spacing:-1.5px;fill:#fffef8}",
+        ".sub{font-size:16px;fill:#d7d4c8}",
+        ".label{font-size:19px;font-weight:800}",
+        ".value{font-size:54px;font-weight:800;letter-spacing:-2.5px}",
+        ".note{font-size:13px;fill:#68675f}",
+        ".foot{font-size:13px;fill:#d7d4c8}",
+        "</style>",
+        f'<rect width="{width}" height="{height}" fill="{COLORS["ink"]}"/>',
+        '<text class="head" x="48" y="60">Best token result from every setup</text>',
+        '<text class="sub mono" x="48" y="94">OBSERVED PROVIDER TOKENS VS REGULAR CODEX</text>',
+    ]
+    for index, (label, value, fill) in enumerate(cards):
+        column = index % 2
+        row = index // 2
+        x = 48 + column * 564
+        y = 140 + row * 224
+        value_text = "Baseline"
+        note = "Regular Codex"
+        if label != "Codex":
+            value_text = f"{abs(value):.2f}% {'fewer' if value >= 0 else 'more'}"
+            note = "Best observed result"
+        out.extend(
+            [
+                f'<rect x="{x}" y="{y}" width="540" height="196" rx="4" fill="{fill}"/>',
+                f'<text class="label" x="{x + 28}" y="{y + 42}">{html.escape(label)}</text>',
+                f'<text class="value" x="{x + 28}" y="{y + 116}">{html.escape(value_text)}</text>',
+                f'<text class="note mono" x="{x + 28}" y="{y + 158}">{html.escape(note.upper())}</text>',
+            ]
+        )
+    out.extend(
+        [
+            '<text class="foot mono" x="48" y="862">'
+            "BEST RECORDED PROVIDER-TOKEN RESULT FOR EACH SETUP ACROSS COMPLETED TESTS</text>",
+            '<text class="foot mono" x="1152" y="862" text-anchor="end">'
+            "FULL QUALITY SCORES BELOW</text>",
+            "</svg>",
+        ]
+    )
+    (ASSETS / "benchmark-overview.svg").write_text(
+        "\n".join(out) + "\n", encoding="utf-8"
+    )
+
+
 def repeated_terminal_bench() -> None:
     data = load("terminal-bench-2.1-replication/summary.json")
     baseline = data["configs"]["codex"]["provider"]["total_tokens"]
@@ -334,13 +523,14 @@ def deepswe_pilot() -> None:
 
 def main() -> None:
     ASSETS.mkdir(parents=True, exist_ok=True)
+    best_observed_overview()
     repeated_terminal_bench()
     controlled_workloads()
     terminal_bench_six_way()
     deepswe_high()
     full_factorial()
     deepswe_pilot()
-    print(f"Generated 6 charts in {ASSETS.relative_to(ROOT)}")
+    print(f"Generated 7 charts in {ASSETS.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":
