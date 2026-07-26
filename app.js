@@ -1,78 +1,71 @@
-const number = new Intl.NumberFormat("en-US");
-const compactNumber = new Intl.NumberFormat("en-US", {
-  notation: "compact",
-  maximumFractionDigits: 2,
-});
+const menuButton = document.querySelector(".menu-button");
+const siteNav = document.querySelector("#site-nav");
 
-const dailyResults = document.querySelector("#daily-results");
-const dailyResultsOutput = document.querySelector("#daily-results-output");
-const eligible = document.querySelector("#eligible");
-const eligibleOutput = document.querySelector("#eligible-output");
-const promptRequests = document.querySelector("#prompt-requests");
-const promptRequestsOutput = document.querySelector("#prompt-requests-output");
-const beforeWeekValue = document.querySelector("#before-week-value");
-const afterWeekValue = document.querySelector("#after-week-value");
-const combinedSavedValue = document.querySelector("#combined-saved-value");
-const combinedPercentValue = document.querySelector("#combined-percent-value");
-const capacityValue = document.querySelector("#capacity-value");
-const capacityPercentValue = document.querySelector("#capacity-percent-value");
-const projectionModes = [...document.querySelectorAll('input[name="projection-mode"]')];
-const projectionModeLabel = document.querySelector("#projection-mode-label");
-const promptBeforePerRequest = 3552;
-const maxSavePromptAfterPerRequest = 738;
-
-function updateProjection() {
-  const mode = projectionModes.find((input) => input.checked)?.value || "safe";
-  const requestsPerDay = Number(promptRequests.value);
-  const toolTokensPerDay = Number(dailyResults.value);
-  const toolReduction = Number(eligible.value) / 100;
-  const promptAfterPerRequest = mode === "max-save"
-    ? maxSavePromptAfterPerRequest
-    : promptBeforePerRequest;
-  const beforeWeek = (requestsPerDay * promptBeforePerRequest * 7) + (toolTokensPerDay * 7);
-  const afterWeek = (requestsPerDay * promptAfterPerRequest * 7) + (toolTokensPerDay * (1 - toolReduction) * 7);
-  const savedWeek = beforeWeek - afterWeek;
-  const reductionPercent = beforeWeek === 0 ? 0 : (savedWeek / beforeWeek) * 100;
-  const capacity = afterWeek === 0 ? 0 : beforeWeek / afterWeek;
-  const capacityIncrease = Math.max(0, (capacity - 1) * 100);
-
-  promptRequestsOutput.value = number.format(requestsPerDay);
-  dailyResultsOutput.value = number.format(toolTokensPerDay);
-  eligibleOutput.value = `${eligible.value}%`;
-  beforeWeekValue.textContent = compactNumber.format(Math.round(beforeWeek));
-  afterWeekValue.textContent = compactNumber.format(Math.round(afterWeek));
-  combinedSavedValue.textContent = compactNumber.format(Math.round(savedWeek));
-  combinedPercentValue.textContent = `${Math.round(reductionPercent)}%`;
-  capacityValue.textContent = `${capacity.toFixed(1)}×`;
-  capacityPercentValue.textContent = `+${Math.round(capacityIncrease)}%`;
-  projectionModeLabel.textContent = mode === "max-save"
-    ? "Max Savings weekly estimate"
-    : "Safe weekly estimate";
+function closeMenu() {
+  menuButton.setAttribute("aria-expanded", "false");
+  siteNav.classList.remove("open");
+  document.body.classList.remove("menu-open");
 }
 
-dailyResults.addEventListener("input", updateProjection);
-eligible.addEventListener("input", updateProjection);
-promptRequests.addEventListener("input", updateProjection);
-for (const mode of projectionModes) mode.addEventListener("change", updateProjection);
-updateProjection();
+menuButton.addEventListener("click", () => {
+  const open = menuButton.getAttribute("aria-expanded") === "true";
+  menuButton.setAttribute("aria-expanded", String(!open));
+  siteNav.classList.toggle("open", !open);
+  document.body.classList.toggle("menu-open", !open);
+});
+
+for (const link of siteNav.querySelectorAll("a")) {
+  link.addEventListener("click", closeMenu);
+}
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeMenu();
+    menuButton.focus();
+  }
+});
 
 const tabs = [...document.querySelectorAll('[role="tab"]')];
-for (const tab of tabs) {
-  tab.addEventListener("click", () => {
-    for (const candidate of tabs) {
-      const selected = candidate === tab;
-      candidate.setAttribute("aria-selected", String(selected));
-      document.querySelector(`#${candidate.getAttribute("aria-controls")}`).hidden = !selected;
-    }
+
+function selectTab(tab, moveFocus = false) {
+  for (const candidate of tabs) {
+    const selected = candidate === tab;
+    candidate.setAttribute("aria-selected", String(selected));
+    candidate.tabIndex = selected ? 0 : -1;
+    document.querySelector(`#${candidate.getAttribute("aria-controls")}`).hidden = !selected;
+  }
+  if (moveFocus) tab.focus();
+}
+
+for (const [index, tab] of tabs.entries()) {
+  tab.addEventListener("click", () => selectTab(tab));
+  tab.addEventListener("keydown", (event) => {
+    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+    event.preventDefault();
+    let nextIndex = index;
+    if (event.key === "ArrowLeft") nextIndex = (index - 1 + tabs.length) % tabs.length;
+    if (event.key === "ArrowRight") nextIndex = (index + 1) % tabs.length;
+    if (event.key === "Home") nextIndex = 0;
+    if (event.key === "End") nextIndex = tabs.length - 1;
+    selectTab(tabs[nextIndex], true);
   });
 }
 
 for (const button of document.querySelectorAll(".copy-button")) {
   button.addEventListener("click", async () => {
     const panel = document.querySelector(`#${button.dataset.copyTarget}`);
-    const command = panel.querySelector("code").textContent;
-    await navigator.clipboard.writeText(command);
-    button.textContent = "Copied";
-    setTimeout(() => { button.textContent = "Copy"; }, 1600);
+    const command = panel.querySelector("code").textContent.trim();
+    try {
+      await navigator.clipboard.writeText(command);
+      button.textContent = "Copied";
+    } catch {
+      const range = document.createRange();
+      range.selectNodeContents(panel.querySelector("code"));
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      button.textContent = "Selected";
+    }
+    setTimeout(() => { button.textContent = "Copy"; }, 1800);
   });
 }

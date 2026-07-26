@@ -3,430 +3,202 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="CodexZero matched stock Codex at 29/36 in a repeated Terminal-Bench run while using 14.63% fewer provider tokens. Max Savings reached 31.31% fewer in its best completed test.">
+  <meta name="description" content="CodexZero recorded the largest token reduction in our completed comparisons. Its repeated benchmark used 15% fewer tokens with the same task score as Codex.">
   <meta name="theme-color" content="#171713">
-  <meta property="og:title" content="CodexZero — up to 31.31% fewer provider tokens">
-  <meta property="og:description" content="See the best observed token result for CodexZero, Max Savings, RTK, Caveman, and RTK plus Caveman.">
-  <meta property="og:image" content="assets/benchmarks/benchmark-overview.svg">
-  <title>CodexZero — Same score, 14.63% fewer tokens</title>
+  <link rel="canonical" href="https://retro2512.github.io/CodexZero/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://retro2512.github.io/CodexZero/">
+  <meta property="og:title" content="CodexZero — fewer tokens, same task score">
+  <meta property="og:description" content="CodexZero used 15% fewer tokens with the same task score as Codex in a repeated benchmark.">
+  <meta property="og:image" content="https://retro2512.github.io/CodexZero/assets/social-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CodexZero — fewer tokens, same task score">
+  <meta name="twitter:description" content="CodexZero used 15% fewer tokens with the same task score as Codex in a repeated benchmark.">
+  <meta name="twitter:image" content="https://retro2512.github.io/CodexZero/assets/social-card.png">
+  <title>CodexZero — fewer tokens, same task score</title>
   <link rel="icon" href="assets/codexzero-mark.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=8">
-  <script src="app.js?v=6" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=9">
+  <script src="app.js?v=7" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
+
   <header class="site-header">
     <a class="brand" href="#" aria-label="CodexZero home">
       <img src="assets/codexzero-mark.svg" alt="" width="34" height="34">
       <span>CodexZero</span>
     </a>
-    <nav aria-label="Main navigation">
-      <a href="#benchmark">Results</a>
-      <a href="#modes">Modes</a>
-      <a href="#projection">Calculator</a>
+    <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">
+      <span>Menu</span>
+    </button>
+    <nav id="site-nav" aria-label="Main navigation">
+      <a href="#results">Results</a>
       <a href="#how">How it works</a>
-      <a href="#faq">FAQ</a>
       <a href="#install">Install</a>
-      <a class="nav-cta" href="https://github.com/Retro2512/CodexZero">View on GitHub</a>
+      <a class="nav-cta" href="https://github.com/Retro2512/CodexZero">GitHub</a>
     </nav>
   </header>
 
   <main id="main">
     <section class="hero">
       <div class="hero-copy">
-        <p class="eyebrow"><span></span> Same score · less model reading</p>
-        <h1>Codex does the job. <em>CodexZero cuts the repetition.</em></h1>
-        <p class="lede"><strong>CodexZero matched regular Codex at 29/36 while using 14.63% fewer provider tokens.</strong> Max Savings reached 31.31% fewer in its best completed test.</p>
+        <p class="eyebrow"><span></span> Less input. Same task score.</p>
+        <h1>CodexZero saves more tokens.</h1>
+        <p class="lede">CodexZero recorded the largest token reduction in our completed comparisons. In the strongest repeated test, it used <strong>15% fewer tokens</strong> and matched Codex’s task score.</p>
         <div class="hero-actions">
           <a class="button button-dark" href="#install">Install CodexZero</a>
-          <a class="text-link" href="#benchmark">See every result <span aria-hidden="true">↓</span></a>
+          <a class="text-link" href="#results">See the result <span aria-hidden="true">↓</span></a>
         </div>
-        <ul class="trust-list" aria-label="Benchmark highlights">
-          <li>12 real tasks · each run three times</li>
-          <li>3.89 million fewer tokens in the newest test</li>
-          <li>Your regular Codex stays in place</li>
+        <ul class="trust-list" aria-label="Product highlights">
+          <li>Free and open source</li>
+          <li>Installs beside Codex</li>
+          <li>Full results stay available</li>
         </ul>
       </div>
 
-      <div class="hero-overview">
-        <img src="assets/benchmarks/benchmark-overview.svg" alt="Best observed token result: CodexZero used 14.63 percent fewer tokens, Max Savings 31.31 percent fewer, RTK 8.01 percent fewer, Caveman 1.95 percent more, and RTK plus Caveman 13.47 percent more than Codex.">
-      </div>
+      <figure class="hero-chart">
+        <picture>
+          <source media="(max-width: 720px)" srcset="assets/benchmarks/benchmark-overview-mobile.svg">
+          <img src="assets/benchmarks/benchmark-overview.svg" width="1200" height="700" alt="Highest recorded token reduction for each setup: CodexZero Max used 31 percent fewer tokens, CodexZero 15 percent fewer, RTK 8 percent fewer, regular Codex is the standard baseline, Caveman used 2 percent more, and RTK plus Caveman used 13 percent more.">
+        </picture>
+        <figcaption>Highest recorded reduction for each setup across completed benchmark runs. <a href="reports/terminal-bench-2.1-replication/README.md">Full scores and methods</a></figcaption>
+      </figure>
     </section>
 
-    <section class="ticker" aria-label="CodexZero benchmark highlights">
-      <div>CODEXZERO MATCHED CODEX: 29 / 36</div>
-      <div aria-hidden="true">◆</div>
-      <div>12 TASKS · EACH RUN 3 TIMES</div>
-      <div aria-hidden="true">◆</div>
-      <div>CODEXZERO: 14.63% FEWER PROVIDER TOKENS</div>
-      <div aria-hidden="true">◆</div>
-      <div>7.40% LOWER API-EQUIVALENT COST</div>
+    <section class="proof-strip" aria-label="Repeated benchmark summary">
+      <div><strong>15%</strong><span>fewer tokens</span></div>
+      <div><strong>Same</strong><span>task score</span></div>
+      <div><strong>3.89M</strong><span>tokens avoided</span></div>
     </section>
 
-    <section class="number-rail" aria-label="Repeated Terminal-Bench results">
-      <article>
-        <span>Same task score</span>
-        <strong>29 / 36</strong>
-        <p>Codex and CodexZero finished even.</p>
-      </article>
-      <article>
-        <span>Less model reading</span>
-        <strong>−14.63%</strong>
-        <p>22.69M tokens instead of 26.58M.</p>
-      </article>
-      <article>
-        <span>Lower estimated API cost</span>
-        <strong>−7.40%</strong>
-        <p>$23.28 instead of $25.14 in the same run.</p>
-      </article>
-    </section>
-
-    <section class="section result-atlas" id="benchmark">
+    <section class="section results" id="results">
       <div class="section-heading">
-        <p class="eyebrow">The results</p>
-        <h2>Every completed test, side by side.</h2>
-        <p>Each chart starts with regular Codex. A shorter bar means the model processed fewer tokens. The score at the right shows how many tasks or checks passed.</p>
+        <p class="eyebrow">Repeated benchmark</p>
+        <h2>Less to process. No score lost.</h2>
+        <p>Codex and CodexZero each completed the same 12 software tasks three times. CodexZero matched the final score while processing 3.89 million fewer tokens.</p>
       </div>
-
-      <figure class="chart-card chart-card-primary">
-        <img src="assets/benchmarks/terminal-bench-repeated.svg" alt="Repeated Terminal-Bench comparison: CodexZero Safe and Codex both scored 29 out of 36; Safe used 14.63 percent fewer provider tokens.">
+      <figure class="primary-result">
+        <picture>
+          <source media="(max-width: 720px)" srcset="assets/benchmarks/terminal-bench-repeated-mobile.svg">
+          <img src="assets/benchmarks/terminal-bench-repeated.svg" width="1200" height="520" alt="Regular Codex processed 26.58 million tokens and scored 29 out of 36. CodexZero processed 22.69 million tokens and also scored 29 out of 36, a 15 percent reduction.">
+        </picture>
         <figcaption>
-          <strong>The strongest current comparison.</strong>
-          <span>12 fresh public tasks, each run three times with GPT-5.6 Sol at medium reasoning.</span>
-          <a href="reports/terminal-bench-2.1-replication/README.md">Open the complete report →</a>
+          <span>12 tasks · three runs each · 36 outcomes per setup</span>
+          <a href="reports/terminal-bench-2.1-replication/README.md">Read the benchmark report →</a>
         </figcaption>
       </figure>
-
-      <div class="chart-grid">
-        <figure class="chart-card">
-          <img src="assets/benchmarks/controlled-workloads.svg" alt="Controlled workload comparison across Codex, CodexZero Max, RTK, Caveman, and Caveman plus RTK.">
-          <figcaption><strong>Controlled workloads</strong><span>All five setups passed 18/18. Max used 13.72% fewer tokens.</span><a href="reports/five-way-benchmark.md">See the 90 trials →</a></figcaption>
-        </figure>
-        <figure class="chart-card">
-          <img src="assets/benchmarks/terminal-bench-six-way.svg" alt="Earlier six-way Terminal-Bench token and quality comparison.">
-          <figcaption><strong>Six-way public check</strong><span>The first wide comparison of Safe, Max, RTK, and Caveman combinations.</span><a href="reports/terminal-bench-2.1-mini/README.md">See the full run →</a></figcaption>
-        </figure>
-        <figure class="chart-card">
-          <img src="assets/benchmarks/deepswe-high.svg" alt="DeepSWE high-reasoning token and quality comparison across five configurations.">
-          <figcaption><strong>DeepSWE at high reasoning</strong><span>The earlier Max setup used 4.75% fewer tokens and resolved 6/10 versus Codex at 8/10.</span><a href="reports/deepswe-sol-high-10/README.md">See all 50 trials →</a></figcaption>
-        </figure>
-        <figure class="chart-card chart-card-wide">
-          <img src="assets/benchmarks/full-factorial.svg" alt="All twelve CodexZero, RTK, and Caveman mode combinations compared on one fixed task.">
-          <figcaption><strong>Every mode combination</strong><span>All 36 runs passed. Max + RTK was lowest at 19.14% fewer tokens.</span><a href="reports/combination-benchmark.md">See every metric →</a></figcaption>
-        </figure>
-        <figure class="chart-card">
-          <img src="assets/benchmarks/deepswe-pilot.svg" alt="One-task DeepSWE pilot where both configurations passed and CodexZero Max used 31.30 percent fewer tokens.">
-          <figcaption><strong>DeepSWE pilot</strong><span>Both passed the task. Max used 31.30% fewer tokens.</span><a href="reports/deepswe-pilot.md">See the pilot →</a></figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <section class="section mode-section" id="modes">
-      <div class="section-heading">
-        <p class="eyebrow">Pick your setting</p>
-        <h2>Safe for everyday work. Max when every token counts.</h2>
-        <p>Both settings keep your normal Codex installation available. You can switch at any time.</p>
-      </div>
-      <div class="mode-grid">
-        <article class="mode-card mode-safe">
-          <span class="tag tag-lime">Default</span>
-          <h3>Safe</h3>
-          <p>Codex thinks with its normal instructions. CodexZero only shortens a tool result when the shorter copy keeps the same information and actually uses fewer tokens.</p>
-          <dl>
-            <div><dt>Best for</dt><dd>Everyday work</dd></div>
-            <div><dt>Repeated public test</dt><dd>29/36 vs 29/36</dd></div>
-            <div><dt>Command</dt><dd><code>codex-zero mode safe</code></dd></div>
-          </dl>
-        </article>
-        <article class="mode-card mode-max">
-          <span class="tag tag-violet">Opt-in</span>
-          <h3>Max Savings</h3>
-          <p>Max also swaps the long built-in setup text for a shorter version. It can save more on predictable work, so it is there when you want the leanest setup.</p>
-          <dl>
-            <div><dt>Best for</dt><dd>Repeatable work</dd></div>
-            <div><dt>Fixed workload test</dt><dd>18/18 · 13.72% fewer</dd></div>
-            <div><dt>Command</dt><dd><code>codex-zero mode max-save</code></dd></div>
-          </dl>
-        </article>
-      </div>
-    </section>
-
-    <section class="section projection" id="projection">
-      <div class="projection-copy">
-        <p class="eyebrow">Your week</p>
-        <h2>Before CodexZero. After CodexZero.</h2>
-        <p>Move the sliders to see how much repeated text CodexZero could remove from a week like yours.</p>
-        <fieldset class="mode-picker">
-          <legend>Mode</legend>
-          <label>
-            <input type="radio" name="projection-mode" value="safe" checked>
-            <span><b>Safe</b><small>Stock model instructions</small></span>
-          </label>
-          <label>
-            <input type="radio" name="projection-mode" value="max-save">
-            <span><b>Max Savings</b><small>738-token prompt</small></span>
-          </label>
-        </fieldset>
-        <div class="slider-group">
-          <div class="slider-label">
-            <label for="prompt-requests">Model requests per day</label>
-            <output for="prompt-requests" id="prompt-requests-output">50</output>
-          </div>
-          <input id="prompt-requests" type="range" min="1" max="200" value="50" step="1">
-          <div class="slider-range"><span>1</span><span>200</span></div>
-        </div>
-        <div class="slider-group">
-          <div class="slider-label">
-            <label for="daily-results">Tool-output tokens per day</label>
-            <output for="daily-results" id="daily-results-output">10,000</output>
-          </div>
-          <input id="daily-results" type="range" min="0" max="100000" value="10000" step="1000">
-          <div class="slider-range"><span>0</span><span>100,000</span></div>
-        </div>
-        <div class="slider-group">
-          <div class="slider-label">
-            <label for="eligible">Tool-output reduction</label>
-            <output for="eligible" id="eligible-output">10%</output>
-          </div>
-          <input id="eligible" type="range" min="0" max="84" value="10" step="1">
-          <div class="slider-range"><span>0%</span><span>84% fixture result</span></div>
-        </div>
-        <p class="projection-note">Run <code>codex-zero savings</code> to replace the slider with your own measured number.</p>
-      </div>
-      <div class="projection-card">
-        <span class="tag tag-lime" id="projection-mode-label">Safe weekly estimate</span>
-        <div class="weekly-comparison">
-          <div>
-            <span>Before</span>
-            <strong id="before-week-value">1.31M</strong>
-          </div>
-          <i aria-hidden="true">→</i>
-          <div>
-            <span>After</span>
-            <strong id="after-week-value">321.3K</strong>
-          </div>
-        </div>
-        <div class="combined-result">
-          <strong id="combined-percent-value">76%</strong>
-          <span>fewer counted input tokens</span>
-        </div>
-        <div class="projection-periods">
-          <div><span>Saved / week</span><b id="combined-saved-value">991.9K</b></div>
-          <div><span>Same counted budget</span><b><span id="capacity-value">4.1×</span> · <span id="capacity-percent-value">+309%</span></b></div>
-        </div>
-        <p class="calculator-scope">This view counts model setup text and command results—the two parts CodexZero changes.</p>
-      </div>
-    </section>
-
-    <section class="section lean-section" id="lean">
-      <div class="lean-copy">
-        <p class="eyebrow">Max Savings</p>
-        <h2>A shorter instruction sheet.</h2>
-        <p>Before Codex starts a step, it receives a built-in instruction sheet. Max turns the dated 3,552-token sheet into a 738-token version, saving 2,814 tokens each time it is sent.</p>
-        <p class="projection-note">Safe keeps the full sheet. Max is the optional lean setting.</p>
-      </div>
-      <div class="lean-card">
-        <span class="tag tag-violet">Counted with the same tokenizer</span>
-        <div class="lean-comparison">
-          <div><span>Dated reference</span><strong>3,552</strong></div>
-          <i aria-hidden="true">→</i>
-          <div><span>Max Savings</span><strong>738</strong></div>
-        </div>
-        <div class="combined-result">
-          <strong>−79.2%</strong>
-          <span>on the dated model-instruction block</span>
-        </div>
-        <div class="projection-periods">
-          <div><span>At 50 requests/day</span><b>984,900 fewer / week</b></div>
-          <div><span>Same prompt budget</span><b>4.8× capacity</b></div>
-        </div>
-        <p>That 4.8× figure is for the instruction sheet itself. The charts above measure complete benchmark runs.</p>
-      </div>
-    </section>
-
-    <section class="section proof" id="proof">
-      <div class="section-heading">
-        <p class="eyebrow">The simple rule</p>
-        <h2>Use the shorter copy—or change nothing.</h2>
-        <p>CodexZero counts both versions. If its version is not smaller, Codex receives the normal result.</p>
-      </div>
-
-      <div class="metric-grid">
-        <article class="metric-card metric-primary">
-          <span class="metric-kicker">Selection rule</span>
-          <strong>&lt;</strong>
-          <h3>Smaller or stock</h3>
-          <p>CodexZero counts the normal result and the shorter copy the same way. The smaller one wins.</p>
-          <div class="metric-line"><span>Tokenizer</span><b><code>o200k_base</code></b></div>
-        </article>
-        <article class="metric-card">
-          <span class="metric-kicker">Fixture replay</span>
-          <strong>84%</strong>
-          <h3>Fewer tool-output tokens</h3>
-          <p>In the fixed tool-output test, repeated lines and stack frames fell from 6,699 to 1,072 tokens.</p>
-          <div class="metric-line"><span>Payloads reduced</span><b>2 / 11</b></div>
-        </article>
-        <article class="metric-card">
-          <span class="metric-kicker">Raw-first</span>
-          <strong>SHA-256</strong>
-          <h3>Full result stays available</h3>
-          <p>CodexZero saves the exact command result locally before making the shorter reading copy.</p>
-          <div class="metric-line"><span>Original</span><b>Retained</b></div>
-        </article>
-      </div>
-
-      <div class="replay-panel">
-        <div>
-          <span class="tag tag-violet">Fixed tool-output test</span>
-          <h3>6,699 before. 1,072 after.</h3>
-          <p>That is 5,627 fewer tokens, or 84%. Nine payloads stayed unchanged because their compact versions were not smaller.</p>
-        </div>
-        <div class="replay-chart" aria-label="Fixture replay token comparison">
-          <div><span>Before</span><i style="--size:100%"></i><b>6,699</b></div>
-          <div><span>After</span><i style="--size:16%"></i><b>1,072</b></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section mechanics" id="how">
-      <div class="section-heading">
-        <p class="eyebrow">How it works</p>
-        <h2>What happens after a command runs.</h2>
-      </div>
-      <div class="flow" aria-label="CodexZero processing flow">
-        <article>
-          <span class="flow-number">1</span>
-          <div class="flow-icon" aria-hidden="true">$_</div>
-          <h3>Command runs</h3>
-          <p>Codex gets the normal result, just as it does today.</p>
-        </article>
-        <div class="flow-arrow" aria-hidden="true">→</div>
-        <article>
-          <span class="flow-number">2</span>
-          <div class="flow-icon" aria-hidden="true">#</div>
-          <h3>Full result saved</h3>
-          <p>The exact result stays available if Codex needs every line.</p>
-        </article>
-        <div class="flow-arrow" aria-hidden="true">→</div>
-        <article>
-          <span class="flow-number">3</span>
-          <div class="flow-icon" aria-hidden="true">≪</div>
-          <h3>Repetition shortened</h3>
-          <p>Repeated lines can become one line plus a repeat count.</p>
-        </article>
-        <div class="flow-arrow" aria-hidden="true">→</div>
-        <article>
-          <span class="flow-number">4</span>
-          <div class="flow-icon" aria-hidden="true">✓</div>
-          <h3>Smallest copy wins</h3>
-          <p>If nothing got smaller, Codex receives the normal result.</p>
-        </article>
-      </div>
-
-      <div class="feature-grid">
-        <article>
-          <h3>Do not reread the same thing</h3>
-          <p>If an unchanged result is already in the conversation, CodexZero can point back to it instead of pasting it again.</p>
-        </article>
-        <article>
-          <h3>Run checks together</h3>
-          <p>A project’s test commands can run as one batch and return one complete result.</p>
-        </article>
-        <article>
-          <h3>See what you saved</h3>
-          <p><code>codex-zero savings</code> shows measured tokens, repeated results, calls, and cache hits.</p>
-        </article>
-        <article>
-          <h3>Switch back instantly</h3>
-          <p><code>codex-zero stock</code> opens your regular Codex whenever you want it.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section boundaries">
-      <div>
-        <p class="eyebrow">What stays put</p>
-        <h2>Still Codex. Just less repetition.</h2>
-      </div>
-      <div class="boundary-list">
-        <div><span>01</span><p><b>The model</b> You choose the same model and reasoning level.</p></div>
-        <div><span>02</span><p><b>Your instructions</b> Project rules and your own preferences stay in place.</p></div>
-        <div><span>03</span><p><b>Your Codex install</b> CodexZero installs beside it, so regular Codex remains one command away.</p></div>
-        <div><span>04</span><p><b>The useful details</b> Errors, warnings, exit codes, and the complete command result stay available.</p></div>
-      </div>
-    </section>
-
-    <section class="section faq" id="faq">
-      <div class="section-heading">
-        <p class="eyebrow">FAQ</p>
-        <h2>Quick answers.</h2>
-        <p>What CodexZero changes, what it keeps, and how the alternatives performed.</p>
-      </div>
-      <div class="faq-list">
-        <details>
-          <summary>How is this different from RTK?</summary>
-          <p><a href="https://github.com/rtk-ai/rtk">RTK</a> rewrites the output of particular shell commands. CodexZero works inside its side-by-side Codex build and keeps the full result. In the repeated run, RTK scored 32/36 and used 18.70% more tokens than Codex; CodexZero Safe scored 29/36 and used 14.63% fewer.</p>
-        </details>
-        <details>
-          <summary>How is this different from Headroom?</summary>
-          <p><a href="https://github.com/headroomlabs-ai/headroom">Headroom</a> shortens more kinds of conversation history through an added service. CodexZero focuses on Codex command results and runs beside your existing install.</p>
-        </details>
-        <details>
-          <summary>What about Caveman and Ponytail?</summary>
-          <p><a href="https://github.com/JuliusBrussee/caveman">Caveman</a> asks the model to speak more briefly. <a href="https://github.com/DietrichGebert/ponytail">Ponytail</a> asks it to write less code. CodexZero instead shortens repeated command results before the model rereads them.</p>
-        </details>
-        <details>
-          <summary>Does the 84.0% fixture result predict session savings?</summary>
-          <p>It is the result for eleven fixed command outputs. The complete benchmark charts above show what happened across whole tasks.</p>
-        </details>
-        <details>
-          <summary>What changes in Max Savings?</summary>
-          <p>It gives Codex a shorter built-in instruction sheet. Your project instructions, tools, model, and reasoning choice stay the same.</p>
-        </details>
-        <details>
-          <summary>Do fewer input tokens mean lower cost or more requests?</summary>
-          <p>They mean the model processed less input. In the repeated public run, that lined up with 7.40% lower API-equivalent cost. Your own result appears in <code>codex-zero savings</code>.</p>
-        </details>
-      </div>
     </section>
 
     <section class="section install" id="install">
       <div class="install-copy">
         <p class="eyebrow">Install</p>
-        <h2>Install beside Codex.<br>Keep both.</h2>
-        <p>Safe is selected by default. Windows x64, Intel Mac, and Apple silicon Mac are supported.</p>
+        <h2>Keep Codex. Add CodexZero.</h2>
+        <p>CodexZero installs beside your existing setup, so regular Codex remains available whenever you want it.</p>
+
         <div class="platform-tabs" role="tablist" aria-label="Install platform">
-          <button role="tab" aria-selected="true" aria-controls="windows-install" id="windows-tab">Windows</button>
-          <button role="tab" aria-selected="false" aria-controls="mac-install" id="mac-tab">macOS</button>
+          <button role="tab" type="button" aria-selected="true" aria-controls="windows-install" id="windows-tab" tabindex="0">Windows</button>
+          <button role="tab" type="button" aria-selected="false" aria-controls="mac-install" id="mac-tab" tabindex="-1">macOS</button>
         </div>
         <div class="install-command" id="windows-install" role="tabpanel" aria-labelledby="windows-tab">
           <code>irm https://raw.githubusercontent.com/Retro2512/CodexZero/main/scripts/bootstrap.ps1 | iex</code>
-          <button class="copy-button" data-copy-target="windows-install" aria-label="Copy Windows install command">Copy</button>
+          <button class="copy-button" type="button" data-copy-target="windows-install">Copy</button>
         </div>
         <div class="install-command" id="mac-install" role="tabpanel" aria-labelledby="mac-tab" hidden>
           <code>curl -fsSL https://raw.githubusercontent.com/Retro2512/CodexZero/main/scripts/bootstrap.sh | sh</code>
-          <button class="copy-button" data-copy-target="mac-install" aria-label="Copy macOS install command">Copy</button>
+          <button class="copy-button" type="button" data-copy-target="mac-install">Copy</button>
         </div>
-        <p class="install-footnote">Requires a published CodexZero release. Source checkout install can use an existing Node.js 20+ runtime.</p>
+        <div class="install-links">
+          <a href="https://github.com/Retro2512/CodexZero/releases/latest">Download a release</a>
+          <a href="https://github.com/Retro2512/CodexZero/blob/main/scripts/bootstrap.ps1">View Windows script</a>
+          <a href="https://github.com/Retro2512/CodexZero/blob/main/scripts/bootstrap.sh">View macOS script</a>
+        </div>
+        <p class="install-note">Supports Windows x64, Intel Mac, and Apple silicon Mac.</p>
       </div>
-      <div class="terminal-card" aria-label="CodexZero commands">
-        <div class="terminal-top"><span></span><span></span><span></span><b>codexzero</b></div>
-        <pre><span class="prompt">›</span> codex-zero run
-<span class="dim">  optimized side-by-side CLI</span>
 
-<span class="prompt">›</span> codex-zero savings
-<span class="lime">  Model-visible tokens eliminated: measured locally</span>
-<span class="dim">  Payloads transformed and fallbacks reported separately</span>
-
-<span class="prompt">›</span> codex-zero mode max-save
-<span class="dim">  opt into the 738-token prompt</span>
-
-<span class="prompt">›</span> codex-zero desktop
-<span class="dim">  signed app + side-by-side core</span>
-
-<span class="prompt">›</span> codex-zero stock
-<span class="dim">  untouched stock Codex</span></pre>
+      <div class="first-run" aria-label="First CodexZero commands">
+        <span class="tag">After installation</span>
+        <code>codex-zero run</code>
+        <p>Start the optimized CLI.</p>
+        <code>codex-zero savings</code>
+        <p>See the tokens saved on your own work.</p>
+        <code>codex-zero stock</code>
+        <p>Open regular Codex at any time.</p>
       </div>
+    </section>
+
+    <section class="section how" id="how">
+      <div class="section-heading">
+        <p class="eyebrow">How it works</p>
+        <h2>Shorter results when they actually save tokens.</h2>
+        <p>CodexZero keeps the original command result available, removes repeated text when it can, and otherwise leaves the result alone.</p>
+      </div>
+      <div class="steps">
+        <article>
+          <span>01</span>
+          <h3>Run normally</h3>
+          <p>Your commands, model, tools, and project instructions continue to work as before.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h3>Remove repetition</h3>
+          <p>Repeated command output can be replaced with a shorter reading copy.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h3>Keep the smaller result</h3>
+          <p>If nothing gets smaller, CodexZero sends the original result unchanged.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section modes" id="modes">
+      <div>
+        <p class="eyebrow">Two settings</p>
+        <h2>Start with Standard.</h2>
+        <p>Standard keeps Codex’s normal instructions and shortens eligible command results. It is selected by default.</p>
+      </div>
+      <div class="mode-list">
+        <article>
+          <div><span class="tag tag-lime">Default</span><h3>Standard</h3></div>
+          <p>The setting used for the repeated 15% result.</p>
+        </article>
+        <article>
+          <div><span class="tag tag-violet">Optional</span><h3>Max Savings</h3></div>
+          <p>A leaner setting for repeatable work. Switch modes whenever you want.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section faq" id="faq">
+      <div class="section-heading">
+        <p class="eyebrow">Quick answers</p>
+        <h2>What you need to know.</h2>
+      </div>
+      <div class="faq-list">
+        <details>
+          <summary>Does CodexZero replace Codex?</summary>
+          <p>No. It installs beside Codex, and <code>codex-zero stock</code> opens your regular setup.</p>
+        </details>
+        <details>
+          <summary>What does it change?</summary>
+          <p>It shortens eligible command results before the model reads them again. The full result stays available.</p>
+        </details>
+        <details>
+          <summary>Will it lower my bill?</summary>
+          <p>CodexZero reduces the input tokens it changes. Your actual bill or plan usage also depends on output, caching, pricing, and your workload.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="final-cta">
+      <p class="eyebrow">Ready when you are</p>
+      <h2>Use fewer tokens on your next Codex run.</h2>
+      <a class="button button-light" href="#install">Install CodexZero</a>
     </section>
   </main>
 
@@ -435,14 +207,13 @@
       <img src="assets/codexzero-mark.svg" alt="" width="34" height="34">
       <span>CodexZero</span>
     </div>
-    <p>Safe preserved stock model instructions and matched Codex at 29/36 across the repeated Terminal-Bench run.</p>
-    <div>
+    <p>Free, open-source, and independent from OpenAI.</p>
+    <nav aria-label="Footer navigation">
       <a href="https://github.com/Retro2512/CodexZero">GitHub</a>
-      <a href="reports/terminal-bench-2.1-replication/README.md">Terminal-Bench report</a>
-      <a href="reports/deepswe-sol-high-10/README.md">Historical DeepSWE</a>
-      <a href="reports/five-way-benchmark.md">Controlled benchmark</a>
-      <a href="docs/measurement.md">Measurement method</a>
-    </div>
+      <a href="reports/terminal-bench-2.1-replication/README.md">Benchmark</a>
+      <a href="https://github.com/Retro2512/CodexZero/blob/main/SECURITY.md">Security</a>
+      <a href="https://github.com/Retro2512/CodexZero/blob/main/docs/rollback.md">Uninstall</a>
+    </nav>
   </footer>
 </body>
 </html>

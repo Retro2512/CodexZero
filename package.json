@@ -2,7 +2,7 @@
   "name": "codex-zero",
   "version": "0.3.0",
   "private": true,
-  "description": "Strictly gated compact tool-result views for Codex.",
+  "description": "Use fewer tokens in Codex without replacing your current setup.",
   "repository": "github:Retro2512/CodexZero",
   "homepage": "https://retro2512.github.io/CodexZero/",
   "bugs": "https://github.com/Retro2512/CodexZero/issues",
