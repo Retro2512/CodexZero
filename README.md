@@ -58,7 +58,7 @@ Open regular Codex at any time.
 
 ## The repeated result
 
-![Regular Codex processed 26.58 million tokens and CodexZero processed 22.69 million while both scored 29 out of 36](assets/benchmarks/terminal-bench-repeated.svg)
+![Regular Codex processed 26.58 million tokens and CodexZero processed 22.69 million while both scored 29 out of 36; CodexZero Max is projected at 19.62 million](assets/benchmarks/terminal-bench-repeated.svg)
 
 Codex and CodexZero each completed 12 software tasks three times. CodexZero matched the final task score while processing 22.69 million tokens instead of 26.58 million.
 

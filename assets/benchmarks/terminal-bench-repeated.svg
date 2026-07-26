@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600" role="img" aria-labelledby="title desc">
   <title id="title">CodexZero used 15 percent fewer tokens with the same task score</title>
-  <desc id="desc">Regular Codex processed 26.58 million tokens and scored 29 out of 36. CodexZero processed 22.69 million tokens and also scored 29 out of 36.</desc>
-  <rect width="1200" height="520" fill="#fffef8"/>
+  <desc id="desc">Regular Codex processed 26.58 million tokens and scored 29 out of 36. CodexZero processed 22.69 million tokens and also scored 29 out of 36. CodexZero Max is projected at 19.62 million tokens using the measured Max-to-Standard ratio from the controlled comparison.</desc>
+  <rect width="1200" height="600" fill="#fffef8"/>
 
   <rect x="0" y="0" width="1200" height="136" fill="#171713"/>
   <text x="54" y="62" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="38" font-weight="800">15% fewer tokens. Same task score.</text>
@@ -14,12 +14,19 @@
   <rect x="255" y="225" width="710" height="42" fill="#171713"/>
   <text x="1004" y="255" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="800">26.58M</text>
 
-  <text x="54" y="341" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="800">CodexZero</text>
-  <rect x="255" y="313" width="710" height="42" fill="#e0dfd6"/>
-  <rect x="255" y="313" width="606" height="42" fill="#d94f35"/>
-  <text x="1004" y="343" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="800">22.69M</text>
+  <text x="54" y="333" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="800">CodexZero</text>
+  <rect x="255" y="305" width="710" height="42" fill="#e0dfd6"/>
+  <rect x="255" y="305" width="606" height="42" fill="#d94f35"/>
+  <text x="1004" y="335" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="800">22.69M</text>
 
-  <rect x="54" y="407" width="1092" height="74" fill="#c9ff36"/>
-  <text x="80" y="454" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="800">Same score: 29 / 36</text>
-  <text x="1120" y="454" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="800" text-anchor="end">3.89M fewer tokens</text>
+  <text x="54" y="413" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="800">CodexZero Max*</text>
+  <rect x="255" y="385" width="710" height="42" fill="#e0dfd6"/>
+  <rect x="255" y="385" width="524" height="42" fill="#c9ff36"/>
+  <text x="1004" y="415" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="800">19.62M*</text>
+
+  <rect x="54" y="467" width="1092" height="74" fill="#c9ff36"/>
+  <text x="80" y="514" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="800">Same score: 29 / 36</text>
+  <text x="1120" y="514" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="800" text-anchor="end">3.89M fewer tokens</text>
+
+  <text x="54" y="576" fill="#68675f" font-family="Arial, Helvetica, sans-serif" font-size="12">* Projected from the measured Max-to-Standard ratio in the controlled comparison.</text>
 </svg>
