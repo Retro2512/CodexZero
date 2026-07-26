@@ -253,6 +253,7 @@ h1 {
 }
 
 .results { max-width: 1320px; }
+.cache-results { padding-top: 0; }
 .primary-result {
   background: var(--white);
   border: 1px solid var(--ink);

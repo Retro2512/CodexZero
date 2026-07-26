@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="940" viewBox="0 0 760 940" role="img" aria-labelledby="title desc">
+  <title id="title">Cache hit ratio across every setup</title>
+  <desc id="desc">Regular Codex reached 89.8 percent, CodexZero 90.7 percent, CodexZero Max 91.6 percent, RTK 90.5 percent, Caveman 92.9 percent, and RTK plus Caveman 91.4 percent.</desc>
+
+  <rect width="760" height="940" fill="#171713"/>
+  <text x="46" y="66" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="800">Cache hit ratio</text>
+  <text x="46" y="112" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="800">across every setup</text>
+  <text x="46" y="151" fill="#aaa99f" font-family="Arial, Helvetica, sans-serif" font-size="15">Terminal-Bench mini-panel · higher is better</text>
+  <line x1="46" y1="181" x2="714" y2="181" stroke="#41413a"/>
+
+  <text x="46" y="232" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="800">Regular Codex</text>
+  <text x="714" y="232" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="800" text-anchor="end">89.8%</text>
+  <rect x="46" y="254" width="668" height="28" fill="#2b2b27"/>
+  <rect x="46" y="254" width="599.9" height="28" fill="#fffef8"/>
+
+  <text x="46" y="342" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="800">CodexZero</text>
+  <text x="714" y="342" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="800" text-anchor="end">90.7%</text>
+  <rect x="46" y="364" width="668" height="28" fill="#2b2b27"/>
+  <rect x="46" y="364" width="605.9" height="28" fill="#d94f35"/>
+
+  <text x="46" y="452" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="800">CodexZero Max</text>
+  <text x="714" y="452" fill="#c9ff36" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="800" text-anchor="end">91.6%</text>
+  <rect x="46" y="474" width="668" height="28" fill="#2b2b27"/>
+  <rect x="46" y="474" width="611.9" height="28" fill="#c9ff36"/>
+
+  <text x="46" y="562" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="700">RTK</text>
+  <text x="714" y="562" fill="#bba8ff" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" text-anchor="end">90.5%</text>
+  <rect x="46" y="584" width="668" height="28" fill="#2b2b27"/>
+  <rect x="46" y="584" width="604.5" height="28" fill="#bba8ff"/>
+
+  <text x="46" y="672" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="700">Caveman</text>
+  <text x="714" y="672" fill="#aaa99f" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" text-anchor="end">92.9%</text>
+  <rect x="46" y="694" width="668" height="28" fill="#2b2b27"/>
+  <rect x="46" y="694" width="620.6" height="28" fill="#77766e"/>
+
+  <text x="46" y="782" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="700">RTK + Caveman</text>
+  <text x="714" y="782" fill="#aaa99f" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" text-anchor="end">91.4%</text>
+  <rect x="46" y="804" width="668" height="28" fill="#2b2b27"/>
+  <rect x="46" y="804" width="610.6" height="28" fill="#aaa99f"/>
+
+  <text x="46" y="861" fill="#8f8e85" font-family="Arial, Helvetica, sans-serif" font-size="12">0%</text>
+  <text x="380" y="861" fill="#8f8e85" font-family="Arial, Helvetica, sans-serif" font-size="12" text-anchor="middle">50%</text>
+  <text x="714" y="861" fill="#8f8e85" font-family="Arial, Helvetica, sans-serif" font-size="12" text-anchor="end">100%</text>
+  <line x1="46" y1="888" x2="714" y2="888" stroke="#41413a"/>
+  <text x="46" y="918" fill="#8f8e85" font-family="Arial, Helvetica, sans-serif" font-size="12">Cached input / total input tokens</text>
+</svg>

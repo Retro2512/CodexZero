@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="660" viewBox="0 0 1200 660" role="img" aria-labelledby="title desc">
+  <title id="title">Cache hit ratio across every setup</title>
+  <desc id="desc">Regular Codex reached 89.8 percent, CodexZero 90.7 percent, CodexZero Max 91.6 percent, RTK 90.5 percent, Caveman 92.9 percent, and RTK plus Caveman 91.4 percent.</desc>
+
+  <rect width="1200" height="660" fill="#171713"/>
+  <text x="58" y="66" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="800">Cache hit ratio across every setup</text>
+  <text x="58" y="101" fill="#aaa99f" font-family="Arial, Helvetica, sans-serif" font-size="15">Terminal-Bench mini-panel · share of input tokens served from cache · higher is better</text>
+  <line x1="58" y1="132" x2="1142" y2="132" stroke="#41413a"/>
+
+  <line x1="355" y1="154" x2="355" y2="565" stroke="#31312d"/>
+  <line x1="705" y1="154" x2="705" y2="565" stroke="#31312d"/>
+  <line x1="1055" y1="154" x2="1055" y2="565" stroke="#31312d"/>
+
+  <text x="72" y="190" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="800">Regular Codex</text>
+  <rect x="355" y="169" width="700" height="24" fill="#2b2b27"/>
+  <rect x="355" y="169" width="628.6" height="24" fill="#fffef8"/>
+  <text x="1128" y="190" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="800" text-anchor="end">89.8%</text>
+
+  <text x="72" y="260" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="800">CodexZero</text>
+  <rect x="355" y="239" width="700" height="24" fill="#2b2b27"/>
+  <rect x="355" y="239" width="634.9" height="24" fill="#d94f35"/>
+  <text x="1128" y="260" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="800" text-anchor="end">90.7%</text>
+
+  <text x="72" y="330" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="800">CodexZero Max</text>
+  <rect x="355" y="309" width="700" height="24" fill="#2b2b27"/>
+  <rect x="355" y="309" width="641.2" height="24" fill="#c9ff36"/>
+  <text x="1128" y="330" fill="#c9ff36" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="800" text-anchor="end">91.6%</text>
+
+  <text x="72" y="400" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">RTK</text>
+  <rect x="355" y="379" width="700" height="24" fill="#2b2b27"/>
+  <rect x="355" y="379" width="633.5" height="24" fill="#bba8ff"/>
+  <text x="1128" y="400" fill="#bba8ff" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" text-anchor="end">90.5%</text>
+
+  <text x="72" y="470" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">Caveman</text>
+  <rect x="355" y="449" width="700" height="24" fill="#2b2b27"/>
+  <rect x="355" y="449" width="650.3" height="24" fill="#77766e"/>
+  <text x="1128" y="470" fill="#aaa99f" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" text-anchor="end">92.9%</text>
+
+  <text x="72" y="540" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">RTK + Caveman</text>
+  <rect x="355" y="519" width="700" height="24" fill="#2b2b27"/>
+  <rect x="355" y="519" width="639.8" height="24" fill="#aaa99f"/>
+  <text x="1128" y="540" fill="#aaa99f" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" text-anchor="end">91.4%</text>
+
+  <text x="355" y="586" fill="#8f8e85" font-family="Arial, Helvetica, sans-serif" font-size="11">0%</text>
+  <text x="705" y="586" fill="#8f8e85" font-family="Arial, Helvetica, sans-serif" font-size="11" text-anchor="middle">50%</text>
+  <text x="1055" y="586" fill="#8f8e85" font-family="Arial, Helvetica, sans-serif" font-size="11" text-anchor="end">100%</text>
+  <line x1="58" y1="610" x2="1142" y2="610" stroke="#41413a"/>
+  <text x="58" y="638" fill="#8f8e85" font-family="Arial, Helvetica, sans-serif" font-size="12">Provider-counted cached input / total input tokens</text>
+</svg>
