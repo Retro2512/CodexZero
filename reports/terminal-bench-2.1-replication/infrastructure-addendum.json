@@ -1,0 +1,552 @@
+{
+  "schema": "codexzero-terminal-bench-infrastructure-addendum-v1",
+  "sealed_at_utc": "2026-07-26T00:05:37.865264+00:00",
+  "parent_preregistration_sha256": "f82462d02256d100694fcd3d500cea501e8f882ae11dc7dd66dda817b74212b6",
+  "trigger": "The first two repetition waves exposed objective container-runtime defects before the final analysis: four minimal Ubuntu task images lacked a usable CA bundle for every configuration, and the Debian Bullseye qemu image could not load the glibc-2.39-linked CodexZero benchmark binary.",
+  "evidence": {
+    "synchronized_ca_failures": {
+      "tasks": [
+        "polyglot-rust-c",
+        "regex-log",
+        "sqlite-with-gcov",
+        "compile-compcert"
+      ],
+      "repetition_waves": 2,
+      "configurations_each_wave": [
+        "codex",
+        "codexzero_safe",
+        "codex_rtk"
+      ],
+      "observed_transport_class": "invalid peer certificate: UnknownIssuer followed by HTTPS transport failure"
+    },
+    "codexzero_runtime_failure": {
+      "task": "qemu-startup",
+      "repetition_waves": 2,
+      "observed_class": "mounted binary --version returned nonzero",
+      "root_cause": "CodexZero benchmark binary dynamically links glibc 2.39; the prebuilt task image is Debian Bullseye with glibc 2.31. Stock Codex is static PIE."
+    }
+  },
+  "correction": {
+    "ca_bundle": "Mount the same read-only host CA bundle into every configuration and task.",
+    "codexzero_runtime": "Execute the identical preregistered CodexZero binary and hash through a 113-byte wrapper using its read-only build-runtime loader and six ldd-declared libraries. No product bytes or configuration features change.",
+    "selection": "Discard the first two 36-cell waves wholesale rather than selectively retaining successes. Run a completely new 108-cell matrix with all corrections active. Original attempts remain preserved as infrastructure-validation evidence.",
+    "quality_dependence": "No task rewards, configuration rankings, or token results informed the correction or the fresh task sample."
+  },
+  "runtime_provenance": {
+    "codexzero_binary_sha256": "657fe9452f05a5d5b5905b84bbe581d97a55f8fa1988306546a639ab201de50b",
+    "wrapper_sha256": "26b17e57aaf1b104f3b52afc53c1a23630e9d888a3e7af92fb5f24b34da13cad",
+    "ca_bundle_sha256": "ecd9dc38bc3efb7dbd6431f57e29d2f8d6a0f0d211e1464b3fef2cbfe266fcd2",
+    "libraries": {
+      "ld-linux-x86-64.so.2": {
+        "source": "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2",
+        "sha256": "1cd555ac46b7887edeaf3c42aac5408c8135e52f6b37870da2cf82d5fe14e829"
+      },
+      "libssl.so.3": {
+        "source": "/usr/lib/x86_64-linux-gnu/libssl.so.3",
+        "sha256": "2f4b14490bdf3e1d4f5d4a9c0e624b95e2074ab40380e7d545aa1eb709584ce6"
+      },
+      "libcrypto.so.3": {
+        "source": "/usr/lib/x86_64-linux-gnu/libcrypto.so.3",
+        "sha256": "e35b898aeda0c9ae473810a3b6935d8ef2d4b91396dc018acbc52638363471ab"
+      },
+      "libgcc_s.so.1": {
+        "source": "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1",
+        "sha256": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb"
+      },
+      "libm.so.6": {
+        "source": "/usr/lib/x86_64-linux-gnu/libm.so.6",
+        "sha256": "1b87a1a50b496cfead2b0ad134c2ff536705c82608db240c7e8aa48d6c0e4217"
+      },
+      "libc.so.6": {
+        "source": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+        "sha256": "d8db8739a1633c972cec6a4fe0566bdcec6fd088f98723492ab0361f66238f75"
+      }
+    }
+  },
+  "replacement_design": "Same sealed tasks, three configurations, three repetitions, task orders, agent orders, model, effort, timeouts, metrics, and zero quality retries. Job names gain the v2 prefix.",
+  "fixed_live_configs_sanitized": [
+    {
+      "job_name": "tb21-replication-v2-r1",
+      "jobs_dir": "${ISOLATED_REPLICATION_ROOT}/jobs",
+      "n_attempts": 1,
+      "install_only": false,
+      "timeout_multiplier": 1.0,
+      "n_concurrent_trials": 12,
+      "quiet": false,
+      "retry": {
+        "max_retries": 0
+      },
+      "environment": {
+        "type": "docker",
+        "force_build": false,
+        "delete": true,
+        "mounts": [
+          {
+            "type": "bind",
+            "source": "${ISOLATED_ORIGINAL_ROOT}/stock-package/codex",
+            "target": "/opt/bench/codex-stock",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${ISOLATED_REPLICATION_ROOT}/sealed/codexzero-glibc-wrapper.sh",
+            "target": "/opt/bench/codexzero",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${CODEXZERO_BINARY}",
+            "target": "/opt/bench/codexzero-bin",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${BENCHMARK_GLIBC_DIR}/ld-linux-x86-64.so.2",
+            "target": "/opt/bench/glibc/ld-linux-x86-64.so.2",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${BENCHMARK_GLIBC_DIR}/libssl.so.3",
+            "target": "/opt/bench/glibc/libssl.so.3",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${BENCHMARK_GLIBC_DIR}/libcrypto.so.3",
+            "target": "/opt/bench/glibc/libcrypto.so.3",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${BENCHMARK_GLIBC_DIR}/libgcc_s.so.1",
+            "target": "/opt/bench/glibc/libgcc_s.so.1",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${BENCHMARK_GLIBC_DIR}/libm.so.6",
+            "target": "/opt/bench/glibc/libm.so.6",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${BENCHMARK_GLIBC_DIR}/libc.so.6",
+            "target": "/opt/bench/glibc/libc.so.6",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${HOST_CA_BUNDLE}",
+            "target": "${HOST_CA_BUNDLE}",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${RTK_BINARY}",
+            "target": "/usr/local/bin/rtk",
+            "read_only": true
+          }
+        ]
+      },
+      "verifier": {
+        "disable": false
+      },
+      "agents": [
+        {
+          "name": "codex",
+          "model_name": "gpt-5.6-sol",
+          "override_timeout_sec": 900,
+          "max_timeout_sec": 900,
+          "kwargs": {
+            "version": "0.145.0-alpha.30",
+            "reasoning_effort": "medium"
+          },
+          "env": {
+            "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+            "CODEX_BENCHMARK_LABEL": "codex",
+            "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codex-stock"
+          }
+        },
+        {
+          "name": "codex",
+          "model_name": "gpt-5.6-sol",
+          "override_timeout_sec": 900,
+          "max_timeout_sec": 900,
+          "kwargs": {
+            "version": "0.145.0-alpha.30",
+            "reasoning_effort": "medium",
+            "config_toml": "suppress_unstable_features_warning = true\n[features]\ncodex_zero_compact_exec_output = true\ncodex_zero_lossless_terminal_codec = true\ncodex_zero_exact_duplicate_results = true\ncodex_zero_event_driven_wait = true\n"
+          },
+          "env": {
+            "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+            "CODEX_BENCHMARK_LABEL": "codexzero_safe",
+            "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codexzero",
+            "CODEX_ZERO_HOME": "/tmp/codexzero-home",
+            "CODEX_ZERO_ARTIFACT_DIR": "/logs/agent/codexzero-artifacts",
+            "CODEX_ZERO_TELEMETRY_FILE": "/logs/agent/codexzero-telemetry.jsonl"
+          }
+        },
+        {
+          "name": "codex",
+          "model_name": "gpt-5.6-sol",
+          "override_timeout_sec": 900,
+          "max_timeout_sec": 900,
+          "kwargs": {
+            "version": "0.145.0-alpha.30",
+            "reasoning_effort": "medium"
+          },
+          "env": {
+            "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+            "CODEX_BENCHMARK_LABEL": "codex_rtk",
+            "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codex-stock",
+            "CODEX_ADDITIONAL_INSTRUCTIONS_PATH": "${ISOLATED_REPLICATION_ROOT}/sealed/rtk-instructions.md",
+            "RTK_DB_PATH": "/logs/agent/rtk.db",
+            "RTK_TELEMETRY_DISABLED": "1"
+          }
+        }
+      ],
+      "datasets": [
+        {
+          "path": "${ISOLATED_REPLICATION_ROOT}/terminal-bench-2",
+          "task_names": [
+            "path-tracing",
+            "headless-terminal",
+            "polyglot-rust-c",
+            "log-summary-date-ranges",
+            "pytorch-model-recovery",
+            "qemu-startup",
+            "sqlite-with-gcov",
+            "crack-7z-hash",
+            "compile-compcert",
+            "fix-git",
+            "cobol-modernization",
+            "regex-log"
+          ]
+        }
+      ]
+    },
+    {
+      "job_name": "tb21-replication-v2-r2",
+      "jobs_dir": "${ISOLATED_REPLICATION_ROOT}/jobs",
+      "n_attempts": 1,
+      "install_only": false,
+      "timeout_multiplier": 1.0,
+      "n_concurrent_trials": 12,
+      "quiet": false,
+      "retry": {
+        "max_retries": 0
+      },
+      "environment": {
+        "type": "docker",
+        "force_build": false,
+        "delete": true,
+        "mounts": [
+          {
+            "type": "bind",
+            "source": "${ISOLATED_ORIGINAL_ROOT}/stock-package/codex",
+            "target": "/opt/bench/codex-stock",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${ISOLATED_REPLICATION_ROOT}/sealed/codexzero-glibc-wrapper.sh",
+            "target": "/opt/bench/codexzero",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${CODEXZERO_BINARY}",
+            "target": "/opt/bench/codexzero-bin",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${BENCHMARK_GLIBC_DIR}/ld-linux-x86-64.so.2",
+            "target": "/opt/bench/glibc/ld-linux-x86-64.so.2",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${BENCHMARK_GLIBC_DIR}/libssl.so.3",
+            "target": "/opt/bench/glibc/libssl.so.3",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${BENCHMARK_GLIBC_DIR}/libcrypto.so.3",
+            "target": "/opt/bench/glibc/libcrypto.so.3",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${BENCHMARK_GLIBC_DIR}/libgcc_s.so.1",
+            "target": "/opt/bench/glibc/libgcc_s.so.1",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${BENCHMARK_GLIBC_DIR}/libm.so.6",
+            "target": "/opt/bench/glibc/libm.so.6",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${BENCHMARK_GLIBC_DIR}/libc.so.6",
+            "target": "/opt/bench/glibc/libc.so.6",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${HOST_CA_BUNDLE}",
+            "target": "${HOST_CA_BUNDLE}",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${RTK_BINARY}",
+            "target": "/usr/local/bin/rtk",
+            "read_only": true
+          }
+        ]
+      },
+      "verifier": {
+        "disable": false
+      },
+      "agents": [
+        {
+          "name": "codex",
+          "model_name": "gpt-5.6-sol",
+          "override_timeout_sec": 900,
+          "max_timeout_sec": 900,
+          "kwargs": {
+            "version": "0.145.0-alpha.30",
+            "reasoning_effort": "medium",
+            "config_toml": "suppress_unstable_features_warning = true\n[features]\ncodex_zero_compact_exec_output = true\ncodex_zero_lossless_terminal_codec = true\ncodex_zero_exact_duplicate_results = true\ncodex_zero_event_driven_wait = true\n"
+          },
+          "env": {
+            "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+            "CODEX_BENCHMARK_LABEL": "codexzero_safe",
+            "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codexzero",
+            "CODEX_ZERO_HOME": "/tmp/codexzero-home",
+            "CODEX_ZERO_ARTIFACT_DIR": "/logs/agent/codexzero-artifacts",
+            "CODEX_ZERO_TELEMETRY_FILE": "/logs/agent/codexzero-telemetry.jsonl"
+          }
+        },
+        {
+          "name": "codex",
+          "model_name": "gpt-5.6-sol",
+          "override_timeout_sec": 900,
+          "max_timeout_sec": 900,
+          "kwargs": {
+            "version": "0.145.0-alpha.30",
+            "reasoning_effort": "medium"
+          },
+          "env": {
+            "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+            "CODEX_BENCHMARK_LABEL": "codex_rtk",
+            "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codex-stock",
+            "CODEX_ADDITIONAL_INSTRUCTIONS_PATH": "${ISOLATED_REPLICATION_ROOT}/sealed/rtk-instructions.md",
+            "RTK_DB_PATH": "/logs/agent/rtk.db",
+            "RTK_TELEMETRY_DISABLED": "1"
+          }
+        },
+        {
+          "name": "codex",
+          "model_name": "gpt-5.6-sol",
+          "override_timeout_sec": 900,
+          "max_timeout_sec": 900,
+          "kwargs": {
+            "version": "0.145.0-alpha.30",
+            "reasoning_effort": "medium"
+          },
+          "env": {
+            "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+            "CODEX_BENCHMARK_LABEL": "codex",
+            "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codex-stock"
+          }
+        }
+      ],
+      "datasets": [
+        {
+          "path": "${ISOLATED_REPLICATION_ROOT}/terminal-bench-2",
+          "task_names": [
+            "pytorch-model-recovery",
+            "qemu-startup",
+            "sqlite-with-gcov",
+            "crack-7z-hash",
+            "compile-compcert",
+            "fix-git",
+            "cobol-modernization",
+            "regex-log",
+            "path-tracing",
+            "headless-terminal",
+            "polyglot-rust-c",
+            "log-summary-date-ranges"
+          ]
+        }
+      ]
+    },
+    {
+      "job_name": "tb21-replication-v2-r3",
+      "jobs_dir": "${ISOLATED_REPLICATION_ROOT}/jobs",
+      "n_attempts": 1,
+      "install_only": false,
+      "timeout_multiplier": 1.0,
+      "n_concurrent_trials": 12,
+      "quiet": false,
+      "retry": {
+        "max_retries": 0
+      },
+      "environment": {
+        "type": "docker",
+        "force_build": false,
+        "delete": true,
+        "mounts": [
+          {
+            "type": "bind",
+            "source": "${ISOLATED_ORIGINAL_ROOT}/stock-package/codex",
+            "target": "/opt/bench/codex-stock",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${ISOLATED_REPLICATION_ROOT}/sealed/codexzero-glibc-wrapper.sh",
+            "target": "/opt/bench/codexzero",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${CODEXZERO_BINARY}",
+            "target": "/opt/bench/codexzero-bin",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${BENCHMARK_GLIBC_DIR}/ld-linux-x86-64.so.2",
+            "target": "/opt/bench/glibc/ld-linux-x86-64.so.2",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${BENCHMARK_GLIBC_DIR}/libssl.so.3",
+            "target": "/opt/bench/glibc/libssl.so.3",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${BENCHMARK_GLIBC_DIR}/libcrypto.so.3",
+            "target": "/opt/bench/glibc/libcrypto.so.3",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${BENCHMARK_GLIBC_DIR}/libgcc_s.so.1",
+            "target": "/opt/bench/glibc/libgcc_s.so.1",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${BENCHMARK_GLIBC_DIR}/libm.so.6",
+            "target": "/opt/bench/glibc/libm.so.6",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${BENCHMARK_GLIBC_DIR}/libc.so.6",
+            "target": "/opt/bench/glibc/libc.so.6",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${HOST_CA_BUNDLE}",
+            "target": "${HOST_CA_BUNDLE}",
+            "read_only": true
+          },
+          {
+            "type": "bind",
+            "source": "${RTK_BINARY}",
+            "target": "/usr/local/bin/rtk",
+            "read_only": true
+          }
+        ]
+      },
+      "verifier": {
+        "disable": false
+      },
+      "agents": [
+        {
+          "name": "codex",
+          "model_name": "gpt-5.6-sol",
+          "override_timeout_sec": 900,
+          "max_timeout_sec": 900,
+          "kwargs": {
+            "version": "0.145.0-alpha.30",
+            "reasoning_effort": "medium"
+          },
+          "env": {
+            "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+            "CODEX_BENCHMARK_LABEL": "codex_rtk",
+            "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codex-stock",
+            "CODEX_ADDITIONAL_INSTRUCTIONS_PATH": "${ISOLATED_REPLICATION_ROOT}/sealed/rtk-instructions.md",
+            "RTK_DB_PATH": "/logs/agent/rtk.db",
+            "RTK_TELEMETRY_DISABLED": "1"
+          }
+        },
+        {
+          "name": "codex",
+          "model_name": "gpt-5.6-sol",
+          "override_timeout_sec": 900,
+          "max_timeout_sec": 900,
+          "kwargs": {
+            "version": "0.145.0-alpha.30",
+            "reasoning_effort": "medium"
+          },
+          "env": {
+            "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+            "CODEX_BENCHMARK_LABEL": "codex",
+            "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codex-stock"
+          }
+        },
+        {
+          "name": "codex",
+          "model_name": "gpt-5.6-sol",
+          "override_timeout_sec": 900,
+          "max_timeout_sec": 900,
+          "kwargs": {
+            "version": "0.145.0-alpha.30",
+            "reasoning_effort": "medium",
+            "config_toml": "suppress_unstable_features_warning = true\n[features]\ncodex_zero_compact_exec_output = true\ncodex_zero_lossless_terminal_codec = true\ncodex_zero_exact_duplicate_results = true\ncodex_zero_event_driven_wait = true\n"
+          },
+          "env": {
+            "CODEX_AUTH_JSON_PATH": "${CODEX_AUTH_JSON_PATH}",
+            "CODEX_BENCHMARK_LABEL": "codexzero_safe",
+            "CODEX_BINARY_CONTAINER_PATH": "/opt/bench/codexzero",
+            "CODEX_ZERO_HOME": "/tmp/codexzero-home",
+            "CODEX_ZERO_ARTIFACT_DIR": "/logs/agent/codexzero-artifacts",
+            "CODEX_ZERO_TELEMETRY_FILE": "/logs/agent/codexzero-telemetry.jsonl"
+          }
+        }
+      ],
+      "datasets": [
+        {
+          "path": "${ISOLATED_REPLICATION_ROOT}/terminal-bench-2",
+          "task_names": [
+            "compile-compcert",
+            "fix-git",
+            "cobol-modernization",
+            "regex-log",
+            "path-tracing",
+            "headless-terminal",
+            "polyglot-rust-c",
+            "log-summary-date-ranges",
+            "pytorch-model-recovery",
+            "qemu-startup",
+            "sqlite-with-gcov",
+            "crack-7z-hash"
+          ]
+        }
+      ]
+    }
+  ]
+}
