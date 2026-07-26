@@ -1,0 +1,159 @@
+{
+  "schema": "codexzero-terminal-bench-replication-run-manifest-v1",
+  "preregistration": {
+    "git_commit": "7c23e04",
+    "sha256": "f82462d02256d100694fcd3d500cea501e8f882ae11dc7dd66dda817b74212b6"
+  },
+  "infrastructure_addendum": {
+    "git_commit": "3cf5926",
+    "sha256": "8151c7e7eba7f5e14c0e2c2e2dc3b447ebd7edec08c144874fe73c1044483f53"
+  },
+  "execution": {
+    "clean_repetitions": [
+      {
+        "start_utc": "2026-07-26T00:06:46Z",
+        "end_utc": "2026-07-26T00:28:48Z",
+        "elapsed_sec": 1322,
+        "exit_code": 0
+      },
+      {
+        "start_utc": "2026-07-26T00:28:58Z",
+        "end_utc": "2026-07-26T00:52:06Z",
+        "elapsed_sec": 1388,
+        "exit_code": 0
+      },
+      {
+        "start_utc": "2026-07-26T00:52:16Z",
+        "end_utc": "2026-07-26T01:15:25Z",
+        "elapsed_sec": 1389,
+        "exit_code": 0
+      }
+    ],
+    "discarded_validation_waves": [
+      {
+        "start_utc": "2026-07-25T23:25:32Z",
+        "end_utc": "2026-07-25T23:45:01Z",
+        "elapsed_sec": 1169,
+        "exit_code": 0
+      },
+      {
+        "start_utc": "2026-07-25T23:46:05Z",
+        "end_utc": "2026-07-26T00:00:18Z",
+        "elapsed_sec": 853,
+        "exit_code": 0
+      }
+    ],
+    "initial_install_check": {
+      "start_utc": "2026-07-25T23:24:35Z",
+      "end_utc": "2026-07-25T23:25:23Z",
+      "elapsed_sec": 48,
+      "exit_code": 0
+    },
+    "fixed_install_check": {
+      "start_utc": "2026-07-26T00:06:08Z",
+      "end_utc": "2026-07-26T00:06:33Z",
+      "elapsed_sec": 25,
+      "exit_code": 0
+    },
+    "clean_matrix_wall_sec": 4099,
+    "discarded_validation_wall_sec": 2022,
+    "recorded_harbor_controller_wall_sec": 6194
+  },
+  "attempts": {
+    "final_scored": 108,
+    "discarded_infrastructure_validation": 72,
+    "total_analyzed": 180
+  },
+  "raw_jobs": {
+    "tb21-replication-r1": {
+      "root": "${ISOLATED_REPLICATION_ROOT}/jobs/tb21-replication-r1",
+      "files": 496,
+      "bytes": 8997247,
+      "tree_sha256": "183426974db6564dabaedb640c4ed44439a14404881ca70d54a7dae42cc0bbd8"
+    },
+    "tb21-replication-r2": {
+      "root": "${ISOLATED_REPLICATION_ROOT}/jobs/tb21-replication-r2",
+      "files": 490,
+      "bytes": 8215603,
+      "tree_sha256": "2d08ea9f62e021b428054f39b180a4fa2bcead900f3bc09ca9ceb027fd109d41"
+    },
+    "tb21-replication-v2-r1": {
+      "root": "${ISOLATED_REPLICATION_ROOT}/jobs/tb21-replication-v2-r1",
+      "files": 671,
+      "bytes": 12408152,
+      "tree_sha256": "fed8c12e85d6e14371c1e93b328035ab9630b4c0e53d6a8e7f36f031f2453fac"
+    },
+    "tb21-replication-v2-r2": {
+      "root": "${ISOLATED_REPLICATION_ROOT}/jobs/tb21-replication-v2-r2",
+      "files": 606,
+      "bytes": 13393050,
+      "tree_sha256": "a29e76c3fa14c81429a84c69c8115fa9c058e3a7b0a511ba58c9a4dbf0b9b9c6"
+    },
+    "tb21-replication-v2-r3": {
+      "root": "${ISOLATED_REPLICATION_ROOT}/jobs/tb21-replication-v2-r3",
+      "files": 585,
+      "bytes": 13666331,
+      "tree_sha256": "c887549371615626bbea5f2107c34046d030d36feb01b8336c70adc1c7df3232"
+    }
+  },
+  "public_artifacts": {
+    "preregistration.json": {
+      "bytes": 23196,
+      "sha256": "f82462d02256d100694fcd3d500cea501e8f882ae11dc7dd66dda817b74212b6"
+    },
+    "PREREGISTRATION.sha256": {
+      "bytes": 87,
+      "sha256": "44b7f2860bf01c8f7926fcbe6a95dbc16ea78f481632b95b3de31f6092fa03d2"
+    },
+    "infrastructure-addendum.json": {
+      "bytes": 19648,
+      "sha256": "8151c7e7eba7f5e14c0e2c2e2dc3b447ebd7edec08c144874fe73c1044483f53"
+    },
+    "INFRASTRUCTURE_ADDENDUM.sha256": {
+      "bytes": 95,
+      "sha256": "0f8f294cc1b3ac064184fc3ec90a3da9641e213b8795af0bdf4513dc61705cad"
+    },
+    "summary.json": {
+      "bytes": 22230,
+      "sha256": "c7aa795ddf1c23cc7878807dc784b1f6a51841867c1ea5310758f0e95efc9a13"
+    },
+    "trials.json": {
+      "bytes": 344123,
+      "sha256": "265680be55e3d3bdd09c5ab1d933d88f396605b33e1b163d19a4ab25d80f5a4c"
+    },
+    "attempts.json": {
+      "bytes": 571400,
+      "sha256": "22b9b7a29bed1c71c5ce3cf756eea6a6de74196a23fab8d4ed386f960b6559cf"
+    },
+    "README.md": {
+      "bytes": 7158,
+      "sha256": "31c769d3bf9c80324295c504a9589a3e405ce87d7889f90e6448264da375f3ac"
+    }
+  },
+  "analysis_script": {
+    "path": "tools/analyze-terminal-bench-replication.py",
+    "sha256": "2952742689669c0c96dd25e20730778cd7fa7aac5bfdf03ea1a602395271d098",
+    "base_parser_path": "tools/analyze-terminal-bench.py",
+    "base_parser_sha256": "46486d1788f8716bb773146406e679abfc0386ad98af9653ba3a6250cd363e8d"
+  },
+  "integrity": {
+    "expected_final_cells": 108,
+    "observed_final_cells": 108,
+    "unique_final_cells": 108,
+    "complete_matrix": true,
+    "verifier_ctrf_files": 108,
+    "provider_session_identities_valid": 108,
+    "codexzero_trials": 36,
+    "codexzero_accounting_valid": true,
+    "codexzero_artifacts_verified": true,
+    "non_timeout_infrastructure_exceptions": 0,
+    "agent_timeouts_retained_as_scored_outcomes": 11
+  },
+  "private_raw_file_manifest": {
+    "path": "private-artifacts/terminal-bench-2.1-replication/raw-file-manifest.json",
+    "files": 2892,
+    "bytes": 56851858,
+    "sha256": "4e9b4c86b98060943f23f4d9a1c8662344d235023fb4602fbad3c2f92eb10b24",
+    "committed": false
+  }
+}

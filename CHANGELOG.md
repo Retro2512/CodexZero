@@ -8,6 +8,7 @@
 - Max Savings adds the bundled 738-token model prompt.
 - Existing `command-output` and `full-lean` installations migrate to Safe and Max Savings respectively.
 - Published a sealed six-way Terminal-Bench 2.1 mini-panel with task scores, tokens, cache hits, calls, turns, time, cost, optimizer telemetry, uncertainty, and evidence hashes.
+- Published a fresh 108-cell Terminal-Bench replication with three repetitions per task and configuration, 2.78-point score resolution, verifier subtests, paired tests, cluster intervals, and all discarded infrastructure-validation attempts.
 - Updated installers, release checks, documentation, benchmark labels, and the public site.
 
 ## 0.2.1

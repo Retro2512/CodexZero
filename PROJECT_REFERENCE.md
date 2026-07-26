@@ -831,6 +831,9 @@ installers, packaging, and release verification rather than core behavior.
 - normalized legacy installation metadata without modifying user instructions;
 - published a sealed six-way Terminal-Bench 2.1 mini-panel with complete
   quality, token, cache, call, turn, timing, cost, and integrity records;
+- published a fresh 108-cell, three-way Terminal-Bench replication with three
+  repetitions per task, 2.78-point score resolution, verifier subtests, paired
+  tests, task-cluster intervals, and retained infrastructure-validation attempts;
 - updated benchmark labels, harnesses, release gates, documentation, and site.
 
 #### 0.2.1

@@ -8,28 +8,31 @@
   [![License: MIT](https://img.shields.io/badge/license-MIT-171713.svg)](LICENSE)
 </div>
 
-![CodexZero Safe matched stock Codex on a six-way Terminal-Bench mini-panel](assets/social-card.svg)
+![CodexZero Safe matched stock Codex across 36 repeated Terminal-Bench outcomes](assets/social-card.svg)
 
 ## Public benchmark first
 
-Twelve seeded [Terminal-Bench 2.1](https://www.tbench.ai/news/terminal-bench-2-1) tasks ran through the official [Harbor](https://www.harborframework.com/docs/run-jobs/run-evals) verifier in isolated containers. The six configurations used the same `gpt-5.6-sol` model at medium reasoning. The task list, binary hashes, metrics, invalid-run rules, and analysis plan were sealed and pushed before the first model call.
+Twelve fresh [Terminal-Bench 2.1](https://www.tbench.ai/news/terminal-bench-2-1) tasks ran three times through official [Harbor](https://www.harborframework.com/docs/run-jobs/run-evals) verifiers for each configuration. All **108 final cells** used `gpt-5.6-sol` at medium reasoning in isolated containers.
 
-| Configuration | Strict score | Scorable score | Provider tokens | Difference vs Codex | API-equivalent cost | Agent time |
-|---|---:|---:|---:|---:|---:|---:|
-| Codex | 7/12 | 7/10 | 3,506,044 | Baseline | $4.4133 | 29.0 min |
-| **CodexZero Safe** | **7/12** | **7/10** | **3,417,215** | **2.53% less** | **$4.0756 · 7.65% less** | **27.0 min** |
-| CodexZero Max Savings | 7/12 | 7/10 | 4,243,972 | 21.05% more | $4.8911 · 10.83% more | 30.5 min |
-| Codex + RTK | 7/12 | 7/10 | 3,225,158 | 8.01% less | $3.9873 · 9.65% less | 23.7 min |
-| Codex + Caveman | 8/12 | 8/10 | 5,483,196 | 56.39% more | $5.8272 · 32.04% more | 33.0 min |
-| Codex + Caveman + RTK | 7/12 | 7/10 | 3,978,272 | 13.47% more | $4.6057 · 4.36% more | 26.6 min |
+| Configuration | Official score | Wilson 95% | Majority tasks | Verifier assertions | Provider tokens | Difference vs Codex | API-equivalent cost | Agent time |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Codex | **29/36 (80.56%)** | 64.97%–90.25% | 10/12 | 92/105 | 26,580,391 | Baseline | $25.1385 | 168.3 min |
+| **CodexZero Safe** | **29/36 (80.56%)** | **64.97%–90.25%** | **10/12** | **91/105** | **22,691,418** | **14.63% less** | **$23.2770 · 7.40% less** | **172.4 min** |
+| Codex + RTK | **32/36 (88.89%)** | 74.69%–95.59% | 11/12 | 95/105 | 31,550,572 | 18.70% more | $28.9572 · 15.19% more | 180.8 min |
 
-**Safe matched stock Codex on every scorable task: 7/10 vs 7/10.** Its measured point estimates were **2.53% fewer provider tokens** and **7.65% lower API-equivalent cost**. The paired efficiency intervals include zero, so this mini-panel does not establish a universal savings rate.
+**CodexZero Safe exactly matched Codex: 29/36 (80.56%) each.** It used **14.63% fewer provider tokens** and **7.40% less API-equivalent cost** in this run. The 36-outcome score resolves to **2.78 percentage points**, replacing the earlier panel’s coarse 10-point steps.
 
-Two tasks produced the same provider transport failure across all six configurations in the original wave, controlled rerun, and stock-Codex probes. They remain zeroes in the strict 12-task score and are the only tasks excluded from the 10-task comparison score. The run retained **84 attempts**, all **72/72 final matrix cells**, request-level token and cache counters, tool calls, shell commands, assistant turns, timings, cost estimates, telemetry, and evidence hashes.
+RTK’s quality point estimate was 8.33 points higher, but the paired exact result was **p = 0.25** and the task-cluster interval includes zero. RTK used 18.70% more tokens in this replication, reversing its efficiency result from the earlier one-attempt panel.
 
-CodexZero inspected **187** model-visible execution payloads and transformed **none** because no candidate was safely smaller. This establishes non-interference for those payloads, not compression-caused savings. Max Savings also matched Codex’s score here, but used more tokens and cost; it remains opt-in.
+The task sample and analysis were sealed before model calls. Two validation waves exposed container certificate and runtime defects; the correction was sealed before replacement calls, and the entire 108-cell matrix was rerun rather than selectively keeping successes. All 72 discarded attempts remain available for audit.
 
-[Full Terminal-Bench report](reports/terminal-bench-2.1-mini/README.md) · [Aggregate statistics](reports/terminal-bench-2.1-mini/summary.json) · [Every final trial](reports/terminal-bench-2.1-mini/trials.json) · [Every attempt](reports/terminal-bench-2.1-mini/attempts.json) · [Sealed preregistration](reports/terminal-bench-2.1-mini/preregistration.json)
+[Full repeated-run report](reports/terminal-bench-2.1-replication/README.md) · [Aggregate statistics](reports/terminal-bench-2.1-replication/summary.json) · [All 108 final trials](reports/terminal-bench-2.1-replication/trials.json) · [All 180 attempts](reports/terminal-bench-2.1-replication/attempts.json) · [Sealed preregistration](reports/terminal-bench-2.1-replication/preregistration.json) · [Sealed infrastructure correction](reports/terminal-bench-2.1-replication/infrastructure-addendum.json)
+
+### Earlier six-way breadth check
+
+The first sealed panel compared Codex, Safe, Max Savings, RTK, Caveman, and Caveman + RTK once across 12 tasks. Safe, Codex, and RTK each scored 7/10 scorable tasks. It was useful for breadth, but its 10-point score steps and single attempts were not precise enough to rank close configurations.
+
+[Earlier six-way report](reports/terminal-bench-2.1-mini/README.md) · [Earlier aggregate statistics](reports/terminal-bench-2.1-mini/summary.json)
 
 Historical context: an earlier 10-task [DeepSWE run](reports/deepswe-sol-high-10/README.md) tested what is now Max Savings at high reasoning. It used 4.75% fewer tokens but resolved 6/10 tasks versus stock Codex at 8/10. It did not test Safe mode.
 
@@ -56,7 +59,7 @@ CodexZero was lower-token in **16 of 18** paired trials. The exact two-sided sig
 | **Safe** | Stock Codex instructions | Guarded compact payloads with raw artifacts and stock fallback | **Yes** |
 | **Max Savings** | Bundled 738-token prompt | Same guarded pipeline | No |
 
-Safe targets quality parity by leaving Codex’s model instructions alone. It matched stock Codex task-for-task in the current Terminal-Bench mini-panel. Max Savings reduces the static instruction block, but it used more total tokens in this run and showed a strict-score tradeoff in the earlier DeepSWE sample. Existing `command-output` installs map to Safe; existing `full-lean` installs map to Max Savings.
+Safe targets quality parity by leaving Codex’s model instructions alone. It matched stock Codex at 29/36 in the repeated Terminal-Bench run. Max Savings was not included in that replication; it matched Codex at 7/10 in the earlier six-way panel but used 21.05% more tokens there. Existing `command-output` installs map to Safe; existing `full-lean` installs map to Max Savings.
 
 ## Install
 
@@ -93,13 +96,19 @@ codex-zero doctor                installation checks
 
 ## Where the numbers come from
 
-### Public Terminal-Bench mini-panel
+### Repeated Terminal-Bench replication
 
-The main comparison uses a sealed, deterministic 12-task sample from the corrected 89-task Terminal-Bench 2.1 package. Six configurations ran once per task through Harbor with isolated homes, mounted binaries, official verifiers, a 900-second agent cap, and no quality retries. Two synchronized provider failures were repeated under the preregistered invalid-run rule and reproduced in stock-only probes.
+The main comparison uses a sealed, deterministic 12-task sample from the 77 Terminal-Bench 2.1 tasks not used in the first panel. Codex, CodexZero Safe, and Codex + RTK each ran three times per task through Harbor with isolated homes, mounted binaries, official verifiers, a 900-second agent cap, and no quality retries.
 
-The report retains strict and scorable scores, per-task outcomes, input, cached input, uncached input, output, reasoning output, requests, cache-hit requests, assistant messages, tool calls, shell commands, agent time, API-equivalent cost, Codex credits, optimizer telemetry, confidence intervals, and artifact hashes.
+The report retains the official 36-outcome score, per-task stability, verifier subtests, Wilson and task-cluster intervals, paired tests, input, cached input, uncached input, output, reasoning output, requests, cache-hit requests, assistant messages, tool calls, shell commands, time, API-equivalent cost, Codex credits, optimizer telemetry, and artifact hashes.
 
-[Read the Terminal-Bench report](reports/terminal-bench-2.1-mini/README.md) · [Inspect the sealed design](reports/terminal-bench-2.1-mini/preregistration.json) · [Inspect normalized trials](reports/terminal-bench-2.1-mini/trials.json)
+[Read the repeated Terminal-Bench report](reports/terminal-bench-2.1-replication/README.md) · [Inspect the sealed design](reports/terminal-bench-2.1-replication/preregistration.json) · [Inspect normalized trials](reports/terminal-bench-2.1-replication/trials.json)
+
+### Earlier six-way mini-panel
+
+The earlier panel ran six configurations once per task and retained strict and scorable scores across 72 final cells. Its wider configuration coverage remains useful, but the repeated run above is the primary quality and efficiency comparison.
+
+[Read the earlier six-way report](reports/terminal-bench-2.1-mini/README.md)
 
 ### Controlled end-to-end benchmark
 
@@ -202,7 +211,7 @@ Observed tokens, model calls, cache counters, and rejected candidates stay separ
 
 ### How is this different from RTK?
 
-[RTK](https://github.com/rtk-ai/rtk) filters shell-command output with command-specific grouping, truncation, and deduplication. CodexZero works inside its Codex build, retains the original result, and rejects any compact view that is not smaller. RTK covers more commands; CodexZero uses a narrower reversible-by-default contract.
+[RTK](https://github.com/rtk-ai/rtk) filters shell-command output with command-specific grouping, truncation, and deduplication. CodexZero works inside its Codex build, retains the original result, and rejects any compact view that is not smaller. In the repeated run, RTK scored 32/36 but used 18.70% more provider tokens than Codex; its three-pass quality lead was not statistically conclusive (exact p = 0.25).
 
 ### How is this different from Headroom?
 

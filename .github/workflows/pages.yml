@@ -29,7 +29,8 @@ jobs:
           mkdir -p \
             _site/assets \
             _site/reports/deepswe-sol-high-10 \
-            _site/reports/terminal-bench-2.1-mini
+            _site/reports/terminal-bench-2.1-mini \
+            _site/reports/terminal-bench-2.1-replication
           cp index.html styles.css app.js _site/
           cp -R assets/. _site/assets/
           cp reports/fixture-payload-report.json _site/reports/
@@ -49,6 +50,17 @@ jobs:
             reports/terminal-bench-2.1-mini/PREREGISTRATION.sha256 \
             reports/terminal-bench-2.1-mini/run-manifest.json \
             _site/reports/terminal-bench-2.1-mini/
+          cp \
+            reports/terminal-bench-2.1-replication/README.md \
+            reports/terminal-bench-2.1-replication/summary.json \
+            reports/terminal-bench-2.1-replication/trials.json \
+            reports/terminal-bench-2.1-replication/attempts.json \
+            reports/terminal-bench-2.1-replication/preregistration.json \
+            reports/terminal-bench-2.1-replication/PREREGISTRATION.sha256 \
+            reports/terminal-bench-2.1-replication/infrastructure-addendum.json \
+            reports/terminal-bench-2.1-replication/INFRASTRUCTURE_ADDENDUM.sha256 \
+            reports/terminal-bench-2.1-replication/run-manifest.json \
+            _site/reports/terminal-bench-2.1-replication/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
