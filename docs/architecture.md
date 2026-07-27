@@ -6,14 +6,21 @@ CodexZero keeps policy, enforcement, and evidence separate.
 
 ### Patched core
 
-The Rust patch adds four default-off feature flags:
+The Rust patch adds five default-off feature flags:
 
 - `codex_zero_compact_exec_output`
 - `codex_zero_lossless_terminal_codec`
+- `codex_zero_command_aware_projection`
 - `codex_zero_exact_duplicate_results`
 - `codex_zero_event_driven_wait`
 
 The UI-facing command result remains unchanged. A separate model-facing candidate is created, counted with the exact production tokenizer, and selected only when smaller.
+
+### Scoped batching runtime
+
+Focused enables Codex's own code-mode-only runtime. The model initially sees the `exec` and `wait` entrypoints plus tools that Codex must keep direct. Full nested schemas stay inside the local runtime, and deferred tools are loaded through Codex tool search only when needed.
+
+One `exec` cell can compose several existing Codex tool handlers. Independent reads can run concurrently; dependent edits remain ordered by the JavaScript program. Every nested call still passes through the normal Codex router, approval policy, sandbox, hooks, cancellation, and UI events. CodexZero does not add a second shell or permission system.
 
 ### Event-driven process waiting
 
@@ -31,6 +38,12 @@ Raw command output is written before a compact payload can be selected. The stor
 - records original byte count and token count;
 - verifies any existing object before reuse;
 - fails closed if an object at the expected hash has different bytes.
+
+### Command-aware projections
+
+Successful test, build, check, and lint commands with at least 80 output lines can produce a deterministic diagnostic projection. It keeps the opening context, warning/error/pass summaries with adjacent locations, and the final output tail. Failed commands and unknown command families are never projected.
+
+The raw artifact is stored first. The projection competes with the plain and reversible line-RLE candidates under the exact tokenizer, so it is selected only when it is the smallest representation. Telemetry records the projection identifier and raw artifact hash.
 
 ### Duplicate-result cache
 
@@ -60,14 +73,16 @@ The monitor watches the telemetry directory for changes and atomically writes an
 
 ### Desktop launcher
 
-`codex-zero desktop` starts the installed signed app with its supported `CODEX_CLI_PATH` override pointing at the side-by-side core. `CODEX_APP_SERVER_FORCE_CLI=1` prevents an existing daemon from bypassing that path. A custom runtime environment switch injects the same default-off feature overrides used by the CLI launcher. In Max Savings mode it also passes the installed prompt path through `CODEX_ZERO_INSTRUCTIONS_FILE`. The command refuses to launch while an existing Desktop process is active because a single-instance handoff would keep the old process environment.
+`codex-zero desktop` starts the installed signed app with its supported `CODEX_CLI_PATH` override pointing at the side-by-side core. `CODEX_APP_SERVER_FORCE_CLI=1` prevents an existing daemon from bypassing that path. A custom runtime environment switch injects the same default-off feature overrides used by the CLI launcher. Focused passes `CODEX_ZERO_SCOPED_RUNTIME=1`; Standard, Max Savings, and Focused pass the installed prompt path through `CODEX_ZERO_INSTRUCTIONS_FILE`. The command refuses to launch while an existing Desktop process is active because a single-instance handoff would keep the old process environment.
 
 ### Optimization modes
 
-The installer records either `safe` or `max-save` in `~/.codex/codexzero/install.json`. New installs default to `safe`.
+The installer records `safe`, `standard`, `max-save`, or `focused` in `~/.codex/codexzero/install.json`. New installs default to `standard`.
 
-- `safe` is the default. It preserves Codex model instructions and activates only the patched result pipeline.
-- `max-save` is opt-in. It adds a per-launch `model_instructions_file` override.
+- `safe` preserves Codex model instructions and the direct tool surface while activating the patched result pipeline.
+- `standard` keeps the direct tool surface and adds a per-launch `model_instructions_file` override.
+- `max-save` preserves Standard's direct-tool, lean-prompt behavior as a legacy mode name.
+- `focused` adds the scoped batching runtime to the lean prompt's stopping and checkpoint guidance.
 
 The bundled prompt is copied under the CodexZero installation. User, global, and project instruction files are neither edited nor replaced. Existing `command-output` metadata normalizes to `safe`; existing `full-lean` metadata normalizes to `max-save`. `codex-zero mode` changes the recorded choice for new CodexZero tasks.
 
@@ -75,7 +90,8 @@ The bundled prompt is copied under the CodexZero installation. User, global, and
 
 | Layer | Responsibility |
 |---|---|
-| Optional lean prompt | Goals, scope, authorization, preservation, verification, concise progress updates, honest reporting |
+| Optional lean prompt | Goals, scope, authorization, preservation, verification budget, context handoff, concise progress updates, honest reporting |
+| Scoped code runtime | Small initial schema set, lazy nested tools, safe composition of existing handlers |
 | Codex harness | Tool execution, context, feature flags, exact selection, telemetry |
 | Artifact store | Byte-identical raw evidence |
 | Wrapper | Side-by-side launch, environment defaults, monitor, stock fallback |

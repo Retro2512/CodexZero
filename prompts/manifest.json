@@ -4,9 +4,9 @@
   "bundled_prompt": {
     "id": "codex-core-lean-v1",
     "path": "codex-core-lean-v1.md",
-    "tokens": 738,
-    "bytes": 4065,
-    "sha256": "662cd8a870cc720068cba44982a0d27d73ddb18dcedb0fe623c0300917185952",
+    "tokens": 874,
+    "bytes": 4860,
+    "sha256": "6fd9a0219d19299e06d68b99f758ac35dc76bd537cbf887daa0ccf9ecd1783d8",
     "keeps_concise_intermediary_updates": true
   },
   "references": [
@@ -15,9 +15,9 @@
       "scope": "model_instructions",
       "model": "gpt-5.6-sol",
       "baseline_tokens": 3552,
-      "lean_tokens": 738,
-      "tokens_removed_per_model_request": 2814,
-      "reduction_percent": 79.2,
+      "lean_tokens": 874,
+      "tokens_removed_per_model_request": 2678,
+      "reduction_percent": 75.4,
       "baseline_sha256": "cbefa6b0bede0e332d957fca70ccacf9f12f4c0ecdf81b819e5cbe1a3b16e265",
       "measured_on": "2026-07-24"
     },
@@ -26,18 +26,18 @@
       "scope": "model_instructions",
       "model": "gpt-5.5",
       "baseline_tokens": 4069,
-      "lean_tokens": 738,
-      "tokens_removed_per_model_request": 3331,
-      "reduction_percent": 81.9,
+      "lean_tokens": 874,
+      "tokens_removed_per_model_request": 3195,
+      "reduction_percent": 78.5,
       "measured_on": "2026-07-24"
     },
     {
       "id": "historical-combined-lineage-2026-07-22",
       "scope": "model_plus_global_instructions",
       "baseline_tokens": 5099,
-      "lean_tokens": 1004,
-      "tokens_removed_per_model_request": 4095,
-      "reduction_percent": 80.3,
+      "lean_tokens": 1140,
+      "tokens_removed_per_model_request": 3959,
+      "reduction_percent": 77.6,
       "measured_on": "2026-07-24",
       "note": "Lineage comparison only. CodexZero does not replace the user's global AGENTS.md."
     }
@@ -66,7 +66,7 @@
   },
   "notes": [
     "Prompt figures are exact tokenizer comparisons against dated snapshots, not production telemetry.",
-    "Safe is the install default and preserves model instructions. Max Savings changes only model_instructions_file and preserves global and project instructions.",
+    "Safe preserves model instructions. Standard, Max Savings, and Focused change only model_instructions_file and preserve global and project instructions.",
     "Prompt and tool-result reductions are reported separately because they measure different payload surfaces.",
     "Provider caching and plan accounting can change the practical effect; no request-limit conversion is claimed."
   ]

@@ -11,18 +11,25 @@ case "$MODE" in
   ask)
     if [ -r /dev/tty ] && [ -w /dev/tty ]; then
       printf '\nChoose a CodexZero mode:\n' > /dev/tty
-      printf '  1. Safe (default) - preserve Codex model instructions and compact eligible tool output\n' > /dev/tty
-      printf '  2. Max Savings - also use the bundled 738-token model prompt\n' > /dev/tty
-      printf 'Select 1 or 2 [1]: ' > /dev/tty
+      printf '  1. Standard (default) - use the lean prompt and direct Codex tools\n' > /dev/tty
+      printf '  2. Focused - Standard plus scoped batching for tool-heavy work\n' > /dev/tty
+      printf '  3. Safe - preserve the direct Codex tool surface and model instructions\n' > /dev/tty
+      printf 'Select 1, 2, or 3 [1]: ' > /dev/tty
       IFS= read -r SELECTION < /dev/tty || SELECTION=""
-      if [ "$SELECTION" = "2" ]; then MODE="max-save"; else MODE="safe"; fi
+      if [ "$SELECTION" = "2" ]; then
+        MODE="focused"
+      elif [ "$SELECTION" = "3" ]; then
+        MODE="safe"
+      else
+        MODE="standard"
+      fi
     else
-      MODE="safe"
-      printf 'No interactive terminal detected; using Safe mode.\n'
+      MODE="standard"
+      printf 'No interactive terminal detected; using Standard mode.\n'
     fi
     ;;
-  safe|max-save) ;;
-  *) echo "Install mode must be ask, safe, or max-save." >&2; exit 1 ;;
+  safe|standard|max-save|focused) ;;
+  *) echo "Install mode must be ask, safe, standard, max-save, or focused." >&2; exit 1 ;;
 esac
 CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
 INSTALL_ROOT="$CODEX_HOME/codexzero"
@@ -44,8 +51,8 @@ if [ ! -x "$CORE" ]; then
 fi
 BUNDLED_NODE="$PACKAGE_ROOT/runtime/node"
 LEAN_PROMPT_SOURCE="$PACKAGE_ROOT/prompts/codex-core-lean-v1.md"
-if [ "$MODE" = "max-save" ] && [ ! -f "$LEAN_PROMPT_SOURCE" ]; then
-  echo "The Max Savings prompt is missing from this package." >&2
+if { [ "$MODE" = "standard" ] || [ "$MODE" = "max-save" ] || [ "$MODE" = "focused" ]; } && [ ! -f "$LEAN_PROMPT_SOURCE" ]; then
+  echo "The selected mode requires a model prompt that is missing from this package." >&2
   exit 1
 fi
 if [ -x "$BUNDLED_NODE" ]; then
@@ -103,7 +110,7 @@ chmod +x "$CODEX_HOME/bin/codex-zero"
 
 INSTALL_METADATA="$INSTALL_ROOT/install.json"
 LEAN_PROMPT_PATH=""
-if [ "$MODE" = "max-save" ]; then
+if [ "$MODE" = "standard" ] || [ "$MODE" = "max-save" ] || [ "$MODE" = "focused" ]; then
   LEAN_PROMPT_PATH="$INSTALL_ROOT/prompts/codex-core-lean-v1.md"
 fi
 MODE="$MODE" BACKUP_ROOT="$BACKUP_ROOT" LEAN_PROMPT_PATH="$LEAN_PROMPT_PATH" \
@@ -111,7 +118,7 @@ MODE="$MODE" BACKUP_ROOT="$BACKUP_ROOT" LEAN_PROMPT_PATH="$LEAN_PROMPT_PATH" \
   "$NODE" -e '
     const fs = require("node:fs");
     fs.writeFileSync(process.env.INSTALL_METADATA, `${JSON.stringify({
-      schema: "codex-zero-install-v3",
+      schema: "codex-zero-install-v4",
       installed_at: process.env.INSTALLED_AT,
       backup_root: process.env.BACKUP_ROOT,
       mode: process.env.MODE,
@@ -129,4 +136,4 @@ MODE="$MODE" BACKUP_ROOT="$BACKUP_ROOT" LEAN_PROMPT_PATH="$LEAN_PROMPT_PATH" \
 printf '\nCodexZero installed.\n'
 printf 'Mode: %s\n' "$MODE"
 printf 'Add %s to PATH if needed.\n' "$CODEX_HOME/bin"
-printf 'Run: codex-zero run\nChange mode: codex-zero mode safe|max-save\nDesktop: codex-zero desktop\nSavings: codex-zero savings\nStock rollback: codex-zero stock\n'
+printf 'Run: codex-zero run\nChange mode: codex-zero mode safe|standard|max-save|focused\nDesktop: codex-zero desktop\nSavings: codex-zero savings\nStock rollback: codex-zero stock\n'

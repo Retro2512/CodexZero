@@ -2,7 +2,7 @@
 param(
     [string]$PackageRoot = (Split-Path -Parent $PSScriptRoot),
     [switch]$SkipMonitor,
-    [ValidateSet('ask', 'safe', 'max-save', 'command-output', 'full-lean')]
+    [ValidateSet('ask', 'safe', 'standard', 'max-save', 'focused', 'command-output', 'full-lean')]
     [string]$Mode = 'ask'
 )
 
@@ -12,15 +12,22 @@ if ($Mode -eq 'full-lean') { $Mode = 'max-save' }
 if ($Mode -eq 'ask') {
     Write-Host ''
     Write-Host 'Choose a CodexZero mode:'
-    Write-Host '  1. Safe (default) - preserve Codex model instructions and compact eligible tool output'
-    Write-Host '  2. Max Savings - also use the bundled 738-token model prompt'
+    Write-Host '  1. Standard (default) - use the lean prompt and direct Codex tools'
+    Write-Host '  2. Focused - Standard plus scoped batching for tool-heavy work'
+    Write-Host '  3. Safe - preserve the direct Codex tool surface and model instructions'
     try {
-        $selection = Read-Host 'Select 1 or 2 [1]'
+        $selection = Read-Host 'Select 1, 2, or 3 [1]'
     } catch [System.Management.Automation.PSInvalidOperationException] {
         $selection = ''
     }
     $selection = if ($null -eq $selection) { '' } else { $selection.Trim() }
-    $Mode = if ($selection -eq '2') { 'max-save' } else { 'safe' }
+    $Mode = if ($selection -eq '2') {
+        'focused'
+    } elseif ($selection -eq '3') {
+        'safe'
+    } else {
+        'standard'
+    }
 }
 $codexHome = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $HOME '.codex' }
 $installRoot = Join-Path $codexHome 'codexzero'
@@ -29,8 +36,8 @@ $backupRoot = Join-Path $codexHome "backups\codexzero-install-$timestamp"
 $sourceRoot = (Resolve-Path -LiteralPath $PackageRoot).Path
 $sourcePromptRoot = Join-Path $sourceRoot 'prompts'
 $sourceLeanPrompt = Join-Path $sourcePromptRoot 'codex-core-lean-v1.md'
-if ($Mode -eq 'max-save' -and -not (Test-Path -LiteralPath $sourceLeanPrompt)) {
-    throw 'The Max Savings prompt is missing from this package.'
+if ($Mode -in @('standard', 'max-save', 'focused') -and -not (Test-Path -LiteralPath $sourceLeanPrompt)) {
+    throw 'The selected mode requires a model prompt that is missing from this package.'
 }
 $existingShim = Join-Path $codexHome 'bin\codex-zero.cmd'
 $monitorPidPath = Join-Path $installRoot 'monitor.pid'
@@ -120,12 +127,12 @@ if ($parts -notcontains $shimRoot) {
 $env:Path = "$shimRoot;$env:Path"
 
 @{
-    schema = 'codex-zero-install-v3'
+    schema = 'codex-zero-install-v4'
     installed_at = (Get-Date).ToUniversalTime().ToString('o')
     package_root = $sourceRoot
     backup_root = $backupRoot
     mode = $Mode
-    lean_prompt = if ($Mode -eq 'max-save') {
+    lean_prompt = if ($Mode -in @('standard', 'max-save', 'focused')) {
         Join-Path $promptRoot 'codex-core-lean-v1.md'
     } else {
         $null
@@ -145,7 +152,7 @@ Write-Host ''
 Write-Host 'CodexZero installed.'
 Write-Host "Mode: $Mode"
 Write-Host 'Run: codex-zero run'
-Write-Host 'Change mode: codex-zero mode safe|max-save'
+Write-Host 'Change mode: codex-zero mode safe|standard|max-save|focused'
 Write-Host 'Desktop: codex-zero desktop'
 Write-Host 'Savings: codex-zero savings'
 Write-Host 'Stock rollback: codex-zero stock'

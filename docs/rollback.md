@@ -14,7 +14,7 @@ This launches the existing stock `codex` command. No files need to move.
 codex-zero mode safe
 ```
 
-New CodexZero tasks keep the guarded tool-result pipeline and stop applying the bundled lean prompt. Switch to the opt-in prompt with `codex-zero mode max-save`.
+New CodexZero tasks keep the guarded tool-result pipeline and stop applying the bundled lean prompt. Switch back with `codex-zero mode standard`.
 
 ## Disable individual optimizations
 
@@ -24,6 +24,7 @@ Edit `~/.codex/codexzero.config.toml`:
 [features]
 codex_zero_compact_exec_output = false
 codex_zero_lossless_terminal_codec = false
+codex_zero_command_aware_projection = false
 codex_zero_exact_duplicate_results = false
 codex_zero_event_driven_wait = false
 ```
