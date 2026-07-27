@@ -1,0 +1,65 @@
+{
+  "schema": "codex-zero-quick-max-benchmark-v1",
+  "date": "2026-07-26",
+  "model": "gpt-5.6-sol",
+  "reasoning_effort": "high",
+  "repetitions_per_cell": 1,
+  "weighted_proxy_formula": "(5 * uncached_input + 0.5 * cached_input + 30 * output) / 1000000",
+  "profiles": [
+    {
+      "id": "previous-codexzero-max",
+      "correct": true,
+      "wall_time_ms": 64177,
+      "input_tokens": 105046,
+      "cached_input_tokens": 82688,
+      "uncached_input_tokens": 22358,
+      "output_tokens": 1307,
+      "reasoning_tokens": 186,
+      "total_tokens": 106353,
+      "inference_requests": 6,
+      "model_visible_tool_calls": 5,
+      "weighted_proxy": 0.192344,
+      "stdout_sha256": "65fce2e80f1aafa8530487c13abb0165e75272472ca9af50d8f8a3c1fd0f2f8b"
+    },
+    {
+      "id": "new-codexzero-max",
+      "correct": true,
+      "wall_time_ms": 58394,
+      "input_tokens": 90064,
+      "cached_input_tokens": 68608,
+      "uncached_input_tokens": 21456,
+      "output_tokens": 1260,
+      "reasoning_tokens": 214,
+      "total_tokens": 91324,
+      "inference_requests": 5,
+      "model_visible_tool_calls": 4,
+      "weighted_proxy": 0.179384,
+      "stdout_sha256": "1c168f8506b2f7e160115d7c4fc3eac944335df0845384cddc38027acb674c56"
+    },
+    {
+      "id": "new-codexzero-focused",
+      "correct": true,
+      "wall_time_ms": 84386,
+      "input_tokens": 127601,
+      "cached_input_tokens": 104960,
+      "uncached_input_tokens": 22641,
+      "output_tokens": 1600,
+      "reasoning_tokens": 172,
+      "total_tokens": 129201,
+      "inference_requests": 7,
+      "model_visible_tool_calls": 6,
+      "weighted_proxy": 0.213685,
+      "stdout_sha256": "59496a2023f4470cfc4ff828a167dee7a1203efe32c1932fb4554aa69d7bf0b4"
+    }
+  ],
+  "verification": {
+    "visible_tests": "5/5 for every CodexZero profile",
+    "hidden_checks": "pass for every CodexZero profile",
+    "source_scope": "pass for every CodexZero profile"
+  },
+  "limitations": [
+    "One run per cell",
+    "Successful test output did not reach the 80-line command-projection gate",
+    "Runtime comparison used the same installed core binary; new core paths were verified by targeted Rust tests"
+  ]
+}

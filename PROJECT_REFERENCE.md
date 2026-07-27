@@ -317,27 +317,35 @@ The launcher applies the prompt only to CodexZero processes. It does not write
 global or project `AGENTS.md` files. Prompt benchmarks remain separate from
 measured tool-result telemetry.
 
-The original July 22 refactor measured 5,099 → 946 combined tokens (81.4%).
-Restoring concise intermediary updates adds 58 model-prompt tokens, so the
-recalculated lineage is 5,099 → 1,004 (80.3%). The active GPT-5.6-sol dated
-model-only comparison is 3,552 → 738 (79.2%). At 50 model requests per day,
-that 2,814-token difference projects to 4,221,000 tokens per 30 days and
-51,355,500 per year.
+### Phase 11 — Lean Standard and opt-in scoped batching
+
+A paired quick benchmark set the mode defaults:
+
+- `standard` uses the lean prompt and direct tools because it won the simple-task comparison;
+- `focused` adds the code-mode-only surface for tool-heavy work;
+- `safe` preserves stock model instructions and direct tools;
+- `max-save` remains a direct-tool lean-prompt compatibility name.
+
+Code mode supplies lazy nested schemas and JavaScript composition over the existing Codex handlers. Independent reads can run concurrently, while edits, approvals, sandboxing, hooks, and cancellation still use the normal router. A fifth payload feature can project long successful check output into a deterministic diagnostic summary after the raw artifact has been saved. Failed and unknown commands remain unprojected, and the exact tokenizer still rejects non-smaller candidates.
+
+The current lean prompt adds batching, stopping, and context-handoff guidance.
+Its GPT-5.6-sol dated model-only comparison is 3,552 → 874 (75.4%).
 
 ---
 
 ## 4. Feature flags and fallback behavior
 
-All four core optimizations are default-off in upstream-compatible source:
+All five core payload optimizations are default-off in upstream-compatible source:
 
 | Flag | Purpose | Flag-off behavior |
 |---|---|---|
 | `codex_zero_compact_exec_output` | Compact model-facing command JSON | Stock response text |
 | `codex_zero_lossless_terminal_codec` | Reversible terminal encoding | Raw stock output |
+| `codex_zero_command_aware_projection` | Artifact-backed successful-check projection | Full successful output |
 | `codex_zero_exact_duplicate_results` | Proven active-result references | Re-send complete result |
 | `codex_zero_event_driven_wait` | Keep empty process polls local | Stock polling timing |
 
-The CodexZero launcher opts into all four and `unified_exec`.
+The CodexZero launcher opts into all five and `unified_exec`. Focused also enables Codex's `code_mode` and `code_mode_only` runtime so the model starts with a small schema surface and composes the same permission-enforced handlers.
 
 Effective profile:
 
@@ -350,6 +358,7 @@ background_terminal_max_timeout = 3600000
 unified_exec = true
 codex_zero_compact_exec_output = true
 codex_zero_lossless_terminal_codec = true
+codex_zero_command_aware_projection = true
 codex_zero_exact_duplicate_results = true
 codex_zero_event_driven_wait = true
 ```
@@ -423,7 +432,8 @@ Default paths are relative to `CODEX_HOME`, normally `~/.codex`:
 | `CODEX_STOCK_BINARY` | Override stock CLI path |
 | `CODEX_ZERO_DESKTOP_BINARY` | Override Desktop executable path |
 | `CODEX_ZERO_RUNTIME_OVERRIDES=1` | Enable guarded core flags for Desktop runtime |
-| `CODEX_ZERO_INSTRUCTIONS_FILE` | Optional Max Savings prompt path for the side-by-side core |
+| `CODEX_ZERO_INSTRUCTIONS_FILE` | Optional lean prompt path for the side-by-side core |
+| `CODEX_ZERO_SCOPED_RUNTIME=1` | Enable the Focused code-mode-only surface |
 | `CODEX_ZERO_INSTALL_MODE` | Non-interactive installer mode selection |
 | `CODEX_CLI_PATH` | Supported Desktop side-by-side CLI override |
 | `CODEX_APP_SERVER_FORCE_CLI=1` | Force a fresh CLI-backed Desktop app server |
@@ -435,9 +445,10 @@ Default paths are relative to `CODEX_HOME`, normally `~/.codex`:
 ### `codex-zero run [codex arguments]`
 
 Runs the patched side-by-side CLI with the CodexZero profile, unified exec, all
-four feature flags, local artifact paths, telemetry path, and plain-terminal
-environment. In Max Savings mode it also passes the installed
-`model_instructions_file`. Additional arguments are forwarded to Codex.
+five feature flags, local artifact paths, telemetry path, and plain-terminal
+environment. Lean-prompt modes also pass the installed
+`model_instructions_file`; Focused enables the scoped runtime. Additional
+arguments are forwarded to Codex.
 
 Examples:
 
@@ -487,10 +498,11 @@ Reads the local telemetry stream and reports cumulative measured values:
 
 `--json` emits the `codex-zero-savings-v1` structure.
 
-In Max Savings mode the command includes a separate `promptBenchmark` block based
-on the dated prompt manifest. It is not added to observed tool-result totals.
+In Standard, Max Savings, and Focused modes the command includes a separate
+`promptBenchmark` block based on the dated prompt manifest. It is not added to
+observed tool-result totals.
 
-### `codex-zero mode [safe|max-save]`
+### `codex-zero mode [safe|standard|max-save|focused]`
 
 Shows or changes the optimization mode recorded in
 `~/.codex/codexzero/install.json`. Changes apply to new CodexZero tasks and do
@@ -549,8 +561,8 @@ The bootstrap:
 5. extracts to a temporary directory;
 6. runs `scripts/install.ps1`.
 
-The installer asks whether to use Safe or Max Savings mode, with
-Safe selected by default, then
+The installer asks whether to use Standard, Focused, or Safe mode, with
+Standard selected by default, then
 stops an existing recorded monitor, waits up to 15 seconds for
 its process to release the bundled Node runtime, backs up the prior
 installation and configs, installs the release, adds `~/.codex/bin` to the
@@ -568,7 +580,7 @@ The bootstrap selects the Intel or ARM archive from `uname -m`, downloads the
 archive and checksum, verifies with SHA-256, extracts it, and runs
 `scripts/install.sh`.
 
-The installer asks for the same choice with Safe as the default, then stops and waits for an existing monitor before replacing the
+The installer asks for the same choice with Standard as the default, then stops and waits for an existing monitor before replacing the
 runtime, creates a backup, installs the platform core and bundled Node runtime,
 creates `~/.codex/bin/codex-zero`, validates the core, runs `doctor`, and
 restarts the monitor.
@@ -708,8 +720,9 @@ scenarios into guaranteed requests, dollars, rate-limit capacity, or latency.
 
 ### Prompt choice and capability preservation
 
-Safe mode preserves the existing model prompt. Max Savings mode applies
-the bundled model prompt only to CodexZero launches. Both modes preserve:
+Safe mode preserves the existing model prompt. Standard, Max Savings, and
+Focused apply the bundled model prompt only to CodexZero launches. All modes
+preserve:
 
 - global and project instructions;
 - model routing;
@@ -725,7 +738,7 @@ the bundled model prompt only to CodexZero launches. Both modes preserve:
 - review capability.
 
 Regression tests verify that mode switching changes installation metadata only,
-that Max Savings requires the installed bundled prompt, and that user instruction
+that lean-prompt modes require the installed bundle, and that user instruction
 files are not written.
 
 ### Public versus private evidence

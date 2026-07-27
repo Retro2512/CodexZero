@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0
+
+- Made the direct-tool, lean-prompt profile the Standard default after it won the paired simple-task benchmark.
+- Added Focused mode with a small initial tool surface and local batching through Codex's existing code-mode router.
+- Added exact-gated, artifact-backed projections for long successful test, build, check, and lint output.
+- Kept Safe as the stock-prompt rollback and Max Savings as a compatibility name for the direct lean profile.
+
 ## 0.3.0
 
 - Replaced the old mode names with **Safe** and **Max Savings**.

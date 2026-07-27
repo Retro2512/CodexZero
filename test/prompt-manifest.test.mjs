@@ -18,7 +18,7 @@ test("prompt manifest matches the bundled file and keeps progress updates", asyn
     createHash("sha256").update(prompt).digest("hex"),
     manifest.bundled_prompt.sha256
   );
-  assert.equal(manifest.bundled_prompt.tokens, 738);
+  assert.equal(manifest.bundled_prompt.tokens, 874);
   assert.equal(manifest.bundled_prompt.keeps_concise_intermediary_updates, true);
   assert.match(prompt.toString("utf8"), /^## Intermediary updates$/mu);
 });
