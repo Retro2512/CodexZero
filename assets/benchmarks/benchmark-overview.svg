@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
   <title id="title">Measured stats across Terminal-Bench and DeepSWE</title>
-  <desc id="desc">CodexZero Max recorded 31 percent fewer tokens, CodexZero 15 percent fewer, RTK 8 percent fewer, standard Codex is the zero percent baseline, Caveman used 2 percent more, and RTK plus Caveman used 13 percent more.</desc>
+  <desc id="desc">CodexZero Max recorded 40 percent fewer tokens, CodexZero Safe 26 percent fewer, RTK 8 percent fewer, standard Codex is the zero percent baseline, Caveman used 2 percent more, and RTK plus Caveman used 13 percent more.</desc>
 
   <rect width="1200" height="700" fill="#171713"/>
 
@@ -24,19 +24,19 @@
   <text x="72" y="238" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="800">CodexZero Max</text>
   <rect x="530" y="220" width="450" height="22" fill="#aeea16"/>
   <rect x="975" y="226" width="10" height="10" fill="#fffef8"/>
-  <text x="1124" y="238" fill="#c9ff36" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="800" text-anchor="end">31% fewer</text>
+  <text x="1124" y="238" fill="#c9ff36" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="800" text-anchor="end">40% fewer</text>
 
   <rect x="54" y="266" width="1092" height="58" fill="#24201d"/>
   <rect x="54" y="266" width="6" height="58" fill="#d94f35"/>
-  <text x="72" y="302" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="800">CodexZero</text>
-  <rect x="530" y="284" width="210" height="22" fill="#d94f35"/>
-  <rect x="735" y="290" width="10" height="10" fill="#fffef8"/>
-  <text x="1124" y="302" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="800" text-anchor="end">15% fewer</text>
+  <text x="72" y="302" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="800">CodexZero Safe</text>
+  <rect x="530" y="284" width="293" height="22" fill="#d94f35"/>
+  <rect x="818" y="290" width="10" height="10" fill="#fffef8"/>
+  <text x="1124" y="302" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="800" text-anchor="end">26% fewer</text>
 
   <line x1="72" y1="330" x2="1128" y2="330" stroke="#3d3d36"/>
   <text x="72" y="366" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">RTK</text>
-  <rect x="530" y="348" width="115" height="20" fill="#9b85ed"/>
-  <rect x="641" y="354" width="8" height="8" fill="#fffef8"/>
+  <rect x="530" y="348" width="90" height="20" fill="#9b85ed"/>
+  <rect x="616" y="354" width="8" height="8" fill="#fffef8"/>
   <text x="1124" y="366" fill="#bba8ff" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="700" text-anchor="end">8% fewer</text>
 
   <rect x="54" y="394" width="1092" height="58" fill="#fffef8"/>
@@ -47,14 +47,14 @@
 
   <line x1="72" y1="458" x2="1128" y2="458" stroke="#3d3d36"/>
   <text x="72" y="494" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">Caveman</text>
-  <rect x="502" y="476" width="28" height="20" fill="#77766f"/>
-  <rect x="498" y="482" width="8" height="8" fill="#fffef8"/>
+  <rect x="507" y="476" width="23" height="20" fill="#77766f"/>
+  <rect x="503" y="482" width="8" height="8" fill="#fffef8"/>
   <text x="1124" y="494" fill="#aaa99f" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="700" text-anchor="end">2% more</text>
 
   <line x1="72" y1="522" x2="1128" y2="522" stroke="#3d3d36"/>
   <text x="72" y="558" fill="#fffef8" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">RTK + Caveman</text>
-  <rect x="336" y="540" width="194" height="20" fill="#77766f"/>
-  <rect x="332" y="546" width="8" height="8" fill="#fffef8"/>
+  <rect x="384" y="540" width="146" height="20" fill="#77766f"/>
+  <rect x="380" y="546" width="8" height="8" fill="#fffef8"/>
   <text x="1124" y="558" fill="#aaa99f" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="700" text-anchor="end">13% more</text>
 
   <text x="336" y="610" fill="#8f8e85" font-family="Arial, Helvetica, sans-serif" font-size="11" text-anchor="middle">MORE TOKENS</text>

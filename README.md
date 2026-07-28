@@ -64,6 +64,12 @@ Codex and CodexZero each completed 12 software tasks three times. CodexZero matc
 
 [Benchmark summary](reports/terminal-bench-2.1-replication/README.md)
 
+## Complete comparison
+
+![Comparison of token use, task result, cached input, and estimated cost across CodexZero and other Codex setups](assets/benchmarks/complete-setup-comparison.png)
+
+CodexZero Standard and Max Savings both completed the comparison with fewer tokens than stock Codex. The chart marks failed runs, different setups, and smaller samples directly.
+
 ## How it works
 
 CodexZero keeps the original command result available, removes repeated text when that produces a smaller result, and otherwise leaves the result alone.
@@ -77,17 +83,19 @@ Your model, reasoning level, tools, project instructions, permissions, and exist
 
 ## Settings
 
-**Standard** is the default and keeps Codex’s normal model instructions. This is the setting used for the repeated 15% result.
+**Standard** is the default. It uses the bundled lean prompt with Codex’s direct tool surface. This is the fastest and lowest-cost profile in the paired quick benchmark.
 
 ```text
-codex-zero mode safe
+codex-zero mode standard
 ```
 
-**Max Savings** uses a leaner setup for repeatable work. Switch back whenever you want.
+**Focused** adds a scoped runtime that can batch independent tool calls. Use it for tool-heavy work; the extra runtime layer can cost more on small tasks.
 
 ```text
-codex-zero mode max-save
+codex-zero mode focused
 ```
+
+`safe` preserves the direct Codex tool surface and stock model instructions. `max-save` is the legacy name for Standard’s direct-tool, lean-prompt behavior. The published repeated 15% result predates these modes.
 
 ## Compatibility
 

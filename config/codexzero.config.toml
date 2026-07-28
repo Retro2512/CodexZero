@@ -6,5 +6,11 @@ background_terminal_max_timeout = 3600000
 unified_exec = true
 codex_zero_compact_exec_output = true
 codex_zero_lossless_terminal_codec = true
+codex_zero_command_aware_projection = true
 codex_zero_exact_duplicate_results = true
 codex_zero_event_driven_wait = true
+
+# Focused mode adds these at launch. It keeps only the code-mode entrypoints
+# model-visible while the same Codex tool handlers enforce calls.
+# code_mode = true
+# code_mode_only = true

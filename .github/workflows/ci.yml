@@ -29,6 +29,6 @@ jobs:
       - name: Verify patch applies to its pinned Codex tag
         shell: bash
         run: |
-          git clone --depth 1 --branch rust-v0.145.0-alpha.30 \
+          git -c core.autocrlf=false clone --depth 1 --branch rust-v0.145.0-alpha.30 \
             https://github.com/openai/codex.git upstream
           git -C upstream apply --check ../patches/codex-rust-v0.145.0-alpha.30.patch

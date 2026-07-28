@@ -1,5 +1,5 @@
 diff --git a/MODULE.bazel.lock b/MODULE.bazel.lock
-index 6c1dd057d22e089aed612d07431f2b9407db6453..f071642b5d62a470608dec2d5413fb0a640f7fdd 100644
+index 6c1dd05..f071642 100644
 --- a/MODULE.bazel.lock
 +++ b/MODULE.bazel.lock
 @@ -910,6 +910,7 @@
@@ -19,7 +19,7 @@ index 6c1dd057d22e089aed612d07431f2b9407db6453..f071642b5d62a470608dec2d5413fb0a
        "time-macros_0.2.27": "{\"dependencies\":[{\"name\":\"num-conv\",\"req\":\"^0.2.0\"},{\"name\":\"time-core\",\"req\":\"=0.1.8\"}],\"features\":{\"formatting\":[],\"large-dates\":[],\"parsing\":[],\"serde\":[]}}",
        "time_0.3.47": "{\"dependencies\":[{\"default_features\":false,\"kind\":\"dev\",\"name\":\"criterion\",\"req\":\"^0.8.1\",\"target\":\"cfg(bench)\"},{\"features\":[\"powerfmt\"],\"name\":\"deranged\",\"req\":\"^0.5.2\"},{\"name\":\"itoa\",\"optional\":true,\"req\":\"^1.0.1\"},{\"name\":\"js-sys\",\"optional\":true,\"req\":\"^0.3.58\",\"target\":\"cfg(all(target_family = \\\"wasm\\\", not(any(target_os = \\\"emscripten\\\", target_os = \\\"wasi\\\"))))\"},{\"name\":\"libc\",\"optional\":true,\"req\":\"^0.2.98\",\"target\":\"cfg(target_family = \\\"unix\\\")\"},{\"name\":\"num-conv\",\"req\":\"^0.2.0\"},{\"kind\":\"dev\",\"name\":\"num-conv\",\"req\":\"^0.2.0\"},{\"name\":\"num_threads\",\"optional\":true,\"req\":\"^0.1.2\",\"target\":\"cfg(target_family = \\\"unix\\\")\"},{\"default_features\":false,\"name\":\"powerfmt\",\"req\":\"^0.2.0\"},{\"default_features\":false,\"name\":\"quickcheck\",\"optional\":true,\"req\":\"^1.0.3\"},{\"kind\":\"dev\",\"name\":\"quickcheck_macros\",\"req\":\"^1.0.0\"},{\"default_features\":false,\"name\":\"rand08\",\"optional\":true,\"package\":\"rand\",\"req\":\"^0.8.4\"},{\"default_features\":false,\"kind\":\"dev\",\"name\":\"rand08\",\"package\":\"rand\",\"req\":\"^0.8.4\"},{\"default_features\":false,\"name\":\"rand09\",\"optional\":true,\"package\":\"rand\",\"req\":\"^0.9.2\"},{\"default_features\":false,\"features\":[\"small_rng\"],\"kind\":\"dev\",\"name\":\"rand09\",\"package\":\"rand\",\"req\":\"^0.9.2\"},{\"default_features\":false,\"kind\":\"dev\",\"name\":\"rstest\",\"req\":\"^0.26.1\"},{\"kind\":\"dev\",\"name\":\"rstest_reuse\",\"req\":\"^0.7.0\"},{\"default_features\":false,\"features\":[\"derive\"],\"kind\":\"dev\",\"name\":\"serde\",\"req\":\"^1.0.184\"},{\"default_features\":false,\"name\":\"serde_core\",\"optional\":true,\"req\":\"^1.0.220\"},{\"kind\":\"dev\",\"name\":\"serde_json\",\"req\":\"^1.0.68\"},{\"kind\":\"dev\",\"name\":\"serde_test\",\"req\":\"^1.0.126\"},{\"name\":\"time-core\",\"req\":\"=0.1.8\"},{\"name\":\"time-macros\",\"optional\":true,\"req\":\"=0.2.27\"},{\"kind\":\"dev\",\"name\":\"time-macros\",\"req\":\"=0.2.27\"},{\"kind\":\"dev\",\"name\":\"trybuild\",\"req\":\"^1.0.102\",\"target\":\"cfg(__ui_tests)\"}],\"features\":{\"alloc\":[\"serde_core?/alloc\"],\"default\":[\"std\"],\"formatting\":[\"dep:itoa\",\"std\",\"time-macros?/formatting\"],\"large-dates\":[\"time-core/large-dates\",\"time-macros?/large-dates\"],\"local-offset\":[\"std\",\"dep:libc\",\"dep:num_threads\"],\"macros\":[\"dep:time-macros\"],\"parsing\":[\"time-macros?/parsing\"],\"quickcheck\":[\"dep:quickcheck\",\"alloc\",\"deranged/quickcheck\"],\"rand\":[\"rand08\",\"rand09\"],\"rand08\":[\"dep:rand08\",\"deranged/rand08\"],\"rand09\":[\"dep:rand09\",\"deranged/rand09\"],\"serde\":[\"dep:serde_core\",\"time-macros?/serde\",\"deranged/serde\"],\"serde-human-readable\":[\"serde\",\"formatting\",\"parsing\"],\"serde-well-known\":[\"serde\",\"formatting\",\"parsing\"],\"std\":[\"alloc\"],\"wasm-bindgen\":[\"dep:js-sys\"]}}",
 diff --git a/codex-rs/Cargo.lock b/codex-rs/Cargo.lock
-index c43d29ce3c49c3302cd5193f661dd3ec0b4ab587..06f1c6f63c45554fc83deb88774742b5dc7338c0 100644
+index c43d29c..06f1c6f 100644
 --- a/codex-rs/Cargo.lock
 +++ b/codex-rs/Cargo.lock
 @@ -394,7 +394,7 @@ checksum = "7f202df86484c868dbad7eaa557ef785d5c66295e41b460ef922eca0723b842c"
@@ -1254,7 +1254,7 @@ index c43d29ce3c49c3302cd5193f661dd3ec0b4ab587..06f1c6f63c45554fc83deb88774742b5
  name = "time"
  version = "0.3.47"
 diff --git a/codex-rs/Cargo.toml b/codex-rs/Cargo.toml
-index fda1df940f65cfaf57c705688837ed18ed02fde5..10d4b1c09529011876b9fc0daf139f96ab8374a4 100644
+index fda1df9..10d4b1c 100644
 --- a/codex-rs/Cargo.toml
 +++ b/codex-rs/Cargo.toml
 @@ -23,6 +23,7 @@ members = [
@@ -1282,10 +1282,10 @@ index fda1df940f65cfaf57c705688837ed18ed02fde5..10d4b1c09529011876b9fc0daf139f96
  similar = "2.7.0"
  socket2 = "0.6.1"
 diff --git a/codex-rs/cli/src/main.rs b/codex-rs/cli/src/main.rs
-index 04d59c24abf40dcac432b9370a77f99fb8d2de46..6bd6591e8af5c20e7bbc482eba35b2d1d2972b28 100644
+index 04d59c2..199b0e6 100644
 --- a/codex-rs/cli/src/main.rs
 +++ b/codex-rs/cli/src/main.rs
-@@ -973,6 +973,13 @@ async fn cli_main(
+@@ -973,6 +973,14 @@ async fn cli_main(
          subcommand,
      } = MultitoolCli::parse();
  
@@ -1294,18 +1294,20 @@ index 04d59c24abf40dcac432b9370a77f99fb8d2de46..6bd6591e8af5c20e7bbc482eba35b2d1
 +        .extend(codex_zero_runtime_overrides(
 +            std::env::var_os("CODEX_ZERO_RUNTIME_OVERRIDES").as_deref(),
 +            std::env::var_os("CODEX_ZERO_INSTRUCTIONS_FILE").as_deref(),
++            std::env::var_os("CODEX_ZERO_SCOPED_RUNTIME").as_deref(),
 +        ));
 +
      // Fold --enable/--disable into config overrides so they flow to all subcommands.
      let toggle_overrides = feature_toggles.to_overrides()?;
      root_config_overrides.raw_overrides.extend(toggle_overrides);
-@@ -1647,6 +1654,35 @@ async fn cli_main(
+@@ -1647,6 +1655,43 @@ async fn cli_main(
      Ok(())
  }
  
 +fn codex_zero_runtime_overrides(
 +    value: Option<&std::ffi::OsStr>,
 +    instructions_file: Option<&std::ffi::OsStr>,
++    scoped_runtime: Option<&std::ffi::OsStr>,
 +) -> Vec<String> {
 +    if value != Some(std::ffi::OsStr::new("1")) {
 +        return Vec::new();
@@ -1318,12 +1320,19 @@ index 04d59c24abf40dcac432b9370a77f99fb8d2de46..6bd6591e8af5c20e7bbc482eba35b2d1
 +        "features.unified_exec=true",
 +        "features.codex_zero_compact_exec_output=true",
 +        "features.codex_zero_lossless_terminal_codec=true",
++        "features.codex_zero_command_aware_projection=true",
 +        "features.codex_zero_exact_duplicate_results=true",
 +        "features.codex_zero_event_driven_wait=true",
 +    ]
 +    .into_iter()
 +    .map(str::to_owned)
 +    .collect::<Vec<_>>();
++    if scoped_runtime == Some(std::ffi::OsStr::new("1")) {
++        overrides.extend([
++            "features.code_mode=true".to_string(),
++            "features.code_mode_only=true".to_string(),
++        ]);
++    }
 +    if let Some(instructions_file) = instructions_file.filter(|value| !value.is_empty())
 +        && let Ok(value) = serde_json::to_string(&instructions_file.to_string_lossy())
 +    {
@@ -1335,17 +1344,18 @@ index 04d59c24abf40dcac432b9370a77f99fb8d2de46..6bd6591e8af5c20e7bbc482eba35b2d1
  fn profile_v2_for_subcommand<'a>(
      interactive: &'a TuiCli,
      subcommand: &Subcommand,
-@@ -4074,6 +4110,47 @@ mod tests {
+@@ -4074,6 +4119,61 @@ mod tests {
          );
      }
  
 +    #[test]
 +    fn codex_zero_runtime_overrides_are_opt_in() {
-+        assert!(codex_zero_runtime_overrides(None, None).is_empty());
++        assert!(codex_zero_runtime_overrides(None, None, None).is_empty());
 +        assert!(
 +            codex_zero_runtime_overrides(
 +                Some(std::ffi::OsStr::new("0")),
-+                Some(std::ffi::OsStr::new("/tmp/lean.md"))
++                Some(std::ffi::OsStr::new("/tmp/lean.md")),
++                Some(std::ffi::OsStr::new("1"))
 +            )
 +            .is_empty()
 +        );
@@ -1354,7 +1364,7 @@ index 04d59c24abf40dcac432b9370a77f99fb8d2de46..6bd6591e8af5c20e7bbc482eba35b2d1
 +    #[test]
 +    fn codex_zero_runtime_overrides_enable_every_guarded_feature() {
 +        assert_eq!(
-+            codex_zero_runtime_overrides(Some(std::ffi::OsStr::new("1")), None),
++            codex_zero_runtime_overrides(Some(std::ffi::OsStr::new("1")), None, None),
 +            vec![
 +                "model_reasoning_effort=\"high\"",
 +                "model_reasoning_summary=\"none\"",
@@ -1362,6 +1372,7 @@ index 04d59c24abf40dcac432b9370a77f99fb8d2de46..6bd6591e8af5c20e7bbc482eba35b2d1
 +                "features.unified_exec=true",
 +                "features.codex_zero_compact_exec_output=true",
 +                "features.codex_zero_lossless_terminal_codec=true",
++                "features.codex_zero_command_aware_projection=true",
 +                "features.codex_zero_exact_duplicate_results=true",
 +                "features.codex_zero_event_driven_wait=true",
 +            ]
@@ -1373,6 +1384,7 @@ index 04d59c24abf40dcac432b9370a77f99fb8d2de46..6bd6591e8af5c20e7bbc482eba35b2d1
 +        let overrides = codex_zero_runtime_overrides(
 +            Some(std::ffi::OsStr::new("1")),
 +            Some(std::ffi::OsStr::new("/tmp/codex zero/lean.md")),
++            None,
 +        );
 +        assert_eq!(
 +            overrides.last().map(String::as_str),
@@ -1380,12 +1392,23 @@ index 04d59c24abf40dcac432b9370a77f99fb8d2de46..6bd6591e8af5c20e7bbc482eba35b2d1
 +        );
 +    }
 +
++    #[test]
++    fn codex_zero_runtime_overrides_include_optional_scoped_runtime() {
++        let overrides = codex_zero_runtime_overrides(
++            Some(std::ffi::OsStr::new("1")),
++            None,
++            Some(std::ffi::OsStr::new("1")),
++        );
++        assert!(overrides.contains(&"features.code_mode=true".to_string()));
++        assert!(overrides.contains(&"features.code_mode_only=true".to_string()));
++    }
++
      fn strict_config_feature_toggle_error(args: &[&str]) -> anyhow::Error {
          let cli_args = std::iter::once("codex")
              .chain(std::iter::once("--strict-config"))
 diff --git a/codex-rs/codex-zero-codec/Cargo.toml b/codex-rs/codex-zero-codec/Cargo.toml
 new file mode 100644
-index 0000000000000000000000000000000000000000..18b6cc2c9766fdd5c5563233f5909c866625fd7a
+index 0000000..18b6cc2
 --- /dev/null
 +++ b/codex-rs/codex-zero-codec/Cargo.toml
 @@ -0,0 +1,23 @@
@@ -1414,10 +1437,10 @@ index 0000000000000000000000000000000000000000..18b6cc2c9766fdd5c5563233f5909c86
 +tempfile = { workspace = true }
 diff --git a/codex-rs/codex-zero-codec/src/lib.rs b/codex-rs/codex-zero-codec/src/lib.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..94b8fe639c0c2de951203e4207ac07e434afe8ba
+index 0000000..046cd2d
 --- /dev/null
 +++ b/codex-rs/codex-zero-codec/src/lib.rs
-@@ -0,0 +1,336 @@
+@@ -0,0 +1,508 @@
 +use anyhow::Context;
 +use anyhow::Result;
 +use serde::Deserialize;
@@ -1434,6 +1457,10 @@ index 0000000000000000000000000000000000000000..94b8fe639c0c2de951203e4207ac07e4
 +use tiktoken_rs::o200k_base_singleton;
 +
 +const RLE_CODEC: &str = "line-rle-v1";
++const SUCCESSFUL_CHECK_PROJECTION: &str = "successful-check-v1";
++const MIN_PROJECTION_LINES: usize = 80;
++const PROJECTION_TAIL_LINES: usize = 24;
++const MAX_DIAGNOSTIC_LINES: usize = 56;
 +static NEXT_TEMP_ID: AtomicU64 = AtomicU64::new(0);
 +
 +#[derive(Debug, Clone, PartialEq, Eq)]
@@ -1455,6 +1482,8 @@ index 0000000000000000000000000000000000000000..94b8fe639c0c2de951203e4207ac07e4
 +pub struct TerminalEncoding {
 +    pub text: String,
 +    pub codec: Option<&'static str>,
++    pub projection: Option<&'static str>,
++    pub original_line_count: Option<usize>,
 +    pub presentation_changed: bool,
 +}
 +
@@ -1599,6 +1628,8 @@ index 0000000000000000000000000000000000000000..94b8fe639c0c2de951203e4207ac07e4
 +        return TerminalEncoding {
 +            text: rle_text,
 +            codec: Some(RLE_CODEC),
++            projection: None,
++            original_line_count: None,
 +            presentation_changed,
 +        };
 +    }
@@ -1606,11 +1637,43 @@ index 0000000000000000000000000000000000000000..94b8fe639c0c2de951203e4207ac07e4
 +    TerminalEncoding {
 +        text: normalized,
 +        codec: None,
++        projection: None,
++        original_line_count: None,
 +        presentation_changed,
 +    }
 +}
 +
++pub fn encode_command_output(
++    raw: &[u8],
++    command: Option<&str>,
++    exit_code: Option<i32>,
++) -> TerminalEncoding {
++    let encoded = encode_terminal(raw);
++    let Some(command) = command else {
++        return encoded;
++    };
++    let Some((projection, original_line_count)) =
++        project_successful_check(&String::from_utf8_lossy(raw), command, exit_code)
++    else {
++        return encoded;
++    };
++    if token_count(&projection) >= token_count(&encoded.text) {
++        return encoded;
++    }
++
++    TerminalEncoding {
++        text: projection,
++        codec: None,
++        projection: Some(SUCCESSFUL_CHECK_PROJECTION),
++        original_line_count: Some(original_line_count),
++        presentation_changed: encoded.presentation_changed,
++    }
++}
++
 +pub fn decode_terminal(encoded: &TerminalEncoding) -> Result<String> {
++    if let Some(projection) = encoded.projection {
++        anyhow::bail!("{projection} is a model projection; read the raw artifact for exact output");
++    }
 +    match encoded.codec {
 +        Some(RLE_CODEC) => {
 +            let rle: LineRle =
@@ -1626,6 +1689,138 @@ index 0000000000000000000000000000000000000000..94b8fe639c0c2de951203e4207ac07e4
 +        Some(codec) => anyhow::bail!("unsupported terminal codec {codec}"),
 +        None => Ok(encoded.text.clone()),
 +    }
++}
++
++fn project_successful_check(
++    output: &str,
++    command: &str,
++    exit_code: Option<i32>,
++) -> Option<(String, usize)> {
++    if exit_code != Some(0) || !is_check_command(command) {
++        return None;
++    }
++    let normalized = normalize_line_endings_if_smaller(&strip_presentation_ansi(output));
++    let lines = normalized.lines().collect::<Vec<_>>();
++    if lines.len() < MIN_PROJECTION_LINES {
++        return None;
++    }
++
++    let mut selected = vec![false; lines.len()];
++    for selected_line in selected.iter_mut().take(lines.len().min(3)) {
++        *selected_line = true;
++    }
++    let mut diagnostic_count = 0;
++    for (index, line) in lines.iter().enumerate() {
++        if diagnostic_count >= MAX_DIAGNOSTIC_LINES || !is_diagnostic_line(line) {
++            continue;
++        }
++        for selected_line in selected
++            .iter_mut()
++            .take((index + 1).min(lines.len() - 1) + 1)
++            .skip(index.saturating_sub(1))
++        {
++            if !*selected_line {
++                *selected_line = true;
++                diagnostic_count += 1;
++            }
++        }
++    }
++    for selected_line in selected
++        .iter_mut()
++        .skip(lines.len().saturating_sub(PROJECTION_TAIL_LINES))
++    {
++        *selected_line = true;
++    }
++
++    let mut projected = format!(
++        "Successful check output projected from {} lines; full output is in the attached artifact.\n",
++        lines.len()
++    );
++    let mut previous_index = None;
++    let mut previous_line = None;
++    let mut repeat_count = 0;
++    for (index, line) in lines.iter().copied().enumerate() {
++        if !selected[index] {
++            continue;
++        }
++        if previous_index.is_some_and(|previous| index > previous + 1) {
++            flush_projected_line(&mut projected, previous_line.take(), repeat_count);
++            repeat_count = 0;
++            projected.push_str("[...]\n");
++        }
++        if previous_line == Some(line) {
++            repeat_count += 1;
++        } else {
++            flush_projected_line(&mut projected, previous_line.replace(line), repeat_count);
++            repeat_count = 1;
++        }
++        previous_index = Some(index);
++    }
++    flush_projected_line(&mut projected, previous_line, repeat_count);
++    Some((projected, lines.len()))
++}
++
++fn flush_projected_line(output: &mut String, line: Option<&str>, count: usize) {
++    let Some(line) = line else {
++        return;
++    };
++    output.push_str(line);
++    if count > 1 {
++        output.push_str(&format!(" [repeated {count} times]"));
++    }
++    output.push('\n');
++}
++
++fn is_check_command(command: &str) -> bool {
++    let command = command.to_ascii_lowercase();
++    [
++        "cargo test",
++        "cargo check",
++        "cargo clippy",
++        "npm test",
++        "npm run test",
++        "npm run build",
++        "npm run check",
++        "npm run lint",
++        "pnpm test",
++        "pnpm run test",
++        "pnpm run build",
++        "pnpm run check",
++        "pnpm run lint",
++        "yarn test",
++        "yarn build",
++        "yarn lint",
++        "node --test",
++        "pytest",
++        "python -m pytest",
++        "go test",
++        "dotnet test",
++        "gradle test",
++        "gradlew test",
++        "mvn test",
++        "mvn verify",
++        "swift test",
++    ]
++    .iter()
++    .any(|pattern| command.contains(pattern))
++}
++
++fn is_diagnostic_line(line: &str) -> bool {
++    let line = line.to_ascii_lowercase();
++    [
++        "error",
++        "warning",
++        "failed",
++        "failure",
++        "passed",
++        "pass ",
++        "test result",
++        "tests:",
++        "summary",
++        "success",
++    ]
++    .iter()
++    .any(|marker| line.contains(marker))
 +}
 +
 +fn normalize_line_endings_if_smaller(text: &str) -> String {
@@ -1756,10 +1951,10 @@ index 0000000000000000000000000000000000000000..94b8fe639c0c2de951203e4207ac07e4
 +mod tests;
 diff --git a/codex-rs/codex-zero-codec/src/lib_tests.rs b/codex-rs/codex-zero-codec/src/lib_tests.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..2d9a75cc53dde440ed6860cdd6121406c6c9cc36
+index 0000000..609c66f
 --- /dev/null
 +++ b/codex-rs/codex-zero-codec/src/lib_tests.rs
-@@ -0,0 +1,82 @@
+@@ -0,0 +1,113 @@
 +use super::*;
 +use pretty_assertions::assert_eq;
 +
@@ -1804,6 +1999,37 @@ index 0000000000000000000000000000000000000000..2d9a75cc53dde440ed6860cdd6121406
 +}
 +
 +#[test]
++fn successful_checks_keep_diagnostics_and_tail_in_a_smaller_projection() {
++    let mut output = String::from("test suite\nplatform windows\nstarting\n");
++    output.push_str(&"heartbeat\n".repeat(100));
++    output.push_str("warning: deprecated fixture\nsrc/check.js:10\n");
++    output.push_str(&"heartbeat\n".repeat(40));
++    output.push_str("Tests: 12 passed, 12 total\n");
++
++    let encoded = encode_command_output(output.as_bytes(), Some("npm test"), Some(0));
++
++    assert_eq!(encoded.projection, Some(SUCCESSFUL_CHECK_PROJECTION));
++    assert_eq!(encoded.original_line_count, Some(146));
++    assert!(encoded.text.contains("warning: deprecated fixture"));
++    assert!(encoded.text.contains("src/check.js:10"));
++    assert!(encoded.text.contains("Tests: 12 passed, 12 total"));
++    assert!(token_count(&encoded.text) < token_count(&output));
++    assert!(decode_terminal(&encoded).is_err());
++}
++
++#[test]
++fn failed_or_unknown_commands_are_never_projected() {
++    let output = "failure detail\n".repeat(100);
++    for encoded in [
++        encode_command_output(output.as_bytes(), Some("npm test"), Some(1)),
++        encode_command_output(output.as_bytes(), Some("cat test.log"), Some(0)),
++    ] {
++        assert_eq!(encoded.projection, None);
++        assert_eq!(decode_terminal(&encoded).unwrap(), output);
++    }
++}
++
++#[test]
 +fn raw_artifact_hash_and_bytes_are_exact() {
 +    let directory = tempfile::tempdir().unwrap();
 +    let raw = b"\x00raw\r\n\xffbytes";
@@ -1843,7 +2069,7 @@ index 0000000000000000000000000000000000000000..2d9a75cc53dde440ed6860cdd6121406
 +    );
 +}
 diff --git a/codex-rs/core/Cargo.toml b/codex-rs/core/Cargo.toml
-index de9d118e9cc7ad6914748033880c6ac70f64a3bc..d3955647ddae576dc1ef13313db303ffa80bd611 100644
+index de9d118..d395564 100644
 --- a/codex-rs/core/Cargo.toml
 +++ b/codex-rs/core/Cargo.toml
 @@ -39,6 +39,7 @@ codex-exec-server = { workspace = true }
@@ -1855,10 +2081,10 @@ index de9d118e9cc7ad6914748033880c6ac70f64a3bc..d3955647ddae576dc1ef13313db303ff
  codex-file-system = { workspace = true }
  codex-login = { workspace = true }
 diff --git a/codex-rs/core/config.schema.json b/codex-rs/core/config.schema.json
-index 0666e065c6c85816419d5b3ad6a69e61d95d648f..ab8cc9b2971395835e14ea7903aa273542ec855c 100644
+index 0666e06..1ae3fe2 100644
 --- a/codex-rs/core/config.schema.json
 +++ b/codex-rs/core/config.schema.json
-@@ -476,6 +476,18 @@
+@@ -476,6 +476,21 @@
              "codex_hooks": {
                "type": "boolean"
              },
@@ -1874,10 +2100,13 @@ index 0666e065c6c85816419d5b3ad6a69e61d95d648f..ab8cc9b2971395835e14ea7903aa2735
 +            "codex_zero_lossless_terminal_codec": {
 +              "type": "boolean"
 +            },
++            "codex_zero_command_aware_projection": {
++              "type": "boolean"
++            },
              "collab": {
                "type": "boolean"
              },
-@@ -4870,6 +4882,18 @@
+@@ -4870,6 +4885,21 @@
          "codex_hooks": {
            "type": "boolean"
          },
@@ -1893,11 +2122,21 @@ index 0666e065c6c85816419d5b3ad6a69e61d95d648f..ab8cc9b2971395835e14ea7903aa2735
 +        "codex_zero_lossless_terminal_codec": {
 +          "type": "boolean"
 +        },
++        "codex_zero_command_aware_projection": {
++          "type": "boolean"
++        },
          "collab": {
            "type": "boolean"
          },
+@@ -5574,4 +5604,4 @@
+   },
+   "title": "ConfigToml",
+   "type": "object"
+-}
+\ No newline at end of file
++}
 diff --git a/codex-rs/core/src/session/session.rs b/codex-rs/core/src/session/session.rs
-index d931a136c62243b2fff4eee96f347caa384cfa81..7ec0e18961b8a68fafd04b52fe54066386e8b9df 100644
+index d931a13..7ec0e18 100644
 --- a/codex-rs/core/src/session/session.rs
 +++ b/codex-rs/core/src/session/session.rs
 @@ -471,6 +471,35 @@ impl Session {
@@ -1937,7 +2176,7 @@ index d931a136c62243b2fff4eee96f347caa384cfa81..7ec0e18961b8a68fafd04b52fe540663
      #[allow(clippy::too_many_arguments)]
      pub(crate) async fn new(
 diff --git a/codex-rs/core/src/state/session.rs b/codex-rs/core/src/state/session.rs
-index 28a08ef4d6886a3d47a39f1a20aa46a8e99b5f4c..c26996f82f6d330e526bcf34428572fadbfd3d66 100644
+index 28a08ef..c26996f 100644
 --- a/codex-rs/core/src/state/session.rs
 +++ b/codex-rs/core/src/state/session.rs
 @@ -41,6 +41,9 @@ pub(crate) struct SessionState {
@@ -1959,7 +2198,7 @@ index 28a08ef4d6886a3d47a39f1a20aa46a8e99b5f4c..c26996f82f6d330e526bcf34428572fa
              next_turn_is_first: true,
          }
 diff --git a/codex-rs/core/src/tasks/mod.rs b/codex-rs/core/src/tasks/mod.rs
-index 9dfa559b7d864a1760e3a657a79b1b946781ddfc..8d457ca168d55c2e6630f0285540e3f5bd581a3f 100644
+index 9dfa559..8d457ca 100644
 --- a/codex-rs/core/src/tasks/mod.rs
 +++ b/codex-rs/core/src/tasks/mod.rs
 @@ -7,6 +7,8 @@ mod user_shell;
@@ -1995,14 +2234,14 @@ index 9dfa559b7d864a1760e3a657a79b1b946781ddfc..8d457ca168d55c2e6630f0285540e3f5
                  TURN_TOKEN_USAGE_METRIC,
                  turn_token_usage.total_tokens,
 diff --git a/codex-rs/core/src/tools/context.rs b/codex-rs/core/src/tools/context.rs
-index 72018904dd2d5d45e4dce21c0f514b566a8b51d8..e8095698b8f7a4319cbc705c127c6e077709718c 100644
+index 7201890..85367ec 100644
 --- a/codex-rs/core/src/tools/context.rs
 +++ b/codex-rs/core/src/tools/context.rs
 @@ -22,11 +22,19 @@ use codex_utils_output_truncation::approx_token_count;
  use codex_utils_output_truncation::formatted_truncate_text;
  use codex_utils_output_truncation::truncate_text;
  use codex_utils_string::take_bytes_at_char_boundary;
-+use codex_zero_codec::encode_terminal;
++use codex_zero_codec::encode_command_output;
 +use codex_zero_codec::select_strictly_smaller;
 +use codex_zero_codec::store_raw;
  use serde::Serialize;
@@ -2041,16 +2280,17 @@ index 72018904dd2d5d45e4dce21c0f514b566a8b51d8..e8095698b8f7a4319cbc705c127c6e07
      fn to_response_item(&self, call_id: &str, payload: &ToolPayload) -> ResponseInputItem {
          function_tool_response(call_id, payload, self.body.clone(), self.success)
      }
-@@ -326,6 +350,8 @@ pub struct ExecCommandToolOutput {
+@@ -326,6 +350,9 @@ pub struct ExecCommandToolOutput {
      /// Bytes omitted by the output collection cap before model-facing truncation.
      pub output_omitted_bytes: Option<NonZeroUsize>,
      pub hook_command: Option<String>,
 +    pub compact_model_payload: bool,
 +    pub lossless_terminal_codec: bool,
++    pub command_aware_projection: bool,
  }
  
  impl ToolOutput for ExecCommandToolOutput {
-@@ -337,12 +363,58 @@ impl ToolOutput for ExecCommandToolOutput {
+@@ -337,12 +364,58 @@ impl ToolOutput for ExecCommandToolOutput {
          true
      }
  
@@ -2110,14 +2350,17 @@ index 72018904dd2d5d45e4dce21c0f514b566a8b51d8..e8095698b8f7a4319cbc705c127c6e07
              }],
              Some(true),
          )
-@@ -467,6 +539,150 @@ impl ExecCommandToolOutput {
+@@ -467,6 +540,170 @@ impl ExecCommandToolOutput {
  
          sections.join("\n")
      }
 +
 +    fn model_response_text(&self) -> String {
 +        let original = self.response_text();
-+        if !self.compact_model_payload && !self.lossless_terminal_codec {
++        if !self.compact_model_payload
++            && !self.lossless_terminal_codec
++            && !self.command_aware_projection
++        {
 +            return original;
 +        }
 +
@@ -2145,12 +2388,20 @@ index 72018904dd2d5d45e4dce21c0f514b566a8b51d8..e8095698b8f7a4319cbc705c127c6e07
 +        };
 +
 +        let truncated = self.truncated_output(self.model_output_max_tokens());
-+        let terminal = if self.lossless_terminal_codec {
-+            encode_terminal(truncated.as_bytes())
++        let terminal = if self.command_aware_projection {
++            encode_command_output(
++                truncated.as_bytes(),
++                self.hook_command.as_deref(),
++                self.exit_code,
++            )
++        } else if self.lossless_terminal_codec {
++            codex_zero_codec::encode_terminal(truncated.as_bytes())
 +        } else {
 +            codex_zero_codec::TerminalEncoding {
 +                text: truncated,
 +                codec: None,
++                projection: None,
++                original_line_count: None,
 +                presentation_changed: false,
 +            }
 +        };
@@ -2179,6 +2430,10 @@ index 72018904dd2d5d45e4dce21c0f514b566a8b51d8..e8095698b8f7a4319cbc705c127c6e07
 +            artifact: ArtifactMetadata<'a>,
 +            #[serde(skip_serializing_if = "Option::is_none")]
 +            codec: Option<&'static str>,
++            #[serde(skip_serializing_if = "Option::is_none")]
++            projection: Option<&'static str>,
++            #[serde(skip_serializing_if = "Option::is_none")]
++            original_line_count: Option<usize>,
 +            #[serde(skip_serializing_if = "is_false")]
 +            presentation_styling_removed: bool,
 +            #[serde(skip_serializing_if = "str::is_empty")]
@@ -2198,6 +2453,8 @@ index 72018904dd2d5d45e4dce21c0f514b566a8b51d8..e8095698b8f7a4319cbc705c127c6e07
 +                original_token_count: self.original_token_count,
 +            },
 +            codec: terminal.codec,
++            projection: terminal.projection,
++            original_line_count: terminal.original_line_count,
 +            presentation_styling_removed: terminal.presentation_changed,
 +            output: &terminal.text,
 +        };
@@ -2209,6 +2466,7 @@ index 72018904dd2d5d45e4dce21c0f514b566a8b51d8..e8095698b8f7a4319cbc705c127c6e07
 +            telemetry_path,
 +            &artifact.sha256,
 +            terminal.codec,
++            terminal.projection,
 +            &selection,
 +        );
 +        selection.text
@@ -2219,6 +2477,7 @@ index 72018904dd2d5d45e4dce21c0f514b566a8b51d8..e8095698b8f7a4319cbc705c127c6e07
 +        telemetry_path: Option<&std::path::Path>,
 +        artifact_sha256: &str,
 +        codec: Option<&str>,
++        projection: Option<&str>,
 +        selection: &codex_zero_codec::MonotonicSelection,
 +    ) {
 +        let Some(path) = telemetry_path else {
@@ -2239,6 +2498,7 @@ index 72018904dd2d5d45e4dce21c0f514b566a8b51d8..e8095698b8f7a4319cbc705c127c6e07
 +            "tokens_eliminated": selection.original_tokens.saturating_sub(selection.selected_tokens),
 +            "transformed": selection.transformed,
 +            "codec": codec,
++            "projection": projection,
 +        });
 +        let Some(parent) = path.parent() else {
 +            return;
@@ -2262,28 +2522,30 @@ index 72018904dd2d5d45e4dce21c0f514b566a8b51d8..e8095698b8f7a4319cbc705c127c6e07
  
  fn function_tool_response(
 diff --git a/codex-rs/core/src/tools/context_tests.rs b/codex-rs/core/src/tools/context_tests.rs
-index caed87dfa5bbaa5a715d2d0fadc357c77d5a9f82..80beb2c0928a5a82928f0addadec35725ec83a01 100644
+index caed87d..ef9d920 100644
 --- a/codex-rs/core/src/tools/context_tests.rs
 +++ b/codex-rs/core/src/tools/context_tests.rs
-@@ -436,6 +436,8 @@ fn exec_command_tool_output_formats_truncated_response() {
+@@ -436,6 +436,9 @@ fn exec_command_tool_output_formats_truncated_response() {
          original_token_count: Some(10),
          output_omitted_bytes: None,
          hook_command: None,
 +        compact_model_payload: false,
 +        lossless_terminal_codec: false,
++        command_aware_projection: false,
      }
      .to_response_item("call-42", &payload);
  
-@@ -487,6 +489,8 @@ fn exec_command_tool_output_preserves_omission_metadata_when_truncated() {
+@@ -487,6 +490,9 @@ fn exec_command_tool_output_preserves_omission_metadata_when_truncated() {
          original_token_count: Some(42_000),
          output_omitted_bytes: NonZeroUsize::new(/*n*/ 123_456),
          hook_command: None,
 +        compact_model_payload: false,
 +        lossless_terminal_codec: false,
++        command_aware_projection: false,
      }
      .to_response_item("call-omitted", &payload);
  
-@@ -501,3 +505,70 @@ fn exec_command_tool_output_preserves_omission_metadata_when_truncated() {
+@@ -501,3 +507,127 @@ fn exec_command_tool_output_preserves_omission_metadata_when_truncated() {
      assert!(text.contains("Warning: truncated output (original token count: 42000)"));
      assert_eq!(text.matches(&marker).count(), 1);
  }
@@ -2307,6 +2569,7 @@ index caed87dfa5bbaa5a715d2d0fadc357c77d5a9f82..80beb2c0928a5a82928f0addadec3572
 +        hook_command: Some("ignored model command".to_string()),
 +        compact_model_payload: true,
 +        lossless_terminal_codec: true,
++        command_aware_projection: true,
 +    };
 +
 +    let original = output.response_text();
@@ -2346,6 +2609,7 @@ index caed87dfa5bbaa5a715d2d0fadc357c77d5a9f82..80beb2c0928a5a82928f0addadec3572
 +        hook_command: None,
 +        compact_model_payload: true,
 +        lossless_terminal_codec: true,
++        command_aware_projection: true,
 +    };
 +
 +    let original = output.response_text();
@@ -2354,9 +2618,64 @@ index caed87dfa5bbaa5a715d2d0fadc357c77d5a9f82..80beb2c0928a5a82928f0addadec3572
 +        original
 +    );
 +}
++
++#[test]
++fn codex_zero_successful_check_projection_is_artifact_backed_and_recorded() {
++    let temp = tempfile::tempdir().expect("temporary artifact directory");
++    let telemetry_path = temp.path().join("telemetry.jsonl");
++    let mut raw_output = String::from("test suite\nplatform windows\nstarting\n");
++    for index in 0..140 {
++        raw_output.push_str(&format!(
++            "completed fixture {index} with value {}\n",
++            index * 17
++        ));
++    }
++    raw_output.push_str("warning: deprecated fixture\nsrc/check.js:10\n");
++    raw_output.push_str("Tests: 140 passed, 140 total\n");
++    let raw_output = raw_output.into_bytes();
++    let output = ExecCommandToolOutput {
++        event_call_id: "call-projection".to_string(),
++        chunk_id: "projection123".to_string(),
++        wall_time: std::time::Duration::from_millis(1250),
++        raw_output: raw_output.clone(),
++        truncation_policy: TruncationPolicy::Tokens(100_000),
++        max_output_tokens: None,
++        process_id: None,
++        exit_code: Some(0),
++        original_token_count: Some(2000),
++        output_omitted_bytes: None,
++        hook_command: Some("npm test".to_string()),
++        compact_model_payload: true,
++        lossless_terminal_codec: true,
++        command_aware_projection: true,
++    };
++
++    let selected = output.model_response_text_with_paths(
++        output.response_text(),
++        temp.path(),
++        Some(&telemetry_path),
++    );
++    let payload: serde_json::Value =
++        serde_json::from_str(&selected).expect("compact payload should be JSON");
++    assert_eq!(payload["projection"], "successful-check-v1");
++    assert_eq!(payload["original_line_count"], 146);
++    assert!(payload["output"].as_str().is_some_and(|text| {
++        text.contains("warning: deprecated fixture")
++            && text.contains("Tests: 140 passed, 140 total")
++    }));
++    let sha = payload["artifact"]["sha256"]
++        .as_str()
++        .expect("artifact hash");
++    assert_eq!(
++        std::fs::read(temp.path().join("sha256").join(sha)).expect("raw artifact"),
++        raw_output
++    );
++    let telemetry = std::fs::read_to_string(telemetry_path).expect("telemetry record");
++    assert!(telemetry.contains(r#""projection":"successful-check-v1""#));
++}
 diff --git a/codex-rs/core/src/tools/exact_duplicate.rs b/codex-rs/core/src/tools/exact_duplicate.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..50c3c8e8fc1c1714b04505f6690354b8145e3cee
+index 0000000..50c3c8e
 --- /dev/null
 +++ b/codex-rs/core/src/tools/exact_duplicate.rs
 @@ -0,0 +1,200 @@
@@ -2561,10 +2880,10 @@ index 0000000000000000000000000000000000000000..50c3c8e8fc1c1714b04505f6690354b8
 +    output.status.success().then_some(output.stdout)
 +}
 diff --git a/codex-rs/core/src/tools/handlers/unified_exec/exec_command.rs b/codex-rs/core/src/tools/handlers/unified_exec/exec_command.rs
-index fc48f1ed81a88ae0a1e2babada28140538cddbdb..0bee33ecba89d0aaee88b3f9b289bc1801d87f51 100644
+index fc48f1e..1cfa948 100644
 --- a/codex-rs/core/src/tools/handlers/unified_exec/exec_command.rs
 +++ b/codex-rs/core/src/tools/handlers/unified_exec/exec_command.rs
-@@ -337,6 +337,14 @@ impl ExecCommandHandler {
+@@ -337,6 +337,18 @@ impl ExecCommandHandler {
                  original_token_count: None,
                  output_omitted_bytes: None,
                  hook_command: None,
@@ -2576,10 +2895,14 @@ index fc48f1ed81a88ae0a1e2babada28140538cddbdb..0bee33ecba89d0aaee88b3f9b289bc18
 +                    .config
 +                    .features
 +                    .enabled(Feature::CodexZeroLosslessTerminalCodec),
++                command_aware_projection: turn
++                    .config
++                    .features
++                    .enabled(Feature::CodexZeroCommandAwareProjection),
              }));
          }
  
-@@ -391,6 +399,14 @@ impl ExecCommandHandler {
+@@ -391,6 +403,18 @@ impl ExecCommandHandler {
                      original_token_count: Some(original_token_count),
                      output_omitted_bytes,
                      hook_command: Some(hook_command),
@@ -2591,11 +2914,15 @@ index fc48f1ed81a88ae0a1e2babada28140538cddbdb..0bee33ecba89d0aaee88b3f9b289bc18
 +                        .config
 +                        .features
 +                        .enabled(Feature::CodexZeroLosslessTerminalCodec),
++                    command_aware_projection: turn
++                        .config
++                        .features
++                        .enabled(Feature::CodexZeroCommandAwareProjection),
                  }))
              }
              Err(err) => Err(FunctionCallError::RespondToModel(format!(
 diff --git a/codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs b/codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs
-index 7c949481885cecfcdf336911350df21cc3607a4d..cab6f41564078362e2945a1e2a56e8959e54388f 100644
+index 7c94948..4217a32 100644
 --- a/codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs
 +++ b/codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs
 @@ -8,6 +8,7 @@ use crate::tools::registry::PostToolUsePayload;
@@ -2606,7 +2933,7 @@ index 7c949481885cecfcdf336911350df21cc3607a4d..cab6f41564078362e2945a1e2a56e895
  use codex_protocol::protocol::EventMsg;
  use codex_protocol::protocol::TerminalInteractionEvent;
  use codex_tools::ToolName;
-@@ -80,6 +81,18 @@ impl WriteStdinHandler {
+@@ -80,6 +81,22 @@ impl WriteStdinHandler {
                  yield_time_ms: args.yield_time_ms,
                  max_output_tokens: args.max_output_tokens,
                  truncation_policy: turn.model_info.truncation_policy.into(),
@@ -2618,6 +2945,10 @@ index 7c949481885cecfcdf336911350df21cc3607a4d..cab6f41564078362e2945a1e2a56e895
 +                    .config
 +                    .features
 +                    .enabled(Feature::CodexZeroLosslessTerminalCodec),
++                command_aware_projection: turn
++                    .config
++                    .features
++                    .enabled(Feature::CodexZeroCommandAwareProjection),
 +                event_driven_wait: turn
 +                    .config
 +                    .features
@@ -2626,65 +2957,71 @@ index 7c949481885cecfcdf336911350df21cc3607a4d..cab6f41564078362e2945a1e2a56e895
              .await
              .map_err(|err| {
 diff --git a/codex-rs/core/src/tools/handlers/unified_exec_tests.rs b/codex-rs/core/src/tools/handlers/unified_exec_tests.rs
-index 9b107dd83d00b80f9c38339c8bfb284718e9fa62..73fe7210ef1c0d9021d9a1d15e8d8b0a92ea2c3d 100644
+index 9b107dd..508d956 100644
 --- a/codex-rs/core/src/tools/handlers/unified_exec_tests.rs
 +++ b/codex-rs/core/src/tools/handlers/unified_exec_tests.rs
-@@ -303,6 +303,8 @@ async fn exec_command_post_tool_use_payload_uses_output_for_noninteractive_one_s
+@@ -303,6 +303,9 @@ async fn exec_command_post_tool_use_payload_uses_output_for_noninteractive_one_s
          original_token_count: None,
          output_omitted_bytes: None,
          hook_command: Some("echo three".to_string()),
 +        compact_model_payload: false,
 +        lossless_terminal_codec: false,
++        command_aware_projection: false,
      };
      let invocation = invocation_for_payload("exec_command", "call-43", payload).await;
      let handler = ExecCommandHandler::default();
-@@ -334,6 +336,8 @@ async fn exec_command_post_tool_use_payload_uses_output_for_interactive_completi
+@@ -334,6 +337,9 @@ async fn exec_command_post_tool_use_payload_uses_output_for_interactive_completi
          original_token_count: None,
          output_omitted_bytes: None,
          hook_command: Some("echo three".to_string()),
 +        compact_model_payload: false,
 +        lossless_terminal_codec: false,
++        command_aware_projection: false,
      };
      let invocation = invocation_for_payload("exec_command", "call-44", payload).await;
      let handler = ExecCommandHandler::default();
-@@ -366,6 +370,8 @@ async fn exec_command_post_tool_use_payload_skips_running_sessions() {
+@@ -366,6 +372,9 @@ async fn exec_command_post_tool_use_payload_skips_running_sessions() {
          original_token_count: None,
          output_omitted_bytes: None,
          hook_command: Some("echo three".to_string()),
 +        compact_model_payload: false,
 +        lossless_terminal_codec: false,
++        command_aware_projection: false,
      };
      let invocation = invocation_for_payload("exec_command", "call-45", payload).await;
      let handler = ExecCommandHandler::default();
-@@ -393,6 +399,8 @@ async fn write_stdin_post_tool_use_payload_uses_original_exec_call_id_and_comman
+@@ -393,6 +402,9 @@ async fn write_stdin_post_tool_use_payload_uses_original_exec_call_id_and_comman
          original_token_count: None,
          output_omitted_bytes: None,
          hook_command: Some("sleep 1; echo finished".to_string()),
 +        compact_model_payload: false,
 +        lossless_terminal_codec: false,
++        command_aware_projection: false,
      };
      let invocation = invocation_for_payload("write_stdin", "write-stdin-call", payload).await;
      let handler = WriteStdinHandler;
-@@ -425,6 +433,8 @@ async fn write_stdin_post_tool_use_payload_keeps_parallel_session_metadata_separ
+@@ -425,6 +437,9 @@ async fn write_stdin_post_tool_use_payload_keeps_parallel_session_metadata_separ
          original_token_count: None,
          output_omitted_bytes: None,
          hook_command: Some("sleep 2; echo alpha".to_string()),
 +        compact_model_payload: false,
 +        lossless_terminal_codec: false,
++        command_aware_projection: false,
      };
      let output_b = ExecCommandToolOutput {
          event_call_id: "exec-call-b".to_string(),
-@@ -438,6 +448,8 @@ async fn write_stdin_post_tool_use_payload_keeps_parallel_session_metadata_separ
+@@ -438,6 +453,9 @@ async fn write_stdin_post_tool_use_payload_keeps_parallel_session_metadata_separ
          original_token_count: None,
          output_omitted_bytes: None,
          hook_command: Some("sleep 1; echo beta".to_string()),
 +        compact_model_payload: false,
 +        lossless_terminal_codec: false,
++        command_aware_projection: false,
      };
      let invocation_b = invocation_for_payload("write_stdin", "write-call-b", payload.clone()).await;
      let invocation_a = invocation_for_payload("write_stdin", "write-call-a", payload).await;
 diff --git a/codex-rs/core/src/tools/mod.rs b/codex-rs/core/src/tools/mod.rs
-index 76a836def392e0a3c0787e70112505fad74d2b92..4897393a8a85d940623685c25c0f99b332cd479f 100644
+index 76a836d..3698352 100644
 --- a/codex-rs/core/src/tools/mod.rs
 +++ b/codex-rs/core/src/tools/mod.rs
 @@ -2,6 +2,7 @@ mod approvals;
@@ -2695,8 +3032,35 @@ index 76a836def392e0a3c0787e70112505fad74d2b92..4897393a8a85d940623685c25c0f99b3
  pub(crate) mod handlers;
  pub(crate) mod hook_names;
  pub(crate) mod hosted_spec;
+@@ -62,15 +63,17 @@ pub(crate) fn tool_user_shell_type(
+ }
+
+ fn effective_tool_mode(turn_context: &TurnContext) -> ToolMode {
+-    turn_context.model_info.tool_mode.unwrap_or_else(|| {
+-        if turn_context.config.features.enabled(Feature::CodeModeOnly) {
+-            ToolMode::CodeModeOnly
+-        } else if turn_context.config.features.enabled(Feature::CodeMode) {
+-            ToolMode::CodeMode
+-        } else {
+-            ToolMode::Direct
+-        }
+-    })
++    if turn_context.config.features.enabled(Feature::CodeModeOnly) {
++        ToolMode::CodeModeOnly
++    } else {
++        turn_context.model_info.tool_mode.unwrap_or_else(|| {
++            if turn_context.config.features.enabled(Feature::CodeMode) {
++                ToolMode::CodeMode
++            } else {
++                ToolMode::Direct
++            }
++        })
++    }
+ }
+
+ /// Format the combined exec output for sending back to the model.
 diff --git a/codex-rs/core/src/tools/parallel.rs b/codex-rs/core/src/tools/parallel.rs
-index e201f0ffce2a4f7a62fff50cf2075fc6bcc5f280..fc673e09cab34a0f25d055324de4f07dafe604f0 100644
+index e201f0f..fc673e0 100644
 --- a/codex-rs/core/src/tools/parallel.rs
 +++ b/codex-rs/core/src/tools/parallel.rs
 @@ -82,7 +82,7 @@ impl ToolCallRuntime {
@@ -2719,7 +3083,7 @@ index e201f0ffce2a4f7a62fff50cf2075fc6bcc5f280..fc673e09cab34a0f25d055324de4f07d
      }
  
 diff --git a/codex-rs/core/src/tools/registry.rs b/codex-rs/core/src/tools/registry.rs
-index 928f43db562eae21d085ee94e8fa8a3c62f9be03..0ce51c0d0f8c3f1120c5faac3972269ea955a38f 100644
+index 928f43d..0ce51c0 100644
 --- a/codex-rs/core/src/tools/registry.rs
 +++ b/codex-rs/core/src/tools/registry.rs
 @@ -3,6 +3,8 @@ use std::sync::Arc;
@@ -2833,7 +3197,7 @@ index 928f43db562eae21d085ee94e8fa8a3c62f9be03..0ce51c0d0f8c3f1120c5faac3972269e
  }
  
 diff --git a/codex-rs/core/src/tools/registry_tests.rs b/codex-rs/core/src/tools/registry_tests.rs
-index 9c8b9e87b8d1ba17525a829fbcc4362894bf16c6..8de51e84bd1422d267d04597d69130c9b8e64fbb 100644
+index 9c8b9e8..8de51e8 100644
 --- a/codex-rs/core/src/tools/registry_tests.rs
 +++ b/codex-rs/core/src/tools/registry_tests.rs
 @@ -319,8 +319,8 @@ async fn write_stdin_does_not_expose_default_pre_tool_use_payload() {
@@ -3052,7 +3416,7 @@ index 9c8b9e87b8d1ba17525a829fbcc4362894bf16c6..8de51e84bd1422d267d04597d69130c9
  async fn dispatch_notifies_tool_lifecycle_contributors() -> anyhow::Result<()> {
      let (mut session, turn) = crate::session::tests::make_session_and_context().await;
 diff --git a/codex-rs/core/src/tools/router_tests.rs b/codex-rs/core/src/tools/router_tests.rs
-index b918035ccc877acbebaf0579ff16ba757a6aa020..38d379d5f196b01950ac69d2f869aea3b3027a70 100644
+index b918035..38d379d 100644
 --- a/codex-rs/core/src/tools/router_tests.rs
 +++ b/codex-rs/core/src/tools/router_tests.rs
 @@ -428,7 +428,7 @@ async fn extension_tool_executors_are_model_visible_and_dispatchable() -> anyhow
@@ -3064,22 +3428,52 @@ index b918035ccc877acbebaf0579ff16ba757a6aa020..38d379d5f196b01950ac69d2f869aea3
      match response {
          ResponseInputItem::FunctionCallOutput { call_id, output } => {
              assert_eq!(call_id, "call-extension");
+diff --git a/codex-rs/core/src/tools/spec_plan_tests.rs b/codex-rs/core/src/tools/spec_plan_tests.rs
+index 3f9fa3b..81812d9 100644
+--- a/codex-rs/core/src/tools/spec_plan_tests.rs
++++ b/codex-rs/core/src/tools/spec_plan_tests.rs
+@@ -1081,6 +1081,24 @@ async fn code_mode_only_exposes_code_executor_and_hides_nested_tools() {
+     );
+ }
+
++#[tokio::test]
++async fn configured_code_mode_only_overrides_a_direct_model_default() {
++    let plan = probe_with(
++        |turn| {
++            turn.model_info.tool_mode = Some(ToolMode::Direct);
++            set_features(turn, &[Feature::CodeMode, Feature::CodeModeOnly]);
++        },
++        ToolPlanInputs::default(),
++    )
++    .await;
++
++    plan.assert_visible_contains(&[
++        codex_code_mode::PUBLIC_TOOL_NAME,
++        codex_code_mode::WAIT_TOOL_NAME,
++    ]);
++    plan.assert_visible_lacks(&["exec_command", "apply_patch"]);
++}
++
+ #[tokio::test]
+ async fn code_mode_only_exposes_configured_dynamic_namespace_directly() {
+     let plan = probe_with(
 diff --git a/codex-rs/core/src/unified_exec/mod.rs b/codex-rs/core/src/unified_exec/mod.rs
-index 21c1a17f0965193982a50524fd129562ddad9d70..ba1af86296c8764f785441e9c503975e4412e686 100644
+index 21c1a17..15c53e3 100644
 --- a/codex-rs/core/src/unified_exec/mod.rs
 +++ b/codex-rs/core/src/unified_exec/mod.rs
-@@ -116,6 +116,9 @@ pub(crate) struct WriteStdinRequest<'a> {
+@@ -116,6 +116,10 @@ pub(crate) struct WriteStdinRequest<'a> {
      pub yield_time_ms: u64,
      pub max_output_tokens: Option<usize>,
      pub truncation_policy: TruncationPolicy,
 +    pub compact_model_payload: bool,
 +    pub lossless_terminal_codec: bool,
++    pub command_aware_projection: bool,
 +    pub event_driven_wait: bool,
  }
  
  #[derive(Default)]
 diff --git a/codex-rs/core/src/unified_exec/mod_tests.rs b/codex-rs/core/src/unified_exec/mod_tests.rs
-index 7e3cf8083aa81d5ce18600a3b824107d4f3e7b23..f4bbaba35650197b1d859241c027d2d50d34efc0 100644
+index 7e3cf80..f8ee855 100644
 --- a/codex-rs/core/src/unified_exec/mod_tests.rs
 +++ b/codex-rs/core/src/unified_exec/mod_tests.rs
 @@ -10,6 +10,7 @@ use crate::session::turn_context::TurnContext;
@@ -3099,26 +3493,28 @@ index 7e3cf8083aa81d5ce18600a3b824107d4f3e7b23..f4bbaba35650197b1d859241c027d2d5
      )
      .await;
      let wall_time = Instant::now().saturating_duration_since(started_at);
-@@ -205,6 +206,8 @@ async fn exec_command_with_tty(
+@@ -205,6 +206,9 @@ async fn exec_command_with_tty(
          original_token_count: Some(original_token_count),
          output_omitted_bytes,
          hook_command: Some(cmd.to_string()),
 +        compact_model_payload: false,
 +        lossless_terminal_codec: false,
++        command_aware_projection: false,
      })
  }
  
-@@ -321,6 +324,9 @@ async fn write_stdin(
+@@ -321,6 +325,10 @@ async fn write_stdin(
              yield_time_ms,
              max_output_tokens: None,
              truncation_policy: TruncationPolicy::Tokens(10_000),
 +            compact_model_payload: false,
 +            lossless_terminal_codec: false,
++            command_aware_projection: false,
 +            event_driven_wait: false,
          })
          .await
  }
-@@ -875,7 +881,7 @@ async fn unified_exec_uses_remote_exec_server_when_configured() -> anyhow::Resul
+@@ -875,7 +883,7 @@ async fn unified_exec_uses_remote_exec_server_when_configured() -> anyhow::Resul
          &output_closed_notify,
          &cancellation_token,
          /*pause_state*/ None,
@@ -3128,7 +3524,7 @@ index 7e3cf8083aa81d5ce18600a3b824107d4f3e7b23..f4bbaba35650197b1d859241c027d2d5
      .await
      .to_bytes_with_omission_marker();
 diff --git a/codex-rs/core/src/unified_exec/process_manager.rs b/codex-rs/core/src/unified_exec/process_manager.rs
-index f828ace22597e82c9b1f43486d105131572ff0a6..cffb7eed9ad0d97dc04e1c959e2f8c9a68a90877 100644
+index f828ace..5ae1b4d 100644
 --- a/codex-rs/core/src/unified_exec/process_manager.rs
 +++ b/codex-rs/core/src/unified_exec/process_manager.rs
 @@ -84,6 +84,12 @@ const NETWORK_ACCESS_DENIED_MESSAGE: &str =
@@ -3153,7 +3549,7 @@ index f828ace22597e82c9b1f43486d105131572ff0a6..cffb7eed9ad0d97dc04e1c959e2f8c9a
          )
          .await;
          let wall_time = Instant::now().saturating_duration_since(start);
-@@ -648,6 +654,16 @@ impl UnifiedExecProcessManager {
+@@ -648,6 +654,21 @@ impl UnifiedExecProcessManager {
              original_token_count: Some(original_token_count),
              output_omitted_bytes,
              hook_command: Some(request.hook_command.clone()),
@@ -3167,10 +3563,15 @@ index f828ace22597e82c9b1f43486d105131572ff0a6..cffb7eed9ad0d97dc04e1c959e2f8c9a
 +                .config
 +                .features
 +                .enabled(codex_features::Feature::CodexZeroLosslessTerminalCodec),
++            command_aware_projection: context
++                .turn
++                .config
++                .features
++                .enabled(codex_features::Feature::CodexZeroCommandAwareProjection),
          };
  
          Ok(response)
-@@ -725,11 +741,15 @@ impl UnifiedExecProcessManager {
+@@ -725,11 +746,15 @@ impl UnifiedExecProcessManager {
          let yield_time_ms = {
              // Empty polls use configurable background timeout bounds. Non-empty
              // writes keep a fixed max cap so interactive stdin remains responsive.
@@ -3190,7 +3591,7 @@ index f828ace22597e82c9b1f43486d105131572ff0a6..cffb7eed9ad0d97dc04e1c959e2f8c9a
              }
          };
          let start = Instant::now();
-@@ -741,7 +761,11 @@ impl UnifiedExecProcessManager {
+@@ -741,7 +766,11 @@ impl UnifiedExecProcessManager {
              &output_closed_notify,
              &cancellation_token,
              pause_state,
@@ -3203,16 +3604,17 @@ index f828ace22597e82c9b1f43486d105131572ff0a6..cffb7eed9ad0d97dc04e1c959e2f8c9a
          )
          .await;
          let wall_time = Instant::now().saturating_duration_since(start);
-@@ -823,6 +847,8 @@ impl UnifiedExecProcessManager {
+@@ -823,6 +852,9 @@ impl UnifiedExecProcessManager {
              original_token_count: Some(original_token_count),
              output_omitted_bytes,
              hook_command: Some(hook_command),
 +            compact_model_payload: request.compact_model_payload,
 +            lossless_terminal_codec: request.lossless_terminal_codec,
++            command_aware_projection: request.command_aware_projection,
          };
  
          Ok(response)
-@@ -1250,9 +1276,13 @@ impl UnifiedExecProcessManager {
+@@ -1250,9 +1282,13 @@ impl UnifiedExecProcessManager {
          output_closed_notify: &Arc<Notify>,
          cancellation_token: &CancellationToken,
          mut pause_state: Option<watch::Receiver<bool>>,
@@ -3227,7 +3629,7 @@ index f828ace22597e82c9b1f43486d105131572ff0a6..cffb7eed9ad0d97dc04e1c959e2f8c9a
  
          let mut collected = HeadTailBuffer::default();
          let mut exit_signal_received = cancellation_token.is_cancelled();
-@@ -1324,6 +1354,9 @@ impl UnifiedExecProcessManager {
+@@ -1324,6 +1360,9 @@ impl UnifiedExecProcessManager {
  
              collected.push_buffer(drained_output);
  
@@ -3238,7 +3640,7 @@ index f828ace22597e82c9b1f43486d105131572ff0a6..cffb7eed9ad0d97dc04e1c959e2f8c9a
              if Instant::now() >= deadline {
                  break;
 diff --git a/codex-rs/core/src/unified_exec/process_manager_tests.rs b/codex-rs/core/src/unified_exec/process_manager_tests.rs
-index 9163862ae7a21fab69cefd0331a8460c44aa65a4..ed13b58798c45ed15298cd253de76822b0889446 100644
+index 9163862..ed13b58 100644
 --- a/codex-rs/core/src/unified_exec/process_manager_tests.rs
 +++ b/codex-rs/core/src/unified_exec/process_manager_tests.rs
 @@ -249,7 +249,7 @@ async fn output_collection_stays_bounded_across_repeated_drains() {
@@ -3298,7 +3700,7 @@ index 9163862ae7a21fab69cefd0331a8460c44aa65a4..ed13b58798c45ed15298cd253de76822
      .await;
  
 diff --git a/codex-rs/core/tests/suite/client.rs b/codex-rs/core/tests/suite/client.rs
-index c73ccf4932ad89e016ef4177fcddc21827f6ee5f..0b5564ebc705be87922e92b296f4d6686d4a13e3 100644
+index c73ccf4..0b5564e 100644
 --- a/codex-rs/core/tests/suite/client.rs
 +++ b/codex-rs/core/tests/suite/client.rs
 @@ -2682,6 +2682,7 @@ async fn reasoning_summary_is_omitted_when_disabled() -> anyhow::Result<()> {
@@ -3325,7 +3727,7 @@ index c73ccf4932ad89e016ef4177fcddc21827f6ee5f..0b5564ebc705be87922e92b296f4d668
      pretty_assertions::assert_eq!(request_body.get("stream_options"), None);
  
 diff --git a/codex-rs/core/tests/suite/unified_exec.rs b/codex-rs/core/tests/suite/unified_exec.rs
-index 62b10cf424245eeaa34db1d2d5f855b8ddd60411..416d76342a6b3c2eba834880d80b8e4c83ce3eaf 100644
+index 62b10cf..416d763 100644
 --- a/codex-rs/core/tests/suite/unified_exec.rs
 +++ b/codex-rs/core/tests/suite/unified_exec.rs
 @@ -1403,6 +1403,99 @@ async fn unified_exec_emits_one_begin_and_one_end_event() -> Result<()> {
@@ -3598,10 +4000,10 @@ index 62b10cf424245eeaa34db1d2d5f855b8ddd60411..416d76342a6b3c2eba834880d80b8e4c
  async fn exec_command_clamps_model_requested_max_output_tokens_to_policy() -> Result<()> {
      // TODO(anp): Remove after unified-exec fixtures use target-native commands.
 diff --git a/codex-rs/features/src/lib.rs b/codex-rs/features/src/lib.rs
-index 6c9b9fb64644a011a64a91142d2df537af50f4ff..1f6ba058e57d8e5e28143a2c8910ac2af58f151a 100644
+index 6c9b9fb..0523a65 100644
 --- a/codex-rs/features/src/lib.rs
 +++ b/codex-rs/features/src/lib.rs
-@@ -98,6 +98,14 @@ pub enum Feature {
+@@ -98,6 +98,16 @@ pub enum Feature {
      CodeModeOnly,
      /// Use the single unified PTY-backed exec tool.
      UnifiedExec,
@@ -3609,6 +4011,8 @@ index 6c9b9fb64644a011a64a91142d2df537af50f4ff..1f6ba058e57d8e5e28143a2c8910ac2a
 +    CodexZeroCompactExecOutput,
 +    /// Apply a reversible, strictly smaller terminal codec to model-visible output.
 +    CodexZeroLosslessTerminalCodec,
++    /// Project successful check output into an artifact-backed diagnostic summary.
++    CodexZeroCommandAwareProjection,
 +    /// Replace a proven unchanged duplicate tool result with a smaller active-context reference.
 +    CodexZeroExactDuplicateResults,
 +    /// Keep empty background-process polls local until output, exit, cancellation, or hard timeout.
@@ -3616,7 +4020,7 @@ index 6c9b9fb64644a011a64a91142d2df537af50f4ff..1f6ba058e57d8e5e28143a2c8910ac2a
      /// Route shell tool execution through the zsh exec bridge.
      ShellZshFork,
      /// Allow unified exec to compose with the zsh exec bridge.
-@@ -824,6 +832,30 @@ pub const FEATURES: &[FeatureSpec] = &[
+@@ -824,6 +834,36 @@ pub const FEATURES: &[FeatureSpec] = &[
          stage: Stage::Stable,
          default_enabled: !cfg!(windows),
      },
@@ -3629,6 +4033,12 @@ index 6c9b9fb64644a011a64a91142d2df537af50f4ff..1f6ba058e57d8e5e28143a2c8910ac2a
 +    FeatureSpec {
 +        id: Feature::CodexZeroLosslessTerminalCodec,
 +        key: "codex_zero_lossless_terminal_codec",
++        stage: Stage::UnderDevelopment,
++        default_enabled: false,
++    },
++    FeatureSpec {
++        id: Feature::CodexZeroCommandAwareProjection,
++        key: "codex_zero_command_aware_projection",
 +        stage: Stage::UnderDevelopment,
 +        default_enabled: false,
 +    },
@@ -3648,7 +4058,7 @@ index 6c9b9fb64644a011a64a91142d2df537af50f4ff..1f6ba058e57d8e5e28143a2c8910ac2a
          id: Feature::ShellZshFork,
          key: "shell_zsh_fork",
 diff --git a/codex-rs/tools/src/tool_output.rs b/codex-rs/tools/src/tool_output.rs
-index f2eed18fac919df5bb619bc7f00f11e1367adf71..be067130ccfd683ad8f3e295ca490480b1f17738 100644
+index f2eed18..be06713 100644
 --- a/codex-rs/tools/src/tool_output.rs
 +++ b/codex-rs/tools/src/tool_output.rs
 @@ -24,6 +24,23 @@ pub trait ToolOutput: Send {

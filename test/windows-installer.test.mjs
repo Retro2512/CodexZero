@@ -34,6 +34,6 @@ test("unattended Windows install defaults without prompting", async () => {
   assert.doesNotMatch(output, /null-valued|NonInteractive mode/u);
   assert.match(
     await fs.readFile(path.join(root, "scripts", "install.ps1"), "utf8"),
-    /if \(\$selection -eq '2'\) \{ 'max-save' \} else \{ 'safe' \}/u
+    /else \{\s+'standard'\s+\}/u
   );
 });

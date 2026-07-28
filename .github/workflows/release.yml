@@ -6,7 +6,7 @@ on:
       version:
         description: CodexZero release version
         required: true
-        default: 0.3.0
+        default: 0.4.0
       reuse_core_release:
         description: Reuse cores only when patches and runtime config match this release; leave blank to rebuild
         required: false
@@ -88,7 +88,7 @@ jobs:
         if: inputs.reuse_core_release == ''
         shell: bash
         run: |
-          git clone --depth 1 --branch rust-v0.145.0-alpha.30 \
+          git -c core.autocrlf=false clone --depth 1 --branch rust-v0.145.0-alpha.30 \
             https://github.com/openai/codex.git upstream
           git -C upstream apply ../codex-zero/patches/codex-rust-v0.145.0-alpha.30.patch
       - name: Build patched core
@@ -131,7 +131,8 @@ jobs:
         shell: pwsh
         run: |
           $env:CODEX_HOME = Join-Path $env:RUNNER_TEMP 'codexzero-home'
-          & package\scripts\install.ps1 -PackageRoot package
+          & package\scripts\install.ps1 -PackageRoot package -Mode standard
+          & package\scripts\install.ps1 -PackageRoot package -Mode focused
           & package\scripts\install.ps1 -PackageRoot package -Mode max-save
           & package\scripts\install.ps1 -PackageRoot package -Mode safe
           $mode = (& "$env:CODEX_HOME\bin\codex-zero.cmd" mode).Trim()
@@ -142,6 +143,8 @@ jobs:
         shell: bash
         run: |
           export CODEX_HOME="$RUNNER_TEMP/codexzero-home"
+          sh package/scripts/install.sh package standard
+          sh package/scripts/install.sh package focused
           sh package/scripts/install.sh package max-save
           sh package/scripts/install.sh package safe
           test "$("$CODEX_HOME/bin/codex-zero" mode)" = "safe"
