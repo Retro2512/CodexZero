@@ -105,6 +105,20 @@
       </figure>
     </section>
 
+    <section class="section results comparison-results" aria-labelledby="comparison-title">
+      <div class="section-heading">
+        <p class="eyebrow">Complete comparison</p>
+        <h2 id="comparison-title">Savings only count when the task passes.</h2>
+        <p>CodexZero Standard and Max Savings both completed the comparison with fewer tokens than stock Codex. Failed runs, different setups, and smaller samples are marked in the chart.</p>
+      </div>
+      <figure class="primary-result">
+        <img src="assets/benchmarks/complete-setup-comparison.png" width="1310" height="922" loading="lazy" alt="Comparison of token use, task result, cached input, and estimated cost across CodexZero and other Codex setups. CodexZero Standard used 17.1 percent fewer tokens and Max Savings used 13.7 percent fewer; both passed.">
+        <figcaption>
+          <span>Standard: 17.1% fewer · Max Savings: 13.7% fewer · both passed</span>
+        </figcaption>
+      </figure>
+    </section>
+
     <section class="section install" id="install">
       <div class="install-copy">
         <p class="eyebrow">Install</p>
@@ -169,18 +183,22 @@
 
     <section class="section modes" id="modes">
       <div>
-        <p class="eyebrow">Two settings</p>
+        <p class="eyebrow">Three settings</p>
         <h2>Start with Standard.</h2>
-        <p>Standard keeps Codex’s normal instructions and shortens eligible command results. It is selected by default.</p>
+        <p>Standard uses lean instructions with Codex’s direct tools. Focused adds batching for independent tool calls. Safe keeps the stock model instructions.</p>
       </div>
       <div class="mode-list">
         <article>
           <div><span class="tag tag-lime">Default</span><h3>Standard</h3></div>
-          <p>The setting used for the repeated 15% result.</p>
+          <p>The fastest profile in the paired quick benchmark.</p>
         </article>
         <article>
-          <div><span class="tag tag-violet">Optional</span><h3>Max Savings</h3></div>
-          <p>A leaner setting for repeatable work. Switch modes whenever you want.</p>
+          <div><span class="tag tag-violet">Optional</span><h3>Focused</h3></div>
+          <p>Batches independent tool calls for tool-heavy work.</p>
+        </article>
+        <article>
+          <div><span class="tag">Rollback</span><h3>Safe</h3></div>
+          <p>Keeps Codex’s stock model instructions with CodexZero’s output handling.</p>
         </article>
       </div>
     </section>
@@ -198,6 +216,10 @@
         <details>
           <summary>What does it change?</summary>
           <p>It shortens eligible command results before the model reads them again. The full result stays available.</p>
+        </details>
+        <details>
+          <summary>What does Focused do?</summary>
+          <p>Focused can run independent tool calls together. Standard keeps tools direct and is the default.</p>
         </details>
         <details>
           <summary>Will it lower my bill?</summary>

@@ -64,6 +64,12 @@ Codex and CodexZero each completed 12 software tasks three times. CodexZero matc
 
 [Benchmark summary](reports/terminal-bench-2.1-replication/README.md)
 
+## Complete comparison
+
+![Comparison of token use, task result, cached input, and estimated cost across CodexZero and other Codex setups](assets/benchmarks/complete-setup-comparison.png)
+
+CodexZero Standard and Max Savings both completed the comparison with fewer tokens than stock Codex. The chart marks failed runs, different setups, and smaller samples directly.
+
 ## How it works
 
 CodexZero keeps the original command result available, removes repeated text when that produces a smaller result, and otherwise leaves the result alone.

@@ -6,6 +6,7 @@
 - Added Focused mode with a small initial tool surface and local batching through Codex's existing code-mode router.
 - Added exact-gated, artifact-backed projections for long successful test, build, check, and lint output.
 - Kept Safe as the stock-prompt rollback and Max Savings as a compatibility name for the direct lean profile.
+- Added the complete setup comparison chart to the repository and public site.
 
 ## 0.3.0
 

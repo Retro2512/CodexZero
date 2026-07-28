@@ -3034,7 +3034,7 @@ index 76a836d..3698352 100644
  pub(crate) mod hosted_spec;
 @@ -62,15 +63,17 @@ pub(crate) fn tool_user_shell_type(
  }
- 
+
  fn effective_tool_mode(turn_context: &TurnContext) -> ToolMode {
 -    turn_context.model_info.tool_mode.unwrap_or_else(|| {
 -        if turn_context.config.features.enabled(Feature::CodeModeOnly) {
@@ -3057,7 +3057,7 @@ index 76a836d..3698352 100644
 +        })
 +    }
  }
- 
+
  /// Format the combined exec output for sending back to the model.
 diff --git a/codex-rs/core/src/tools/parallel.rs b/codex-rs/core/src/tools/parallel.rs
 index e201f0f..fc673e0 100644
@@ -3435,7 +3435,7 @@ index 3f9fa3b..81812d9 100644
 @@ -1081,6 +1081,24 @@ async fn code_mode_only_exposes_code_executor_and_hides_nested_tools() {
      );
  }
- 
+
 +#[tokio::test]
 +async fn configured_code_mode_only_overrides_a_direct_model_default() {
 +    let plan = probe_with(
