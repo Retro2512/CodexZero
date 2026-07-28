@@ -10,10 +10,14 @@ import { maybeSuggestStar } from "./star-prompt.mjs";
 
 const execFileAsync = promisify(execFile);
 const SAFE_MODE = "safe";
+const STANDARD_MODE = "standard";
 const MAX_SAVE_MODE = "max-save";
+const FOCUSED_MODE = "focused";
 const MODE_ALIASES = new Map([
   [SAFE_MODE, SAFE_MODE],
+  [STANDARD_MODE, STANDARD_MODE],
   [MAX_SAVE_MODE, MAX_SAVE_MODE],
+  [FOCUSED_MODE, FOCUSED_MODE],
   ["command-output", SAFE_MODE],
   ["full-lean", MAX_SAVE_MODE]
 ]);
@@ -140,14 +144,14 @@ async function doctor() {
   const customBinary = customBinaryPath();
   const desktopBinary = await resolveDesktopBinary();
   const mode = await selectedInstallMode();
-  const leanPrompt = mode === MAX_SAVE_MODE ? bundledLeanPromptPath() : null;
+  const leanPrompt = modeUsesLeanPrompt(mode) ? bundledLeanPromptPath() : null;
   const checks = [
     ["Codex home", home, await exists(home)],
     ["Config", path.join(home, "config.toml"), await exists(path.join(home, "config.toml"))],
     [
       "Optimization mode",
       mode,
-      mode === SAFE_MODE || (mode === MAX_SAVE_MODE && await exists(leanPrompt))
+      !modeUsesLeanPrompt(mode) || await exists(leanPrompt)
     ],
     ["Custom binary", customBinary, await exists(customBinary)],
     ["Artifact store", artifactRoot(), true],
@@ -176,6 +180,7 @@ async function launchDesktop(args) {
   if (await desktopIsRunning()) {
     throw new Error("Quit Codex Desktop completely, then run codex-zero desktop again.");
   }
+  const mode = await selectedInstallMode();
   const leanPrompt = await activeLeanPromptPath();
 
   const child = spawn(desktopBinary, [], {
@@ -186,6 +191,7 @@ async function launchDesktop(args) {
       CODEX_CLI_PATH: customBinary,
       CODEX_APP_SERVER_FORCE_CLI: "1",
       CODEX_ZERO_RUNTIME_OVERRIDES: "1",
+      ...(modeUsesScopedRuntime(mode) ? { CODEX_ZERO_SCOPED_RUNTIME: "1" } : {}),
       ...(leanPrompt ? { CODEX_ZERO_INSTRUCTIONS_FILE: leanPrompt } : {}),
       CODEX_ZERO_HOME: codexZeroHome(),
       CODEX_ZERO_ARTIFACT_DIR: artifactRoot(),
@@ -219,10 +225,11 @@ async function launch(args, stock) {
   if (!stock && !(await exists(executable))) {
     throw new Error(`Custom binary not found at ${executable}. Run the installer or use "codex-zero stock".`);
   }
+  const mode = stock ? SAFE_MODE : await selectedInstallMode();
   const leanPrompt = stock ? null : await activeLeanPromptPath();
   const launchArguments = stock
     ? args
-    : buildLaunchArguments(args, leanPrompt);
+    : buildLaunchArguments(args, leanPrompt, mode);
   const child = spawn(executable, launchArguments, {
     stdio: "inherit",
     env: {
@@ -245,7 +252,7 @@ async function launch(args, stock) {
   process.exitCode = exitCode;
 }
 
-export function buildLaunchArguments(args, leanPrompt) {
+export function buildLaunchArguments(args, leanPrompt, mode = SAFE_MODE) {
   return [
     "--profile",
     "codexzero",
@@ -261,9 +268,19 @@ export function buildLaunchArguments(args, leanPrompt) {
     "-c",
     "features.codex_zero_lossless_terminal_codec=true",
     "-c",
+    "features.codex_zero_command_aware_projection=true",
+    "-c",
     "features.codex_zero_exact_duplicate_results=true",
     "-c",
     "features.codex_zero_event_driven_wait=true",
+    ...(modeUsesScopedRuntime(mode)
+      ? [
+          "-c",
+          "features.code_mode=true",
+          "-c",
+          "features.code_mode_only=true"
+        ]
+      : []),
     ...args
   ];
 }
@@ -277,24 +294,24 @@ async function promptMode(args) {
   }
   const requested = normalizeMode(requestedInput);
   if (!requested) {
-    throw new Error('Mode must be "safe" or "max-save".');
+    throw new Error('Mode must be "safe", "standard", "max-save", or "focused".');
   }
   const metadataPath = path.join(codexZeroHome(), "install.json");
   const metadata = await readInstallMetadata();
   if (!metadata) {
     throw new Error("CodexZero installation metadata is missing. Re-run the installer.");
   }
-  if (requested === MAX_SAVE_MODE) {
+  if (modeUsesLeanPrompt(requested)) {
     const promptPath = bundledLeanPromptPath();
     if (!(await exists(promptPath))) {
-      throw new Error(`Max Savings prompt is missing at ${promptPath}. Re-run the installer.`);
+      throw new Error(`Lean prompt is missing at ${promptPath}. Re-run the installer.`);
     }
   }
   const updated = {
     ...metadata,
-    schema: "codex-zero-install-v3",
+    schema: "codex-zero-install-v4",
     mode: requested,
-    lean_prompt: requested === MAX_SAVE_MODE ? bundledLeanPromptPath() : null,
+    lean_prompt: modeUsesLeanPrompt(requested) ? bundledLeanPromptPath() : null,
     mode_updated_at: new Date().toISOString()
   };
   const temporary = `${metadataPath}.${process.pid}.tmp`;
@@ -327,17 +344,25 @@ function bundledLeanPromptPath() {
 }
 
 async function activeLeanPromptPath() {
-  if (await selectedInstallMode() !== MAX_SAVE_MODE) return null;
+  if (!modeUsesLeanPrompt(await selectedInstallMode())) return null;
   const promptPath = bundledLeanPromptPath();
   if (!(await exists(promptPath))) {
-    throw new Error(`Max Savings prompt is missing at ${promptPath}. Re-run the installer.`);
+    throw new Error(`Lean prompt is missing at ${promptPath}. Re-run the installer.`);
   }
   return promptPath;
 }
 
+function modeUsesLeanPrompt(mode) {
+  return mode === STANDARD_MODE || mode === MAX_SAVE_MODE || mode === FOCUSED_MODE;
+}
+
+function modeUsesScopedRuntime(mode) {
+  return mode === FOCUSED_MODE;
+}
+
 async function promptBenchmarkSummary() {
   const mode = await selectedInstallMode();
-  if (mode !== MAX_SAVE_MODE) {
+  if (!modeUsesLeanPrompt(mode)) {
     return {
       mode,
       active: false,
@@ -504,7 +529,7 @@ function help() {
     "codex-zero desktop --check         Verify the Desktop executable path",
     "codex-zero stock [codex arguments]  Run the untouched stock CLI",
     "codex-zero savings [--json]         Show measured savings",
-    "codex-zero mode [MODE]              Show or select safe|max-save",
+    "codex-zero mode [MODE]              Show or select safe|standard|max-save|focused",
     "codex-zero monitor --start|--stop   Manage the savings monitor service",
     "codex-zero monitor --status         Show monitor service status",
     "codex-zero run-checks <profile>     Run a deterministic local check batch",

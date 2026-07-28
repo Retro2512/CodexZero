@@ -218,10 +218,21 @@ The dated GPT-5.6-sol reference is:
 
 ```text
 3,552 baseline model-instruction tokens
-  738 bundled model-instruction tokens
-2,814-token reference difference per model request (79.2%)
+  874 bundled model-instruction tokens
+2,678-token reference difference per model request (75.4%)
 ```
 
 This is a static comparison, not runtime telemetry. A model update can change the baseline. Prompt caching and provider accounting can also change its practical effect.
 
-The original July 22 refactor measured 5,099 → 946 combined tokens (81.4%). Restoring concise intermediary updates adds 58 model-prompt tokens, making the recalculated lineage 5,099 → 1,004 (80.3%). Neither combined figure is the installed mode: CodexZero preserves the user’s global and project instruction files.
+The original July 22 refactor measured 5,099 → 946 combined tokens (81.4%). Restoring concise intermediary updates produced 5,099 → 1,004 (80.3%). Adding batching, stopping, and context-handoff guidance makes the current lineage 5,099 → 1,140 (77.6%). None of the combined figures replaces the user’s global or project instruction files.
+
+## Scoped-runtime benchmark
+
+Direct and scoped profiles must be measured separately. The required factorial is:
+
+- Safe: direct tools, stock model instructions;
+- Standard: direct tools, lean model instructions;
+- Max Savings: legacy alias profile with direct tools and lean model instructions;
+- Focused: scoped code runtime, lean model instructions.
+
+For each cell, record initial tool-schema tokens, provider input/cached/output/reasoning tokens, model-visible calls, nested tool calls, wall time, weighted cost, verifier result, and changed paths. A projection trial is valid only when telemetry records `projection: "successful-check-v1"` and the raw artifact hash verifies.

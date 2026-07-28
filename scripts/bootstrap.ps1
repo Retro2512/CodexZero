@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('ask', 'safe', 'max-save', 'command-output', 'full-lean')]
+    [ValidateSet('ask', 'safe', 'standard', 'max-save', 'focused', 'command-output', 'full-lean')]
     [string]$Mode = 'ask'
 )
 

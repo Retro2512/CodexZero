@@ -1,1 +1,2 @@
 prompts/*.md text eol=lf
+patches/*.patch text eol=lf
