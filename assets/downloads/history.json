@@ -1,11 +1,48 @@
 {
   "repository": "Retro2512/CodexZero",
   "metric": "release-package-downloads",
+  "estimate": "Launch-period points allocate each release total across the time it was current, weighted by daily unique repository clones and views.",
   "points": [
     {
+      "date": "2026-07-23",
+      "downloads": 0,
+      "kind": "estimated"
+    },
+    {
+      "date": "2026-07-24",
+      "downloads": 66,
+      "kind": "estimated"
+    },
+    {
+      "date": "2026-07-25",
+      "downloads": 103,
+      "kind": "estimated"
+    },
+    {
+      "date": "2026-07-26",
+      "downloads": 126,
+      "kind": "estimated"
+    },
+    {
+      "date": "2026-07-27",
+      "downloads": 131,
+      "kind": "estimated"
+    },
+    {
+      "date": "2026-07-28",
+      "downloads": 159,
+      "kind": "estimated"
+    },
+    {
+      "date": "2026-07-29",
+      "downloads": 184,
+      "kind": "estimated"
+    },
+    {
       "date": "2026-07-30",
-      "downloads": 199
+      "downloads": 199,
+      "kind": "observed"
     }
   ],
-  "updated_at": "2026-07-30T15:20:24Z"
+  "updated_at": "2026-07-30T15:30:08Z"
 }

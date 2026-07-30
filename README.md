@@ -135,4 +135,4 @@ CodexZero is an independent project and is not an official OpenAI product.
 
 ![CodexZero total package download history](assets/downloads/history.svg)
 
-Counts release packages across every version, excluding checksum files. Updated daily.
+Launch-period points are estimated from release timing and GitHub traffic. Daily points from July 30 onward use observed package totals. Checksum files are excluded.

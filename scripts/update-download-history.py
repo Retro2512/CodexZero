@@ -57,100 +57,141 @@ def load_history(path: Path, repository: str) -> dict:
 def write_history(path: Path, history: dict, total: int, now: datetime) -> None:
     today = now.date().isoformat()
     points = history.setdefault("points", [])
+    cumulative_total = max(total, points[-1]["downloads"] if points else 0)
     if points and points[-1]["date"] == today:
-        points[-1]["downloads"] = total
+        points[-1]["downloads"] = cumulative_total
+        points[-1]["kind"] = "observed"
     else:
-        points.append({"date": today, "downloads": total})
+        points.append({
+            "date": today,
+            "downloads": cumulative_total,
+            "kind": "observed",
+        })
 
     history["updated_at"] = now.replace(microsecond=0).isoformat().replace("+00:00", "Z")
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(history, indent=2) + "\n", encoding="utf-8")
 
 
-def nice_ceiling(value: int) -> int:
-    if value <= 10:
-        return 10
-    magnitude = 10 ** math.floor(math.log10(value))
-    normalized = value / magnitude
-    step = 1 if normalized <= 1 else 2 if normalized <= 2 else 5 if normalized <= 5 else 10
-    return step * magnitude
+def nice_scale(value: int) -> tuple[int, int]:
+    rough_step = max(1, value) / 4
+    magnitude = 10 ** math.floor(math.log10(rough_step))
+    normalized = rough_step / magnitude
+    step_factor = 1 if normalized <= 1 else 2 if normalized <= 2 else 5 if normalized <= 5 else 10
+    step = max(1, round(step_factor * magnitude))
+    return step, max(step, math.ceil(value / step) * step)
+
+
+def line_path(coordinates: list[tuple[float, float]]) -> str:
+    return "M " + " L ".join(f"{x:.1f} {y:.1f}" for x, y in coordinates)
+
+
+def chart_tick_indices(point_count: int) -> list[int]:
+    if point_count <= 8:
+        return list(range(point_count))
+    return sorted({round(index * (point_count - 1) / 6) for index in range(7)})
+
+
+def date_label(value: str, span_days: int) -> str:
+    parsed = datetime.strptime(value, "%Y-%m-%d")
+    if span_days <= 31:
+        return parsed.strftime("%b %d").replace(" 0", " ")
+    if span_days <= 730:
+        return parsed.strftime("%b %Y")
+    return parsed.strftime("%Y")
 
 
 def render_svg(path: Path, history: dict) -> None:
     points = history["points"]
-    width, height = 960, 360
-    left, right, top, bottom = 72, 930, 112, 298
+    width, height = 960, 560
+    left, right, top, bottom = 92, 930, 108, 450
     chart_width, chart_height = right - left, bottom - top
-    maximum = nice_ceiling(max(point["downloads"] for point in points))
+    tick_step, maximum = nice_scale(max(point["downloads"] for point in points))
+    dates = [datetime.strptime(point["date"], "%Y-%m-%d").date() for point in points]
+    first_day, last_day = dates[0].toordinal(), dates[-1].toordinal()
+    span_days = max(1, last_day - first_day)
 
     def x_at(index: int) -> float:
-        if len(points) == 1:
+        if first_day == last_day:
             return left + chart_width / 2
-        return left + chart_width * index / (len(points) - 1)
+        return left + chart_width * (dates[index].toordinal() - first_day) / span_days
 
     def y_at(value: int) -> float:
         return bottom - chart_height * value / maximum
 
     coordinates = [(x_at(index), y_at(point["downloads"])) for index, point in enumerate(points)]
-    if len(coordinates) == 1:
-        chart_paths = ""
-        date_labels = (
-            f'<text x="{coordinates[0][0]:.1f}" y="329" text-anchor="middle" '
-            f'fill="#8b949e" font-size="13">{escape(points[0]["date"])}</text>'
-        )
-    else:
-        line = "M " + " L ".join(f"{x:.1f} {y:.1f}" for x, y in coordinates)
-        area = (
-            f"M {coordinates[0][0]:.1f} {bottom} L "
-            + " L ".join(f"{x:.1f} {y:.1f}" for x, y in coordinates)
-            + f" L {coordinates[-1][0]:.1f} {bottom} Z"
-        )
-        chart_paths = (
-            f'<path d="{area}" fill="url(#area)"/>'
-            f'<path d="{line}" fill="none" stroke="#58a6ff" stroke-width="3" '
+    first_observed = next(
+        (index for index, point in enumerate(points) if point.get("kind") == "observed"),
+        len(points) - 1,
+    )
+    estimated_coordinates = coordinates[:first_observed + 1] if first_observed else []
+    observed_coordinates = coordinates[first_observed:]
+
+    chart_paths = []
+    if len(estimated_coordinates) > 1:
+        chart_paths.append(
+            f'<path d="{line_path(estimated_coordinates)}" fill="none" '
+            'stroke="#f0442e" stroke-width="3.5" stroke-dasharray="9 7" '
             'stroke-linecap="round" stroke-linejoin="round"/>'
         )
-        date_labels = (
-            f'<text x="{left}" y="329" fill="#8b949e" font-size="13">'
-            f'{escape(points[0]["date"])}</text>'
-            f'<text x="{right}" y="329" text-anchor="end" fill="#8b949e" '
-            f'font-size="13">{escape(points[-1]["date"])}</text>'
+    if len(observed_coordinates) > 1:
+        chart_paths.append(
+            f'<path d="{line_path(observed_coordinates)}" fill="none" '
+            'stroke="#f0442e" stroke-width="4" stroke-linecap="round" '
+            'stroke-linejoin="round"/>'
         )
 
     grid = []
-    for index in range(5):
-        value = round(maximum * index / 4)
+    for value in range(0, maximum + tick_step, tick_step):
         y = y_at(value)
         grid.append(
             f'<line x1="{left}" y1="{y:.1f}" x2="{right}" y2="{y:.1f}" '
-            'stroke="#30363d" stroke-width="1"/>'
+            'stroke="#e1e4e8" stroke-width="1"/>'
             f'<text x="{left - 14}" y="{y + 5:.1f}" text-anchor="end" '
-            f'fill="#8b949e" font-size="13">{value:,}</text>'
+            f'fill="#24292f" font-size="14">{value:,}</text>'
+        )
+
+    x_ticks = []
+    for index in chart_tick_indices(len(points)):
+        x, _ = coordinates[index]
+        x_ticks.append(
+            f'<line x1="{x:.1f}" y1="{bottom}" x2="{x:.1f}" y2="{bottom + 7}" '
+            'stroke="#24292f" stroke-width="1.5"/>'
+            f'<text x="{x:.1f}" y="{bottom + 28}" text-anchor="middle" '
+            f'fill="#24292f" font-size="13">{escape(date_label(points[index]["date"], span_days))}</text>'
         )
 
     total = points[-1]["downloads"]
     updated = escape(history["updated_at"])
     repository = escape(history["repository"])
     last_x, last_y = coordinates[-1]
+    observed_x, observed_y = coordinates[first_observed]
 
     svg = f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img">
   <title>CodexZero package download history</title>
-  <desc>{total:,} release package downloads as of {updated}. Checksum downloads are excluded.</desc>
-  <defs>
-    <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#2f81f7" stop-opacity="0.42"/>
-      <stop offset="100%" stop-color="#2f81f7" stop-opacity="0.04"/>
-    </linearGradient>
-  </defs>
-  <rect width="{width}" height="{height}" rx="14" fill="#0d1117"/>
-  <text x="32" y="42" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="21" font-weight="650">Total package downloads</text>
-  <text x="32" y="70" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14">{repository} · updated daily</text>
-  <text x="{right}" y="53" text-anchor="end" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="34" font-weight="700">{total:,}</text>
-  <g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif">
+  <desc>{total:,} release package downloads as of {updated}. Dashed launch-period values are estimated from release timing and repository traffic. Solid values are observed daily totals. Checksum downloads are excluded.</desc>
+  <rect width="{width}" height="{height}" rx="12" fill="#ffffff"/>
+  <g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" fill="#24292f">
+    <text x="{width / 2}" y="47" text-anchor="middle" font-size="25" font-weight="650">Download history</text>
+    <text x="{right}" y="48" text-anchor="end" font-size="19" font-weight="650">{total:,} total</text>
     {''.join(grid)}
-    {chart_paths}
-    <circle cx="{last_x:.1f}" cy="{last_y:.1f}" r="5" fill="#58a6ff" stroke="#0d1117" stroke-width="3"/>
-    {date_labels}
+    <line x1="{left}" y1="{top}" x2="{left}" y2="{bottom}" stroke="#24292f" stroke-width="2"/>
+    <line x1="{left}" y1="{bottom}" x2="{right}" y2="{bottom}" stroke="#24292f" stroke-width="2"/>
+    {''.join(chart_paths)}
+    <circle cx="{observed_x:.1f}" cy="{observed_y:.1f}" r="5" fill="#ffffff" stroke="#f0442e" stroke-width="3"/>
+    <circle cx="{last_x:.1f}" cy="{last_y:.1f}" r="5" fill="#f0442e" stroke="#ffffff" stroke-width="2"/>
+    {''.join(x_ticks)}
+    <text x="{(left + right) / 2}" y="530" text-anchor="middle" font-size="15">Date</text>
+    <text x="25" y="{(top + bottom) / 2}" text-anchor="middle" font-size="15" transform="rotate(-90 25 {(top + bottom) / 2})">Package downloads</text>
+    <g>
+      <rect x="{left + 18}" y="{top + 17}" width="292" height="76" rx="5" fill="#ffffff" stroke="#24292f" stroke-width="1.5"/>
+      <rect x="{left + 33}" y="{top + 33}" width="11" height="11" rx="2" fill="#f0442e"/>
+      <text x="{left + 54}" y="{top + 44}" font-size="14" font-weight="600">{repository}</text>
+      <line x1="{left + 33}" y1="{top + 68}" x2="{left + 72}" y2="{top + 68}" stroke="#f0442e" stroke-width="3" stroke-dasharray="8 6"/>
+      <text x="{left + 80}" y="{top + 73}" font-size="13">Estimated</text>
+      <line x1="{left + 174}" y1="{top + 68}" x2="{left + 213}" y2="{top + 68}" stroke="#f0442e" stroke-width="3"/>
+      <text x="{left + 221}" y="{top + 73}" font-size="13">Observed</text>
+    </g>
   </g>
 </svg>
 """
