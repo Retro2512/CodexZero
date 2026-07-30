@@ -1,0 +1,6139 @@
+{
+  "schema": "codexzero-five-way-benchmark-v1",
+  "captured_at": "2026-07-28T04:54:08.123183+00:00",
+  "model": "gpt-5.6-sol",
+  "reasoning_effort": "medium",
+  "codexzero_mode": "safe",
+  "tokenizer": "o200k_base",
+  "seed": 2512,
+  "repetitions": 1,
+  "workloads": [
+    "repetitive_log",
+    "git_diff",
+    "code_fix"
+  ],
+  "configurations": [
+    {
+      "id": "codex_sqz",
+      "label": "Codex + sqz 1.3.0",
+      "binary": "stock",
+      "codexzero": false,
+      "rtk": true,
+      "caveman": false
+    },
+    {
+      "id": "codex_squeez",
+      "label": "Codex + Squeez 1.44.0",
+      "binary": "stock",
+      "codexzero": false,
+      "rtk": true,
+      "caveman": false
+    }
+  ],
+  "expected_trials": 6,
+  "completed_trials": 6,
+  "quality_passes": 6,
+  "evidence_audit": {
+    "status": "passed",
+    "unique_trial_ids": 6,
+    "quality_passes": 6,
+    "cache_input_identities": 6,
+    "provider_total_identities": 6,
+    "raw_exec_streams_rehashed": 6,
+    "stderr_streams_rehashed": 6,
+    "tool_payloads_rehashed_and_recounted": 16,
+    "codexzero_artifacts_rehashed": true
+  },
+  "host": {
+    "platform": "Windows-10-10.0.26200-SP0",
+    "python": "3.10.11",
+    "cpu_count": 32
+  },
+  "binaries": {
+    "stock": {
+      "filename": "codex.exe",
+      "version": "codex-cli 0.145.0-alpha.30",
+      "bytes": 350254384,
+      "sha256": "adf966822b9a04fb3a6e41d7d6a44b60e5c87beac6aebef5c0b0a2205c8cdf62"
+    },
+    "codexzero": {
+      "filename": "codex-zero-core.exe",
+      "version": "codex-cli 0.145.0-alpha.30",
+      "bytes": 353837568,
+      "sha256": "eb0cc8bb522510ef51f281ae386c18f432ac2f24303223aa12f8a7f37c219956"
+    }
+  },
+  "stock_package_provenance": {
+    "package": "@openai/codex",
+    "version": "0.145.0-alpha.30-win32-x64",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/openai/codex.git",
+      "directory": "codex-cli"
+    },
+    "archive_filename": "openai-codex-0.145.0-alpha.30-win32-x64.tgz",
+    "archive_bytes": 147845466,
+    "archive_integrity": "sha512-kFTtlwpuXKD9rQlQXlf4buNxeC346nBI5q+4Jdjd03jagafahF2uqa4z5tKb1NixMv3Jds9hx0AjX+kWnFtlKQ==",
+    "registry_integrity_match": true
+  },
+  "instructions": {
+    "baseline_model_prompt_tokens": 3552,
+    "lean_model_prompt_tokens": 874,
+    "lean_tokens_removed_per_inference": 2678,
+    "rtk_tokens": 186,
+    "rtk_sha256": "2c567444ade9caf9f5b58955a0acafe7886c256c72e56bd496d26bbe33baeb73",
+    "caveman_skill_tokens": 0,
+    "caveman_skill_sha256": null,
+    "caveman_activation_tokens": 13
+  },
+  "fixture_manifest": {
+    ".gitignore": {
+      "bytes": 11,
+      "sha256": "7a008398bbf1abf32fa8851fc1b50085b0ab885a1fdddca1b75008247c543e69"
+    },
+    "benchmark-data.txt": {
+      "bytes": 7420,
+      "sha256": "4345e2284c710259ff15f174c82c3fe4ca130d357293553e5765c56d2f400fc2"
+    },
+    "code-fix.test.mjs": {
+      "bytes": 251,
+      "sha256": "b5206fd09cea6a59364d298996d68ed49f3e39ed3389ca6c67fd9a4bfe849073"
+    },
+    "failing-stack.mjs": {
+      "bytes": 230,
+      "sha256": "0508af4996891473b4c000bcdb378c056817e35538dafe4be8d660e034fcaf71"
+    },
+    "lib.mjs": {
+      "bytes": 108,
+      "sha256": "4e1e8485252a27cd1a3670ecf5a091ab5d1ced433474f2cca0c2fb11c05f28b3"
+    },
+    "package.json": {
+      "bytes": 197,
+      "sha256": "38ec85d81ca68e3cf09d3d0526310242dd20fd87ef2530ef5c23e4d5f3a3ce8b"
+    },
+    "repeated-output.mjs": {
+      "bytes": 224,
+      "sha256": "03b7bb99b16ebbea368df375f12ce48072b02a30cdaa060ec780c0bfa8966375"
+    },
+    "small-output.mjs": {
+      "bytes": 89,
+      "sha256": "4101a816967d5dc884b424e87c642423e35cb2bb26c81e0711277f552bce71fb"
+    },
+    "test-output.mjs": {
+      "bytes": 228,
+      "sha256": "b8a34cedc67991c825bf3b0688da8ff54a8c5e2fa3c2dcf7df9088c67852eaba"
+    }
+  },
+  "overall": [
+    {
+      "configuration": "codex_sqz",
+      "label": "Codex + sqz 1.3.0",
+      "trials": 3,
+      "expected_trials": 3,
+      "quality_passes": 3,
+      "metrics": {
+        "provider_total_tokens": {
+          "n": 3,
+          "mean": 60736.67,
+          "median": 68797.0,
+          "stdev": 25626.53,
+          "min": 32049.0,
+          "max": 81364.0,
+          "p95": 80107.3,
+          "bootstrap_95_ci": [
+            32049.0,
+            81364.0
+          ]
+        },
+        "provider_input_tokens": {
+          "n": 3,
+          "mean": 60194.33,
+          "median": 68232.0,
+          "stdev": 25572.11,
+          "min": 31569.0,
+          "max": 80782.0,
+          "p95": 79527.0,
+          "bootstrap_95_ci": [
+            31569.0,
+            80782.0
+          ]
+        },
+        "provider_cached_input_tokens": {
+          "n": 3,
+          "mean": 48981.33,
+          "median": 57344.0,
+          "stdev": 30566.37,
+          "min": 15104.0,
+          "max": 74496.0,
+          "p95": 72780.8,
+          "bootstrap_95_ci": [
+            15104.0,
+            74496.0
+          ]
+        },
+        "provider_uncached_input_tokens": {
+          "n": 3,
+          "mean": 11213.0,
+          "median": 10888.0,
+          "stdev": 5097.28,
+          "min": 6286.0,
+          "max": 16465.0,
+          "p95": 15907.3,
+          "bootstrap_95_ci": [
+            6286.0,
+            16465.0
+          ]
+        },
+        "provider_cache_write_tokens": {
+          "n": 3,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "provider_output_tokens": {
+          "n": 3,
+          "mean": 542.33,
+          "median": 565.0,
+          "stdev": 54.65,
+          "min": 480.0,
+          "max": 582.0,
+          "p95": 580.3,
+          "bootstrap_95_ci": [
+            480.0,
+            582.0
+          ]
+        },
+        "provider_reasoning_tokens": {
+          "n": 3,
+          "mean": 133.67,
+          "median": 76.0,
+          "stdev": 122.17,
+          "min": 51.0,
+          "max": 274.0,
+          "p95": 254.2,
+          "bootstrap_95_ci": [
+            51.0,
+            274.0
+          ]
+        },
+        "inference_requests": {
+          "n": 3,
+          "mean": 3.67,
+          "median": 4.0,
+          "stdev": 1.53,
+          "min": 2.0,
+          "max": 5.0,
+          "p95": 4.9,
+          "bootstrap_95_ci": [
+            2.0,
+            5.0
+          ]
+        },
+        "cache_hit_requests": {
+          "n": 3,
+          "mean": 3.33,
+          "median": 4.0,
+          "stdev": 2.08,
+          "min": 1.0,
+          "max": 5.0,
+          "p95": 4.9,
+          "bootstrap_95_ci": [
+            1.0,
+            5.0
+          ]
+        },
+        "tool_output_tokens": {
+          "n": 3,
+          "mean": 1243.33,
+          "median": 468.0,
+          "stdev": 1694.7,
+          "min": 75.0,
+          "max": 3187.0,
+          "p95": 2915.1,
+          "bootstrap_95_ci": [
+            75.0,
+            3187.0
+          ]
+        },
+        "assistant_visible_tokens": {
+          "n": 3,
+          "mean": 103.67,
+          "median": 117.0,
+          "stdev": 45.49,
+          "min": 53.0,
+          "max": 141.0,
+          "p95": 138.6,
+          "bootstrap_95_ci": [
+            53.0,
+            141.0
+          ]
+        },
+        "final_answer_tokens": {
+          "n": 3,
+          "mean": 39.0,
+          "median": 33.0,
+          "stdev": 14.93,
+          "min": 28.0,
+          "max": 56.0,
+          "p95": 53.7,
+          "bootstrap_95_ci": [
+            28.0,
+            56.0
+          ]
+        },
+        "tool_calls": {
+          "n": 3,
+          "mean": 2.33,
+          "median": 3.0,
+          "stdev": 1.15,
+          "min": 1.0,
+          "max": 3.0,
+          "p95": 3.0,
+          "bootstrap_95_ci": [
+            1.0,
+            3.0
+          ]
+        },
+        "tool_call_argument_tokens": {
+          "n": 3,
+          "mean": 215.67,
+          "median": 218.0,
+          "stdev": 87.52,
+          "min": 127.0,
+          "max": 302.0,
+          "p95": 293.6,
+          "bootstrap_95_ci": [
+            127.0,
+            302.0
+          ]
+        },
+        "shell_command_executions": {
+          "n": 3,
+          "mean": 2.33,
+          "median": 3.0,
+          "stdev": 1.15,
+          "min": 1.0,
+          "max": 3.0,
+          "p95": 3.0,
+          "bootstrap_95_ci": [
+            1.0,
+            3.0
+          ]
+        },
+        "file_change_events": {
+          "n": 3,
+          "mean": 0.33,
+          "median": 0.0,
+          "stdev": 0.58,
+          "min": 0.0,
+          "max": 1.0,
+          "p95": 0.9,
+          "bootstrap_95_ci": [
+            0.0,
+            1.0
+          ]
+        },
+        "observed_execution_events": {
+          "n": 3,
+          "mean": 2.67,
+          "median": 3.0,
+          "stdev": 1.53,
+          "min": 1.0,
+          "max": 4.0,
+          "p95": 3.9,
+          "bootstrap_95_ci": [
+            1.0,
+            4.0
+          ]
+        },
+        "shell_command_argument_tokens": {
+          "n": 3,
+          "mean": 121.0,
+          "median": 98.0,
+          "stdev": 50.59,
+          "min": 86.0,
+          "max": 179.0,
+          "p95": 170.9,
+          "bootstrap_95_ci": [
+            86.0,
+            179.0
+          ]
+        },
+        "shell_command_output_tokens": {
+          "n": 3,
+          "mean": 1141.67,
+          "median": 304.0,
+          "stdev": 1684.69,
+          "min": 40.0,
+          "max": 3081.0,
+          "p95": 2803.3,
+          "bootstrap_95_ci": [
+            40.0,
+            3081.0
+          ]
+        },
+        "wall_time_ms": {
+          "n": 3,
+          "mean": 22941.17,
+          "median": 24839.8,
+          "stdev": 6117.85,
+          "min": 16099.1,
+          "max": 27884.6,
+          "p95": 27580.12,
+          "bootstrap_95_ci": [
+            16099.1,
+            27884.6
+          ]
+        },
+        "codexzero_tokens_eliminated": {
+          "n": 3,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "rtk_tokens_saved": {
+          "n": 3,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "paired_savings_vs_codex": {
+        "provider_total_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_cached_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_uncached_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_cache_write_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_reasoning_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "inference_requests": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "cache_hit_requests": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "assistant_visible_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "final_answer_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_calls": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_call_argument_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_executions": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "file_change_events": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "observed_execution_events": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_argument_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "wall_time_ms": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "codexzero_tokens_eliminated": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "rtk_tokens_saved": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        }
+      },
+      "paired_direction_vs_codex": {
+        "lower_token_trials": 0,
+        "equal_token_trials": 0,
+        "higher_token_trials": 0,
+        "exact_two_sided_sign_test_p": 1.0,
+        "provider_total_tokens": 182210,
+        "paired_codex_total_tokens": 0,
+        "net_tokens_saved": 0,
+        "net_percent_saved": 0
+      },
+      "cache": {
+        "total_requests": 11,
+        "hit_requests": 10,
+        "miss_requests": 1,
+        "request_hit_rate": 0.9091,
+        "input_tokens": 180583,
+        "cached_input_tokens": 146944,
+        "uncached_input_tokens": 33639,
+        "token_hit_ratio": 0.8137
+      },
+      "rtk": {
+        "eligible_trials": 2,
+        "adopted_trials": 0,
+        "commands": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "tokens_saved": 0,
+        "parse_failures": 0,
+        "fallback_successes": 0
+      },
+      "codexzero": {
+        "events": 0,
+        "transformed_events": 0,
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "all_monotonic": true,
+        "all_artifacts_verified": true
+      }
+    },
+    {
+      "configuration": "codex_squeez",
+      "label": "Codex + Squeez 1.44.0",
+      "trials": 3,
+      "expected_trials": 3,
+      "quality_passes": 3,
+      "metrics": {
+        "provider_total_tokens": {
+          "n": 3,
+          "mean": 63440.0,
+          "median": 69097.0,
+          "stdev": 21322.93,
+          "min": 39859.0,
+          "max": 81364.0,
+          "p95": 80137.3,
+          "bootstrap_95_ci": [
+            39859.0,
+            81364.0
+          ]
+        },
+        "provider_input_tokens": {
+          "n": 3,
+          "mean": 62989.67,
+          "median": 68605.0,
+          "stdev": 21082.53,
+          "min": 39668.0,
+          "max": 80696.0,
+          "p95": 79486.9,
+          "bootstrap_95_ci": [
+            39668.0,
+            80696.0
+          ]
+        },
+        "provider_cached_input_tokens": {
+          "n": 3,
+          "mean": 41301.33,
+          "median": 47360.0,
+          "stdev": 23754.72,
+          "min": 15104.0,
+          "max": 61440.0,
+          "p95": 60032.0,
+          "bootstrap_95_ci": [
+            15104.0,
+            61440.0
+          ]
+        },
+        "provider_uncached_input_tokens": {
+          "n": 3,
+          "mean": 21688.33,
+          "median": 21245.0,
+          "stdev": 2681.63,
+          "min": 19256.0,
+          "max": 24564.0,
+          "p95": 24232.1,
+          "bootstrap_95_ci": [
+            19256.0,
+            24564.0
+          ]
+        },
+        "provider_cache_write_tokens": {
+          "n": 3,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "provider_output_tokens": {
+          "n": 3,
+          "mean": 450.33,
+          "median": 492.0,
+          "stdev": 241.21,
+          "min": 191.0,
+          "max": 668.0,
+          "p95": 650.4,
+          "bootstrap_95_ci": [
+            191.0,
+            668.0
+          ]
+        },
+        "provider_reasoning_tokens": {
+          "n": 3,
+          "mean": 92.67,
+          "median": 99.0,
+          "stdev": 53.78,
+          "min": 36.0,
+          "max": 143.0,
+          "p95": 138.6,
+          "bootstrap_95_ci": [
+            36.0,
+            143.0
+          ]
+        },
+        "inference_requests": {
+          "n": 3,
+          "mean": 3.67,
+          "median": 4.0,
+          "stdev": 1.53,
+          "min": 2.0,
+          "max": 5.0,
+          "p95": 4.9,
+          "bootstrap_95_ci": [
+            2.0,
+            5.0
+          ]
+        },
+        "cache_hit_requests": {
+          "n": 3,
+          "mean": 2.67,
+          "median": 3.0,
+          "stdev": 1.53,
+          "min": 1.0,
+          "max": 4.0,
+          "p95": 3.9,
+          "bootstrap_95_ci": [
+            1.0,
+            4.0
+          ]
+        },
+        "tool_output_tokens": {
+          "n": 3,
+          "mean": 3558.67,
+          "median": 3024.0,
+          "stdev": 3447.24,
+          "min": 410.0,
+          "max": 7242.0,
+          "p95": 6820.2,
+          "bootstrap_95_ci": [
+            410.0,
+            7242.0
+          ]
+        },
+        "assistant_visible_tokens": {
+          "n": 3,
+          "mean": 93.0,
+          "median": 79.0,
+          "stdev": 40.84,
+          "min": 61.0,
+          "max": 139.0,
+          "p95": 133.0,
+          "bootstrap_95_ci": [
+            61.0,
+            139.0
+          ]
+        },
+        "final_answer_tokens": {
+          "n": 3,
+          "mean": 38.33,
+          "median": 36.0,
+          "stdev": 13.65,
+          "min": 26.0,
+          "max": 53.0,
+          "p95": 51.3,
+          "bootstrap_95_ci": [
+            26.0,
+            53.0
+          ]
+        },
+        "tool_calls": {
+          "n": 3,
+          "mean": 2.0,
+          "median": 2.0,
+          "stdev": 1.0,
+          "min": 1.0,
+          "max": 3.0,
+          "p95": 2.9,
+          "bootstrap_95_ci": [
+            1.0,
+            3.0
+          ]
+        },
+        "tool_call_argument_tokens": {
+          "n": 3,
+          "mean": 170.0,
+          "median": 177.0,
+          "stdev": 98.69,
+          "min": 68.0,
+          "max": 265.0,
+          "p95": 256.2,
+          "bootstrap_95_ci": [
+            68.0,
+            265.0
+          ]
+        },
+        "shell_command_executions": {
+          "n": 3,
+          "mean": 2.0,
+          "median": 2.0,
+          "stdev": 1.0,
+          "min": 1.0,
+          "max": 3.0,
+          "p95": 2.9,
+          "bootstrap_95_ci": [
+            1.0,
+            3.0
+          ]
+        },
+        "file_change_events": {
+          "n": 3,
+          "mean": 0.33,
+          "median": 0.0,
+          "stdev": 0.58,
+          "min": 0.0,
+          "max": 1.0,
+          "p95": 0.9,
+          "bootstrap_95_ci": [
+            0.0,
+            1.0
+          ]
+        },
+        "observed_execution_events": {
+          "n": 3,
+          "mean": 2.33,
+          "median": 2.0,
+          "stdev": 1.53,
+          "min": 1.0,
+          "max": 4.0,
+          "p95": 3.8,
+          "bootstrap_95_ci": [
+            1.0,
+            4.0
+          ]
+        },
+        "shell_command_argument_tokens": {
+          "n": 3,
+          "mean": 86.0,
+          "median": 92.0,
+          "stdev": 58.23,
+          "min": 25.0,
+          "max": 141.0,
+          "p95": 136.1,
+          "bootstrap_95_ci": [
+            25.0,
+            141.0
+          ]
+        },
+        "shell_command_output_tokens": {
+          "n": 3,
+          "mean": 3455.33,
+          "median": 2912.0,
+          "stdev": 3511.67,
+          "min": 247.0,
+          "max": 7207.0,
+          "p95": 6777.5,
+          "bootstrap_95_ci": [
+            247.0,
+            7207.0
+          ]
+        },
+        "wall_time_ms": {
+          "n": 3,
+          "mean": 23018.23,
+          "median": 23587.1,
+          "stdev": 11461.79,
+          "min": 11282.6,
+          "max": 34185.0,
+          "p95": 33125.21,
+          "bootstrap_95_ci": [
+            11282.6,
+            34185.0
+          ]
+        },
+        "codexzero_tokens_eliminated": {
+          "n": 3,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "rtk_tokens_saved": {
+          "n": 3,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "paired_savings_vs_codex": {
+        "provider_total_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_cached_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_uncached_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_cache_write_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_reasoning_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "inference_requests": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "cache_hit_requests": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "assistant_visible_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "final_answer_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_calls": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_call_argument_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_executions": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "file_change_events": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "observed_execution_events": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_argument_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "wall_time_ms": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "codexzero_tokens_eliminated": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "rtk_tokens_saved": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        }
+      },
+      "paired_direction_vs_codex": {
+        "lower_token_trials": 0,
+        "equal_token_trials": 0,
+        "higher_token_trials": 0,
+        "exact_two_sided_sign_test_p": 1.0,
+        "provider_total_tokens": 190320,
+        "paired_codex_total_tokens": 0,
+        "net_tokens_saved": 0,
+        "net_percent_saved": 0
+      },
+      "cache": {
+        "total_requests": 11,
+        "hit_requests": 8,
+        "miss_requests": 3,
+        "request_hit_rate": 0.7273,
+        "input_tokens": 188969,
+        "cached_input_tokens": 123904,
+        "uncached_input_tokens": 65065,
+        "token_hit_ratio": 0.6557
+      },
+      "rtk": {
+        "eligible_trials": 2,
+        "adopted_trials": 0,
+        "commands": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "tokens_saved": 0,
+        "parse_failures": 0,
+        "fallback_successes": 0
+      },
+      "codexzero": {
+        "events": 0,
+        "transformed_events": 0,
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "all_monotonic": true,
+        "all_artifacts_verified": true
+      }
+    }
+  ],
+  "by_workload": [
+    {
+      "configuration": "codex_sqz",
+      "label": "Codex + sqz 1.3.0",
+      "trials": 1,
+      "expected_trials": 3,
+      "quality_passes": 1,
+      "metrics": {
+        "provider_total_tokens": {
+          "n": 1,
+          "mean": 32049.0,
+          "median": 32049.0,
+          "stdev": 0,
+          "min": 32049.0,
+          "max": 32049.0,
+          "p95": 32049.0,
+          "bootstrap_95_ci": [
+            32049.0,
+            32049.0
+          ]
+        },
+        "provider_input_tokens": {
+          "n": 1,
+          "mean": 31569.0,
+          "median": 31569.0,
+          "stdev": 0,
+          "min": 31569.0,
+          "max": 31569.0,
+          "p95": 31569.0,
+          "bootstrap_95_ci": [
+            31569.0,
+            31569.0
+          ]
+        },
+        "provider_cached_input_tokens": {
+          "n": 1,
+          "mean": 15104.0,
+          "median": 15104.0,
+          "stdev": 0,
+          "min": 15104.0,
+          "max": 15104.0,
+          "p95": 15104.0,
+          "bootstrap_95_ci": [
+            15104.0,
+            15104.0
+          ]
+        },
+        "provider_uncached_input_tokens": {
+          "n": 1,
+          "mean": 16465.0,
+          "median": 16465.0,
+          "stdev": 0,
+          "min": 16465.0,
+          "max": 16465.0,
+          "p95": 16465.0,
+          "bootstrap_95_ci": [
+            16465.0,
+            16465.0
+          ]
+        },
+        "provider_cache_write_tokens": {
+          "n": 1,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "provider_output_tokens": {
+          "n": 1,
+          "mean": 480.0,
+          "median": 480.0,
+          "stdev": 0,
+          "min": 480.0,
+          "max": 480.0,
+          "p95": 480.0,
+          "bootstrap_95_ci": [
+            480.0,
+            480.0
+          ]
+        },
+        "provider_reasoning_tokens": {
+          "n": 1,
+          "mean": 274.0,
+          "median": 274.0,
+          "stdev": 0,
+          "min": 274.0,
+          "max": 274.0,
+          "p95": 274.0,
+          "bootstrap_95_ci": [
+            274.0,
+            274.0
+          ]
+        },
+        "inference_requests": {
+          "n": 1,
+          "mean": 2.0,
+          "median": 2.0,
+          "stdev": 0,
+          "min": 2.0,
+          "max": 2.0,
+          "p95": 2.0,
+          "bootstrap_95_ci": [
+            2.0,
+            2.0
+          ]
+        },
+        "cache_hit_requests": {
+          "n": 1,
+          "mean": 1.0,
+          "median": 1.0,
+          "stdev": 0,
+          "min": 1.0,
+          "max": 1.0,
+          "p95": 1.0,
+          "bootstrap_95_ci": [
+            1.0,
+            1.0
+          ]
+        },
+        "tool_output_tokens": {
+          "n": 1,
+          "mean": 75.0,
+          "median": 75.0,
+          "stdev": 0,
+          "min": 75.0,
+          "max": 75.0,
+          "p95": 75.0,
+          "bootstrap_95_ci": [
+            75.0,
+            75.0
+          ]
+        },
+        "assistant_visible_tokens": {
+          "n": 1,
+          "mean": 53.0,
+          "median": 53.0,
+          "stdev": 0,
+          "min": 53.0,
+          "max": 53.0,
+          "p95": 53.0,
+          "bootstrap_95_ci": [
+            53.0,
+            53.0
+          ]
+        },
+        "final_answer_tokens": {
+          "n": 1,
+          "mean": 33.0,
+          "median": 33.0,
+          "stdev": 0,
+          "min": 33.0,
+          "max": 33.0,
+          "p95": 33.0,
+          "bootstrap_95_ci": [
+            33.0,
+            33.0
+          ]
+        },
+        "tool_calls": {
+          "n": 1,
+          "mean": 1.0,
+          "median": 1.0,
+          "stdev": 0,
+          "min": 1.0,
+          "max": 1.0,
+          "p95": 1.0,
+          "bootstrap_95_ci": [
+            1.0,
+            1.0
+          ]
+        },
+        "tool_call_argument_tokens": {
+          "n": 1,
+          "mean": 127.0,
+          "median": 127.0,
+          "stdev": 0,
+          "min": 127.0,
+          "max": 127.0,
+          "p95": 127.0,
+          "bootstrap_95_ci": [
+            127.0,
+            127.0
+          ]
+        },
+        "shell_command_executions": {
+          "n": 1,
+          "mean": 1.0,
+          "median": 1.0,
+          "stdev": 0,
+          "min": 1.0,
+          "max": 1.0,
+          "p95": 1.0,
+          "bootstrap_95_ci": [
+            1.0,
+            1.0
+          ]
+        },
+        "file_change_events": {
+          "n": 1,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "observed_execution_events": {
+          "n": 1,
+          "mean": 1.0,
+          "median": 1.0,
+          "stdev": 0,
+          "min": 1.0,
+          "max": 1.0,
+          "p95": 1.0,
+          "bootstrap_95_ci": [
+            1.0,
+            1.0
+          ]
+        },
+        "shell_command_argument_tokens": {
+          "n": 1,
+          "mean": 86.0,
+          "median": 86.0,
+          "stdev": 0,
+          "min": 86.0,
+          "max": 86.0,
+          "p95": 86.0,
+          "bootstrap_95_ci": [
+            86.0,
+            86.0
+          ]
+        },
+        "shell_command_output_tokens": {
+          "n": 1,
+          "mean": 40.0,
+          "median": 40.0,
+          "stdev": 0,
+          "min": 40.0,
+          "max": 40.0,
+          "p95": 40.0,
+          "bootstrap_95_ci": [
+            40.0,
+            40.0
+          ]
+        },
+        "wall_time_ms": {
+          "n": 1,
+          "mean": 16099.1,
+          "median": 16099.1,
+          "stdev": 0,
+          "min": 16099.1,
+          "max": 16099.1,
+          "p95": 16099.1,
+          "bootstrap_95_ci": [
+            16099.1,
+            16099.1
+          ]
+        },
+        "codexzero_tokens_eliminated": {
+          "n": 1,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "rtk_tokens_saved": {
+          "n": 1,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "paired_savings_vs_codex": {
+        "provider_total_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_cached_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_uncached_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_cache_write_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_reasoning_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "inference_requests": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "cache_hit_requests": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "assistant_visible_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "final_answer_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_calls": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_call_argument_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_executions": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "file_change_events": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "observed_execution_events": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_argument_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "wall_time_ms": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "codexzero_tokens_eliminated": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "rtk_tokens_saved": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        }
+      },
+      "paired_direction_vs_codex": {
+        "lower_token_trials": 0,
+        "equal_token_trials": 0,
+        "higher_token_trials": 0,
+        "exact_two_sided_sign_test_p": 1.0,
+        "provider_total_tokens": 32049,
+        "paired_codex_total_tokens": 0,
+        "net_tokens_saved": 0,
+        "net_percent_saved": 0
+      },
+      "cache": {
+        "total_requests": 2,
+        "hit_requests": 1,
+        "miss_requests": 1,
+        "request_hit_rate": 0.5,
+        "input_tokens": 31569,
+        "cached_input_tokens": 15104,
+        "uncached_input_tokens": 16465,
+        "token_hit_ratio": 0.4784
+      },
+      "rtk": {
+        "eligible_trials": 0,
+        "adopted_trials": 0,
+        "commands": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "tokens_saved": 0,
+        "parse_failures": 0,
+        "fallback_successes": 0
+      },
+      "codexzero": {
+        "events": 0,
+        "transformed_events": 0,
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "all_monotonic": true,
+        "all_artifacts_verified": true
+      },
+      "workload": "repetitive_log"
+    },
+    {
+      "configuration": "codex_squeez",
+      "label": "Codex + Squeez 1.44.0",
+      "trials": 1,
+      "expected_trials": 3,
+      "quality_passes": 1,
+      "metrics": {
+        "provider_total_tokens": {
+          "n": 1,
+          "mean": 39859.0,
+          "median": 39859.0,
+          "stdev": 0,
+          "min": 39859.0,
+          "max": 39859.0,
+          "p95": 39859.0,
+          "bootstrap_95_ci": [
+            39859.0,
+            39859.0
+          ]
+        },
+        "provider_input_tokens": {
+          "n": 1,
+          "mean": 39668.0,
+          "median": 39668.0,
+          "stdev": 0,
+          "min": 39668.0,
+          "max": 39668.0,
+          "p95": 39668.0,
+          "bootstrap_95_ci": [
+            39668.0,
+            39668.0
+          ]
+        },
+        "provider_cached_input_tokens": {
+          "n": 1,
+          "mean": 15104.0,
+          "median": 15104.0,
+          "stdev": 0,
+          "min": 15104.0,
+          "max": 15104.0,
+          "p95": 15104.0,
+          "bootstrap_95_ci": [
+            15104.0,
+            15104.0
+          ]
+        },
+        "provider_uncached_input_tokens": {
+          "n": 1,
+          "mean": 24564.0,
+          "median": 24564.0,
+          "stdev": 0,
+          "min": 24564.0,
+          "max": 24564.0,
+          "p95": 24564.0,
+          "bootstrap_95_ci": [
+            24564.0,
+            24564.0
+          ]
+        },
+        "provider_cache_write_tokens": {
+          "n": 1,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "provider_output_tokens": {
+          "n": 1,
+          "mean": 191.0,
+          "median": 191.0,
+          "stdev": 0,
+          "min": 191.0,
+          "max": 191.0,
+          "p95": 191.0,
+          "bootstrap_95_ci": [
+            191.0,
+            191.0
+          ]
+        },
+        "provider_reasoning_tokens": {
+          "n": 1,
+          "mean": 36.0,
+          "median": 36.0,
+          "stdev": 0,
+          "min": 36.0,
+          "max": 36.0,
+          "p95": 36.0,
+          "bootstrap_95_ci": [
+            36.0,
+            36.0
+          ]
+        },
+        "inference_requests": {
+          "n": 1,
+          "mean": 2.0,
+          "median": 2.0,
+          "stdev": 0,
+          "min": 2.0,
+          "max": 2.0,
+          "p95": 2.0,
+          "bootstrap_95_ci": [
+            2.0,
+            2.0
+          ]
+        },
+        "cache_hit_requests": {
+          "n": 1,
+          "mean": 1.0,
+          "median": 1.0,
+          "stdev": 0,
+          "min": 1.0,
+          "max": 1.0,
+          "p95": 1.0,
+          "bootstrap_95_ci": [
+            1.0,
+            1.0
+          ]
+        },
+        "tool_output_tokens": {
+          "n": 1,
+          "mean": 7242.0,
+          "median": 7242.0,
+          "stdev": 0,
+          "min": 7242.0,
+          "max": 7242.0,
+          "p95": 7242.0,
+          "bootstrap_95_ci": [
+            7242.0,
+            7242.0
+          ]
+        },
+        "assistant_visible_tokens": {
+          "n": 1,
+          "mean": 61.0,
+          "median": 61.0,
+          "stdev": 0,
+          "min": 61.0,
+          "max": 61.0,
+          "p95": 61.0,
+          "bootstrap_95_ci": [
+            61.0,
+            61.0
+          ]
+        },
+        "final_answer_tokens": {
+          "n": 1,
+          "mean": 36.0,
+          "median": 36.0,
+          "stdev": 0,
+          "min": 36.0,
+          "max": 36.0,
+          "p95": 36.0,
+          "bootstrap_95_ci": [
+            36.0,
+            36.0
+          ]
+        },
+        "tool_calls": {
+          "n": 1,
+          "mean": 1.0,
+          "median": 1.0,
+          "stdev": 0,
+          "min": 1.0,
+          "max": 1.0,
+          "p95": 1.0,
+          "bootstrap_95_ci": [
+            1.0,
+            1.0
+          ]
+        },
+        "tool_call_argument_tokens": {
+          "n": 1,
+          "mean": 68.0,
+          "median": 68.0,
+          "stdev": 0,
+          "min": 68.0,
+          "max": 68.0,
+          "p95": 68.0,
+          "bootstrap_95_ci": [
+            68.0,
+            68.0
+          ]
+        },
+        "shell_command_executions": {
+          "n": 1,
+          "mean": 1.0,
+          "median": 1.0,
+          "stdev": 0,
+          "min": 1.0,
+          "max": 1.0,
+          "p95": 1.0,
+          "bootstrap_95_ci": [
+            1.0,
+            1.0
+          ]
+        },
+        "file_change_events": {
+          "n": 1,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "observed_execution_events": {
+          "n": 1,
+          "mean": 1.0,
+          "median": 1.0,
+          "stdev": 0,
+          "min": 1.0,
+          "max": 1.0,
+          "p95": 1.0,
+          "bootstrap_95_ci": [
+            1.0,
+            1.0
+          ]
+        },
+        "shell_command_argument_tokens": {
+          "n": 1,
+          "mean": 25.0,
+          "median": 25.0,
+          "stdev": 0,
+          "min": 25.0,
+          "max": 25.0,
+          "p95": 25.0,
+          "bootstrap_95_ci": [
+            25.0,
+            25.0
+          ]
+        },
+        "shell_command_output_tokens": {
+          "n": 1,
+          "mean": 7207.0,
+          "median": 7207.0,
+          "stdev": 0,
+          "min": 7207.0,
+          "max": 7207.0,
+          "p95": 7207.0,
+          "bootstrap_95_ci": [
+            7207.0,
+            7207.0
+          ]
+        },
+        "wall_time_ms": {
+          "n": 1,
+          "mean": 11282.6,
+          "median": 11282.6,
+          "stdev": 0,
+          "min": 11282.6,
+          "max": 11282.6,
+          "p95": 11282.6,
+          "bootstrap_95_ci": [
+            11282.6,
+            11282.6
+          ]
+        },
+        "codexzero_tokens_eliminated": {
+          "n": 1,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "rtk_tokens_saved": {
+          "n": 1,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "paired_savings_vs_codex": {
+        "provider_total_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_cached_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_uncached_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_cache_write_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_reasoning_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "inference_requests": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "cache_hit_requests": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "assistant_visible_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "final_answer_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_calls": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_call_argument_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_executions": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "file_change_events": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "observed_execution_events": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_argument_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "wall_time_ms": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "codexzero_tokens_eliminated": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "rtk_tokens_saved": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        }
+      },
+      "paired_direction_vs_codex": {
+        "lower_token_trials": 0,
+        "equal_token_trials": 0,
+        "higher_token_trials": 0,
+        "exact_two_sided_sign_test_p": 1.0,
+        "provider_total_tokens": 39859,
+        "paired_codex_total_tokens": 0,
+        "net_tokens_saved": 0,
+        "net_percent_saved": 0
+      },
+      "cache": {
+        "total_requests": 2,
+        "hit_requests": 1,
+        "miss_requests": 1,
+        "request_hit_rate": 0.5,
+        "input_tokens": 39668,
+        "cached_input_tokens": 15104,
+        "uncached_input_tokens": 24564,
+        "token_hit_ratio": 0.3808
+      },
+      "rtk": {
+        "eligible_trials": 0,
+        "adopted_trials": 0,
+        "commands": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "tokens_saved": 0,
+        "parse_failures": 0,
+        "fallback_successes": 0
+      },
+      "codexzero": {
+        "events": 0,
+        "transformed_events": 0,
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "all_monotonic": true,
+        "all_artifacts_verified": true
+      },
+      "workload": "repetitive_log"
+    },
+    {
+      "configuration": "codex_sqz",
+      "label": "Codex + sqz 1.3.0",
+      "trials": 1,
+      "expected_trials": 3,
+      "quality_passes": 1,
+      "metrics": {
+        "provider_total_tokens": {
+          "n": 1,
+          "mean": 68797.0,
+          "median": 68797.0,
+          "stdev": 0,
+          "min": 68797.0,
+          "max": 68797.0,
+          "p95": 68797.0,
+          "bootstrap_95_ci": [
+            68797.0,
+            68797.0
+          ]
+        },
+        "provider_input_tokens": {
+          "n": 1,
+          "mean": 68232.0,
+          "median": 68232.0,
+          "stdev": 0,
+          "min": 68232.0,
+          "max": 68232.0,
+          "p95": 68232.0,
+          "bootstrap_95_ci": [
+            68232.0,
+            68232.0
+          ]
+        },
+        "provider_cached_input_tokens": {
+          "n": 1,
+          "mean": 57344.0,
+          "median": 57344.0,
+          "stdev": 0,
+          "min": 57344.0,
+          "max": 57344.0,
+          "p95": 57344.0,
+          "bootstrap_95_ci": [
+            57344.0,
+            57344.0
+          ]
+        },
+        "provider_uncached_input_tokens": {
+          "n": 1,
+          "mean": 10888.0,
+          "median": 10888.0,
+          "stdev": 0,
+          "min": 10888.0,
+          "max": 10888.0,
+          "p95": 10888.0,
+          "bootstrap_95_ci": [
+            10888.0,
+            10888.0
+          ]
+        },
+        "provider_cache_write_tokens": {
+          "n": 1,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "provider_output_tokens": {
+          "n": 1,
+          "mean": 565.0,
+          "median": 565.0,
+          "stdev": 0,
+          "min": 565.0,
+          "max": 565.0,
+          "p95": 565.0,
+          "bootstrap_95_ci": [
+            565.0,
+            565.0
+          ]
+        },
+        "provider_reasoning_tokens": {
+          "n": 1,
+          "mean": 76.0,
+          "median": 76.0,
+          "stdev": 0,
+          "min": 76.0,
+          "max": 76.0,
+          "p95": 76.0,
+          "bootstrap_95_ci": [
+            76.0,
+            76.0
+          ]
+        },
+        "inference_requests": {
+          "n": 1,
+          "mean": 4.0,
+          "median": 4.0,
+          "stdev": 0,
+          "min": 4.0,
+          "max": 4.0,
+          "p95": 4.0,
+          "bootstrap_95_ci": [
+            4.0,
+            4.0
+          ]
+        },
+        "cache_hit_requests": {
+          "n": 1,
+          "mean": 4.0,
+          "median": 4.0,
+          "stdev": 0,
+          "min": 4.0,
+          "max": 4.0,
+          "p95": 4.0,
+          "bootstrap_95_ci": [
+            4.0,
+            4.0
+          ]
+        },
+        "tool_output_tokens": {
+          "n": 1,
+          "mean": 3187.0,
+          "median": 3187.0,
+          "stdev": 0,
+          "min": 3187.0,
+          "max": 3187.0,
+          "p95": 3187.0,
+          "bootstrap_95_ci": [
+            3187.0,
+            3187.0
+          ]
+        },
+        "assistant_visible_tokens": {
+          "n": 1,
+          "mean": 117.0,
+          "median": 117.0,
+          "stdev": 0,
+          "min": 117.0,
+          "max": 117.0,
+          "p95": 117.0,
+          "bootstrap_95_ci": [
+            117.0,
+            117.0
+          ]
+        },
+        "final_answer_tokens": {
+          "n": 1,
+          "mean": 28.0,
+          "median": 28.0,
+          "stdev": 0,
+          "min": 28.0,
+          "max": 28.0,
+          "p95": 28.0,
+          "bootstrap_95_ci": [
+            28.0,
+            28.0
+          ]
+        },
+        "tool_calls": {
+          "n": 1,
+          "mean": 3.0,
+          "median": 3.0,
+          "stdev": 0,
+          "min": 3.0,
+          "max": 3.0,
+          "p95": 3.0,
+          "bootstrap_95_ci": [
+            3.0,
+            3.0
+          ]
+        },
+        "tool_call_argument_tokens": {
+          "n": 1,
+          "mean": 302.0,
+          "median": 302.0,
+          "stdev": 0,
+          "min": 302.0,
+          "max": 302.0,
+          "p95": 302.0,
+          "bootstrap_95_ci": [
+            302.0,
+            302.0
+          ]
+        },
+        "shell_command_executions": {
+          "n": 1,
+          "mean": 3.0,
+          "median": 3.0,
+          "stdev": 0,
+          "min": 3.0,
+          "max": 3.0,
+          "p95": 3.0,
+          "bootstrap_95_ci": [
+            3.0,
+            3.0
+          ]
+        },
+        "file_change_events": {
+          "n": 1,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "observed_execution_events": {
+          "n": 1,
+          "mean": 3.0,
+          "median": 3.0,
+          "stdev": 0,
+          "min": 3.0,
+          "max": 3.0,
+          "p95": 3.0,
+          "bootstrap_95_ci": [
+            3.0,
+            3.0
+          ]
+        },
+        "shell_command_argument_tokens": {
+          "n": 1,
+          "mean": 179.0,
+          "median": 179.0,
+          "stdev": 0,
+          "min": 179.0,
+          "max": 179.0,
+          "p95": 179.0,
+          "bootstrap_95_ci": [
+            179.0,
+            179.0
+          ]
+        },
+        "shell_command_output_tokens": {
+          "n": 1,
+          "mean": 3081.0,
+          "median": 3081.0,
+          "stdev": 0,
+          "min": 3081.0,
+          "max": 3081.0,
+          "p95": 3081.0,
+          "bootstrap_95_ci": [
+            3081.0,
+            3081.0
+          ]
+        },
+        "wall_time_ms": {
+          "n": 1,
+          "mean": 24839.8,
+          "median": 24839.8,
+          "stdev": 0,
+          "min": 24839.8,
+          "max": 24839.8,
+          "p95": 24839.8,
+          "bootstrap_95_ci": [
+            24839.8,
+            24839.8
+          ]
+        },
+        "codexzero_tokens_eliminated": {
+          "n": 1,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "rtk_tokens_saved": {
+          "n": 1,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "paired_savings_vs_codex": {
+        "provider_total_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_cached_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_uncached_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_cache_write_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_reasoning_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "inference_requests": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "cache_hit_requests": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "assistant_visible_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "final_answer_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_calls": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_call_argument_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_executions": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "file_change_events": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "observed_execution_events": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_argument_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "wall_time_ms": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "codexzero_tokens_eliminated": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "rtk_tokens_saved": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        }
+      },
+      "paired_direction_vs_codex": {
+        "lower_token_trials": 0,
+        "equal_token_trials": 0,
+        "higher_token_trials": 0,
+        "exact_two_sided_sign_test_p": 1.0,
+        "provider_total_tokens": 68797,
+        "paired_codex_total_tokens": 0,
+        "net_tokens_saved": 0,
+        "net_percent_saved": 0
+      },
+      "cache": {
+        "total_requests": 4,
+        "hit_requests": 4,
+        "miss_requests": 0,
+        "request_hit_rate": 1.0,
+        "input_tokens": 68232,
+        "cached_input_tokens": 57344,
+        "uncached_input_tokens": 10888,
+        "token_hit_ratio": 0.8404
+      },
+      "rtk": {
+        "eligible_trials": 1,
+        "adopted_trials": 0,
+        "commands": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "tokens_saved": 0,
+        "parse_failures": 0,
+        "fallback_successes": 0
+      },
+      "codexzero": {
+        "events": 0,
+        "transformed_events": 0,
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "all_monotonic": true,
+        "all_artifacts_verified": true
+      },
+      "workload": "git_diff"
+    },
+    {
+      "configuration": "codex_squeez",
+      "label": "Codex + Squeez 1.44.0",
+      "trials": 1,
+      "expected_trials": 3,
+      "quality_passes": 1,
+      "metrics": {
+        "provider_total_tokens": {
+          "n": 1,
+          "mean": 69097.0,
+          "median": 69097.0,
+          "stdev": 0,
+          "min": 69097.0,
+          "max": 69097.0,
+          "p95": 69097.0,
+          "bootstrap_95_ci": [
+            69097.0,
+            69097.0
+          ]
+        },
+        "provider_input_tokens": {
+          "n": 1,
+          "mean": 68605.0,
+          "median": 68605.0,
+          "stdev": 0,
+          "min": 68605.0,
+          "max": 68605.0,
+          "p95": 68605.0,
+          "bootstrap_95_ci": [
+            68605.0,
+            68605.0
+          ]
+        },
+        "provider_cached_input_tokens": {
+          "n": 1,
+          "mean": 47360.0,
+          "median": 47360.0,
+          "stdev": 0,
+          "min": 47360.0,
+          "max": 47360.0,
+          "p95": 47360.0,
+          "bootstrap_95_ci": [
+            47360.0,
+            47360.0
+          ]
+        },
+        "provider_uncached_input_tokens": {
+          "n": 1,
+          "mean": 21245.0,
+          "median": 21245.0,
+          "stdev": 0,
+          "min": 21245.0,
+          "max": 21245.0,
+          "p95": 21245.0,
+          "bootstrap_95_ci": [
+            21245.0,
+            21245.0
+          ]
+        },
+        "provider_cache_write_tokens": {
+          "n": 1,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "provider_output_tokens": {
+          "n": 1,
+          "mean": 492.0,
+          "median": 492.0,
+          "stdev": 0,
+          "min": 492.0,
+          "max": 492.0,
+          "p95": 492.0,
+          "bootstrap_95_ci": [
+            492.0,
+            492.0
+          ]
+        },
+        "provider_reasoning_tokens": {
+          "n": 1,
+          "mean": 143.0,
+          "median": 143.0,
+          "stdev": 0,
+          "min": 143.0,
+          "max": 143.0,
+          "p95": 143.0,
+          "bootstrap_95_ci": [
+            143.0,
+            143.0
+          ]
+        },
+        "inference_requests": {
+          "n": 1,
+          "mean": 4.0,
+          "median": 4.0,
+          "stdev": 0,
+          "min": 4.0,
+          "max": 4.0,
+          "p95": 4.0,
+          "bootstrap_95_ci": [
+            4.0,
+            4.0
+          ]
+        },
+        "cache_hit_requests": {
+          "n": 1,
+          "mean": 3.0,
+          "median": 3.0,
+          "stdev": 0,
+          "min": 3.0,
+          "max": 3.0,
+          "p95": 3.0,
+          "bootstrap_95_ci": [
+            3.0,
+            3.0
+          ]
+        },
+        "tool_output_tokens": {
+          "n": 1,
+          "mean": 3024.0,
+          "median": 3024.0,
+          "stdev": 0,
+          "min": 3024.0,
+          "max": 3024.0,
+          "p95": 3024.0,
+          "bootstrap_95_ci": [
+            3024.0,
+            3024.0
+          ]
+        },
+        "assistant_visible_tokens": {
+          "n": 1,
+          "mean": 79.0,
+          "median": 79.0,
+          "stdev": 0,
+          "min": 79.0,
+          "max": 79.0,
+          "p95": 79.0,
+          "bootstrap_95_ci": [
+            79.0,
+            79.0
+          ]
+        },
+        "final_answer_tokens": {
+          "n": 1,
+          "mean": 26.0,
+          "median": 26.0,
+          "stdev": 0,
+          "min": 26.0,
+          "max": 26.0,
+          "p95": 26.0,
+          "bootstrap_95_ci": [
+            26.0,
+            26.0
+          ]
+        },
+        "tool_calls": {
+          "n": 1,
+          "mean": 2.0,
+          "median": 2.0,
+          "stdev": 0,
+          "min": 2.0,
+          "max": 2.0,
+          "p95": 2.0,
+          "bootstrap_95_ci": [
+            2.0,
+            2.0
+          ]
+        },
+        "tool_call_argument_tokens": {
+          "n": 1,
+          "mean": 177.0,
+          "median": 177.0,
+          "stdev": 0,
+          "min": 177.0,
+          "max": 177.0,
+          "p95": 177.0,
+          "bootstrap_95_ci": [
+            177.0,
+            177.0
+          ]
+        },
+        "shell_command_executions": {
+          "n": 1,
+          "mean": 2.0,
+          "median": 2.0,
+          "stdev": 0,
+          "min": 2.0,
+          "max": 2.0,
+          "p95": 2.0,
+          "bootstrap_95_ci": [
+            2.0,
+            2.0
+          ]
+        },
+        "file_change_events": {
+          "n": 1,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "observed_execution_events": {
+          "n": 1,
+          "mean": 2.0,
+          "median": 2.0,
+          "stdev": 0,
+          "min": 2.0,
+          "max": 2.0,
+          "p95": 2.0,
+          "bootstrap_95_ci": [
+            2.0,
+            2.0
+          ]
+        },
+        "shell_command_argument_tokens": {
+          "n": 1,
+          "mean": 92.0,
+          "median": 92.0,
+          "stdev": 0,
+          "min": 92.0,
+          "max": 92.0,
+          "p95": 92.0,
+          "bootstrap_95_ci": [
+            92.0,
+            92.0
+          ]
+        },
+        "shell_command_output_tokens": {
+          "n": 1,
+          "mean": 2912.0,
+          "median": 2912.0,
+          "stdev": 0,
+          "min": 2912.0,
+          "max": 2912.0,
+          "p95": 2912.0,
+          "bootstrap_95_ci": [
+            2912.0,
+            2912.0
+          ]
+        },
+        "wall_time_ms": {
+          "n": 1,
+          "mean": 23587.1,
+          "median": 23587.1,
+          "stdev": 0,
+          "min": 23587.1,
+          "max": 23587.1,
+          "p95": 23587.1,
+          "bootstrap_95_ci": [
+            23587.1,
+            23587.1
+          ]
+        },
+        "codexzero_tokens_eliminated": {
+          "n": 1,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "rtk_tokens_saved": {
+          "n": 1,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "paired_savings_vs_codex": {
+        "provider_total_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_cached_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_uncached_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_cache_write_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_reasoning_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "inference_requests": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "cache_hit_requests": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "assistant_visible_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "final_answer_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_calls": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_call_argument_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_executions": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "file_change_events": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "observed_execution_events": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_argument_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "wall_time_ms": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "codexzero_tokens_eliminated": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "rtk_tokens_saved": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        }
+      },
+      "paired_direction_vs_codex": {
+        "lower_token_trials": 0,
+        "equal_token_trials": 0,
+        "higher_token_trials": 0,
+        "exact_two_sided_sign_test_p": 1.0,
+        "provider_total_tokens": 69097,
+        "paired_codex_total_tokens": 0,
+        "net_tokens_saved": 0,
+        "net_percent_saved": 0
+      },
+      "cache": {
+        "total_requests": 4,
+        "hit_requests": 3,
+        "miss_requests": 1,
+        "request_hit_rate": 0.75,
+        "input_tokens": 68605,
+        "cached_input_tokens": 47360,
+        "uncached_input_tokens": 21245,
+        "token_hit_ratio": 0.6903
+      },
+      "rtk": {
+        "eligible_trials": 1,
+        "adopted_trials": 0,
+        "commands": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "tokens_saved": 0,
+        "parse_failures": 0,
+        "fallback_successes": 0
+      },
+      "codexzero": {
+        "events": 0,
+        "transformed_events": 0,
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "all_monotonic": true,
+        "all_artifacts_verified": true
+      },
+      "workload": "git_diff"
+    },
+    {
+      "configuration": "codex_sqz",
+      "label": "Codex + sqz 1.3.0",
+      "trials": 1,
+      "expected_trials": 3,
+      "quality_passes": 1,
+      "metrics": {
+        "provider_total_tokens": {
+          "n": 1,
+          "mean": 81364.0,
+          "median": 81364.0,
+          "stdev": 0,
+          "min": 81364.0,
+          "max": 81364.0,
+          "p95": 81364.0,
+          "bootstrap_95_ci": [
+            81364.0,
+            81364.0
+          ]
+        },
+        "provider_input_tokens": {
+          "n": 1,
+          "mean": 80782.0,
+          "median": 80782.0,
+          "stdev": 0,
+          "min": 80782.0,
+          "max": 80782.0,
+          "p95": 80782.0,
+          "bootstrap_95_ci": [
+            80782.0,
+            80782.0
+          ]
+        },
+        "provider_cached_input_tokens": {
+          "n": 1,
+          "mean": 74496.0,
+          "median": 74496.0,
+          "stdev": 0,
+          "min": 74496.0,
+          "max": 74496.0,
+          "p95": 74496.0,
+          "bootstrap_95_ci": [
+            74496.0,
+            74496.0
+          ]
+        },
+        "provider_uncached_input_tokens": {
+          "n": 1,
+          "mean": 6286.0,
+          "median": 6286.0,
+          "stdev": 0,
+          "min": 6286.0,
+          "max": 6286.0,
+          "p95": 6286.0,
+          "bootstrap_95_ci": [
+            6286.0,
+            6286.0
+          ]
+        },
+        "provider_cache_write_tokens": {
+          "n": 1,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "provider_output_tokens": {
+          "n": 1,
+          "mean": 582.0,
+          "median": 582.0,
+          "stdev": 0,
+          "min": 582.0,
+          "max": 582.0,
+          "p95": 582.0,
+          "bootstrap_95_ci": [
+            582.0,
+            582.0
+          ]
+        },
+        "provider_reasoning_tokens": {
+          "n": 1,
+          "mean": 51.0,
+          "median": 51.0,
+          "stdev": 0,
+          "min": 51.0,
+          "max": 51.0,
+          "p95": 51.0,
+          "bootstrap_95_ci": [
+            51.0,
+            51.0
+          ]
+        },
+        "inference_requests": {
+          "n": 1,
+          "mean": 5.0,
+          "median": 5.0,
+          "stdev": 0,
+          "min": 5.0,
+          "max": 5.0,
+          "p95": 5.0,
+          "bootstrap_95_ci": [
+            5.0,
+            5.0
+          ]
+        },
+        "cache_hit_requests": {
+          "n": 1,
+          "mean": 5.0,
+          "median": 5.0,
+          "stdev": 0,
+          "min": 5.0,
+          "max": 5.0,
+          "p95": 5.0,
+          "bootstrap_95_ci": [
+            5.0,
+            5.0
+          ]
+        },
+        "tool_output_tokens": {
+          "n": 1,
+          "mean": 468.0,
+          "median": 468.0,
+          "stdev": 0,
+          "min": 468.0,
+          "max": 468.0,
+          "p95": 468.0,
+          "bootstrap_95_ci": [
+            468.0,
+            468.0
+          ]
+        },
+        "assistant_visible_tokens": {
+          "n": 1,
+          "mean": 141.0,
+          "median": 141.0,
+          "stdev": 0,
+          "min": 141.0,
+          "max": 141.0,
+          "p95": 141.0,
+          "bootstrap_95_ci": [
+            141.0,
+            141.0
+          ]
+        },
+        "final_answer_tokens": {
+          "n": 1,
+          "mean": 56.0,
+          "median": 56.0,
+          "stdev": 0,
+          "min": 56.0,
+          "max": 56.0,
+          "p95": 56.0,
+          "bootstrap_95_ci": [
+            56.0,
+            56.0
+          ]
+        },
+        "tool_calls": {
+          "n": 1,
+          "mean": 3.0,
+          "median": 3.0,
+          "stdev": 0,
+          "min": 3.0,
+          "max": 3.0,
+          "p95": 3.0,
+          "bootstrap_95_ci": [
+            3.0,
+            3.0
+          ]
+        },
+        "tool_call_argument_tokens": {
+          "n": 1,
+          "mean": 218.0,
+          "median": 218.0,
+          "stdev": 0,
+          "min": 218.0,
+          "max": 218.0,
+          "p95": 218.0,
+          "bootstrap_95_ci": [
+            218.0,
+            218.0
+          ]
+        },
+        "shell_command_executions": {
+          "n": 1,
+          "mean": 3.0,
+          "median": 3.0,
+          "stdev": 0,
+          "min": 3.0,
+          "max": 3.0,
+          "p95": 3.0,
+          "bootstrap_95_ci": [
+            3.0,
+            3.0
+          ]
+        },
+        "file_change_events": {
+          "n": 1,
+          "mean": 1.0,
+          "median": 1.0,
+          "stdev": 0,
+          "min": 1.0,
+          "max": 1.0,
+          "p95": 1.0,
+          "bootstrap_95_ci": [
+            1.0,
+            1.0
+          ]
+        },
+        "observed_execution_events": {
+          "n": 1,
+          "mean": 4.0,
+          "median": 4.0,
+          "stdev": 0,
+          "min": 4.0,
+          "max": 4.0,
+          "p95": 4.0,
+          "bootstrap_95_ci": [
+            4.0,
+            4.0
+          ]
+        },
+        "shell_command_argument_tokens": {
+          "n": 1,
+          "mean": 98.0,
+          "median": 98.0,
+          "stdev": 0,
+          "min": 98.0,
+          "max": 98.0,
+          "p95": 98.0,
+          "bootstrap_95_ci": [
+            98.0,
+            98.0
+          ]
+        },
+        "shell_command_output_tokens": {
+          "n": 1,
+          "mean": 304.0,
+          "median": 304.0,
+          "stdev": 0,
+          "min": 304.0,
+          "max": 304.0,
+          "p95": 304.0,
+          "bootstrap_95_ci": [
+            304.0,
+            304.0
+          ]
+        },
+        "wall_time_ms": {
+          "n": 1,
+          "mean": 27884.6,
+          "median": 27884.6,
+          "stdev": 0,
+          "min": 27884.6,
+          "max": 27884.6,
+          "p95": 27884.6,
+          "bootstrap_95_ci": [
+            27884.6,
+            27884.6
+          ]
+        },
+        "codexzero_tokens_eliminated": {
+          "n": 1,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "rtk_tokens_saved": {
+          "n": 1,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "paired_savings_vs_codex": {
+        "provider_total_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_cached_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_uncached_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_cache_write_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_reasoning_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "inference_requests": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "cache_hit_requests": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "assistant_visible_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "final_answer_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_calls": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_call_argument_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_executions": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "file_change_events": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "observed_execution_events": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_argument_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "wall_time_ms": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "codexzero_tokens_eliminated": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "rtk_tokens_saved": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        }
+      },
+      "paired_direction_vs_codex": {
+        "lower_token_trials": 0,
+        "equal_token_trials": 0,
+        "higher_token_trials": 0,
+        "exact_two_sided_sign_test_p": 1.0,
+        "provider_total_tokens": 81364,
+        "paired_codex_total_tokens": 0,
+        "net_tokens_saved": 0,
+        "net_percent_saved": 0
+      },
+      "cache": {
+        "total_requests": 5,
+        "hit_requests": 5,
+        "miss_requests": 0,
+        "request_hit_rate": 1.0,
+        "input_tokens": 80782,
+        "cached_input_tokens": 74496,
+        "uncached_input_tokens": 6286,
+        "token_hit_ratio": 0.9222
+      },
+      "rtk": {
+        "eligible_trials": 1,
+        "adopted_trials": 0,
+        "commands": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "tokens_saved": 0,
+        "parse_failures": 0,
+        "fallback_successes": 0
+      },
+      "codexzero": {
+        "events": 0,
+        "transformed_events": 0,
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "all_monotonic": true,
+        "all_artifacts_verified": true
+      },
+      "workload": "code_fix"
+    },
+    {
+      "configuration": "codex_squeez",
+      "label": "Codex + Squeez 1.44.0",
+      "trials": 1,
+      "expected_trials": 3,
+      "quality_passes": 1,
+      "metrics": {
+        "provider_total_tokens": {
+          "n": 1,
+          "mean": 81364.0,
+          "median": 81364.0,
+          "stdev": 0,
+          "min": 81364.0,
+          "max": 81364.0,
+          "p95": 81364.0,
+          "bootstrap_95_ci": [
+            81364.0,
+            81364.0
+          ]
+        },
+        "provider_input_tokens": {
+          "n": 1,
+          "mean": 80696.0,
+          "median": 80696.0,
+          "stdev": 0,
+          "min": 80696.0,
+          "max": 80696.0,
+          "p95": 80696.0,
+          "bootstrap_95_ci": [
+            80696.0,
+            80696.0
+          ]
+        },
+        "provider_cached_input_tokens": {
+          "n": 1,
+          "mean": 61440.0,
+          "median": 61440.0,
+          "stdev": 0,
+          "min": 61440.0,
+          "max": 61440.0,
+          "p95": 61440.0,
+          "bootstrap_95_ci": [
+            61440.0,
+            61440.0
+          ]
+        },
+        "provider_uncached_input_tokens": {
+          "n": 1,
+          "mean": 19256.0,
+          "median": 19256.0,
+          "stdev": 0,
+          "min": 19256.0,
+          "max": 19256.0,
+          "p95": 19256.0,
+          "bootstrap_95_ci": [
+            19256.0,
+            19256.0
+          ]
+        },
+        "provider_cache_write_tokens": {
+          "n": 1,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "provider_output_tokens": {
+          "n": 1,
+          "mean": 668.0,
+          "median": 668.0,
+          "stdev": 0,
+          "min": 668.0,
+          "max": 668.0,
+          "p95": 668.0,
+          "bootstrap_95_ci": [
+            668.0,
+            668.0
+          ]
+        },
+        "provider_reasoning_tokens": {
+          "n": 1,
+          "mean": 99.0,
+          "median": 99.0,
+          "stdev": 0,
+          "min": 99.0,
+          "max": 99.0,
+          "p95": 99.0,
+          "bootstrap_95_ci": [
+            99.0,
+            99.0
+          ]
+        },
+        "inference_requests": {
+          "n": 1,
+          "mean": 5.0,
+          "median": 5.0,
+          "stdev": 0,
+          "min": 5.0,
+          "max": 5.0,
+          "p95": 5.0,
+          "bootstrap_95_ci": [
+            5.0,
+            5.0
+          ]
+        },
+        "cache_hit_requests": {
+          "n": 1,
+          "mean": 4.0,
+          "median": 4.0,
+          "stdev": 0,
+          "min": 4.0,
+          "max": 4.0,
+          "p95": 4.0,
+          "bootstrap_95_ci": [
+            4.0,
+            4.0
+          ]
+        },
+        "tool_output_tokens": {
+          "n": 1,
+          "mean": 410.0,
+          "median": 410.0,
+          "stdev": 0,
+          "min": 410.0,
+          "max": 410.0,
+          "p95": 410.0,
+          "bootstrap_95_ci": [
+            410.0,
+            410.0
+          ]
+        },
+        "assistant_visible_tokens": {
+          "n": 1,
+          "mean": 139.0,
+          "median": 139.0,
+          "stdev": 0,
+          "min": 139.0,
+          "max": 139.0,
+          "p95": 139.0,
+          "bootstrap_95_ci": [
+            139.0,
+            139.0
+          ]
+        },
+        "final_answer_tokens": {
+          "n": 1,
+          "mean": 53.0,
+          "median": 53.0,
+          "stdev": 0,
+          "min": 53.0,
+          "max": 53.0,
+          "p95": 53.0,
+          "bootstrap_95_ci": [
+            53.0,
+            53.0
+          ]
+        },
+        "tool_calls": {
+          "n": 1,
+          "mean": 3.0,
+          "median": 3.0,
+          "stdev": 0,
+          "min": 3.0,
+          "max": 3.0,
+          "p95": 3.0,
+          "bootstrap_95_ci": [
+            3.0,
+            3.0
+          ]
+        },
+        "tool_call_argument_tokens": {
+          "n": 1,
+          "mean": 265.0,
+          "median": 265.0,
+          "stdev": 0,
+          "min": 265.0,
+          "max": 265.0,
+          "p95": 265.0,
+          "bootstrap_95_ci": [
+            265.0,
+            265.0
+          ]
+        },
+        "shell_command_executions": {
+          "n": 1,
+          "mean": 3.0,
+          "median": 3.0,
+          "stdev": 0,
+          "min": 3.0,
+          "max": 3.0,
+          "p95": 3.0,
+          "bootstrap_95_ci": [
+            3.0,
+            3.0
+          ]
+        },
+        "file_change_events": {
+          "n": 1,
+          "mean": 1.0,
+          "median": 1.0,
+          "stdev": 0,
+          "min": 1.0,
+          "max": 1.0,
+          "p95": 1.0,
+          "bootstrap_95_ci": [
+            1.0,
+            1.0
+          ]
+        },
+        "observed_execution_events": {
+          "n": 1,
+          "mean": 4.0,
+          "median": 4.0,
+          "stdev": 0,
+          "min": 4.0,
+          "max": 4.0,
+          "p95": 4.0,
+          "bootstrap_95_ci": [
+            4.0,
+            4.0
+          ]
+        },
+        "shell_command_argument_tokens": {
+          "n": 1,
+          "mean": 141.0,
+          "median": 141.0,
+          "stdev": 0,
+          "min": 141.0,
+          "max": 141.0,
+          "p95": 141.0,
+          "bootstrap_95_ci": [
+            141.0,
+            141.0
+          ]
+        },
+        "shell_command_output_tokens": {
+          "n": 1,
+          "mean": 247.0,
+          "median": 247.0,
+          "stdev": 0,
+          "min": 247.0,
+          "max": 247.0,
+          "p95": 247.0,
+          "bootstrap_95_ci": [
+            247.0,
+            247.0
+          ]
+        },
+        "wall_time_ms": {
+          "n": 1,
+          "mean": 34185.0,
+          "median": 34185.0,
+          "stdev": 0,
+          "min": 34185.0,
+          "max": 34185.0,
+          "p95": 34185.0,
+          "bootstrap_95_ci": [
+            34185.0,
+            34185.0
+          ]
+        },
+        "codexzero_tokens_eliminated": {
+          "n": 1,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "rtk_tokens_saved": {
+          "n": 1,
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "p95": 0.0,
+          "bootstrap_95_ci": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "paired_savings_vs_codex": {
+        "provider_total_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_cached_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_uncached_input_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_cache_write_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "provider_reasoning_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "inference_requests": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "cache_hit_requests": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "assistant_visible_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "final_answer_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_calls": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "tool_call_argument_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_executions": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "file_change_events": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "observed_execution_events": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_argument_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "shell_command_output_tokens": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "wall_time_ms": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "codexzero_tokens_eliminated": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        },
+        "rtk_tokens_saved": {
+          "n": 0,
+          "mean": 0,
+          "median": 0,
+          "stdev": 0,
+          "min": 0,
+          "max": 0,
+          "p95": 0,
+          "bootstrap_95_ci": [
+            0,
+            0
+          ]
+        }
+      },
+      "paired_direction_vs_codex": {
+        "lower_token_trials": 0,
+        "equal_token_trials": 0,
+        "higher_token_trials": 0,
+        "exact_two_sided_sign_test_p": 1.0,
+        "provider_total_tokens": 81364,
+        "paired_codex_total_tokens": 0,
+        "net_tokens_saved": 0,
+        "net_percent_saved": 0
+      },
+      "cache": {
+        "total_requests": 5,
+        "hit_requests": 4,
+        "miss_requests": 1,
+        "request_hit_rate": 0.8,
+        "input_tokens": 80696,
+        "cached_input_tokens": 61440,
+        "uncached_input_tokens": 19256,
+        "token_hit_ratio": 0.7614
+      },
+      "rtk": {
+        "eligible_trials": 1,
+        "adopted_trials": 0,
+        "commands": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "tokens_saved": 0,
+        "parse_failures": 0,
+        "fallback_successes": 0
+      },
+      "codexzero": {
+        "events": 0,
+        "transformed_events": 0,
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "all_monotonic": true,
+        "all_artifacts_verified": true
+      },
+      "workload": "code_fix"
+    }
+  ],
+  "trials": [
+    {
+      "id": "r1-git_diff-codex_sqz",
+      "configuration": "codex_sqz",
+      "configuration_label": "Codex + sqz 1.3.0",
+      "workload": "git_diff",
+      "repetition": 1,
+      "cli_exit_code": 0,
+      "wall_time_ms": 24839.8,
+      "quality": {
+        "passed": true,
+        "checks": {
+          "cli_exit_zero": true,
+          "minimum_tool_calls": true,
+          "required_commands_observed": true,
+          "result_line_present": true,
+          "final_evidence_present": true,
+          "codexzero_monotonic": true,
+          "codexzero_artifacts_verified": true,
+          "workspace_unchanged": true
+        }
+      },
+      "request_usages": [
+        {
+          "input_tokens": 15652,
+          "cached_input_tokens": 9984,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 169,
+          "reasoning_output_tokens": 0,
+          "total_tokens": 15821,
+          "uncached_input_tokens": 5668,
+          "cache_hit": true
+        },
+        {
+          "input_tokens": 15928,
+          "cached_input_tokens": 15104,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 182,
+          "reasoning_output_tokens": 15,
+          "total_tokens": 16110,
+          "uncached_input_tokens": 824,
+          "cache_hit": true
+        },
+        {
+          "input_tokens": 17271,
+          "cached_input_tokens": 15104,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 158,
+          "reasoning_output_tokens": 39,
+          "total_tokens": 17429,
+          "uncached_input_tokens": 2167,
+          "cache_hit": true
+        },
+        {
+          "input_tokens": 19381,
+          "cached_input_tokens": 17152,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 56,
+          "reasoning_output_tokens": 22,
+          "total_tokens": 19437,
+          "uncached_input_tokens": 2229,
+          "cache_hit": true
+        }
+      ],
+      "usage": {
+        "input_tokens": 68232,
+        "cached_input_tokens": 57344,
+        "cache_write_input_tokens": 0,
+        "uncached_input_tokens": 10888,
+        "output_tokens": 565,
+        "reasoning_output_tokens": 76,
+        "total_tokens": 68797
+      },
+      "inference_requests": 4,
+      "cache_hit_requests": 4,
+      "cache_miss_requests": 0,
+      "cache_request_hit_rate": 1.0,
+      "cache_token_ratio": 0.8404267792238246,
+      "tool_outputs": [
+        {
+          "sha256": "848da731718deb0ba19bd3ad9c9fc3e8280901807b53cd7662641454c08b36f2",
+          "bytes": 363,
+          "o200k_tokens": 96
+        },
+        {
+          "sha256": "6804d05e3a0abf12d04b92d2a09f4042bed67335d9b41a9583cddb7e3a8ceff9",
+          "bytes": 3264,
+          "o200k_tokens": 1150
+        },
+        {
+          "sha256": "986dba5e7069444b0c60da24c1a6423188a65f39bacbfa9eb212ddf30b5c9769",
+          "bytes": 6280,
+          "o200k_tokens": 1941
+        }
+      ],
+      "tool_output_tokens": 3187,
+      "assistant_tokens": 117,
+      "final_answer_tokens": 28,
+      "call_count": 3,
+      "call_argument_tokens": 302,
+      "rtk_observed": false,
+      "shell_command_executions": 3,
+      "successful_shell_commands": 2,
+      "failed_shell_commands": 1,
+      "file_change_events": 0,
+      "changed_path_events": 0,
+      "observed_execution_events": 3,
+      "shell_command_argument_tokens": 179,
+      "shell_command_output_tokens": 3081,
+      "shell_command_output_bytes": 9595,
+      "command_metadata": [
+        {
+          "command_sha256": "68298cec6b4927268b22ba0a4532b445e906e0e55b15b13a37852ca491308bef",
+          "command_tokens": 77,
+          "output_sha256": "e8e0b81d5b302ad2143a01ad5977490dcd1bac2aba6903f83be5b5e5b54ad28d",
+          "output_bytes": 260,
+          "output_tokens": 61,
+          "exit_code": 1,
+          "status": "failed"
+        },
+        {
+          "command_sha256": "b835d57031a3c02dc24118787fd725ac3f1fc2165074bdf80f5da5ada569a802",
+          "command_tokens": 78,
+          "output_sha256": "74915822ed8eb3ed75f5b5ee6586d375c6c998f5bd6cd92cd63910a326f2e0bf",
+          "output_bytes": 3160,
+          "output_tokens": 1115,
+          "exit_code": 0,
+          "status": "completed"
+        },
+        {
+          "command_sha256": "427cab607240578aae6ed9720972e3801db7229080d21d5edea4d1b0ef87edf0",
+          "command_tokens": 24,
+          "output_sha256": "1fce135431603cf2b6a34cec539ba2b3eabed5f37080dfedebbba649e6a573c3",
+          "output_bytes": 6175,
+          "output_tokens": 1905,
+          "exit_code": 0,
+          "status": "completed"
+        }
+      ],
+      "file_change_metadata": [],
+      "call_metadata": [
+        {
+          "name": "exec_command",
+          "arguments_sha256": "e62d01a7bf07c99c20e2920dbbfcac9b5bdda0f008dc820718ff5502a05ee2f3",
+          "arguments_tokens": 118
+        },
+        {
+          "name": "exec_command",
+          "arguments_sha256": "d8fa8b1320d2ce90b03cb16fcf89cbfab9894d35bf42018cc84c507ee36d78fa",
+          "arguments_tokens": 119
+        },
+        {
+          "name": "exec_command",
+          "arguments_sha256": "07933ca6ce06c9b0e4f1df45278ae5df9ee5e93f7308e4a0579add0173c31fbb",
+          "arguments_tokens": 65
+        }
+      ],
+      "codexzero": {
+        "events": 0,
+        "transformed_events": 0,
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "monotonic": true,
+        "artifacts_verified": true
+      },
+      "rtk": {
+        "commands": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "tokens_saved": 0,
+        "exec_time_ms": 0,
+        "parse_failures": 0,
+        "fallback_successes": 0,
+        "rows": []
+      },
+      "raw_exec_stream": {
+        "sha256": "9de5c96248472f7b58f1acce157201bb94c0bdccc54b9b5518e1dc82e682cbad",
+        "bytes": 13367
+      },
+      "raw_stderr": {
+        "sha256": "72376b9508674f8666bb0ee6250c549556e15a5b453df4442f28000ec97aaedd",
+        "bytes": 481
+      }
+    },
+    {
+      "id": "r1-git_diff-codex_squeez",
+      "configuration": "codex_squeez",
+      "configuration_label": "Codex + Squeez 1.44.0",
+      "workload": "git_diff",
+      "repetition": 1,
+      "cli_exit_code": 0,
+      "wall_time_ms": 23587.1,
+      "quality": {
+        "passed": true,
+        "checks": {
+          "cli_exit_zero": true,
+          "minimum_tool_calls": true,
+          "required_commands_observed": true,
+          "result_line_present": true,
+          "final_evidence_present": true,
+          "codexzero_monotonic": true,
+          "codexzero_artifacts_verified": true,
+          "workspace_unchanged": true
+        }
+      },
+      "request_usages": [
+        {
+          "input_tokens": 15638,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 156,
+          "reasoning_output_tokens": 0,
+          "total_tokens": 15794,
+          "uncached_input_tokens": 15638,
+          "cache_hit": false
+        },
+        {
+          "input_tokens": 16846,
+          "cached_input_tokens": 15104,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 156,
+          "reasoning_output_tokens": 76,
+          "total_tokens": 17002,
+          "uncached_input_tokens": 1742,
+          "cache_hit": true
+        },
+        {
+          "input_tokens": 17026,
+          "cached_input_tokens": 16128,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 116,
+          "reasoning_output_tokens": 35,
+          "total_tokens": 17142,
+          "uncached_input_tokens": 898,
+          "cache_hit": true
+        },
+        {
+          "input_tokens": 19095,
+          "cached_input_tokens": 16128,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 64,
+          "reasoning_output_tokens": 32,
+          "total_tokens": 19159,
+          "uncached_input_tokens": 2967,
+          "cache_hit": true
+        }
+      ],
+      "usage": {
+        "input_tokens": 68605,
+        "cached_input_tokens": 47360,
+        "cache_write_input_tokens": 0,
+        "uncached_input_tokens": 21245,
+        "output_tokens": 492,
+        "reasoning_output_tokens": 143,
+        "total_tokens": 69097
+      },
+      "inference_requests": 4,
+      "cache_hit_requests": 3,
+      "cache_miss_requests": 1,
+      "cache_request_hit_rate": 0.75,
+      "cache_token_ratio": 0.6903286932439326,
+      "tool_outputs": [
+        {
+          "sha256": "5ee00fbac0b5385e3e76d6d09d89b9c5386c424a432c9b8dedfe8a7386846c5d",
+          "bytes": 3340,
+          "o200k_tokens": 1041
+        },
+        {
+          "sha256": "23543e4fa3d258527ffc56d0d076d922f19253e88d2c88c911118460dc4f37e4",
+          "bytes": 124,
+          "o200k_tokens": 41
+        },
+        {
+          "sha256": "f1aba45c98d1bcf08e8149ff3e70c255afc43d06eabfa0e6d6c0a317d1cac7df",
+          "bytes": 6280,
+          "o200k_tokens": 1942
+        }
+      ],
+      "tool_output_tokens": 3024,
+      "assistant_tokens": 79,
+      "final_answer_tokens": 26,
+      "call_count": 2,
+      "call_argument_tokens": 177,
+      "rtk_observed": false,
+      "shell_command_executions": 2,
+      "successful_shell_commands": 2,
+      "failed_shell_commands": 0,
+      "file_change_events": 0,
+      "changed_path_events": 0,
+      "observed_execution_events": 2,
+      "shell_command_argument_tokens": 92,
+      "shell_command_output_tokens": 2912,
+      "shell_command_output_bytes": 9411,
+      "command_metadata": [
+        {
+          "command_sha256": "02b59397c0755c842c73ac64e856a0eb259c36b7ea91aa3487d42a1cc249c151",
+          "command_tokens": 68,
+          "output_sha256": "447df3151cd974a050f43a37760885028c6330394f7c6da2864e6a09a34c8352",
+          "output_bytes": 3236,
+          "output_tokens": 1007,
+          "exit_code": 0,
+          "status": "completed"
+        },
+        {
+          "command_sha256": "427cab607240578aae6ed9720972e3801db7229080d21d5edea4d1b0ef87edf0",
+          "command_tokens": 24,
+          "output_sha256": "1fce135431603cf2b6a34cec539ba2b3eabed5f37080dfedebbba649e6a573c3",
+          "output_bytes": 6175,
+          "output_tokens": 1905,
+          "exit_code": 0,
+          "status": "completed"
+        }
+      ],
+      "file_change_metadata": [],
+      "call_metadata": [
+        {
+          "name": "exec_command",
+          "arguments_sha256": "bb2d9d57e60a0de8075e9ee09eb46c9cac2900baacf16e486abf71aaba93c911",
+          "arguments_tokens": 111
+        },
+        {
+          "name": "exec_command",
+          "arguments_sha256": "e7d86cdf50d1158b410832e96c3741c78020ffee5c85a5f3abdf62428a2d5268",
+          "arguments_tokens": 66
+        }
+      ],
+      "codexzero": {
+        "events": 0,
+        "transformed_events": 0,
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "monotonic": true,
+        "artifacts_verified": true
+      },
+      "rtk": {
+        "commands": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "tokens_saved": 0,
+        "exec_time_ms": 0,
+        "parse_failures": 0,
+        "fallback_successes": 0,
+        "rows": []
+      },
+      "raw_exec_stream": {
+        "sha256": "297f4ff7d32d6bf83bad920a5dc5f8fce1f6d2480ea772fbbb17ac21016c140f",
+        "bytes": 11904
+      },
+      "raw_stderr": {
+        "sha256": "aec0ea78133fe59a525c3c22726a023967b70d19a9907efd96d5747319722a0e",
+        "bytes": 484
+      }
+    },
+    {
+      "id": "r1-repetitive_log-codex_sqz",
+      "configuration": "codex_sqz",
+      "configuration_label": "Codex + sqz 1.3.0",
+      "workload": "repetitive_log",
+      "repetition": 1,
+      "cli_exit_code": 0,
+      "wall_time_ms": 16099.1,
+      "quality": {
+        "passed": true,
+        "checks": {
+          "cli_exit_zero": true,
+          "minimum_tool_calls": true,
+          "required_commands_observed": true,
+          "result_line_present": true,
+          "final_evidence_present": true,
+          "codexzero_monotonic": true,
+          "codexzero_artifacts_verified": true,
+          "workspace_unchanged": true
+        }
+      },
+      "request_usages": [
+        {
+          "input_tokens": 15658,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 167,
+          "reasoning_output_tokens": 0,
+          "total_tokens": 15825,
+          "uncached_input_tokens": 15658,
+          "cache_hit": false
+        },
+        {
+          "input_tokens": 15911,
+          "cached_input_tokens": 15104,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 313,
+          "reasoning_output_tokens": 274,
+          "total_tokens": 16224,
+          "uncached_input_tokens": 807,
+          "cache_hit": true
+        }
+      ],
+      "usage": {
+        "input_tokens": 31569,
+        "cached_input_tokens": 15104,
+        "cache_write_input_tokens": 0,
+        "uncached_input_tokens": 16465,
+        "output_tokens": 480,
+        "reasoning_output_tokens": 274,
+        "total_tokens": 32049
+      },
+      "inference_requests": 2,
+      "cache_hit_requests": 1,
+      "cache_miss_requests": 1,
+      "cache_request_hit_rate": 0.5,
+      "cache_token_ratio": 0.4784440432069435,
+      "tool_outputs": [
+        {
+          "sha256": "767d553bcfe54e6fc312824a0db68ef7c0280e17590fa657a1641d7daf40d11d",
+          "bytes": 237,
+          "o200k_tokens": 75
+        }
+      ],
+      "tool_output_tokens": 75,
+      "assistant_tokens": 53,
+      "final_answer_tokens": 33,
+      "call_count": 1,
+      "call_argument_tokens": 127,
+      "rtk_observed": false,
+      "shell_command_executions": 1,
+      "successful_shell_commands": 1,
+      "failed_shell_commands": 0,
+      "file_change_events": 0,
+      "changed_path_events": 0,
+      "observed_execution_events": 1,
+      "shell_command_argument_tokens": 86,
+      "shell_command_output_tokens": 40,
+      "shell_command_output_bytes": 134,
+      "command_metadata": [
+        {
+          "command_sha256": "5d748e27a7d2aa2262ab17782448568841112c0aef9823a9c68e500ee34c8581",
+          "command_tokens": 86,
+          "output_sha256": "2b124433136f9c7d6d8e709ffd6dbd23e43c81900eafb5adb2cd826b76ef2f20",
+          "output_bytes": 134,
+          "output_tokens": 40,
+          "exit_code": 0,
+          "status": "completed"
+        }
+      ],
+      "file_change_metadata": [],
+      "call_metadata": [
+        {
+          "name": "exec_command",
+          "arguments_sha256": "aa1b3f842352a1807b5c3fa1160b648f0c6a98cffce7d0e8e7bfbf096f104e04",
+          "arguments_tokens": 127
+        }
+      ],
+      "codexzero": {
+        "events": 0,
+        "transformed_events": 0,
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "monotonic": true,
+        "artifacts_verified": true
+      },
+      "rtk": {
+        "commands": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "tokens_saved": 0,
+        "exec_time_ms": 0,
+        "parse_failures": 0,
+        "fallback_successes": 0,
+        "rows": []
+      },
+      "raw_exec_stream": {
+        "sha256": "36d67b568c3eed32c4eab6607223087685542fb506a436e6a176c553a75e3e54",
+        "bytes": 1739
+      },
+      "raw_stderr": {
+        "sha256": "989eb1ba74f284c4e762ee487a3adca28ec1cbd5bda4b80ad3acd8454722e70f",
+        "bytes": 481
+      }
+    },
+    {
+      "id": "r1-repetitive_log-codex_squeez",
+      "configuration": "codex_squeez",
+      "configuration_label": "Codex + Squeez 1.44.0",
+      "workload": "repetitive_log",
+      "repetition": 1,
+      "cli_exit_code": 0,
+      "wall_time_ms": 11282.6,
+      "quality": {
+        "passed": true,
+        "checks": {
+          "cli_exit_zero": true,
+          "minimum_tool_calls": true,
+          "required_commands_observed": true,
+          "result_line_present": true,
+          "final_evidence_present": true,
+          "codexzero_monotonic": true,
+          "codexzero_artifacts_verified": true,
+          "workspace_unchanged": true
+        }
+      },
+      "request_usages": [
+        {
+          "input_tokens": 16151,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 113,
+          "reasoning_output_tokens": 0,
+          "total_tokens": 16264,
+          "uncached_input_tokens": 16151,
+          "cache_hit": false
+        },
+        {
+          "input_tokens": 23517,
+          "cached_input_tokens": 15104,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 78,
+          "reasoning_output_tokens": 36,
+          "total_tokens": 23595,
+          "uncached_input_tokens": 8413,
+          "cache_hit": true
+        }
+      ],
+      "usage": {
+        "input_tokens": 39668,
+        "cached_input_tokens": 15104,
+        "cache_write_input_tokens": 0,
+        "uncached_input_tokens": 24564,
+        "output_tokens": 191,
+        "reasoning_output_tokens": 36,
+        "total_tokens": 39859
+      },
+      "inference_requests": 2,
+      "cache_hit_requests": 1,
+      "cache_miss_requests": 1,
+      "cache_request_hit_rate": 0.5,
+      "cache_token_ratio": 0.3807603105777957,
+      "tool_outputs": [
+        {
+          "sha256": "e8081375e74caed0d8bc16a299e63d03a8b9bd61f70356f883596065ce909190",
+          "bytes": 36128,
+          "o200k_tokens": 7242
+        }
+      ],
+      "tool_output_tokens": 7242,
+      "assistant_tokens": 61,
+      "final_answer_tokens": 36,
+      "call_count": 1,
+      "call_argument_tokens": 68,
+      "rtk_observed": false,
+      "shell_command_executions": 1,
+      "successful_shell_commands": 1,
+      "failed_shell_commands": 0,
+      "file_change_events": 0,
+      "changed_path_events": 0,
+      "observed_execution_events": 1,
+      "shell_command_argument_tokens": 25,
+      "shell_command_output_tokens": 7207,
+      "shell_command_output_bytes": 36023,
+      "command_metadata": [
+        {
+          "command_sha256": "2e88e317f52a57fda8e044702eafaa6e27bc45ceb5bb7bd15874432648e4fadd",
+          "command_tokens": 25,
+          "output_sha256": "92f52f7ef83ebad104a8ce2d12729711769043cdc7ada3d87bfeb20514142e84",
+          "output_bytes": 36023,
+          "output_tokens": 7207,
+          "exit_code": 0,
+          "status": "completed"
+        }
+      ],
+      "file_change_metadata": [],
+      "call_metadata": [
+        {
+          "name": "exec_command",
+          "arguments_sha256": "546f4c21c349f61f7915d056ae3e5614913353d2d362f50f3dd3bf3757cc47f9",
+          "arguments_tokens": 68
+        }
+      ],
+      "codexzero": {
+        "events": 0,
+        "transformed_events": 0,
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "monotonic": true,
+        "artifacts_verified": true
+      },
+      "rtk": {
+        "commands": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "tokens_saved": 0,
+        "exec_time_ms": 0,
+        "parse_failures": 0,
+        "fallback_successes": 0,
+        "rows": []
+      },
+      "raw_exec_stream": {
+        "sha256": "f71efb1df33ee156da3c86b05c400681dca00cf005dedaa9a1412a5937cfbca3",
+        "bytes": 37793
+      },
+      "raw_stderr": {
+        "sha256": "25c3f116edb3c738a4e8ba038a3478ed65a9726e9dc6533005248b8c11e65899",
+        "bytes": 484
+      }
+    },
+    {
+      "id": "r1-code_fix-codex_sqz",
+      "configuration": "codex_sqz",
+      "configuration_label": "Codex + sqz 1.3.0",
+      "workload": "code_fix",
+      "repetition": 1,
+      "cli_exit_code": 0,
+      "wall_time_ms": 27884.6,
+      "quality": {
+        "passed": true,
+        "checks": {
+          "cli_exit_zero": true,
+          "minimum_tool_calls": true,
+          "required_commands_observed": true,
+          "result_line_present": true,
+          "final_evidence_present": true,
+          "codexzero_monotonic": true,
+          "codexzero_artifacts_verified": true,
+          "external_code_test_passed": true,
+          "only_expected_files_changed": true
+        }
+      },
+      "request_usages": [
+        {
+          "input_tokens": 15646,
+          "cached_input_tokens": 13056,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 133,
+          "reasoning_output_tokens": 0,
+          "total_tokens": 15779,
+          "uncached_input_tokens": 2590,
+          "cache_hit": true
+        },
+        {
+          "input_tokens": 15923,
+          "cached_input_tokens": 15104,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 172,
+          "reasoning_output_tokens": 26,
+          "total_tokens": 16095,
+          "uncached_input_tokens": 819,
+          "cache_hit": true
+        },
+        {
+          "input_tokens": 16167,
+          "cached_input_tokens": 15104,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 76,
+          "reasoning_output_tokens": 0,
+          "total_tokens": 16243,
+          "uncached_input_tokens": 1063,
+          "cache_hit": true
+        },
+        {
+          "input_tokens": 16366,
+          "cached_input_tokens": 15104,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 141,
+          "reasoning_output_tokens": 25,
+          "total_tokens": 16507,
+          "uncached_input_tokens": 1262,
+          "cache_hit": true
+        },
+        {
+          "input_tokens": 16680,
+          "cached_input_tokens": 16128,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 60,
+          "reasoning_output_tokens": 0,
+          "total_tokens": 16740,
+          "uncached_input_tokens": 552,
+          "cache_hit": true
+        }
+      ],
+      "usage": {
+        "input_tokens": 80782,
+        "cached_input_tokens": 74496,
+        "cache_write_input_tokens": 0,
+        "uncached_input_tokens": 6286,
+        "output_tokens": 582,
+        "reasoning_output_tokens": 51,
+        "total_tokens": 81364
+      },
+      "inference_requests": 5,
+      "cache_hit_requests": 5,
+      "cache_miss_requests": 0,
+      "cache_request_hit_rate": 1.0,
+      "cache_token_ratio": 0.9221856354138298,
+      "tool_outputs": [
+        {
+          "sha256": "bec934379235c82cbaabe4d1f3c00a3153abab5c0040a4199c03087476fb846b",
+          "bytes": 436,
+          "o200k_tokens": 133
+        },
+        {
+          "sha256": "00d2a8c810351e1aef1c15a0f33e7ad216e58e02e0754637fa31d488c2fbeec3",
+          "bytes": 185,
+          "o200k_tokens": 61
+        },
+        {
+          "sha256": "214a2bc317e91087e28d32292e5f548581a0fceed37289b304ee02c87ff1f22e",
+          "bytes": 282,
+          "o200k_tokens": 112
+        },
+        {
+          "sha256": "cf9f14c772090f37345449d1980acb07b30696c16b2255abcafa4104f6466fd9",
+          "bytes": 505,
+          "o200k_tokens": 162
+        }
+      ],
+      "tool_output_tokens": 468,
+      "assistant_tokens": 141,
+      "final_answer_tokens": 56,
+      "call_count": 3,
+      "call_argument_tokens": 218,
+      "rtk_observed": false,
+      "shell_command_executions": 3,
+      "successful_shell_commands": 3,
+      "failed_shell_commands": 0,
+      "file_change_events": 1,
+      "changed_path_events": 1,
+      "observed_execution_events": 4,
+      "shell_command_argument_tokens": 98,
+      "shell_command_output_tokens": 304,
+      "shell_command_output_bytes": 913,
+      "command_metadata": [
+        {
+          "command_sha256": "c827c9d64acab65c37acf9adae8c4b3631c681b8d2903e1331e0d1adad54d3f8",
+          "command_tokens": 46,
+          "output_sha256": "d608abed64c14e7717b07ea059d439312edf13d48657e34dd49c3d96afdb8abb",
+          "output_bytes": 333,
+          "output_tokens": 99,
+          "exit_code": 0,
+          "status": "completed"
+        },
+        {
+          "command_sha256": "ae9254e01795e0ef7911697390b93646ee9a17ac0d990500103d7b1db675aa94",
+          "command_tokens": 23,
+          "output_sha256": "0d0cc75e6212372cc8d38623db2cc815d65ccd734b36f381d3ae471cbd7b9250",
+          "output_bytes": 179,
+          "output_tokens": 78,
+          "exit_code": 0,
+          "status": "completed"
+        },
+        {
+          "command_sha256": "28d172491fac15220f0f90796d42d8299922740c99a7878e23e970f31d6aadcf",
+          "command_tokens": 29,
+          "output_sha256": "49b13aec91aca59b7c0667b2968f90beb22cf0d50d6fadbf5391c917c83e667d",
+          "output_bytes": 401,
+          "output_tokens": 127,
+          "exit_code": 0,
+          "status": "completed"
+        }
+      ],
+      "file_change_metadata": [
+        {
+          "changes_sha256": "f499870b4cc2b991a958c53048d687b0a419a58541bdf1ead50aec26e8f27d21",
+          "change_count": 1,
+          "status": "completed"
+        }
+      ],
+      "call_metadata": [
+        {
+          "name": "exec_command",
+          "arguments_sha256": "66e4b84729b8e14241c3483582a36b563c0b40806d7881dab70d871c9b6f8fc2",
+          "arguments_tokens": 86
+        },
+        {
+          "name": "exec_command",
+          "arguments_sha256": "a81c68cfae4a3d253a558f327bf7d32ed4d634e71569dcee264fea81e88745bf",
+          "arguments_tokens": 63
+        },
+        {
+          "name": "exec_command",
+          "arguments_sha256": "c01634766c30c015a028ee685fb94cd802ec7b7867a75af0410443f98b6a9169",
+          "arguments_tokens": 69
+        }
+      ],
+      "codexzero": {
+        "events": 0,
+        "transformed_events": 0,
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "monotonic": true,
+        "artifacts_verified": true
+      },
+      "rtk": {
+        "commands": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "tokens_saved": 0,
+        "exec_time_ms": 0,
+        "parse_failures": 0,
+        "fallback_successes": 0,
+        "rows": []
+      },
+      "raw_exec_stream": {
+        "sha256": "4a99bd6661c518ed3adbb1174a1e2bf268065bfc98c0eb29f558e230762d3104",
+        "bytes": 4248
+      },
+      "raw_stderr": {
+        "sha256": "b05a098371423d594a1857aa695b6ef1fdccc3811cfed2dfcce85efa1d421885",
+        "bytes": 481
+      }
+    },
+    {
+      "id": "r1-code_fix-codex_squeez",
+      "configuration": "codex_squeez",
+      "configuration_label": "Codex + Squeez 1.44.0",
+      "workload": "code_fix",
+      "repetition": 1,
+      "cli_exit_code": 0,
+      "wall_time_ms": 34185.0,
+      "quality": {
+        "passed": true,
+        "checks": {
+          "cli_exit_zero": true,
+          "minimum_tool_calls": true,
+          "required_commands_observed": true,
+          "result_line_present": true,
+          "final_evidence_present": true,
+          "codexzero_monotonic": true,
+          "codexzero_artifacts_verified": true,
+          "external_code_test_passed": true,
+          "only_expected_files_changed": true
+        }
+      },
+      "request_usages": [
+        {
+          "input_tokens": 15632,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 132,
+          "reasoning_output_tokens": 0,
+          "total_tokens": 15764,
+          "uncached_input_tokens": 15632,
+          "cache_hit": false
+        },
+        {
+          "input_tokens": 15851,
+          "cached_input_tokens": 15104,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 164,
+          "reasoning_output_tokens": 26,
+          "total_tokens": 16015,
+          "uncached_input_tokens": 747,
+          "cache_hit": true
+        },
+        {
+          "input_tokens": 16088,
+          "cached_input_tokens": 15104,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 218,
+          "reasoning_output_tokens": 61,
+          "total_tokens": 16306,
+          "uncached_input_tokens": 984,
+          "cache_hit": true
+        },
+        {
+          "input_tokens": 16428,
+          "cached_input_tokens": 15104,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 97,
+          "reasoning_output_tokens": 12,
+          "total_tokens": 16525,
+          "uncached_input_tokens": 1324,
+          "cache_hit": true
+        },
+        {
+          "input_tokens": 16697,
+          "cached_input_tokens": 16128,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 57,
+          "reasoning_output_tokens": 0,
+          "total_tokens": 16754,
+          "uncached_input_tokens": 569,
+          "cache_hit": true
+        }
+      ],
+      "usage": {
+        "input_tokens": 80696,
+        "cached_input_tokens": 61440,
+        "cache_write_input_tokens": 0,
+        "uncached_input_tokens": 19256,
+        "output_tokens": 668,
+        "reasoning_output_tokens": 99,
+        "total_tokens": 81364
+      },
+      "inference_requests": 5,
+      "cache_hit_requests": 4,
+      "cache_miss_requests": 1,
+      "cache_request_hit_rate": 0.8,
+      "cache_token_ratio": 0.761376028551601,
+      "tool_outputs": [
+        {
+          "sha256": "ec8e7f569e08bdbd07963088e65eac979886ebca1163f92d6f2759ad22bceba4",
+          "bytes": 285,
+          "o200k_tokens": 76
+        },
+        {
+          "sha256": "2449bb398869e75e5a2ad56844d2f43f95d8e8bbe19fda960be1ebaf7cf5c70a",
+          "bytes": 188,
+          "o200k_tokens": 62
+        },
+        {
+          "sha256": "dd06f20a6b6763bd944febb71ee8f9568fd8946579f5fd409249d4aec0f87c5e",
+          "bytes": 282,
+          "o200k_tokens": 111
+        },
+        {
+          "sha256": "e88fa169d775df02e160916440996b78b06b45452026fda27fe5c9d706c70efb",
+          "bytes": 505,
+          "o200k_tokens": 161
+        }
+      ],
+      "tool_output_tokens": 410,
+      "assistant_tokens": 139,
+      "final_answer_tokens": 53,
+      "call_count": 3,
+      "call_argument_tokens": 265,
+      "rtk_observed": false,
+      "shell_command_executions": 3,
+      "successful_shell_commands": 3,
+      "failed_shell_commands": 0,
+      "file_change_events": 1,
+      "changed_path_events": 1,
+      "observed_execution_events": 4,
+      "shell_command_argument_tokens": 141,
+      "shell_command_output_tokens": 247,
+      "shell_command_output_bytes": 762,
+      "command_metadata": [
+        {
+          "command_sha256": "c3f0a9e96657c91b3e79ab330145b85d85a67faa3a4639fc304be16a74922f1c",
+          "command_tokens": 45,
+          "output_sha256": "5311f8317108174086c7bee27202c6f4439244f7a6ec39302ef99d5f0e185cc0",
+          "output_bytes": 182,
+          "output_tokens": 42,
+          "exit_code": 0,
+          "status": "completed"
+        },
+        {
+          "command_sha256": "500c3b1032ce5b4f881371feb4ba1febe964e47cd5a459d9f22757a26998294e",
+          "command_tokens": 67,
+          "output_sha256": "d7abc238bb135efa56168dbe211c0588a6610ec3999b6c7ce991d247f37ca8f0",
+          "output_bytes": 179,
+          "output_tokens": 78,
+          "exit_code": 0,
+          "status": "completed"
+        },
+        {
+          "command_sha256": "25221b6ee9797c0cfd2db547f6d8f705343d2433ce9c0faebcaebebbf1f65fd0",
+          "command_tokens": 29,
+          "output_sha256": "f1d30570c799757ee7567ffdd36db9f4be4cf32ae9d4bb6ffed0e2c28d6aa87d",
+          "output_bytes": 401,
+          "output_tokens": 127,
+          "exit_code": 0,
+          "status": "completed"
+        }
+      ],
+      "file_change_metadata": [
+        {
+          "changes_sha256": "dc2df783ace943ddbe97db7ce2e6b3c919e7566691337d74504aed71aacfca69",
+          "change_count": 1,
+          "status": "completed"
+        }
+      ],
+      "call_metadata": [
+        {
+          "name": "exec_command",
+          "arguments_sha256": "3b73289b56268e33d161a5a3edf3eb6f63665c9b1dfdabf7ad5903f3300bc21f",
+          "arguments_tokens": 86
+        },
+        {
+          "name": "exec_command",
+          "arguments_sha256": "3f7d10d8944f1942c9978bfac806b73b3e7feab0990a9c8f9c5072ce93ab5bec",
+          "arguments_tokens": 109
+        },
+        {
+          "name": "exec_command",
+          "arguments_sha256": "ca4ff399a48800857b3d92c6da1c43a42be0499763360cc7a0611e74bcd70502",
+          "arguments_tokens": 70
+        }
+      ],
+      "codexzero": {
+        "events": 0,
+        "transformed_events": 0,
+        "original_tokens": 0,
+        "selected_tokens": 0,
+        "tokens_eliminated": 0,
+        "monotonic": true,
+        "artifacts_verified": true
+      },
+      "rtk": {
+        "commands": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "tokens_saved": 0,
+        "exec_time_ms": 0,
+        "parse_failures": 0,
+        "fallback_successes": 0,
+        "rows": []
+      },
+      "raw_exec_stream": {
+        "sha256": "6a1d72e7169a9e7e1f1caeb94f5832bf3064ce5a962b5f89bdf13e05c47ea6d2",
+        "bytes": 4369
+      },
+      "raw_stderr": {
+        "sha256": "732cc5921eda6aafb23df924a89527e56a25941a9bebb5a5d0dbb0c7e3f149c3",
+        "bytes": 484
+      }
+    }
+  ],
+  "private_artifacts": "private-artifacts/additional-tools-screen-20260728/agent-run",
+  "limitations": [
+    "Provider prompt caches cannot be forcibly cleared; every cache counter is recorded.",
+    "RTK adoption is measured from natural instruction following, not forced command rewriting.",
+    "Bootstrap intervals quantify this fixed corpus and do not make it universal."
+  ]
+}

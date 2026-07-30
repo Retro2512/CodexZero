@@ -218,13 +218,13 @@ The dated GPT-5.6-sol reference is:
 
 ```text
 3,552 baseline model-instruction tokens
-  874 bundled model-instruction tokens
-2,678-token reference difference per model request (75.4%)
+1,356 bundled model-instruction tokens
+2,196-token reference difference per model request (61.8%)
 ```
 
 This is a static comparison, not runtime telemetry. A model update can change the baseline. Prompt caching and provider accounting can also change its practical effect.
 
-The original July 22 refactor measured 5,099 → 946 combined tokens (81.4%). Restoring concise intermediary updates produced 5,099 → 1,004 (80.3%). Adding batching, stopping, and context-handoff guidance makes the current lineage 5,099 → 1,140 (77.6%). None of the combined figures replaces the user’s global or project instruction files.
+The original July 22 refactor measured 5,099 → 946 combined tokens (81.4%). Restoring concise intermediary updates produced 5,099 → 1,004 (80.3%). Adding batching, stopping, context-handoff, and product-authority guidance makes the current lineage 5,099 → 1,622 (68.2%). None of the combined figures replaces the user’s global or project instruction files.
 
 ## Scoped-runtime benchmark
 

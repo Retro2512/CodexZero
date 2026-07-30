@@ -11,17 +11,21 @@
 
   <text x="34" y="278" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="800">Regular Codex</text>
   <text x="606" y="278" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="800" text-anchor="end">26.58M</text>
-  <rect x="34" y="300" width="572" height="38" fill="#171713"/>
+  <rect x="34" y="300" width="277" height="38" fill="#171713"/>
 
   <text x="34" y="401" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="800">CodexZero</text>
   <text x="606" y="401" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="800" text-anchor="end">22.69M</text>
   <rect x="34" y="423" width="572" height="38" fill="#deddd4"/>
-  <rect x="34" y="423" width="488" height="38" fill="#d94f35"/>
+  <rect x="34" y="423" width="237" height="38" fill="#d94f35"/>
 
   <text x="34" y="524" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="800">CodexZero Max*</text>
   <text x="606" y="524" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="800" text-anchor="end">19.62M*</text>
   <rect x="34" y="546" width="572" height="38" fill="#deddd4"/>
-  <rect x="34" y="546" width="422" height="38" fill="#c9ff36"/>
+  <rect x="34" y="546" width="205" height="38" fill="#c9ff36"/>
+
+  <text x="34" y="611" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="800">LeanCTX</text>
+  <text x="606" y="611" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="800" text-anchor="end">54.87M</text>
+  <rect x="34" y="619" width="572" height="18" fill="#7c5cff"/>
 
   <rect x="34" y="650" width="572" height="86" fill="#c9ff36"/>
   <text x="58" y="702" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="800">Same score</text>
