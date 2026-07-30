@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.5.0
+
 - Rebased the patched core onto the official stable Codex `0.146.0` release and refreshed the reproducible source patch.
 - Added a single-source regression check that keeps compatibility metadata, CI, release builds, installers, and documentation pinned to the same upstream release.
 - Made the user's product and disclosure decisions authoritative for feature implementation and customer-facing text.
