@@ -1689,7 +1689,8 @@ def main() -> int:
         / "skills"
         / "caveman"
     )
-    required = (
+    needs_caveman = any(config["caveman"] for config in CONFIGURATIONS)
+    required = [
         stock_binary,
         codexzero_binary,
         auth,
@@ -1697,8 +1698,9 @@ def main() -> int:
         prompt_manifest,
         rtk_file,
         rtk_binary,
-        caveman_source / "SKILL.md",
-    )
+    ]
+    if needs_caveman:
+        required.append(caveman_source / "SKILL.md")
     missing = [str(path) for path in required if not path.exists()]
     if missing:
         raise SystemExit("Missing benchmark dependency:\n" + "\n".join(missing))
@@ -1915,11 +1917,15 @@ def main() -> int:
             ],
             "rtk_tokens": tokens(rtk_instructions),
             "rtk_sha256": digest(rtk_instructions.encode("utf-8")),
-            "caveman_skill_tokens": tokens(
-                (caveman_source / "SKILL.md").read_text(encoding="utf-8")
+            "caveman_skill_tokens": (
+                tokens((caveman_source / "SKILL.md").read_text(encoding="utf-8"))
+                if needs_caveman
+                else 0
             ),
-            "caveman_skill_sha256": digest(
-                (caveman_source / "SKILL.md").read_bytes()
+            "caveman_skill_sha256": (
+                digest((caveman_source / "SKILL.md").read_bytes())
+                if needs_caveman
+                else None
             ),
             "caveman_activation_tokens": tokens(CAVEMAN_ACTIVATION),
         },
