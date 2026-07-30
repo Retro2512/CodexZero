@@ -26,9 +26,26 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.95.0
       - name: Verify patch applies to its pinned Codex tag
         shell: bash
         run: |
-          git -c core.autocrlf=false clone --depth 1 --branch rust-v0.145.0-alpha.30 \
+          git -c core.autocrlf=false clone --depth 1 --branch rust-v0.146.0 \
             https://github.com/openai/codex.git upstream
-          git -C upstream apply --check ../patches/codex-rust-v0.145.0-alpha.30.patch
+          git -C upstream apply --check ../patches/codex-rust-v0.146.0.patch
+          git -C upstream apply ../patches/codex-rust-v0.146.0.patch
+      - name: Check patched core and focused regressions
+        shell: bash
+        env:
+          CARGO_BUILD_JOBS: 2
+          RUST_MIN_STACK: 8388608
+        run: |
+          manifest=upstream/codex-rs/Cargo.toml
+          cargo test --locked --manifest-path "$manifest" -p codex-zero-codec
+          cargo test --locked --manifest-path "$manifest" -p codex-core codex_zero
+          cargo test --locked --manifest-path "$manifest" -p codex-core exact_duplicate_repository_search_uses_active_result_reference
+          cargo test --locked --manifest-path "$manifest" -p codex-core event_driven_empty_poll_waits_past_requested_interval_until_silent_exit
+          cargo test --locked --manifest-path "$manifest" -p codex-core configured_code_mode_only_overrides_a_direct_model_default
+          cargo test --locked --manifest-path "$manifest" -p codex-core tool_mode_selector_overrides_feature_flags
+          cargo test --locked --manifest-path "$manifest" -p codex-core config_schema_matches_fixture
+          cargo check --locked --manifest-path "$manifest" -p codex-cli

@@ -1,0 +1,65 @@
+{
+  "schema": "codexzero-additional-tools-screen-v1",
+  "model": "gpt-5.6-sol",
+  "effort": "medium",
+  "seed": 2512,
+  "workloads": [
+    "code_fix",
+    "git_diff",
+    "repetitive_log"
+  ],
+  "baseline_source": "private-artifacts/fast-benchmark-20260728T013916Z/five-safe-2512.json",
+  "candidate_source": "reports/additional-output-tools-screen-2026-07-28.json",
+  "baseline": {
+    "tokens": 135977,
+    "cost": 0.246241,
+    "input": 135029,
+    "cached": 101632,
+    "output": 948,
+    "wall": 71677.29999999999,
+    "requests": 8,
+    "calls": 3,
+    "quality": 3
+  },
+  "results": {
+    "codex_sqz": {
+      "tokens": 182210,
+      "cost": 0.290477,
+      "input": 180583,
+      "cached": 146944,
+      "output": 1627,
+      "wall": 68823.5,
+      "requests": 11,
+      "calls": 7,
+      "quality": 3,
+      "token_savings_pct": -34.00060304316171,
+      "cost_savings_pct": -17.964514439106402,
+      "speed_savings_pct": 3.9814557747013195,
+      "request_savings_pct": -37.5,
+      "tool_call_savings_pct": -133.33333333333334,
+      "cache_ratio_pct": 81.37200068666486
+    },
+    "codex_squeez": {
+      "tokens": 190320,
+      "cost": 0.427807,
+      "input": 188969,
+      "cached": 123904,
+      "output": 1351,
+      "wall": 69054.7,
+      "requests": 11,
+      "calls": 6,
+      "quality": 3,
+      "token_savings_pct": -39.96484699618318,
+      "cost_savings_pct": -73.73508067299922,
+      "speed_savings_pct": 3.65889898196499,
+      "request_savings_pct": -37.5,
+      "tool_call_savings_pct": -100.0,
+      "cache_ratio_pct": 65.56842656732057
+    }
+  },
+  "limitations": [
+    "Three-task screening sample; not the full 18-cell micro.",
+    "Baseline cells are reused from the same pinned harness, model, effort, seed, and stock binary to avoid additional usage.",
+    "Provider cache state cannot be cleared and materially affected total-token and cost results."
+  ]
+}

@@ -1,9 +1,10 @@
 {
   "schema": "codex-zero-compatibility-v1",
   "core": {
-    "upstreamTag": "rust-v0.145.0-alpha.30",
-    "upstreamCommit": "3b61fac9",
-    "desktopRuntimeVerified": "0.145.0-alpha.30",
+    "upstreamTag": "rust-v0.146.0",
+    "upstreamCommit": "e363b08c",
+    "desktopPackageVerified": "26.721.4979.0",
+    "desktopRuntimeVerified": "0.146.0-alpha.3.1",
     "stockCliCoexistenceVerified": "0.139.0"
   },
   "platforms": [

@@ -11,18 +11,22 @@
 
   <text x="54" y="253" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="800">Regular Codex</text>
   <rect x="255" y="225" width="710" height="42" fill="#e0dfd6"/>
-  <rect x="255" y="225" width="710" height="42" fill="#171713"/>
+  <rect x="255" y="225" width="344" height="42" fill="#171713"/>
   <text x="1004" y="255" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="800">26.58M</text>
 
   <text x="54" y="333" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="800">CodexZero</text>
   <rect x="255" y="305" width="710" height="42" fill="#e0dfd6"/>
-  <rect x="255" y="305" width="606" height="42" fill="#d94f35"/>
+  <rect x="255" y="305" width="294" height="42" fill="#d94f35"/>
   <text x="1004" y="335" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="800">22.69M</text>
 
   <text x="54" y="413" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="800">CodexZero Max*</text>
   <rect x="255" y="385" width="710" height="42" fill="#e0dfd6"/>
-  <rect x="255" y="385" width="524" height="42" fill="#c9ff36"/>
+  <rect x="255" y="385" width="254" height="42" fill="#c9ff36"/>
   <text x="1004" y="415" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="800">19.62M*</text>
+
+  <text x="54" y="455" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="800">LeanCTX</text>
+  <rect x="255" y="433" width="710" height="26" fill="#7c5cff"/>
+  <text x="1004" y="455" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="800">54.87M</text>
 
   <rect x="54" y="467" width="1092" height="74" fill="#c9ff36"/>
   <text x="80" y="514" fill="#171713" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="800">Same score: 29 / 36</text>

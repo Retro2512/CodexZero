@@ -57,10 +57,10 @@ The implementation began against:
 
 | Component | Version or location |
 |---|---|
-| Codex Desktop | `26.715.10079.0` |
+| Codex Desktop | `26.721.4979.0` |
 | Stock Codex CLI | `0.139.0` |
-| Patched upstream tag | `rust-v0.145.0-alpha.30` |
-| Patched upstream commit | `3b61fac9` |
+| Patched upstream tag | `rust-v0.146.0` |
+| Patched upstream commit | `e363b08c` |
 
 The Safe optimizer was required to preserve all of the following:
 
@@ -328,8 +328,9 @@ A paired quick benchmark set the mode defaults:
 
 Code mode supplies lazy nested schemas and JavaScript composition over the existing Codex handlers. Independent reads can run concurrently, while edits, approvals, sandboxing, hooks, and cancellation still use the normal router. A fifth payload feature can project long successful check output into a deterministic diagnostic summary after the raw artifact has been saved. Failed and unknown commands remain unprojected, and the exact tokenizer still rejects non-smaller candidates.
 
-The current lean prompt adds batching, stopping, and context-handoff guidance.
-Its GPT-5.6-sol dated model-only comparison is 3,552 → 874 (75.4%).
+The current lean prompt adds batching, stopping, context-handoff, and
+product-authority guidance. Its GPT-5.6-sol dated model-only comparison is
+3,552 → 1,356 (61.8%).
 
 ---
 
@@ -604,8 +605,8 @@ Release packages include Node. A source checkout can use Node.js 20 or newer.
 The patched core can be reproduced with:
 
 ```sh
-git clone --branch rust-v0.145.0-alpha.30 https://github.com/openai/codex.git upstream
-git -C upstream apply ../CodexZero/patches/codex-rust-v0.145.0-alpha.30.patch
+git clone --branch rust-v0.146.0 https://github.com/openai/codex.git upstream
+git -C upstream apply ../CodexZero/patches/codex-rust-v0.146.0.patch
 cargo build --manifest-path upstream/codex-rs/Cargo.toml -p codex-cli --release
 ```
 
@@ -1095,7 +1096,7 @@ removed per eligible result.
 
 | File | Purpose |
 |---|---|
-| `patches/codex-rust-v0.145.0-alpha.30.patch` | Complete reproducible Rust patch |
+| `patches/codex-rust-v0.146.0.patch` | Complete reproducible Rust patch |
 
 The upstream clone under `/work/` is local build material and is not tracked.
 
@@ -1298,8 +1299,8 @@ Useful development commands:
 npm test
 node bin/codex-zero.mjs doctor
 node bin/codex-zero.mjs savings --json
-git clone --depth 1 --branch rust-v0.145.0-alpha.30 https://github.com/openai/codex.git upstream
-git -C upstream apply --check ../patches/codex-rust-v0.145.0-alpha.30.patch
+git clone --depth 1 --branch rust-v0.146.0 https://github.com/openai/codex.git upstream
+git -C upstream apply --check ../patches/codex-rust-v0.146.0.patch
 ```
 
 The detailed machine-readable evidence remains in `reports/`. When this

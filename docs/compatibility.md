@@ -12,9 +12,9 @@ Release packages include a Node runtime for the wrapper and monitor. Source-chec
 
 ## Codex versions
 
-The patched core is built from upstream tag `rust-v0.145.0-alpha.30`. It was verified alongside:
+The patched core is built from the official stable upstream tag `rust-v0.146.0`. It was verified alongside:
 
-- Codex Desktop embedded runtime `0.145.0-alpha.30`;
+- Codex Desktop package `26.721.4979.0` with embedded runtime `0.146.0-alpha.3.1`;
 - stock Codex CLI `0.139.0`.
 
 CodexZero installs side by side, so it can coexist with other stock Codex versions. It never patches an installed executable. `codex-zero stock` resolves the user’s current stock `codex` command.

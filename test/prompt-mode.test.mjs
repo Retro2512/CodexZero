@@ -42,11 +42,11 @@ test("mode switches without modifying prompt or global instruction files", async
   assert.equal(savings.status, 0);
   const summary = JSON.parse(savings.stdout);
   assert.equal(summary.promptBenchmark.active, true);
-  assert.equal(summary.promptBenchmark.referenceDifferencePerModelRequest, 2678);
-  assert.equal(summary.promptBenchmark.referenceReductionPercent, 75.4);
+  assert.equal(summary.promptBenchmark.referenceDifferencePerModelRequest, 2196);
+  assert.equal(summary.promptBenchmark.referenceReductionPercent, 61.8);
   assert.equal(
     summary.promptBenchmark.referenceScenarioAt50RequestsPerDay.per30Days,
-    4017000
+    3294000
   );
 });
 

@@ -4,9 +4,9 @@
   "bundled_prompt": {
     "id": "codex-core-lean-v1",
     "path": "codex-core-lean-v1.md",
-    "tokens": 874,
-    "bytes": 4860,
-    "sha256": "6fd9a0219d19299e06d68b99f758ac35dc76bd537cbf887daa0ccf9ecd1783d8",
+    "tokens": 1356,
+    "bytes": 7422,
+    "sha256": "2daa3187de4ab8ed7337cec2d16cfea8cfe6f02270bd4760796ec59702fcb4ab",
     "keeps_concise_intermediary_updates": true
   },
   "references": [
@@ -15,9 +15,9 @@
       "scope": "model_instructions",
       "model": "gpt-5.6-sol",
       "baseline_tokens": 3552,
-      "lean_tokens": 874,
-      "tokens_removed_per_model_request": 2678,
-      "reduction_percent": 75.4,
+      "lean_tokens": 1356,
+      "tokens_removed_per_model_request": 2196,
+      "reduction_percent": 61.8,
       "baseline_sha256": "cbefa6b0bede0e332d957fca70ccacf9f12f4c0ecdf81b819e5cbe1a3b16e265",
       "measured_on": "2026-07-24"
     },
@@ -26,18 +26,18 @@
       "scope": "model_instructions",
       "model": "gpt-5.5",
       "baseline_tokens": 4069,
-      "lean_tokens": 874,
-      "tokens_removed_per_model_request": 3195,
-      "reduction_percent": 78.5,
+      "lean_tokens": 1356,
+      "tokens_removed_per_model_request": 2713,
+      "reduction_percent": 66.7,
       "measured_on": "2026-07-24"
     },
     {
       "id": "historical-combined-lineage-2026-07-22",
       "scope": "model_plus_global_instructions",
       "baseline_tokens": 5099,
-      "lean_tokens": 1140,
-      "tokens_removed_per_model_request": 3959,
-      "reduction_percent": 77.6,
+      "lean_tokens": 1622,
+      "tokens_removed_per_model_request": 3477,
+      "reduction_percent": 68.2,
       "measured_on": "2026-07-24",
       "note": "Lineage comparison only. CodexZero does not replace the user's global AGENTS.md."
     }

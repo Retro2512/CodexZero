@@ -43,7 +43,7 @@ $existingShim = Join-Path $codexHome 'bin\codex-zero.cmd'
 $monitorPidPath = Join-Path $installRoot 'monitor.pid'
 $sourceCore = Join-Path $sourceRoot 'dist\windows-x64\codex-zero-core.exe'
 if (-not (Test-Path -LiteralPath $sourceCore)) {
-    $sourceCore = Join-Path $sourceRoot 'work\codex-0.145.0-alpha.30\codex-rs\target\debug\codex.exe'
+    $sourceCore = Join-Path $sourceRoot 'work\codex-0.146.0\codex-rs\target\debug\codex.exe'
 }
 if (-not (Test-Path -LiteralPath $sourceCore)) {
     throw 'codex-zero-core.exe is missing. Download a release package or build the patched CLI first.'
