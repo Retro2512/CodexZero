@@ -1,0 +1,41 @@
+name: Update download history
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/download-history.yml
+      - scripts/update-download-history.py
+
+permissions:
+  contents: write
+
+concurrency:
+  group: download-history
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update chart
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/update-download-history.py
+
+      - name: Commit changes
+        run: |
+          if git diff --quiet; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/downloads/history.json assets/downloads/history.svg
+          git commit -m "Update download history"
+          git push

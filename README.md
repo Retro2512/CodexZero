@@ -130,3 +130,9 @@ Token reductions do not translate directly into the same percentage reduction on
 - [Contributing](CONTRIBUTING.md)
 
 CodexZero is an independent project and is not an official OpenAI product.
+
+## Downloads
+
+![CodexZero total package download history](assets/downloads/history.svg)
+
+Counts release packages across every version, excluding checksum files. Updated daily.
