@@ -1,16 +1,16 @@
 diff --git a/MODULE.bazel.lock b/MODULE.bazel.lock
-index fac6b4f3cf..0f664fa1e7 100644
+index 0964875..9d109f7 100644
 --- a/MODULE.bazel.lock
 +++ b/MODULE.bazel.lock
-@@ -904,6 +904,7 @@
-       "eyre_0.6.12": "{\"dependencies\":[{\"kind\":\"dev\",\"name\":\"anyhow\",\"req\":\"^1.0.28\"},{\"kind\":\"dev\",\"name\":\"backtrace\",\"req\":\"^0.3.46\"},{\"default_features\":false,\"kind\":\"dev\",\"name\":\"futures\",\"req\":\"^0.3\"},{\"name\":\"indenter\",\"req\":\"^0.3.0\"},{\"name\":\"once_cell\",\"req\":\"^1.18.0\"},{\"default_features\":false,\"name\":\"pyo3\",\"optional\":true,\"req\":\"^0.20\"},{\"default_features\":false,\"features\":[\"auto-initialize\"],\"kind\":\"dev\",\"name\":\"pyo3\",\"req\":\"^0.20\"},{\"kind\":\"dev\",\"name\":\"rustversion\",\"req\":\"^1.0\"},{\"features\":[\"full\"],\"kind\":\"dev\",\"name\":\"syn\",\"req\":\"^2.0\"},{\"kind\":\"dev\",\"name\":\"thiserror\",\"req\":\"^1.0\"},{\"features\":[\"diff\"],\"kind\":\"dev\",\"name\":\"trybuild\",\"req\":\"^1.0.19\"}],\"features\":{\"auto-install\":[],\"default\":[\"auto-install\",\"track-caller\"],\"track-caller\":[]}}",
+@@ -991,6 +991,7 @@
        "fallible-iterator_0.2.0": "{\"dependencies\":[],\"features\":{\"alloc\":[],\"default\":[\"std\"],\"std\":[]}}",
+       "fancy-regex_0.11.0": "{\"dependencies\":[{\"name\":\"bit-set\",\"req\":\"^0.5\"},{\"kind\":\"dev\",\"name\":\"criterion\",\"req\":\"^0.3.0\"},{\"kind\":\"dev\",\"name\":\"matches\",\"req\":\"^0.1.8\"},{\"kind\":\"dev\",\"name\":\"quickcheck\",\"req\":\"^1.0.1\"},{\"default_features\":false,\"features\":[\"std\"],\"name\":\"regex\",\"req\":\"^1.3.8\"}],\"features\":{\"default\":[\"unicode\",\"perf\"],\"perf\":[\"regex/perf\"],\"perf-cache\":[\"regex/perf-cache\"],\"perf-dfa\":[\"regex/perf-dfa\"],\"perf-inline\":[\"regex/perf-inline\"],\"perf-literal\":[\"regex/perf-literal\"],\"track_caller\":[],\"unicode\":[\"regex/unicode\"]}}",
        "fancy-regex_0.16.2": "{\"dependencies\":[{\"default_features\":false,\"name\":\"bit-set\",\"req\":\"^0.8\"},{\"kind\":\"dev\",\"name\":\"criterion\",\"req\":\"^0.5\"},{\"kind\":\"dev\",\"name\":\"matches\",\"req\":\"^0.1.10\"},{\"kind\":\"dev\",\"name\":\"quickcheck\",\"req\":\"^1.0\"},{\"kind\":\"dev\",\"name\":\"regex\",\"req\":\"^1.10\"},{\"default_features\":false,\"features\":[\"alloc\",\"syntax\",\"meta\",\"nfa\",\"dfa\",\"hybrid\"],\"name\":\"regex-automata\",\"req\":\"^0.4\"},{\"default_features\":false,\"name\":\"regex-syntax\",\"req\":\"^0.8\"}],\"features\":{\"default\":[\"unicode\",\"perf\",\"std\"],\"perf\":[\"regex-automata/perf\"],\"std\":[\"regex-automata/std\",\"regex-syntax/std\",\"bit-set/std\"],\"track_caller\":[],\"unicode\":[\"regex-automata/unicode\",\"regex-syntax/unicode\"]}}",
 +      "fancy-regex_0.17.0": "{\"dependencies\":[{\"default_features\":false,\"name\":\"bit-set\",\"req\":\"^0.8\"},{\"kind\":\"dev\",\"name\":\"criterion\",\"req\":\"^0.5\"},{\"kind\":\"dev\",\"name\":\"matches\",\"req\":\"^0.1.10\"},{\"kind\":\"dev\",\"name\":\"quickcheck\",\"req\":\"^1.0\"},{\"kind\":\"dev\",\"name\":\"regex\",\"req\":\"^1.10\"},{\"default_features\":false,\"features\":[\"alloc\",\"syntax\",\"meta\",\"nfa\",\"dfa\",\"hybrid\"],\"name\":\"regex-automata\",\"req\":\"^0.4\"},{\"default_features\":false,\"name\":\"regex-syntax\",\"req\":\"^0.8\"}],\"features\":{\"default\":[\"unicode\",\"perf\",\"std\",\"variable-lookbehinds\"],\"perf\":[\"regex-automata/perf\"],\"std\":[\"regex-automata/std\",\"regex-syntax/std\",\"bit-set/std\"],\"track_caller\":[],\"unicode\":[\"regex-automata/unicode\",\"regex-syntax/unicode\"],\"variable-lookbehinds\":[\"regex-automata/dfa-search\"]}}",
+       "fast-srgb8_1.0.0": "{\"dependencies\":[],\"features\":{}}",
        "faster-hex_0.10.0": "{\"dependencies\":[{\"kind\":\"dev\",\"name\":\"bytes\",\"req\":\"^1.4.0\"},{\"kind\":\"dev\",\"name\":\"criterion\",\"req\":\"^0.5\"},{\"name\":\"heapless\",\"req\":\"^0.8\",\"target\":\"cfg(not(feature = \\\"alloc\\\"))\"},{\"kind\":\"dev\",\"name\":\"hex\",\"req\":\"^0.3.2\"},{\"kind\":\"dev\",\"name\":\"proptest\",\"req\":\"^1.0\"},{\"kind\":\"dev\",\"name\":\"rustc-hex\",\"req\":\"^1.0\"},{\"default_features\":false,\"name\":\"serde\",\"optional\":true,\"req\":\"^1.0\"},{\"features\":[\"derive\"],\"kind\":\"dev\",\"name\":\"serde\",\"req\":\"^1.0\"},{\"kind\":\"dev\",\"name\":\"serde_json\",\"req\":\"^1.0\"}],\"features\":{\"alloc\":[],\"default\":[\"std\",\"serde\"],\"serde\":[\"dep:serde\",\"alloc\"],\"std\":[\"alloc\",\"serde?/std\"]}}",
        "fastrand_2.3.0": "{\"dependencies\":[{\"features\":[\"js\"],\"name\":\"getrandom\",\"optional\":true,\"req\":\"^0.2\",\"target\":\"cfg(all(any(target_arch = \\\"wasm32\\\", target_arch = \\\"wasm64\\\"), target_os = \\\"unknown\\\"))\"},{\"kind\":\"dev\",\"name\":\"getrandom\",\"req\":\"^0.2\"},{\"features\":[\"js\"],\"kind\":\"dev\",\"name\":\"getrandom\",\"req\":\"^0.2\",\"target\":\"cfg(all(any(target_arch = \\\"wasm32\\\", target_arch = \\\"wasm64\\\"), target_os = \\\"unknown\\\"))\"},{\"kind\":\"dev\",\"name\":\"rand\",\"req\":\"^0.8\"},{\"kind\":\"dev\",\"name\":\"wasm-bindgen-test\",\"req\":\"^0.3\",\"target\":\"cfg(all(any(target_arch = \\\"wasm32\\\", target_arch = \\\"wasm64\\\"), target_os = \\\"unknown\\\"))\"},{\"kind\":\"dev\",\"name\":\"wyhash\",\"req\":\"^0.5\"}],\"features\":{\"alloc\":[],\"default\":[\"std\"],\"js\":[\"std\",\"getrandom\"],\"std\":[\"alloc\"]}}",
-       "fastrand_2.4.1": "{\"dependencies\":[{\"features\":[\"wasm_js\"],\"name\":\"getrandom\",\"optional\":true,\"req\":\"^0.3.4\",\"target\":\"cfg(all(any(target_arch = \\\"wasm32\\\", target_arch = \\\"wasm64\\\"), target_os = \\\"unknown\\\"))\"},{\"kind\":\"dev\",\"name\":\"getrandom\",\"req\":\"^0.3.4\"},{\"features\":[\"wasm_js\"],\"kind\":\"dev\",\"name\":\"getrandom\",\"req\":\"^0.3.4\",\"target\":\"cfg(all(any(target_arch = \\\"wasm32\\\", target_arch = \\\"wasm64\\\"), target_os = \\\"unknown\\\"))\"},{\"kind\":\"dev\",\"name\":\"rand\",\"req\":\"^0.9\"},{\"kind\":\"dev\",\"name\":\"wasm-bindgen-test\",\"req\":\"^0.3\",\"target\":\"cfg(all(any(target_arch = \\\"wasm32\\\", target_arch = \\\"wasm64\\\"), target_os = \\\"unknown\\\"))\"},{\"kind\":\"dev\",\"name\":\"wyhash\",\"req\":\"^0.6\"}],\"features\":{\"alloc\":[],\"default\":[\"std\"],\"js\":[\"std\",\"getrandom\"],\"std\":[\"alloc\"]}}",
-@@ -1617,6 +1618,7 @@
+@@ -1743,6 +1744,7 @@
        "thread_local_1.1.9": "{\"dependencies\":[{\"name\":\"cfg-if\",\"req\":\"^1.0.0\"},{\"kind\":\"dev\",\"name\":\"criterion\",\"req\":\"^0.5.1\"}],\"features\":{\"nightly\":[]}}",
        "threadpool_1.8.1": "{\"dependencies\":[{\"name\":\"num_cpus\",\"req\":\"^1.13\"}],\"features\":{}}",
        "tiff_0.10.3": "{\"dependencies\":[{\"kind\":\"dev\",\"name\":\"crc32fast\",\"req\":\"^1.5\"},{\"kind\":\"dev\",\"name\":\"criterion\",\"req\":\"^0.3.1\"},{\"name\":\"fax34\",\"optional\":true,\"package\":\"fax\",\"req\":\"^0.2.6\"},{\"name\":\"flate2\",\"optional\":true,\"req\":\"^1.0.20\"},{\"name\":\"half\",\"req\":\"^2.4.1\"},{\"name\":\"quick-error\",\"req\":\"^2.0.1\"},{\"name\":\"weezl\",\"optional\":true,\"req\":\"^0.1.10\"},{\"name\":\"zstd\",\"optional\":true,\"req\":\"^0.13\"},{\"name\":\"zune-jpeg\",\"optional\":true,\"req\":\"^0.4.17\"}],\"features\":{\"default\":[\"deflate\",\"fax\",\"jpeg\",\"lzw\"],\"deflate\":[\"dep:flate2\"],\"fax\":[\"dep:fax34\"],\"jpeg\":[\"dep:zune-jpeg\"],\"lzw\":[\"dep:weezl\"],\"zstd\":[\"dep:zstd\"]}}",
@@ -19,7 +19,7 @@ index fac6b4f3cf..0f664fa1e7 100644
        "time-macros_0.2.27": "{\"dependencies\":[{\"name\":\"num-conv\",\"req\":\"^0.2.0\"},{\"name\":\"time-core\",\"req\":\"=0.1.8\"}],\"features\":{\"formatting\":[],\"large-dates\":[],\"parsing\":[],\"serde\":[]}}",
        "time_0.3.47": "{\"dependencies\":[{\"default_features\":false,\"kind\":\"dev\",\"name\":\"criterion\",\"req\":\"^0.8.1\",\"target\":\"cfg(bench)\"},{\"features\":[\"powerfmt\"],\"name\":\"deranged\",\"req\":\"^0.5.2\"},{\"name\":\"itoa\",\"optional\":true,\"req\":\"^1.0.1\"},{\"name\":\"js-sys\",\"optional\":true,\"req\":\"^0.3.58\",\"target\":\"cfg(all(target_family = \\\"wasm\\\", not(any(target_os = \\\"emscripten\\\", target_os = \\\"wasi\\\"))))\"},{\"name\":\"libc\",\"optional\":true,\"req\":\"^0.2.98\",\"target\":\"cfg(target_family = \\\"unix\\\")\"},{\"name\":\"num-conv\",\"req\":\"^0.2.0\"},{\"kind\":\"dev\",\"name\":\"num-conv\",\"req\":\"^0.2.0\"},{\"name\":\"num_threads\",\"optional\":true,\"req\":\"^0.1.2\",\"target\":\"cfg(target_family = \\\"unix\\\")\"},{\"default_features\":false,\"name\":\"powerfmt\",\"req\":\"^0.2.0\"},{\"default_features\":false,\"name\":\"quickcheck\",\"optional\":true,\"req\":\"^1.0.3\"},{\"kind\":\"dev\",\"name\":\"quickcheck_macros\",\"req\":\"^1.0.0\"},{\"default_features\":false,\"name\":\"rand08\",\"optional\":true,\"package\":\"rand\",\"req\":\"^0.8.4\"},{\"default_features\":false,\"kind\":\"dev\",\"name\":\"rand08\",\"package\":\"rand\",\"req\":\"^0.8.4\"},{\"default_features\":false,\"name\":\"rand09\",\"optional\":true,\"package\":\"rand\",\"req\":\"^0.9.2\"},{\"default_features\":false,\"features\":[\"small_rng\"],\"kind\":\"dev\",\"name\":\"rand09\",\"package\":\"rand\",\"req\":\"^0.9.2\"},{\"default_features\":false,\"kind\":\"dev\",\"name\":\"rstest\",\"req\":\"^0.26.1\"},{\"kind\":\"dev\",\"name\":\"rstest_reuse\",\"req\":\"^0.7.0\"},{\"default_features\":false,\"features\":[\"derive\"],\"kind\":\"dev\",\"name\":\"serde\",\"req\":\"^1.0.184\"},{\"default_features\":false,\"name\":\"serde_core\",\"optional\":true,\"req\":\"^1.0.220\"},{\"kind\":\"dev\",\"name\":\"serde_json\",\"req\":\"^1.0.68\"},{\"kind\":\"dev\",\"name\":\"serde_test\",\"req\":\"^1.0.126\"},{\"name\":\"time-core\",\"req\":\"=0.1.8\"},{\"name\":\"time-macros\",\"optional\":true,\"req\":\"=0.2.27\"},{\"kind\":\"dev\",\"name\":\"time-macros\",\"req\":\"=0.2.27\"},{\"kind\":\"dev\",\"name\":\"trybuild\",\"req\":\"^1.0.102\",\"target\":\"cfg(__ui_tests)\"}],\"features\":{\"alloc\":[\"serde_core?/alloc\"],\"default\":[\"std\"],\"formatting\":[\"dep:itoa\",\"std\",\"time-macros?/formatting\"],\"large-dates\":[\"time-core/large-dates\",\"time-macros?/large-dates\"],\"local-offset\":[\"std\",\"dep:libc\",\"dep:num_threads\"],\"macros\":[\"dep:time-macros\"],\"parsing\":[\"time-macros?/parsing\"],\"quickcheck\":[\"dep:quickcheck\",\"alloc\",\"deranged/quickcheck\"],\"rand\":[\"rand08\",\"rand09\"],\"rand08\":[\"dep:rand08\",\"deranged/rand08\"],\"rand09\":[\"dep:rand09\",\"deranged/rand09\"],\"serde\":[\"dep:serde_core\",\"time-macros?/serde\",\"deranged/serde\"],\"serde-human-readable\":[\"serde\",\"formatting\",\"parsing\"],\"serde-well-known\":[\"serde\",\"formatting\",\"parsing\"],\"std\":[\"alloc\"],\"wasm-bindgen\":[\"dep:js-sys\"]}}",
 diff --git a/codex-rs/Cargo.lock b/codex-rs/Cargo.lock
-index 38f79b8974..0f936424ee 100644
+index b1c6a2a..2d5dd3d 100644
 --- a/codex-rs/Cargo.lock
 +++ b/codex-rs/Cargo.lock
 @@ -394,7 +394,7 @@ checksum = "2a4385e2e34eb35d6b3efe798b9eb88096925d87726c0798709bf56d9ed84af3"
@@ -27,322 +27,354 @@ index 38f79b8974..0f936424ee 100644
  [[package]]
  name = "app_test_support"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "base64 0.22.1",
-@@ -1837,7 +1837,7 @@ dependencies = [
+@@ -1870,7 +1870,7 @@ dependencies = [
  
  [[package]]
  name = "codex-agent-extension"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "codex-core",
-@@ -1849,7 +1849,7 @@ dependencies = [
+@@ -1882,7 +1882,7 @@ dependencies = [
  
  [[package]]
  name = "codex-agent-graph-store"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-protocol",
   "codex-state",
-@@ -1864,7 +1864,7 @@ dependencies = [
+@@ -1897,7 +1897,7 @@ dependencies = [
  
  [[package]]
  name = "codex-agent-identity"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "base64 0.22.1",
-@@ -1884,7 +1884,7 @@ dependencies = [
+@@ -1917,7 +1917,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-agent-roles"
+-version = "0.0.0"
++version = "0.151.0"
+ dependencies = [
+  "codex-config",
+  "codex-file-system",
+@@ -1930,7 +1930,7 @@ dependencies = [
  
  [[package]]
  name = "codex-analytics"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-app-server-protocol",
   "codex-git-utils",
-@@ -1905,7 +1905,7 @@ dependencies = [
+@@ -1951,7 +1951,7 @@ dependencies = [
  
  [[package]]
  name = "codex-ansi-escape"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "ansi-to-tui",
   "ratatui",
-@@ -1914,7 +1914,7 @@ dependencies = [
+@@ -1960,7 +1960,7 @@ dependencies = [
  
  [[package]]
  name = "codex-api"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "assert_matches",
-@@ -1950,7 +1950,7 @@ dependencies = [
+@@ -1995,7 +1995,7 @@ dependencies = [
  
  [[package]]
  name = "codex-app-server"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "app_test_support",
-@@ -2047,7 +2047,7 @@ dependencies = [
+@@ -2097,7 +2097,7 @@ dependencies = [
  
  [[package]]
  name = "codex-app-server-client"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-app-server",
   "codex-app-server-protocol",
-@@ -2074,7 +2074,7 @@ dependencies = [
+@@ -2124,7 +2124,7 @@ dependencies = [
  
  [[package]]
  name = "codex-app-server-daemon"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "codex-app-server-protocol",
-@@ -2095,7 +2095,7 @@ dependencies = [
+@@ -2145,7 +2145,7 @@ dependencies = [
  
  [[package]]
  name = "codex-app-server-protocol"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
-  "clap",
-@@ -2124,7 +2124,7 @@ dependencies = [
+  "codex-app-server-protocol-noop-macros",
+@@ -2179,11 +2179,11 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-app-server-protocol-noop-macros"
+-version = "0.0.0"
++version = "0.151.0"
  
  [[package]]
  name = "codex-app-server-test-client"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "clap",
-@@ -2146,7 +2146,7 @@ dependencies = [
+@@ -2205,7 +2205,7 @@ dependencies = [
  
  [[package]]
  name = "codex-app-server-transport"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "axum",
-@@ -2188,7 +2188,7 @@ dependencies = [
+@@ -2247,7 +2247,7 @@ dependencies = [
  
  [[package]]
  name = "codex-apply-patch"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "assert_cmd",
-@@ -2208,7 +2208,7 @@ dependencies = [
+@@ -2267,7 +2267,7 @@ dependencies = [
  
  [[package]]
  name = "codex-arg0"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "codex-apply-patch",
-@@ -2228,7 +2228,7 @@ dependencies = [
+@@ -2288,7 +2288,7 @@ dependencies = [
  
  [[package]]
  name = "codex-async-utils"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "pretty_assertions",
   "tokio",
-@@ -2237,7 +2237,7 @@ dependencies = [
+@@ -2297,7 +2297,7 @@ dependencies = [
  
  [[package]]
  name = "codex-aws-auth"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "aws-config",
   "aws-credential-types",
-@@ -2252,7 +2252,7 @@ dependencies = [
+@@ -2312,7 +2312,7 @@ dependencies = [
  
  [[package]]
  name = "codex-backend-client"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "codex-api",
-@@ -2272,7 +2272,7 @@ dependencies = [
+@@ -2332,7 +2332,7 @@ dependencies = [
  
  [[package]]
  name = "codex-backend-openapi-models"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "serde",
   "serde_json",
-@@ -2281,7 +2281,7 @@ dependencies = [
+@@ -2341,7 +2341,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-build-info"
+-version = "0.0.0"
++version = "0.151.0"
+ dependencies = [
+  "codex-install-context",
+  "pretty_assertions",
+@@ -2353,7 +2353,7 @@ dependencies = [
  
  [[package]]
  name = "codex-bwrap"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "cc",
   "libc",
-@@ -2290,7 +2290,7 @@ dependencies = [
+@@ -2362,7 +2362,7 @@ dependencies = [
  
  [[package]]
  name = "codex-chatgpt"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "clap",
-@@ -2311,7 +2311,7 @@ dependencies = [
+@@ -2384,7 +2384,7 @@ dependencies = [
  
  [[package]]
  name = "codex-cli"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "app_test_support",
-@@ -2392,7 +2392,7 @@ dependencies = [
+@@ -2472,7 +2472,7 @@ dependencies = [
  
  [[package]]
  name = "codex-client"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-http-client",
   "eventsource-stream",
-@@ -2404,7 +2404,7 @@ dependencies = [
+@@ -2485,7 +2485,7 @@ dependencies = [
  
  [[package]]
  name = "codex-cloud-config"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "base64 0.22.1",
   "chrono",
-@@ -2429,7 +2429,7 @@ dependencies = [
+@@ -2510,7 +2510,7 @@ dependencies = [
  
  [[package]]
  name = "codex-cloud-tasks"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -2460,7 +2460,7 @@ dependencies = [
+@@ -2543,7 +2543,7 @@ dependencies = [
  
  [[package]]
  name = "codex-cloud-tasks-client"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -2475,7 +2475,7 @@ dependencies = [
+@@ -2558,7 +2558,7 @@ dependencies = [
  
  [[package]]
  name = "codex-cloud-tasks-mock-client"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "chrono",
   "codex-cloud-tasks-client",
-@@ -2484,7 +2484,7 @@ dependencies = [
+@@ -2567,7 +2567,7 @@ dependencies = [
  
  [[package]]
  name = "codex-code-mode"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-code-mode-protocol",
   "codex-http-client",
-@@ -2503,7 +2503,7 @@ dependencies = [
+@@ -2590,7 +2590,7 @@ dependencies = [
  
  [[package]]
  name = "codex-code-mode-host"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "axum",
-@@ -2525,7 +2525,7 @@ dependencies = [
+@@ -2617,7 +2617,7 @@ dependencies = [
  
  [[package]]
  name = "codex-code-mode-protocol"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-protocol",
-  "pretty_assertions",
-@@ -2537,11 +2537,11 @@ dependencies = [
+  "glob",
+@@ -2635,7 +2635,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-code-mode-runtime"
+-version = "0.0.0"
++version = "0.151.0"
+ dependencies = [
+  "codex-code-mode-protocol",
+  "codex-protocol",
+@@ -2651,11 +2651,11 @@ dependencies = [
  
  [[package]]
  name = "codex-collaboration-mode-templates"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  
  [[package]]
  name = "codex-config"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "base64 0.22.1",
-@@ -2589,7 +2589,7 @@ dependencies = [
+@@ -2704,7 +2704,7 @@ dependencies = [
  
  [[package]]
  name = "codex-connectors"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "arc-swap",
-@@ -2611,7 +2611,7 @@ dependencies = [
+@@ -2726,7 +2726,7 @@ dependencies = [
  
  [[package]]
  name = "codex-connectors-extension"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-connectors",
   "codex-core-plugins",
-@@ -2624,7 +2624,7 @@ dependencies = [
+@@ -2740,7 +2740,7 @@ dependencies = [
  
  [[package]]
  name = "codex-context-fragments"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-protocol",
   "codex-utils-string",
-@@ -2632,7 +2632,7 @@ dependencies = [
+@@ -2748,7 +2748,7 @@ dependencies = [
  
  [[package]]
  name = "codex-core"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "arc-swap",
-@@ -2708,6 +2708,7 @@ dependencies = [
+@@ -2829,6 +2829,7 @@ dependencies = [
   "codex-utils-string",
   "codex-web-search-extension",
   "codex-windows-sandbox",
@@ -350,759 +382,804 @@ index 38f79b8974..0f936424ee 100644
   "core_test_support",
   "ctor 0.6.3",
   "dirs",
-@@ -2762,7 +2763,7 @@ dependencies = [
+@@ -2881,7 +2882,7 @@ dependencies = [
  
  [[package]]
  name = "codex-core-api"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-analytics",
   "codex-app-server-protocol",
-@@ -2784,7 +2785,7 @@ dependencies = [
+@@ -2904,7 +2905,7 @@ dependencies = [
  
  [[package]]
  name = "codex-core-plugins"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -2837,7 +2838,7 @@ dependencies = [
+@@ -2960,7 +2961,7 @@ dependencies = [
  
  [[package]]
- name = "codex-core-skills"
+ name = "codex-diagnostics"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
-  "anyhow",
-  "codex-analytics",
-@@ -2871,7 +2872,7 @@ dependencies = [
+  "libc",
+  "pretty_assertions",
+@@ -2968,7 +2969,7 @@ dependencies = [
  
  [[package]]
  name = "codex-exec"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "assert_cmd",
-@@ -2917,7 +2918,7 @@ dependencies = [
+@@ -3015,7 +3016,7 @@ dependencies = [
  
  [[package]]
  name = "codex-exec-server"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "arc-swap",
-@@ -2971,7 +2972,7 @@ dependencies = [
+@@ -3074,7 +3075,7 @@ dependencies = [
  
  [[package]]
  name = "codex-exec-server-protocol"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "base64 0.22.1",
   "codex-file-system",
-@@ -2986,7 +2987,7 @@ dependencies = [
+@@ -3089,7 +3090,7 @@ dependencies = [
  
  [[package]]
  name = "codex-exec-server-test-support"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
+  "anyhow",
   "codex-exec-server",
-  "codex-http-client",
-@@ -2994,7 +2995,7 @@ dependencies = [
+@@ -3104,7 +3105,7 @@ dependencies = [
  
  [[package]]
  name = "codex-execpolicy"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "clap",
-@@ -3012,7 +3013,7 @@ dependencies = [
+@@ -3122,7 +3123,7 @@ dependencies = [
  
  [[package]]
  name = "codex-experimental-api-macros"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "proc-macro2",
   "quote",
-@@ -3021,7 +3022,7 @@ dependencies = [
+@@ -3131,7 +3132,7 @@ dependencies = [
  
  [[package]]
  name = "codex-extension-api"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-config",
   "codex-context-fragments",
-@@ -3037,7 +3038,7 @@ dependencies = [
+@@ -3148,7 +3149,7 @@ dependencies = [
  
  [[package]]
  name = "codex-extension-items"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-utils-absolute-path",
   "pretty_assertions",
-@@ -3049,7 +3050,7 @@ dependencies = [
+@@ -3160,7 +3161,7 @@ dependencies = [
  
  [[package]]
  name = "codex-external-agent-migration"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "chrono",
   "codex-analytics",
-@@ -3077,7 +3078,7 @@ dependencies = [
+@@ -3190,7 +3191,7 @@ dependencies = [
  
  [[package]]
  name = "codex-features"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-otel",
   "codex-protocol",
-@@ -3090,7 +3091,7 @@ dependencies = [
+@@ -3203,7 +3204,7 @@ dependencies = [
  
  [[package]]
  name = "codex-feedback"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
-  "codex-login",
-@@ -3104,7 +3105,7 @@ dependencies = [
+  "codex-http-client",
+@@ -3221,7 +3222,7 @@ dependencies = [
  
  [[package]]
  name = "codex-file-search"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "clap",
-@@ -3120,7 +3121,7 @@ dependencies = [
+@@ -3237,7 +3238,7 @@ dependencies = [
  
  [[package]]
  name = "codex-file-system"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "bytes",
   "codex-protocol",
-@@ -3132,7 +3133,7 @@ dependencies = [
+@@ -3249,7 +3250,7 @@ dependencies = [
  
  [[package]]
  name = "codex-file-watcher"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "notify",
   "pretty_assertions",
-@@ -3143,7 +3144,7 @@ dependencies = [
+@@ -3260,7 +3261,7 @@ dependencies = [
  
  [[package]]
  name = "codex-git-attribution"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-backend-client",
   "codex-extension-api",
-@@ -3156,7 +3157,7 @@ dependencies = [
+@@ -3273,7 +3274,7 @@ dependencies = [
  
  [[package]]
  name = "codex-git-utils"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -3181,7 +3182,7 @@ dependencies = [
+@@ -3299,7 +3300,7 @@ dependencies = [
  
  [[package]]
  name = "codex-goal-extension"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -3204,7 +3205,7 @@ dependencies = [
+@@ -3323,7 +3324,7 @@ dependencies = [
  
  [[package]]
- name = "codex-guardian"
+ name = "codex-guardian-v2"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
-  "codex-core",
-  "codex-extension-api",
-@@ -3213,7 +3214,7 @@ dependencies = [
+  "anyhow",
+  "codex-api",
+@@ -3350,7 +3351,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-history"
+-version = "0.0.0"
++version = "0.151.0"
+ dependencies = [
+  "anyhow",
+  "codex-protocol",
+@@ -3362,7 +3363,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-history-notes-extension"
+-version = "0.0.0"
++version = "0.151.0"
+ dependencies = [
+  "codex-api",
+  "codex-client",
+@@ -3385,7 +3386,7 @@ dependencies = [
  
  [[package]]
  name = "codex-home"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-extension-api",
   "codex-utils-absolute-path",
-@@ -3224,7 +3225,7 @@ dependencies = [
+@@ -3396,7 +3397,7 @@ dependencies = [
  
  [[package]]
  name = "codex-hooks"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
-  "chrono",
-@@ -3247,7 +3248,7 @@ dependencies = [
+  "async-channel",
+@@ -3422,7 +3423,7 @@ dependencies = [
  
  [[package]]
  name = "codex-http-client"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "bytes",
   "codex-utils-cargo-bin",
-@@ -3278,7 +3279,7 @@ dependencies = [
+@@ -3454,7 +3455,7 @@ dependencies = [
  
  [[package]]
  name = "codex-image-generation-extension"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "base64 0.22.1",
   "codex-api",
-@@ -3305,7 +3306,7 @@ dependencies = [
+@@ -3481,7 +3482,7 @@ dependencies = [
  
  [[package]]
  name = "codex-install-context"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-utils-absolute-path",
   "codex-utils-home-dir",
-@@ -3315,7 +3316,7 @@ dependencies = [
+@@ -3494,7 +3495,7 @@ dependencies = [
  
  [[package]]
  name = "codex-keyring-store"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "keyring",
   "tracing",
-@@ -3323,7 +3324,7 @@ dependencies = [
+@@ -3502,7 +3503,7 @@ dependencies = [
  
  [[package]]
  name = "codex-linux-sandbox"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "clap",
   "codex-core",
-@@ -3348,7 +3349,7 @@ dependencies = [
+@@ -3529,7 +3530,7 @@ dependencies = [
  
  [[package]]
  name = "codex-lmstudio"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-core",
   "codex-http-client",
-@@ -3362,7 +3363,7 @@ dependencies = [
+@@ -3543,7 +3544,7 @@ dependencies = [
  
  [[package]]
  name = "codex-login"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "base64 0.22.1",
-@@ -3404,7 +3405,7 @@ dependencies = [
+@@ -3586,7 +3587,7 @@ dependencies = [
  
  [[package]]
  name = "codex-mcp"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "arc-swap",
-@@ -3441,7 +3442,7 @@ dependencies = [
+@@ -3625,7 +3626,7 @@ dependencies = [
  
  [[package]]
  name = "codex-mcp-extension"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-config",
   "codex-connectors",
-@@ -3467,7 +3468,7 @@ dependencies = [
+@@ -3651,7 +3652,7 @@ dependencies = [
  
  [[package]]
  name = "codex-mcp-server"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "app_test_support",
-@@ -3503,7 +3504,7 @@ dependencies = [
+@@ -3690,7 +3691,7 @@ dependencies = [
  
  [[package]]
  name = "codex-memories-extension"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-core",
   "codex-extension-api",
-@@ -3524,7 +3525,7 @@ dependencies = [
+@@ -3711,7 +3712,7 @@ dependencies = [
  
  [[package]]
  name = "codex-memories-read"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-protocol",
   "codex-shell-command",
-@@ -3534,7 +3535,7 @@ dependencies = [
+@@ -3721,7 +3722,7 @@ dependencies = [
  
  [[package]]
  name = "codex-memories-write"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -3571,7 +3572,7 @@ dependencies = [
+@@ -3758,7 +3759,7 @@ dependencies = [
  
  [[package]]
  name = "codex-message-history"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-config",
   "memchr",
-@@ -3585,7 +3586,7 @@ dependencies = [
+@@ -3772,7 +3773,7 @@ dependencies = [
  
  [[package]]
  name = "codex-model-provider"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-agent-identity",
   "codex-api",
-@@ -3608,7 +3609,7 @@ dependencies = [
+@@ -3796,7 +3797,7 @@ dependencies = [
  
  [[package]]
  name = "codex-model-provider-info"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-api",
   "codex-protocol",
-@@ -3624,7 +3625,7 @@ dependencies = [
+@@ -3813,7 +3814,7 @@ dependencies = [
  
  [[package]]
  name = "codex-models-manager"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "chrono",
   "codex-collaboration-mode-templates",
-@@ -3644,7 +3645,7 @@ dependencies = [
+@@ -3833,7 +3834,7 @@ dependencies = [
  
  [[package]]
  name = "codex-network-proxy"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "base64 0.22.1",
-@@ -3682,7 +3683,7 @@ dependencies = [
+@@ -3871,7 +3872,7 @@ dependencies = [
  
  [[package]]
  name = "codex-ollama"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "assert_matches",
   "async-stream",
-@@ -3702,7 +3703,7 @@ dependencies = [
+@@ -3891,7 +3892,7 @@ dependencies = [
  
  [[package]]
  name = "codex-otel"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "chrono",
   "codex-api",
-@@ -3733,7 +3734,7 @@ dependencies = [
+@@ -3924,7 +3925,7 @@ dependencies = [
  
  [[package]]
  name = "codex-plugin"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-config",
   "codex-protocol",
-@@ -3746,7 +3747,7 @@ dependencies = [
+@@ -3937,7 +3938,7 @@ dependencies = [
  
  [[package]]
  name = "codex-process-hardening"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "libc",
   "pretty_assertions",
-@@ -3754,7 +3755,7 @@ dependencies = [
+@@ -3945,7 +3946,7 @@ dependencies = [
  
  [[package]]
  name = "codex-prompts"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "codex-context-fragments",
-@@ -3768,7 +3769,7 @@ dependencies = [
+@@ -3959,7 +3960,7 @@ dependencies = [
  
  [[package]]
  name = "codex-protocol"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "chardetng",
-@@ -3810,7 +3811,7 @@ dependencies = [
+@@ -4003,7 +4004,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-queue-extension"
+-version = "0.0.0"
++version = "0.151.0"
+ dependencies = [
+  "anyhow",
+  "codex-core",
+@@ -4024,7 +4025,7 @@ dependencies = [
  
  [[package]]
  name = "codex-response-debug-context"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "base64 0.22.1",
   "codex-api",
-@@ -3821,7 +3822,7 @@ dependencies = [
+@@ -4035,7 +4036,7 @@ dependencies = [
  
  [[package]]
  name = "codex-responses-api-proxy"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "clap",
-@@ -3838,7 +3839,7 @@ dependencies = [
+@@ -4052,7 +4053,7 @@ dependencies = [
  
  [[package]]
  name = "codex-rmcp-client"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "axum",
-@@ -3880,7 +3881,7 @@ dependencies = [
+@@ -4098,7 +4099,7 @@ dependencies = [
  
  [[package]]
  name = "codex-rollout"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -3906,7 +3907,7 @@ dependencies = [
+@@ -4125,7 +4126,7 @@ dependencies = [
  
  [[package]]
  name = "codex-rollout-trace"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "codex-code-mode",
-@@ -3922,7 +3923,7 @@ dependencies = [
+@@ -4141,7 +4142,7 @@ dependencies = [
  
  [[package]]
  name = "codex-sandboxing"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "codex-network-proxy",
-@@ -3946,7 +3947,7 @@ dependencies = [
+@@ -4165,7 +4166,7 @@ dependencies = [
  
  [[package]]
  name = "codex-secrets"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "age",
   "anyhow",
-@@ -3967,7 +3968,7 @@ dependencies = [
+@@ -4186,7 +4187,7 @@ dependencies = [
  
  [[package]]
  name = "codex-shell-command"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "base64 0.22.1",
-@@ -3988,7 +3989,7 @@ dependencies = [
+@@ -4209,7 +4210,7 @@ dependencies = [
  
  [[package]]
  name = "codex-shell-escalation"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "clap",
-@@ -4008,7 +4009,7 @@ dependencies = [
+@@ -4229,7 +4230,7 @@ dependencies = [
  
  [[package]]
  name = "codex-skills"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-protocol",
-  "codex-utils-absolute-path",
-@@ -4019,7 +4020,7 @@ dependencies = [
+  "codex-shell-command",
+@@ -4246,7 +4247,7 @@ dependencies = [
  
  [[package]]
  name = "codex-skills-extension"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
-  "codex-core-skills",
-  "codex-exec-server",
-@@ -4045,7 +4046,7 @@ dependencies = [
+  "assert_matches",
+  "codex-analytics",
+@@ -4283,7 +4284,7 @@ dependencies = [
  
  [[package]]
  name = "codex-state"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -4071,7 +4072,7 @@ dependencies = [
+@@ -4307,7 +4308,7 @@ dependencies = [
  
  [[package]]
  name = "codex-stdio-to-uds"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "codex-uds",
-@@ -4083,7 +4084,7 @@ dependencies = [
+@@ -4319,7 +4320,7 @@ dependencies = [
  
  [[package]]
  name = "codex-terminal-detection"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "pretty_assertions",
   "tracing",
-@@ -4091,7 +4092,7 @@ dependencies = [
+@@ -4327,7 +4328,7 @@ dependencies = [
  
  [[package]]
  name = "codex-test-binary-support"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-arg0",
   "tempfile",
-@@ -4099,7 +4100,7 @@ dependencies = [
+@@ -4335,7 +4336,7 @@ dependencies = [
  
  [[package]]
  name = "codex-thread-manager-sample"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "clap",
-@@ -4110,7 +4111,7 @@ dependencies = [
+@@ -4346,7 +4347,7 @@ dependencies = [
  
  [[package]]
  name = "codex-thread-store"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "chrono",
   "codex-app-server-protocol",
-@@ -4138,7 +4139,7 @@ dependencies = [
+@@ -4376,7 +4377,7 @@ dependencies = [
  
  [[package]]
  name = "codex-tools"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
+  "bitflags 2.13.1",
   "codex-code-mode",
-  "codex-connectors",
-@@ -4163,7 +4164,7 @@ dependencies = [
+@@ -4401,7 +4402,7 @@ dependencies = [
  
  [[package]]
  name = "codex-tui"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "app_test_support",
-@@ -4274,7 +4275,7 @@ dependencies = [
+@@ -4514,7 +4515,7 @@ dependencies = [
  
  [[package]]
  name = "codex-uds"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "async-io",
   "pretty_assertions",
-@@ -4286,7 +4287,7 @@ dependencies = [
+@@ -4526,7 +4527,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-absolute-path"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "dirs",
   "dunce",
-@@ -4300,14 +4301,14 @@ dependencies = [
+@@ -4540,14 +4541,14 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-approval-presets"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-protocol",
  ]
  
  [[package]]
+ name = "codex-utils-audio"
+-version = "0.0.0"
++version = "0.151.0"
+ dependencies = [
+  "base64 0.22.1",
+  "codex-protocol",
+@@ -4561,7 +4562,7 @@ dependencies = [
+ 
+ [[package]]
  name = "codex-utils-cache"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
-  "lru 0.16.3",
+  "lru",
   "sha1 0.10.6",
-@@ -4316,7 +4317,7 @@ dependencies = [
+@@ -4570,7 +4571,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-cargo-bin"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "assert_cmd",
   "runfiles",
-@@ -4325,7 +4326,7 @@ dependencies = [
+@@ -4579,7 +4580,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-cli"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "clap",
   "codex-protocol",
-@@ -4337,15 +4338,15 @@ dependencies = [
+@@ -4591,15 +4592,15 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-elapsed"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  
  [[package]]
  name = "codex-utils-fuzzy-match"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  
  [[package]]
  name = "codex-utils-home-dir"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-utils-absolute-path",
   "dirs",
-@@ -4355,7 +4356,7 @@ dependencies = [
+@@ -4609,7 +4610,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-image"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "base64 0.22.1",
   "codex-utils-cache",
-@@ -4368,7 +4369,7 @@ dependencies = [
+@@ -4622,7 +4623,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-json-to-toml"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "pretty_assertions",
   "serde_json",
-@@ -4377,7 +4378,7 @@ dependencies = [
+@@ -4631,7 +4632,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-oss"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-core",
   "codex-lmstudio",
-@@ -4387,7 +4388,7 @@ dependencies = [
+@@ -4641,7 +4642,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-output-truncation"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-protocol",
   "codex-utils-string",
-@@ -4396,7 +4397,7 @@ dependencies = [
+@@ -4650,7 +4651,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-path"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-utils-absolute-path",
   "dunce",
-@@ -4406,7 +4407,7 @@ dependencies = [
+@@ -4660,7 +4661,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-path-uri"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "base64 0.22.1",
   "codex-utils-absolute-path",
-@@ -4422,7 +4423,7 @@ dependencies = [
+@@ -4676,7 +4677,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-plugins"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-exec-server",
   "codex-exec-server-protocol",
-@@ -4436,7 +4437,7 @@ dependencies = [
+@@ -4690,7 +4691,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-pty"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "filedescriptor",
-@@ -4452,7 +4453,7 @@ dependencies = [
+@@ -4706,7 +4707,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-readiness"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "assert_matches",
   "thiserror 2.0.18",
-@@ -4462,14 +4463,14 @@ dependencies = [
+@@ -4716,7 +4717,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-redacted-string"
+-version = "0.0.0"
++version = "0.151.0"
+ dependencies = [
+  "schemars 0.8.22",
+  "serde",
+@@ -4724,14 +4725,14 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-rustls-provider"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "rustls",
  ]
@@ -1110,25 +1187,25 @@ index 38f79b8974..0f936424ee 100644
  [[package]]
  name = "codex-utils-sandbox-summary"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-protocol",
   "codex-utils-absolute-path",
-@@ -4478,7 +4479,7 @@ dependencies = [
+@@ -4740,7 +4741,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-sleep-inhibitor"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "core-foundation 0.9.4",
   "libc",
-@@ -4488,14 +4489,14 @@ dependencies = [
+@@ -4750,14 +4751,14 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-stream-parser"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "pretty_assertions",
  ]
@@ -1136,16 +1213,16 @@ index 38f79b8974..0f936424ee 100644
  [[package]]
  name = "codex-utils-string"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "pretty_assertions",
   "regex-lite",
-@@ -4505,14 +4506,14 @@ dependencies = [
+@@ -4767,14 +4768,14 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-template"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "pretty_assertions",
  ]
@@ -1153,44 +1230,62 @@ index 38f79b8974..0f936424ee 100644
  [[package]]
  name = "codex-v8-poc"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "pretty_assertions",
   "v8",
-@@ -4520,7 +4521,7 @@ dependencies = [
+@@ -4782,7 +4783,7 @@ dependencies = [
  
  [[package]]
  name = "codex-web-search-extension"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-api",
   "codex-core",
-@@ -4541,7 +4542,7 @@ dependencies = [
+@@ -4803,7 +4804,7 @@ dependencies = [
  
  [[package]]
  name = "codex-websocket-client"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "codex-http-client",
   "codex-utils-rustls-provider",
-@@ -4557,7 +4558,7 @@ dependencies = [
+@@ -4819,7 +4820,7 @@ dependencies = [
  
  [[package]]
  name = "codex-windows-sandbox"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "base64 0.22.1",
-@@ -4581,6 +4582,19 @@ dependencies = [
-  "windows-sys 0.52.0",
+@@ -4845,7 +4846,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-workload-identity"
+-version = "0.0.0"
++version = "0.151.0"
+ dependencies = [
+  "codex-http-client",
+  "pretty_assertions",
+@@ -4860,7 +4861,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-worktree"
+-version = "0.0.0"
++version = "0.151.0"
+ dependencies = [
+  "anyhow",
+  "codex-git-utils",
+@@ -4872,6 +4873,19 @@ dependencies = [
+  "tempfile",
  ]
  
 +[[package]]
 +name = "codex-zero-codec"
-+version = "0.146.0"
++version = "0.151.0"
 +dependencies = [
 + "anyhow",
 + "pretty_assertions",
@@ -1204,16 +1299,16 @@ index 38f79b8974..0f936424ee 100644
  [[package]]
  name = "color-eyre"
  version = "0.6.5"
-@@ -4808,7 +4822,7 @@ dependencies = [
+@@ -5099,7 +5113,7 @@ dependencies = [
  
  [[package]]
  name = "core_test_support"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "assert_cmd",
-@@ -5976,6 +5990,17 @@ dependencies = [
+@@ -6339,6 +6353,17 @@ dependencies = [
   "regex-syntax",
  ]
  
@@ -1223,33 +1318,24 @@ index 38f79b8974..0f936424ee 100644
 +source = "registry+https://github.com/rust-lang/crates.io-index"
 +checksum = "72cf461f865c862bb7dc573f643dd6a2b6842f7c30b07882b56bd148cc2761b8"
 +dependencies = [
-+ "bit-set",
++ "bit-set 0.8.0",
 + "regex-automata",
 + "regex-syntax",
 +]
 +
  [[package]]
- name = "faster-hex"
- version = "0.10.0"
-@@ -8970,7 +8995,7 @@ dependencies = [
+ name = "fast-srgb8"
+ version = "1.0.0"
+@@ -9361,7 +9386,7 @@ dependencies = [
  
  [[package]]
  name = "mcp_test_support"
 -version = "0.0.0"
-+version = "0.146.0"
++version = "0.151.0"
  dependencies = [
   "anyhow",
   "codex-login",
-@@ -9871,7 +9896,7 @@ dependencies = [
-  "dupe",
-  "either",
-  "erased-serde 0.4.10",
-- "fancy-regex",
-+ "fancy-regex 0.16.2",
-  "indexmap 2.14.0",
-  "inventory",
-  "num-bigint",
-@@ -13303,6 +13328,21 @@ dependencies = [
+@@ -14052,6 +14077,21 @@ dependencies = [
   "zune-jpeg 0.4.21",
  ]
  
@@ -1272,26 +1358,26 @@ index 38f79b8974..0f936424ee 100644
  name = "time"
  version = "0.3.47"
 diff --git a/codex-rs/Cargo.toml b/codex-rs/Cargo.toml
-index 084c141e99..9fb61a731f 100644
+index 277004d..d1240f9 100644
 --- a/codex-rs/Cargo.toml
 +++ b/codex-rs/Cargo.toml
-@@ -23,6 +23,7 @@ members = [
-     "code-mode",
+@@ -27,6 +27,7 @@ members = [
      "code-mode-host",
      "code-mode-protocol",
+     "code-mode-runtime",
 +    "codex-zero-codec",
      "codex-home",
      "cloud-config",
      "cloud-tasks",
-@@ -166,6 +167,7 @@ codex-cloud-tasks-client = { path = "cloud-tasks-client" }
- codex-cloud-tasks-mock-client = { path = "cloud-tasks-mock-client" }
+@@ -179,6 +180,7 @@ codex-cloud-tasks-mock-client = { path = "cloud-tasks-mock-client" }
  codex-code-mode = { path = "code-mode" }
  codex-code-mode-protocol = { path = "code-mode-protocol" }
+ codex-code-mode-runtime = { path = "code-mode-runtime" }
 +codex-zero-codec = { path = "codex-zero-codec" }
  codex-home = { path = "codex-home" }
  codex-http-client = { path = "http-client" }
  codex-websocket-client = { path = "websocket-client" }
-@@ -399,6 +401,7 @@ serial_test = "3.2.0"
+@@ -425,6 +427,7 @@ serial_test = "3.2.0"
  sha1 = "0.10.6"
  scopeguard = "1.2.0"
  sha2 = "0.10"
@@ -1300,13 +1386,14 @@ index 084c141e99..9fb61a731f 100644
  similar = "2.7.0"
  symphonia = { version = "0.6.0", default-features = false, features = [
 diff --git a/codex-rs/cli/src/main.rs b/codex-rs/cli/src/main.rs
-index 034c27fdda..be9cdc0a40 100644
+index 0bfea04..da225c9 100644
 --- a/codex-rs/cli/src/main.rs
 +++ b/codex-rs/cli/src/main.rs
-@@ -975,6 +975,14 @@ async fn cli_main(
+@@ -1054,6 +1054,15 @@ async fn cli_main(
+         mut interactive,
          subcommand,
      } = MultitoolCli::parse();
- 
++
 +    root_config_overrides
 +        .raw_overrides
 +        .extend(codex_zero_runtime_overrides(
@@ -1318,7 +1405,7 @@ index 034c27fdda..be9cdc0a40 100644
      // Fold --enable/--disable into config overrides so they flow to all subcommands.
      let toggle_overrides = feature_toggles.to_overrides()?;
      root_config_overrides.raw_overrides.extend(toggle_overrides);
-@@ -1664,6 +1672,44 @@ async fn cli_main(
+@@ -1821,6 +1830,44 @@ async fn cli_main(
      Ok(())
  }
  
@@ -1363,7 +1450,7 @@ index 034c27fdda..be9cdc0a40 100644
  fn profile_v2_for_subcommand<'a>(
      interactive: &'a TuiCli,
      subcommand: &Subcommand,
-@@ -4252,6 +4298,62 @@ mod tests {
+@@ -4921,6 +4968,62 @@ mod tests {
          );
      }
  
@@ -1428,7 +1515,7 @@ index 034c27fdda..be9cdc0a40 100644
              .chain(std::iter::once("--strict-config"))
 diff --git a/codex-rs/codex-zero-codec/Cargo.toml b/codex-rs/codex-zero-codec/Cargo.toml
 new file mode 100644
-index 0000000000..18b6cc2c97
+index 0000000..18b6cc2
 --- /dev/null
 +++ b/codex-rs/codex-zero-codec/Cargo.toml
 @@ -0,0 +1,23 @@
@@ -1457,7 +1544,7 @@ index 0000000000..18b6cc2c97
 +tempfile = { workspace = true }
 diff --git a/codex-rs/codex-zero-codec/src/lib.rs b/codex-rs/codex-zero-codec/src/lib.rs
 new file mode 100644
-index 0000000000..046cd2d8ef
+index 0000000..046cd2d
 --- /dev/null
 +++ b/codex-rs/codex-zero-codec/src/lib.rs
 @@ -0,0 +1,508 @@
@@ -1971,7 +2058,7 @@ index 0000000000..046cd2d8ef
 +mod tests;
 diff --git a/codex-rs/codex-zero-codec/src/lib_tests.rs b/codex-rs/codex-zero-codec/src/lib_tests.rs
 new file mode 100644
-index 0000000000..609c66ff1d
+index 0000000..609c66f
 --- /dev/null
 +++ b/codex-rs/codex-zero-codec/src/lib_tests.rs
 @@ -0,0 +1,113 @@
@@ -2089,10 +2176,10 @@ index 0000000000..609c66ff1d
 +    );
 +}
 diff --git a/codex-rs/core/Cargo.toml b/codex-rs/core/Cargo.toml
-index 3eac8f03e6..365aac439e 100644
+index 384af1d..ca54fc6 100644
 --- a/codex-rs/core/Cargo.toml
 +++ b/codex-rs/core/Cargo.toml
-@@ -39,6 +39,7 @@ codex-exec-server = { workspace = true }
+@@ -41,6 +41,7 @@ codex-exec-server = { workspace = true }
  codex-extension-api = { workspace = true }
  codex-extension-items = { workspace = true }
  codex-features = { workspace = true }
@@ -2101,10 +2188,10 @@ index 3eac8f03e6..365aac439e 100644
  codex-file-system = { workspace = true }
  codex-login = { workspace = true }
 diff --git a/codex-rs/core/config.schema.json b/codex-rs/core/config.schema.json
-index f3fb1b36c6..71967b11e0 100644
+index 19484e2..2f56479 100644
 --- a/codex-rs/core/config.schema.json
 +++ b/codex-rs/core/config.schema.json
-@@ -486,6 +486,24 @@
+@@ -640,6 +640,24 @@
              "codex_hooks": {
                "type": "boolean"
              },
@@ -2129,7 +2216,7 @@ index f3fb1b36c6..71967b11e0 100644
              "collab": {
                "type": "boolean"
              },
-@@ -5039,6 +5057,24 @@
+@@ -5793,6 +5811,24 @@
          "codex_hooks": {
            "type": "boolean"
          },
@@ -2155,11 +2242,11 @@ index f3fb1b36c6..71967b11e0 100644
            "type": "boolean"
          },
 diff --git a/codex-rs/core/src/session/session.rs b/codex-rs/core/src/session/session.rs
-index cf0d43c3b4..f5c38190e8 100644
+index c5082fd..5c5e3d9 100644
 --- a/codex-rs/core/src/session/session.rs
 +++ b/codex-rs/core/src/session/session.rs
-@@ -489,6 +489,35 @@ impl Session {
-         state.session_configuration.originator.clone()
+@@ -616,6 +616,35 @@ impl Session {
+         }
      }
  
 +    pub(crate) async fn codex_zero_active_duplicate_call(
@@ -2172,13 +2259,13 @@ index cf0d43c3b4..f5c38190e8 100644
 +            .codex_zero_exact_tool_results
 +            .get(&result_key)
 +            .filter(|previous_call_id| {
-+                state.history.raw_items().iter().any(|item| {
++                state.history.raw_items().any(|item| {
 +                    matches!(
 +                        item,
 +                        codex_protocol::models::ResponseItem::FunctionCallOutput {
 +                            call_id,
 +                            ..
-+                        } if call_id == *previous_call_id
++                        } if call_id.as_ref() == Some(*previous_call_id)
 +                    )
 +                })
 +            })
@@ -2195,10 +2282,10 @@ index cf0d43c3b4..f5c38190e8 100644
      #[allow(clippy::too_many_arguments)]
      pub(crate) async fn new(
 diff --git a/codex-rs/core/src/state/session.rs b/codex-rs/core/src/state/session.rs
-index 28a08ef4d6..c26996f82f 100644
+index 7a19b98..f2540b1 100644
 --- a/codex-rs/core/src/state/session.rs
 +++ b/codex-rs/core/src/state/session.rs
-@@ -41,6 +41,9 @@ pub(crate) struct SessionState {
+@@ -45,6 +45,9 @@ pub(crate) struct SessionState {
      pub(crate) current_time_reminder: CurrentTimeReminderState,
      pub(crate) active_connector_selection: HashSet<String>,
      pub(crate) pending_session_start_sources: VecDeque<codex_hooks::SessionStartSource>,
@@ -2208,7 +2295,7 @@ index 28a08ef4d6..c26996f82f 100644
      granted_permissions_by_environment_id: HashMap<String, AdditionalPermissionProfile>,
      next_turn_is_first: bool,
  }
-@@ -73,6 +76,7 @@ impl SessionState {
+@@ -78,6 +81,7 @@ impl SessionState {
              current_time_reminder: CurrentTimeReminderState::default(),
              active_connector_selection: HashSet::new(),
              pending_session_start_sources: VecDeque::new(),
@@ -2217,7 +2304,7 @@ index 28a08ef4d6..c26996f82f 100644
              next_turn_is_first: true,
          }
 diff --git a/codex-rs/core/src/tasks/mod.rs b/codex-rs/core/src/tasks/mod.rs
-index 54e561de4f..a5cdef36aa 100644
+index 24bbae0..f012449 100644
 --- a/codex-rs/core/src/tasks/mod.rs
 +++ b/codex-rs/core/src/tasks/mod.rs
 @@ -7,6 +7,8 @@ mod user_shell;
@@ -2227,9 +2314,9 @@ index 54e561de4f..a5cdef36aa 100644
 +use std::time::SystemTime;
 +use std::time::UNIX_EPOCH;
  
- use codex_extension_api::ExtensionData;
- use futures::future::BoxFuture;
-@@ -734,6 +736,22 @@ impl Session {
+ use codex_diagnostics::Gauge;
+ use codex_extension_api::ThreadIdleCause;
+@@ -740,6 +742,22 @@ impl Session {
                      thread_id: self.thread_id.to_string(),
                      token_usage: turn_token_usage.clone(),
                  });
@@ -2253,13 +2340,13 @@ index 54e561de4f..a5cdef36aa 100644
                  TURN_TOKEN_USAGE_METRIC,
                  turn_token_usage.total_tokens,
 diff --git a/codex-rs/core/src/tools/context.rs b/codex-rs/core/src/tools/context.rs
-index 72018904dd..85367ecb2f 100644
+index 378f947..c9508b2 100644
 --- a/codex-rs/core/src/tools/context.rs
 +++ b/codex-rs/core/src/tools/context.rs
-@@ -22,11 +22,19 @@ use codex_utils_output_truncation::approx_token_count;
+@@ -20,11 +20,19 @@ use codex_utils_output_truncation::TruncationPolicy;
+ use codex_utils_output_truncation::approx_token_count;
  use codex_utils_output_truncation::formatted_truncate_text;
  use codex_utils_output_truncation::truncate_text;
- use codex_utils_string::take_bytes_at_char_boundary;
 +use codex_zero_codec::encode_command_output;
 +use codex_zero_codec::select_strictly_smaller;
 +use codex_zero_codec::store_raw;
@@ -2276,7 +2363,7 @@ index 72018904dd..85367ecb2f 100644
  use tokio::sync::Mutex;
  use tokio_util::sync::CancellationToken;
  
-@@ -230,6 +238,22 @@ impl ToolOutput for FunctionToolOutput {
+@@ -256,6 +264,22 @@ impl ToolOutput for FunctionToolOutput {
          self.success.unwrap_or(true)
      }
  
@@ -2299,7 +2386,7 @@ index 72018904dd..85367ecb2f 100644
      fn to_response_item(&self, call_id: &str, payload: &ToolPayload) -> ResponseInputItem {
          function_tool_response(call_id, payload, self.body.clone(), self.success)
      }
-@@ -326,6 +350,9 @@ pub struct ExecCommandToolOutput {
+@@ -352,6 +376,9 @@ pub struct ExecCommandToolOutput {
      /// Bytes omitted by the output collection cap before model-facing truncation.
      pub output_omitted_bytes: Option<NonZeroUsize>,
      pub hook_command: Option<String>,
@@ -2309,13 +2396,13 @@ index 72018904dd..85367ecb2f 100644
  }
  
  impl ToolOutput for ExecCommandToolOutput {
-@@ -337,12 +364,58 @@ impl ToolOutput for ExecCommandToolOutput {
+@@ -371,12 +398,58 @@ impl ToolOutput for ExecCommandToolOutput {
          true
      }
  
 +    fn exact_duplicate_key(&self) -> Option<Vec<u8>> {
 +        Some(
-+            self.truncated_output(self.model_output_max_tokens())
++            self.truncated_output_with_policy(self.model_output_policy())
 +                .into_bytes(),
 +        )
 +    }
@@ -2369,9 +2456,9 @@ index 72018904dd..85367ecb2f 100644
              }],
              Some(true),
          )
-@@ -467,6 +540,170 @@ impl ExecCommandToolOutput {
+@@ -534,6 +607,170 @@ impl ExecCommandToolOutput {
  
-         sections.join("\n")
+         format!("{header}\n{output}")
      }
 +
 +    fn model_response_text(&self) -> String {
@@ -2406,7 +2493,7 @@ index 72018904dd..85367ecb2f 100644
 +            return original;
 +        };
 +
-+        let truncated = self.truncated_output(self.model_output_max_tokens());
++        let truncated = self.truncated_output_with_policy(self.model_output_policy());
 +        let terminal = if self.command_aware_projection {
 +            encode_command_output(
 +                truncated.as_bytes(),
@@ -2541,30 +2628,40 @@ index 72018904dd..85367ecb2f 100644
  
  fn function_tool_response(
 diff --git a/codex-rs/core/src/tools/context_tests.rs b/codex-rs/core/src/tools/context_tests.rs
-index caed87dfa5..ef9d920b0c 100644
+index 3011b2e..0a11098 100644
 --- a/codex-rs/core/src/tools/context_tests.rs
 +++ b/codex-rs/core/src/tools/context_tests.rs
-@@ -436,6 +436,9 @@ fn exec_command_tool_output_formats_truncated_response() {
+@@ -409,6 +409,9 @@ fn exec_command_tool_output_formats_truncated_response() {
          original_token_count: Some(10),
          output_omitted_bytes: None,
          hook_command: None,
 +        compact_model_payload: false,
 +        lossless_terminal_codec: false,
 +        command_aware_projection: false,
-     }
-     .to_response_item("call-42", &payload);
+     };
+     assert_eq!(
+         output.log_output(),
+@@ -466,6 +469,9 @@ fn exec_command_tool_output_reserves_metadata_budget_and_preserves_policy_units(
+             original_token_count: Some(123),
+             output_omitted_bytes: None,
+             hook_command: None,
++            compact_model_payload: false,
++            lossless_terminal_codec: false,
++            command_aware_projection: false,
+         }
+         .to_response_item("call-42", &payload);
  
-@@ -487,6 +490,9 @@ fn exec_command_tool_output_preserves_omission_metadata_when_truncated() {
+@@ -510,6 +516,9 @@ fn exec_command_tool_output_preserves_omission_metadata_when_truncated() {
          original_token_count: Some(42_000),
          output_omitted_bytes: NonZeroUsize::new(/*n*/ 123_456),
          hook_command: None,
 +        compact_model_payload: false,
 +        lossless_terminal_codec: false,
 +        command_aware_projection: false,
-     }
-     .to_response_item("call-omitted", &payload);
- 
-@@ -501,3 +507,127 @@ fn exec_command_tool_output_preserves_omission_metadata_when_truncated() {
+     };
+     let expected_header = "Chunk ID: abc123\nWall time: 1.2500 seconds\nProcess exited with code 0\nOriginal token count: 42000\nOutput:\n";
+     assert_eq!(
+@@ -539,3 +548,127 @@ fn exec_command_tool_output_preserves_omission_metadata_when_truncated() {
      assert!(text.contains("Warning: truncated output (original token count: 42000)"));
      assert_eq!(text.matches(&marker).count(), 1);
  }
@@ -2694,7 +2791,7 @@ index caed87dfa5..ef9d920b0c 100644
 +}
 diff --git a/codex-rs/core/src/tools/exact_duplicate.rs b/codex-rs/core/src/tools/exact_duplicate.rs
 new file mode 100644
-index 0000000000..87da34edd2
+index 0000000..87da34e
 --- /dev/null
 +++ b/codex-rs/core/src/tools/exact_duplicate.rs
 @@ -0,0 +1,200 @@
@@ -2899,10 +2996,10 @@ index 0000000000..87da34edd2
 +    output.status.success().then_some(output.stdout)
 +}
 diff --git a/codex-rs/core/src/tools/handlers/unified_exec/exec_command.rs b/codex-rs/core/src/tools/handlers/unified_exec/exec_command.rs
-index fc48f1ed81..1cfa9487f3 100644
+index f27542a..61211ae 100644
 --- a/codex-rs/core/src/tools/handlers/unified_exec/exec_command.rs
 +++ b/codex-rs/core/src/tools/handlers/unified_exec/exec_command.rs
-@@ -337,6 +337,18 @@ impl ExecCommandHandler {
+@@ -384,6 +384,18 @@ impl ExecCommandHandler {
                  original_token_count: None,
                  output_omitted_bytes: None,
                  hook_command: None,
@@ -2921,7 +3018,7 @@ index fc48f1ed81..1cfa9487f3 100644
              }));
          }
  
-@@ -391,6 +403,18 @@ impl ExecCommandHandler {
+@@ -440,6 +452,18 @@ impl ExecCommandHandler {
                      original_token_count: Some(original_token_count),
                      output_omitted_bytes,
                      hook_command: Some(hook_command),
@@ -2941,45 +3038,45 @@ index fc48f1ed81..1cfa9487f3 100644
              }
              Err(err) => Err(FunctionCallError::RespondToModel(format!(
 diff --git a/codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs b/codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs
-index 7f1709b045..f004b9483a 100644
+index 657da46..b826354 100644
 --- a/codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs
 +++ b/codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs
-@@ -9,6 +9,7 @@ use crate::tools::registry::PreToolUsePayload;
- use crate::tools::registry::ToolExecutor;
+@@ -12,6 +12,7 @@ use crate::unified_exec::UnifiedExecContext;
+ use crate::unified_exec::UnifiedExecError;
  use crate::unified_exec::WriteStdinInteractionEvent;
  use crate::unified_exec::WriteStdinRequest;
 +use codex_features::Feature;
  use codex_tools::ToolName;
  use codex_tools::ToolSpec;
  use serde::Deserialize;
-@@ -83,6 +84,22 @@ impl WriteStdinHandler {
-                     session: &session,
-                     turn: &turn,
-                 }),
-+                compact_model_payload: turn
-+                    .config
-+                    .features
-+                    .enabled(Feature::CodexZeroCompactExecOutput),
-+                lossless_terminal_codec: turn
-+                    .config
-+                    .features
-+                    .enabled(Feature::CodexZeroLosslessTerminalCodec),
-+                command_aware_projection: turn
-+                    .config
-+                    .features
-+                    .enabled(Feature::CodexZeroCommandAwareProjection),
-+                event_driven_wait: turn
-+                    .config
-+                    .features
-+                    .enabled(Feature::CodexZeroEventDrivenWait),
-             })
+@@ -96,6 +97,22 @@ impl WriteStdinHandler {
+                         session: &session,
+                         turn: &turn,
+                     }),
++                    compact_model_payload: turn
++                        .config
++                        .features
++                        .enabled(Feature::CodexZeroCompactExecOutput),
++                    lossless_terminal_codec: turn
++                        .config
++                        .features
++                        .enabled(Feature::CodexZeroLosslessTerminalCodec),
++                    command_aware_projection: turn
++                        .config
++                        .features
++                        .enabled(Feature::CodexZeroCommandAwareProjection),
++                    event_driven_wait: turn
++                        .config
++                        .features
++                        .enabled(Feature::CodexZeroEventDrivenWait),
+                 },
+             )
              .await
-             .map_err(|err| {
 diff --git a/codex-rs/core/src/tools/handlers/unified_exec_tests.rs b/codex-rs/core/src/tools/handlers/unified_exec_tests.rs
-index 9b107dd83d..508d956e0d 100644
+index 775d78c..8f047d5 100644
 --- a/codex-rs/core/src/tools/handlers/unified_exec_tests.rs
 +++ b/codex-rs/core/src/tools/handlers/unified_exec_tests.rs
-@@ -303,6 +303,9 @@ async fn exec_command_post_tool_use_payload_uses_output_for_noninteractive_one_s
+@@ -350,6 +350,9 @@ async fn exec_command_post_tool_use_payload_uses_output_for_noninteractive_one_s
          original_token_count: None,
          output_omitted_bytes: None,
          hook_command: Some("echo three".to_string()),
@@ -2989,7 +3086,7 @@ index 9b107dd83d..508d956e0d 100644
      };
      let invocation = invocation_for_payload("exec_command", "call-43", payload).await;
      let handler = ExecCommandHandler::default();
-@@ -334,6 +337,9 @@ async fn exec_command_post_tool_use_payload_uses_output_for_interactive_completi
+@@ -381,6 +384,9 @@ async fn exec_command_post_tool_use_payload_uses_output_for_interactive_completi
          original_token_count: None,
          output_omitted_bytes: None,
          hook_command: Some("echo three".to_string()),
@@ -2999,7 +3096,7 @@ index 9b107dd83d..508d956e0d 100644
      };
      let invocation = invocation_for_payload("exec_command", "call-44", payload).await;
      let handler = ExecCommandHandler::default();
-@@ -366,6 +372,9 @@ async fn exec_command_post_tool_use_payload_skips_running_sessions() {
+@@ -413,6 +419,9 @@ async fn exec_command_post_tool_use_payload_skips_running_sessions() {
          original_token_count: None,
          output_omitted_bytes: None,
          hook_command: Some("echo three".to_string()),
@@ -3009,7 +3106,7 @@ index 9b107dd83d..508d956e0d 100644
      };
      let invocation = invocation_for_payload("exec_command", "call-45", payload).await;
      let handler = ExecCommandHandler::default();
-@@ -393,6 +402,9 @@ async fn write_stdin_post_tool_use_payload_uses_original_exec_call_id_and_comman
+@@ -440,6 +449,9 @@ async fn write_stdin_post_tool_use_payload_uses_original_exec_call_id_and_comman
          original_token_count: None,
          output_omitted_bytes: None,
          hook_command: Some("sleep 1; echo finished".to_string()),
@@ -3019,7 +3116,7 @@ index 9b107dd83d..508d956e0d 100644
      };
      let invocation = invocation_for_payload("write_stdin", "write-stdin-call", payload).await;
      let handler = WriteStdinHandler;
-@@ -425,6 +437,9 @@ async fn write_stdin_post_tool_use_payload_keeps_parallel_session_metadata_separ
+@@ -472,6 +484,9 @@ async fn write_stdin_post_tool_use_payload_keeps_parallel_session_metadata_separ
          original_token_count: None,
          output_omitted_bytes: None,
          hook_command: Some("sleep 2; echo alpha".to_string()),
@@ -3029,7 +3126,7 @@ index 9b107dd83d..508d956e0d 100644
      };
      let output_b = ExecCommandToolOutput {
          event_call_id: "exec-call-b".to_string(),
-@@ -438,6 +453,9 @@ async fn write_stdin_post_tool_use_payload_keeps_parallel_session_metadata_separ
+@@ -485,6 +500,9 @@ async fn write_stdin_post_tool_use_payload_keeps_parallel_session_metadata_separ
          original_token_count: None,
          output_omitted_bytes: None,
          hook_command: Some("sleep 1; echo beta".to_string()),
@@ -3040,22 +3137,22 @@ index 9b107dd83d..508d956e0d 100644
      let invocation_b = invocation_for_payload("write_stdin", "write-call-b", payload.clone()).await;
      let invocation_a = invocation_for_payload("write_stdin", "write-call-a", payload).await;
 diff --git a/codex-rs/core/src/tools/mod.rs b/codex-rs/core/src/tools/mod.rs
-index 76a836def3..136bb9778b 100644
+index ff1b6d0..8fedf13 100644
 --- a/codex-rs/core/src/tools/mod.rs
 +++ b/codex-rs/core/src/tools/mod.rs
-@@ -2,6 +2,7 @@ mod approvals;
- pub(crate) mod code_mode;
+@@ -3,6 +3,7 @@ pub(crate) mod code_mode;
  pub(crate) mod context;
+ mod control_tool_analytics;
  pub(crate) mod events;
 +pub(crate) mod exact_duplicate;
+ mod executed_tool_calls;
  pub(crate) mod handlers;
  pub(crate) mod hook_names;
- pub(crate) mod hosted_spec;
-@@ -62,15 +63,24 @@ pub(crate) fn tool_user_shell_type(
+@@ -66,15 +67,24 @@ pub(crate) fn tool_user_shell_type(
  }
  
- fn effective_tool_mode(turn_context: &TurnContext) -> ToolMode {
--    turn_context.model_info.tool_mode.unwrap_or_else(|| {
+ pub(crate) fn requested_tool_mode(turn_context: &TurnContext, model_info: &ModelInfo) -> ToolMode {
+-    model_info.tool_mode.unwrap_or_else(|| {
 -        if turn_context.config.features.enabled(Feature::CodeModeOnly) {
 -            ToolMode::CodeModeOnly
 -        } else if turn_context.config.features.enabled(Feature::CodeMode) {
@@ -3072,7 +3169,7 @@ index 76a836def3..136bb9778b 100644
 +    {
 +        ToolMode::CodeModeOnly
 +    } else {
-+        turn_context.model_info.tool_mode.unwrap_or_else(|| {
++        model_info.tool_mode.unwrap_or_else(|| {
 +            if turn_context.config.features.enabled(Feature::CodeModeOnly) {
 +                ToolMode::CodeModeOnly
 +            } else if turn_context.config.features.enabled(Feature::CodeMode) {
@@ -3084,13 +3181,13 @@ index 76a836def3..136bb9778b 100644
 +    }
  }
  
- /// Format the combined exec output for sending back to the model.
+ pub(crate) fn effective_tool_mode(turn_context: &TurnContext, model_info: &ModelInfo) -> ToolMode {
 diff --git a/codex-rs/core/src/tools/parallel.rs b/codex-rs/core/src/tools/parallel.rs
-index e201f0ffce..fc673e09ca 100644
+index 6b92c89..5f48b02 100644
 --- a/codex-rs/core/src/tools/parallel.rs
 +++ b/codex-rs/core/src/tools/parallel.rs
-@@ -82,7 +82,7 @@ impl ToolCallRuntime {
-             self.handle_tool_call_with_source(call, ToolCallSource::Direct, cancellation_token);
+@@ -80,7 +80,7 @@ impl ToolCallRuntime {
+         let future = self.handle_tool_call_with_source(call, source, cancellation_token);
          async move {
              match future.await {
 -                Ok(response) => Ok(response.into_response()),
@@ -3098,7 +3195,7 @@ index e201f0ffce..fc673e09ca 100644
                  Err(FunctionCallError::Fatal(message)) => Err(CodexErr::Fatal(message)),
                  Err(other) => Ok(Self::failure_response(error_call, other)),
              }
-@@ -242,6 +242,9 @@ impl ToolCallRuntime {
+@@ -248,6 +248,9 @@ impl ToolCallRuntime {
                  message: Self::abort_message(call, secs),
              }),
              post_tool_use_payload: None,
@@ -3109,10 +3206,10 @@ index e201f0ffce..fc673e09ca 100644
      }
  
 diff --git a/codex-rs/core/src/tools/registry.rs b/codex-rs/core/src/tools/registry.rs
-index 3000c518ba..a95eee2e69 100644
+index 15c2cf2..935356d 100644
 --- a/codex-rs/core/src/tools/registry.rs
 +++ b/codex-rs/core/src/tools/registry.rs
-@@ -4,6 +4,8 @@ use std::sync::Arc;
+@@ -3,6 +3,8 @@ use std::sync::Arc;
  use std::sync::atomic::AtomicBool;
  use std::sync::atomic::Ordering;
  use std::time::Duration;
@@ -3121,15 +3218,15 @@ index 3000c518ba..a95eee2e69 100644
  
  use crate::function_tool::FunctionCallError;
  use crate::hook_runtime::PreToolUseHookResult;
-@@ -19,6 +21,7 @@ use crate::tools::context::FunctionToolOutput;
- use crate::tools::context::ToolInvocation;
+@@ -20,6 +22,7 @@ use crate::tools::context::ToolInvocation;
  use crate::tools::context::ToolOutput;
  use crate::tools::context::ToolPayload;
+ use crate::tools::control_tool_analytics::ControlToolCallGuard;
 +use crate::tools::exact_duplicate;
  use crate::tools::flat_tool_name;
  use crate::tools::handlers::multi_agents_spec::MULTI_AGENT_V1_NAMESPACE;
  use crate::tools::hook_names::HookToolName;
-@@ -166,17 +169,76 @@ pub(crate) struct AnyToolResult {
+@@ -188,17 +191,76 @@ pub(crate) struct AnyToolResult {
      pub(crate) payload: ToolPayload,
      pub(crate) result: Box<dyn ToolOutput>,
      pub(crate) post_tool_use_payload: Option<PostToolUsePayload>,
@@ -3208,7 +3305,7 @@ index 3000c518ba..a95eee2e69 100644
      }
  
      pub(crate) fn code_mode_result(self) -> serde_json::Value {
-@@ -745,6 +807,13 @@ async fn handle_any_tool(
+@@ -794,6 +856,13 @@ async fn handle_any_tool(
          payload,
          result: output,
          post_tool_use_payload,
@@ -3223,10 +3320,10 @@ index 3000c518ba..a95eee2e69 100644
  }
  
 diff --git a/codex-rs/core/src/tools/registry_tests.rs b/codex-rs/core/src/tools/registry_tests.rs
-index 12ab6b3f28..0e7693d74f 100644
+index 798dba3..1011d84 100644
 --- a/codex-rs/core/src/tools/registry_tests.rs
 +++ b/codex-rs/core/src/tools/registry_tests.rs
-@@ -319,8 +319,8 @@ async fn write_stdin_does_not_expose_default_pre_tool_use_payload() {
+@@ -585,8 +585,8 @@ async fn write_stdin_does_not_expose_default_pre_tool_use_payload() {
      assert_eq!(write_stdin.pre_tool_use_payload(&invocation), None);
  }
  
@@ -3237,7 +3334,7 @@ index 12ab6b3f28..0e7693d74f 100644
      let result = AnyToolResult {
          call_id: "call-1".to_string(),
          payload: ToolPayload::Function {
-@@ -336,10 +336,13 @@ fn post_tool_use_feedback_output_keeps_code_mode_result_typed() {
+@@ -602,10 +602,13 @@ fn post_tool_use_feedback_output_keeps_code_mode_result_typed() {
              ),
          }),
          post_tool_use_payload: None,
@@ -3252,7 +3349,7 @@ index 12ab6b3f28..0e7693d74f 100644
          ResponseInputItem::FunctionCallOutput {
              call_id: "call-1".to_string(),
              output: codex_protocol::models::FunctionCallOutputPayload::from_text(
-@@ -363,6 +366,9 @@ fn post_tool_use_feedback_output_keeps_code_mode_result_typed() {
+@@ -629,6 +632,9 @@ fn post_tool_use_feedback_output_keeps_code_mode_result_typed() {
              ),
          }),
          post_tool_use_payload: None,
@@ -3262,7 +3359,7 @@ index 12ab6b3f28..0e7693d74f 100644
      };
  
      assert_eq!(
-@@ -371,6 +377,178 @@ fn post_tool_use_feedback_output_keeps_code_mode_result_typed() {
+@@ -637,6 +643,178 @@ fn post_tool_use_feedback_output_keeps_code_mode_result_typed() {
      );
  }
  
@@ -3439,13 +3536,13 @@ index 12ab6b3f28..0e7693d74f 100644
 +}
 +
  #[tokio::test]
- async fn dispatch_notifies_tool_lifecycle_contributors() -> anyhow::Result<()> {
+ async fn dispatch_uses_canonical_tool_names_for_lifecycle_contributors() -> anyhow::Result<()> {
      let (mut session, turn) = crate::session::tests::make_session_and_context().await;
 diff --git a/codex-rs/core/src/tools/router_tests.rs b/codex-rs/core/src/tools/router_tests.rs
-index 95501d9ecd..13864cdfee 100644
+index d01de04..f5c102e 100644
 --- a/codex-rs/core/src/tools/router_tests.rs
 +++ b/codex-rs/core/src/tools/router_tests.rs
-@@ -452,7 +452,7 @@ async fn extension_tool_executors_are_model_visible_and_dispatchable() -> anyhow
+@@ -604,7 +604,7 @@ async fn extension_tool_executors_are_model_visible_and_dispatchable() -> anyhow
          )
          .await?;
  
@@ -3455,18 +3552,20 @@ index 95501d9ecd..13864cdfee 100644
          ResponseInputItem::FunctionCallOutput { call_id, output } => {
              assert_eq!(call_id, "call-extension");
 diff --git a/codex-rs/core/src/tools/spec_plan_tests.rs b/codex-rs/core/src/tools/spec_plan_tests.rs
-index 87be4d9275..53f2e4b488 100644
+index 76cda52..f72a2df 100644
 --- a/codex-rs/core/src/tools/spec_plan_tests.rs
 +++ b/codex-rs/core/src/tools/spec_plan_tests.rs
-@@ -1329,6 +1329,31 @@ async fn code_mode_buffered_exec_updates_exec_description() {
-     assert!(!exec.description.contains("Defaults to 10000 ms."));
+@@ -2486,6 +2486,33 @@ async fn code_mode_config_updates_exec_description() {
+     }
  }
  
 +#[tokio::test]
 +async fn configured_code_mode_only_overrides_a_direct_model_default() {
 +    let plan = probe_with(
 +        |turn| {
-+            turn.model_info.tool_mode = Some(ToolMode::Direct);
++            update_turn_settings_for_test(turn, |settings| {
++                Arc::make_mut(&mut settings.model_info).tool_mode = Some(ToolMode::Direct);
++            });
 +            set_features(
 +                turn,
 +                &[
@@ -3491,10 +3590,10 @@ index 87be4d9275..53f2e4b488 100644
  async fn code_mode_only_exposes_configured_dynamic_namespace_directly() {
      let plan = probe_with(
 diff --git a/codex-rs/core/src/unified_exec/mod.rs b/codex-rs/core/src/unified_exec/mod.rs
-index e8dd31c2ce..3af2355120 100644
+index 0af579e..189b810 100644
 --- a/codex-rs/core/src/unified_exec/mod.rs
 +++ b/codex-rs/core/src/unified_exec/mod.rs
-@@ -117,6 +117,10 @@ pub(crate) struct WriteStdinRequest<'a> {
+@@ -130,6 +130,10 @@ pub(crate) struct WriteStdinRequest<'a> {
      pub max_output_tokens: Option<usize>,
      pub truncation_policy: TruncationPolicy,
      pub interaction_event: Option<WriteStdinInteractionEvent<'a>>,
@@ -3506,27 +3605,28 @@ index e8dd31c2ce..3af2355120 100644
  
  pub(crate) struct WriteStdinInteractionEvent<'a> {
 diff --git a/codex-rs/core/src/unified_exec/mod_tests.rs b/codex-rs/core/src/unified_exec/mod_tests.rs
-index acf6d7d639..8deab695e6 100644
+index f70caaa..a90d11b 100644
 --- a/codex-rs/core/src/unified_exec/mod_tests.rs
 +++ b/codex-rs/core/src/unified_exec/mod_tests.rs
-@@ -11,6 +11,7 @@ use crate::session::turn_context::TurnContext;
+@@ -9,6 +9,8 @@ use crate::session::tests::make_session_and_context;
+ use crate::session::turn_context::TurnContext;
  use crate::tools::context::ExecCommandToolOutput;
  use crate::unified_exec::WriteStdinRequest;
- use crate::unified_exec::process::OutputHandles;
++use crate::unified_exec::process::OutputHandles;
 +use crate::unified_exec::process_manager::OutputCollectionMode;
  use codex_exec_server::ExecProcess;
  use codex_exec_server::ExecProcessEventReceiver;
  use codex_exec_server::ExecProcessFuture;
-@@ -164,7 +165,7 @@ async fn exec_command_with_tty(
-         &output_closed_notify,
-         &cancellation_token,
+@@ -159,7 +161,7 @@ async fn exec_command_with_tty(
+     let collected_output = UnifiedExecProcessManager::collect_output_until_deadline(
+         process.output_handles(),
          Some(session.subscribe_elicitation_pause_state()),
 -        deadline,
 +        OutputCollectionMode::UntilDeadline(deadline),
      )
      .await;
      let wall_time = Instant::now().saturating_duration_since(started_at);
-@@ -207,6 +208,9 @@ async fn exec_command_with_tty(
+@@ -202,6 +204,9 @@ async fn exec_command_with_tty(
          original_token_count: Some(original_token_count),
          output_omitted_bytes,
          hook_command: Some(cmd.to_string()),
@@ -3536,20 +3636,20 @@ index acf6d7d639..8deab695e6 100644
      })
  }
  
-@@ -324,6 +328,10 @@ async fn write_stdin(
-             max_output_tokens: None,
-             truncation_policy: TruncationPolicy::Tokens(10_000),
-             interaction_event: None,
-+            compact_model_payload: false,
-+            lossless_terminal_codec: false,
-+            command_aware_projection: false,
-+            event_driven_wait: false,
-         })
+@@ -328,6 +333,10 @@ async fn write_stdin(
+                 max_output_tokens: None,
+                 truncation_policy: TruncationPolicy::Tokens(10_000),
+                 interaction_event: None,
++                compact_model_payload: false,
++                lossless_terminal_codec: false,
++                command_aware_projection: false,
++                event_driven_wait: false,
+             },
+         )
          .await
- }
-@@ -819,7 +827,7 @@ async fn unified_exec_uses_remote_exec_server_when_configured() -> anyhow::Resul
-         &output_closed_notify,
-         &cancellation_token,
+@@ -807,7 +816,7 @@ async fn unified_exec_uses_remote_exec_server_when_configured() -> anyhow::Resul
+     let collected = UnifiedExecProcessManager::collect_output_until_deadline(
+         process.output_handles(),
          /*pause_state*/ None,
 -        Instant::now() + Duration::from_millis(2_500),
 +        OutputCollectionMode::UntilDeadline(Instant::now() + Duration::from_millis(2_500)),
@@ -3557,10 +3657,10 @@ index acf6d7d639..8deab695e6 100644
      .await
      .to_bytes_with_omission_marker();
 diff --git a/codex-rs/core/src/unified_exec/process_manager.rs b/codex-rs/core/src/unified_exec/process_manager.rs
-index 098c70f026..a0d09baf16 100644
+index 74e61a9..0a34b9c 100644
 --- a/codex-rs/core/src/unified_exec/process_manager.rs
 +++ b/codex-rs/core/src/unified_exec/process_manager.rs
-@@ -89,6 +89,12 @@ const NETWORK_ACCESS_DENIED_MESSAGE: &str =
+@@ -104,6 +104,12 @@ const NETWORK_ACCESS_DENIED_MESSAGE: &str =
  const LATE_NETWORK_DENIAL_GRACE_PERIOD: Duration = Duration::from_millis(100);
  const INTERRUPT: &str = "\u{3}";
  
@@ -3573,30 +3673,33 @@ index 098c70f026..a0d09baf16 100644
  /// Test-only override for deterministic unified exec process IDs.
  ///
  /// In production builds this value should remain at its default (`false`) and
-@@ -516,7 +522,7 @@ impl UnifiedExecProcessManager {
-             &output_closed_notify,
-             &cancellation_token,
+@@ -601,7 +607,7 @@ impl UnifiedExecProcessManager {
+         let collected_output = Self::collect_output_until_deadline(
+             process.output_handles(),
              Some(context.session.subscribe_elicitation_pause_state()),
 -            deadline,
 +            OutputCollectionMode::UntilDeadline(deadline),
          )
          .await;
-         let wall_time = Instant::now().saturating_duration_since(start);
-@@ -673,6 +679,21 @@ impl UnifiedExecProcessManager {
+         if let Some(completion) = completion.as_mut()
+@@ -793,6 +799,24 @@ impl UnifiedExecProcessManager {
              original_token_count: Some(original_token_count),
              output_omitted_bytes,
              hook_command: Some(request.hook_command.clone()),
 +            compact_model_payload: context
++                .step_context
 +                .turn
 +                .config
 +                .features
 +                .enabled(codex_features::Feature::CodexZeroCompactExecOutput),
 +            lossless_terminal_codec: context
++                .step_context
 +                .turn
 +                .config
 +                .features
 +                .enabled(codex_features::Feature::CodexZeroLosslessTerminalCodec),
 +            command_aware_projection: context
++                .step_context
 +                .turn
 +                .config
 +                .features
@@ -3604,7 +3707,7 @@ index 098c70f026..a0d09baf16 100644
          };
  
          Ok(response)
-@@ -750,11 +771,15 @@ impl UnifiedExecProcessManager {
+@@ -938,17 +962,29 @@ impl UnifiedExecProcessManager {
          let yield_time_ms = {
              // Empty polls use configurable background timeout bounds. Non-empty
              // writes keep a fixed max cap so interactive stdin remains responsive.
@@ -3624,20 +3727,23 @@ index 098c70f026..a0d09baf16 100644
              }
          };
          let start = Instant::now();
-@@ -766,7 +791,11 @@ impl UnifiedExecProcessManager {
-             &output_closed_notify,
-             &cancellation_token,
-             pause_state,
--            deadline,
+         let deadline = start + Duration::from_millis(yield_time_ms);
+-        let collected_output =
+-            Self::collect_output_until_deadline(&output, pause_state, deadline).await;
++        let collected_output = Self::collect_output_until_deadline(
++            &output,
++            pause_state,
 +            if request.input.is_empty() && request.event_driven_wait {
 +                OutputCollectionMode::UntilOutput(deadline)
 +            } else {
 +                OutputCollectionMode::UntilDeadline(deadline)
 +            },
-         )
-         .await;
++        )
++        .await;
          let wall_time = Instant::now().saturating_duration_since(start);
-@@ -848,6 +877,9 @@ impl UnifiedExecProcessManager {
+ 
+         let original_token_count = usize::try_from(approx_tokens_from_byte_count(
+@@ -1028,6 +1064,9 @@ impl UnifiedExecProcessManager {
              original_token_count: Some(original_token_count),
              output_omitted_bytes,
              hook_command: Some(hook_command),
@@ -3647,22 +3753,22 @@ index 098c70f026..a0d09baf16 100644
          };
  
          let should_emit_interaction = !request.input.is_empty() || response.process_id.is_some();
-@@ -1256,9 +1288,13 @@ impl UnifiedExecProcessManager {
-         output_closed_notify: &Arc<Notify>,
-         cancellation_token: &CancellationToken,
+@@ -1454,9 +1493,13 @@ impl UnifiedExecProcessManager {
+     pub(super) async fn collect_output_until_deadline<const MAX_BYTES: usize>(
+         output: &OutputHandles<MAX_BYTES>,
          mut pause_state: Option<watch::Receiver<bool>>,
 -        mut deadline: Instant,
 +        mode: OutputCollectionMode,
-     ) -> HeadTailBuffer {
+     ) -> HeadTailBuffer<MAX_BYTES> {
          const POST_EXIT_CLOSE_WAIT_CAP: Duration = Duration::from_millis(50);
 +        let (mut deadline, return_on_output) = match mode {
 +            OutputCollectionMode::UntilDeadline(deadline) => (deadline, false),
 +            OutputCollectionMode::UntilOutput(deadline) => (deadline, true),
 +        };
  
-         let mut collected = HeadTailBuffer::default();
-         let mut exit_signal_received = cancellation_token.is_cancelled();
-@@ -1330,6 +1366,9 @@ impl UnifiedExecProcessManager {
+         let OutputHandles {
+             output_buffer,
+@@ -1535,6 +1578,9 @@ impl UnifiedExecProcessManager {
  
              collected.push_buffer(drained_output);
  
@@ -3673,45 +3779,48 @@ index 098c70f026..a0d09baf16 100644
              if Instant::now() >= deadline {
                  break;
 diff --git a/codex-rs/core/src/unified_exec/process_manager_tests.rs b/codex-rs/core/src/unified_exec/process_manager_tests.rs
-index ced51882a1..08081ab290 100644
+index 5db327e..8de238f 100644
 --- a/codex-rs/core/src/unified_exec/process_manager_tests.rs
 +++ b/codex-rs/core/src/unified_exec/process_manager_tests.rs
-@@ -263,7 +263,7 @@ async fn output_collection_stays_bounded_across_repeated_drains() {
-         &output_closed_notify,
-         &cancellation_token,
+@@ -313,7 +313,7 @@ async fn output_collection_stays_bounded_across_repeated_drains() {
+     let collect = UnifiedExecProcessManager::collect_output_until_deadline(
+         &output,
          /*pause_state*/ None,
 -        Instant::now() + Duration::from_secs(5),
 +        OutputCollectionMode::UntilDeadline(Instant::now() + Duration::from_secs(5)),
      );
      let produce = async {
-         for byte in [b'a', b'b', b'c'] {
-@@ -300,6 +300,37 @@ async fn output_collection_stays_bounded_across_repeated_drains() {
+         for chunk in chunks {
+@@ -345,6 +345,40 @@ async fn output_collection_stays_bounded_across_repeated_drains() {
      assert_eq!(collected, expected);
  }
  
 +#[tokio::test]
 +async fn output_collection_can_return_on_first_output() {
-+    let output_buffer = Arc::new(tokio::sync::Mutex::new(HeadTailBuffer::default()));
++    let output_buffer = Arc::new(tokio::sync::Mutex::new(HeadTailBuffer::<1024>::default()));
 +    let output_notify = Arc::new(Notify::new());
 +    let output_closed = Arc::new(AtomicBool::new(false));
 +    let output_closed_notify = Arc::new(Notify::new());
 +    let cancellation_token = CancellationToken::new();
++    let output = OutputHandles {
++        output_buffer: Arc::clone(&output_buffer),
++        output_notify: Arc::clone(&output_notify),
++        output_closed: Arc::clone(&output_closed),
++        output_closed_notify: Arc::clone(&output_closed_notify),
++        cancellation_token: cancellation_token.clone(),
++    };
 +
 +    let collect = UnifiedExecProcessManager::collect_output_until_deadline(
-+        &output_buffer,
-+        &output_notify,
-+        &output_closed,
-+        &output_closed_notify,
-+        &cancellation_token,
++        &output,
 +        /*pause_state*/ None,
 +        OutputCollectionMode::UntilOutput(Instant::now() + Duration::from_secs(1)),
 +    );
 +    let produce = async {
 +        tokio::time::sleep(Duration::from_millis(25)).await;
-+        output_buffer.lock().await.push_chunk(b"ready".to_vec());
++        output_buffer.lock().await.push_chunk(b"ready");
 +        output_notify.notify_one();
 +        tokio::time::sleep(Duration::from_millis(75)).await;
-+        output_buffer.lock().await.push_chunk(b"later".to_vec());
++        output_buffer.lock().await.push_chunk(b"later");
 +        output_notify.notify_one();
 +    };
 +
@@ -3722,10 +3831,10 @@ index ced51882a1..08081ab290 100644
 +
  #[tokio::test]
  async fn output_collection_preserves_omissions_from_drained_buffer() {
-     let mut buffered_output = HeadTailBuffer::default();
-@@ -328,7 +359,7 @@ async fn output_collection_preserves_omissions_from_drained_buffer() {
-         &output_closed_notify,
-         &cancellation_token,
+     let mut buffered_output = HeadTailBuffer::<10>::default();
+@@ -370,7 +404,7 @@ async fn output_collection_preserves_omissions_from_drained_buffer() {
+     let collected = UnifiedExecProcessManager::collect_output_until_deadline(
+         &output,
          /*pause_state*/ None,
 -        Instant::now() + Duration::from_secs(1),
 +        OutputCollectionMode::UntilDeadline(Instant::now() + Duration::from_secs(1)),
@@ -3733,10 +3842,10 @@ index ced51882a1..08081ab290 100644
      .await;
  
 diff --git a/codex-rs/core/tests/suite/client.rs b/codex-rs/core/tests/suite/client.rs
-index 0127de4a9f..ee42d79bb1 100644
+index 556c384..9dfe703 100644
 --- a/codex-rs/core/tests/suite/client.rs
 +++ b/codex-rs/core/tests/suite/client.rs
-@@ -2839,6 +2839,7 @@ async fn reasoning_summary_is_omitted_when_disabled() -> anyhow::Result<()> {
+@@ -2659,6 +2659,7 @@ async fn reasoning_summary_is_omitted_when_disabled() -> anyhow::Result<()> {
      let TestCodex { codex, .. } = test_codex()
          .with_config(|config| {
              config.model_reasoning_summary = Some(ReasoningSummary::None);
@@ -3744,7 +3853,7 @@ index 0127de4a9f..ee42d79bb1 100644
          })
          .build(&server)
          .await?;
-@@ -2862,11 +2863,10 @@ async fn reasoning_summary_is_omitted_when_disabled() -> anyhow::Result<()> {
+@@ -2676,11 +2677,10 @@ async fn reasoning_summary_is_omitted_when_disabled() -> anyhow::Result<()> {
      let request = resp_mock.single_request();
      let request_body = request.body_json();
  
@@ -3760,10 +3869,10 @@ index 0127de4a9f..ee42d79bb1 100644
      pretty_assertions::assert_eq!(request_body.get("stream_options"), None);
  
 diff --git a/codex-rs/core/tests/suite/unified_exec.rs b/codex-rs/core/tests/suite/unified_exec.rs
-index 06523c546e..3cf46ed3b2 100644
+index 94cc55d..317b498 100644
 --- a/codex-rs/core/tests/suite/unified_exec.rs
 +++ b/codex-rs/core/tests/suite/unified_exec.rs
-@@ -1403,6 +1403,99 @@ async fn unified_exec_emits_one_begin_and_one_end_event() -> Result<()> {
+@@ -1782,6 +1782,100 @@ async fn unified_exec_emits_one_begin_and_one_end_event() -> Result<()> {
      Ok(())
  }
  
@@ -3789,7 +3898,8 @@ index 06523c546e..3cf46ed3b2 100644
 +    let open_call_id = "event-driven-silent-open";
 +    let poll_call_id = "event-driven-silent-poll";
 +    let silent_command = if cfg!(windows) {
-+        "Start-Sleep -Seconds 6"
++        // Keep the process alive beyond the Windows initial exec yield floor.
++        "Start-Sleep -Seconds 11"
 +    } else {
 +        "sleep 6"
 +    };
@@ -3863,7 +3973,7 @@ index 06523c546e..3cf46ed3b2 100644
  #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
  async fn exec_command_reports_chunk_and_exit_metadata() -> Result<()> {
      // TODO(anp): Remove after unified-exec fixtures use target-native commands.
-@@ -1497,6 +1590,168 @@ async fn exec_command_reports_chunk_and_exit_metadata() -> Result<()> {
+@@ -1871,6 +1965,170 @@ async fn exec_command_reports_chunk_and_exit_metadata() -> Result<()> {
      Ok(())
  }
  
@@ -3889,7 +3999,12 @@ index 06523c546e..3cf46ed3b2 100644
 +    let fixture_path = test.config.cwd.join("fixture.txt");
 +    let fixture_uri = PathUri::from_host_native_path(&fixture_path)?;
 +    test.fs()
-+        .write_file(&fixture_uri, fixture.into_bytes(), /*sandbox*/ None)
++        .write_file(
++            &fixture_uri,
++            fixture.into_bytes(),
++            Default::default(),
++            /*sandbox*/ None,
++        )
 +        .await?;
 +
 +    let setup_call_id = "duplicate-search-setup";
@@ -3941,30 +4056,27 @@ index 06523c546e..3cf46ed3b2 100644
 +    let (sandbox_policy, permission_profile) =
 +        turn_permission_fields(PermissionProfile::Disabled, test.config.cwd.as_path());
 +    test.codex
-+        .submit(Op::UserInput {
-+            items: vec![UserInput::Text {
++        .start_or_steer_turn(
++            TurnInputRequest::user_input(vec![UserInput::Text {
 +                text: "run the same repository search twice".into(),
 +                text_elements: Vec::new(),
-+            }],
-+            final_output_json_schema: None,
-+            responsesapi_client_metadata: None,
-+            additional_context: Default::default(),
-+            thread_settings: codex_protocol::protocol::ThreadSettingsOverrides {
++            }])
++            .with_thread_settings(ThreadSettingsOverrides {
 +                environments: Some(local_selections(test.config.cwd.clone())),
 +                approval_policy: Some(AskForApproval::Never),
 +                sandbox_policy: Some(sandbox_policy),
 +                permission_profile,
-+                collaboration_mode: Some(codex_protocol::config_types::CollaborationMode {
-+                    mode: codex_protocol::config_types::ModeKind::Default,
-+                    settings: codex_protocol::config_types::Settings {
++                collaboration_mode: Some(CollaborationMode {
++                    mode: ModeKind::Default,
++                    settings: Settings {
 +                        model: test.session_configured.model.clone(),
 +                        reasoning_effort: None,
 +                        developer_instructions: None,
 +                    },
 +                }),
 +                ..Default::default()
-+            },
-+        })
++            }),
++        )
 +        .await?;
 +    wait_for_event_with_timeout(
 +        &test.codex,
@@ -4033,10 +4145,10 @@ index 06523c546e..3cf46ed3b2 100644
  async fn exec_command_clamps_model_requested_max_output_tokens_to_policy() -> Result<()> {
      // TODO(anp): Remove after unified-exec fixtures use target-native commands.
 diff --git a/codex-rs/features/src/lib.rs b/codex-rs/features/src/lib.rs
-index 8713496eed..ab06f722e2 100644
+index a4d275c..b9c4c0d 100644
 --- a/codex-rs/features/src/lib.rs
 +++ b/codex-rs/features/src/lib.rs
-@@ -102,6 +102,18 @@ pub enum Feature {
+@@ -119,6 +119,18 @@ pub enum Feature {
      CodeModeOnly,
      /// Use the single unified PTY-backed exec tool.
      UnifiedExec,
@@ -4055,9 +4167,9 @@ index 8713496eed..ab06f722e2 100644
      /// Route shell tool execution through the zsh exec bridge.
      ShellZshFork,
      /// Allow unified exec to compose with the zsh exec bridge.
-@@ -857,6 +869,42 @@ pub const FEATURES: &[FeatureSpec] = &[
+@@ -883,6 +895,42 @@ pub const FEATURES: &[FeatureSpec] = &[
          stage: Stage::Stable,
-         default_enabled: !cfg!(windows),
+         default_enabled: true,
      },
 +    FeatureSpec {
 +        id: Feature::CodexZeroCompactExecOutput,
@@ -4099,10 +4211,10 @@ index 8713496eed..ab06f722e2 100644
          id: Feature::ShellZshFork,
          key: "shell_zsh_fork",
 diff --git a/codex-rs/tools/src/tool_output.rs b/codex-rs/tools/src/tool_output.rs
-index 7d58b35e89..481342f13d 100644
+index a8cfa56..0a5f587 100644
 --- a/codex-rs/tools/src/tool_output.rs
 +++ b/codex-rs/tools/src/tool_output.rs
-@@ -24,6 +24,23 @@ pub trait ToolOutput: Send {
+@@ -23,6 +23,23 @@ pub trait ToolOutput: Send {
          false
      }
  
@@ -4126,7 +4238,7 @@ index 7d58b35e89..481342f13d 100644
      fn to_response_item(&self, call_id: &str, payload: &ToolPayload) -> ResponseInputItem;
  
      /// Returns the tool call id exposed to `PostToolUse` hooks for this output.
-@@ -68,6 +85,18 @@ where
+@@ -67,6 +84,18 @@ where
          (**self).contains_external_context()
      }
  

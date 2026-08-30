@@ -88,9 +88,9 @@ jobs:
         if: inputs.reuse_core_release == ''
         shell: bash
         run: |
-          git -c core.autocrlf=false clone --depth 1 --branch rust-v0.146.0 \
+          git -c core.autocrlf=false clone --depth 1 --branch rust-v0.151.0 \
             https://github.com/openai/codex.git upstream
-          git -C upstream apply ../codex-zero/patches/codex-rust-v0.146.0.patch
+          git -C upstream apply ../codex-zero/patches/codex-rust-v0.151.0.patch
       - name: Build patched core
         if: inputs.reuse_core_release == ''
         shell: bash

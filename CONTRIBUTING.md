@@ -19,8 +19,8 @@ npm test
 Verify the patch:
 
 ```sh
-git clone --depth 1 --branch rust-v0.146.0 https://github.com/openai/codex.git upstream
-git -C upstream apply --check ../patches/codex-rust-v0.146.0.patch
+git clone --depth 1 --branch rust-v0.151.0 https://github.com/openai/codex.git upstream
+git -C upstream apply --check ../patches/codex-rust-v0.151.0.patch
 ```
 
 Rust changes should use the upstream Codex formatting, lint, and focused-test guidance. Do not include private session logs, prompt manifests, raw artifacts, local paths, or credentials in a pull request.
