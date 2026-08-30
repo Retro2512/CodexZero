@@ -30,10 +30,10 @@ jobs:
       - name: Verify patch applies to its pinned Codex tag
         shell: bash
         run: |
-          git -c core.autocrlf=false clone --depth 1 --branch rust-v0.146.0 \
+          git -c core.autocrlf=false clone --depth 1 --branch rust-v0.151.0 \
             https://github.com/openai/codex.git upstream
-          git -C upstream apply --check ../patches/codex-rust-v0.146.0.patch
-          git -C upstream apply ../patches/codex-rust-v0.146.0.patch
+          git -C upstream apply --check ../patches/codex-rust-v0.151.0.patch
+          git -C upstream apply ../patches/codex-rust-v0.151.0.patch
       - name: Check patched core and focused regressions
         shell: bash
         env:

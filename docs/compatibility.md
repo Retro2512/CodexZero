@@ -12,7 +12,7 @@ Release packages include a Node runtime for the wrapper and monitor. Source-chec
 
 ## Codex versions
 
-The patched core is built from the official stable upstream tag `rust-v0.146.0`. It was verified alongside:
+The patched core is built from the official stable upstream tag `rust-v0.151.0`. It was verified alongside:
 
 - Codex Desktop package `26.721.4979.0` with embedded runtime `0.146.0-alpha.3.1`;
 - stock Codex CLI `0.139.0`.

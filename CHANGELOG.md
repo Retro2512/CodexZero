@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Rebased the patched core onto the official stable Codex `0.151.0` release and refreshed the reproducible source patch.
 - Isolated CodexZero's SQLite runtime files from the stock Codex and Desktop cores so version-specific migration checksums cannot block startup.
 
 ## 0.5.0
