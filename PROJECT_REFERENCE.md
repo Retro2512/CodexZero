@@ -429,6 +429,7 @@ Default paths are relative to `CODEX_HOME`, normally `~/.codex`:
 | `CODEX_ZERO_HOME` | Override CodexZero state root |
 | `CODEX_ZERO_ARTIFACT_DIR` | Override raw artifact directory |
 | `CODEX_ZERO_TELEMETRY_FILE` | Override telemetry JSONL file |
+| `CODEX_ZERO_SQLITE_HOME` | Override the patched core's isolated SQLite directory |
 | `CODEX_ZERO_BINARY` | Override patched core path |
 | `CODEX_STOCK_BINARY` | Override stock CLI path |
 | `CODEX_ZERO_DESKTOP_BINARY` | Override Desktop executable path |
@@ -437,6 +438,7 @@ Default paths are relative to `CODEX_HOME`, normally `~/.codex`:
 | `CODEX_ZERO_SCOPED_RUNTIME=1` | Enable the Focused code-mode-only surface |
 | `CODEX_ZERO_INSTALL_MODE` | Non-interactive installer mode selection |
 | `CODEX_CLI_PATH` | Supported Desktop side-by-side CLI override |
+| `CODEX_SQLITE_HOME` | Core setting used at launch to isolate version-specific migration state |
 | `CODEX_APP_SERVER_FORCE_CLI=1` | Force a fresh CLI-backed Desktop app server |
 
 ---

@@ -4,7 +4,14 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 import { aggregateSavings, formatSavings, readTelemetry } from "./savings.mjs";
-import { artifactRoot, codexHome, codexZeroHome, statePath, telemetryPath } from "./paths.mjs";
+import {
+  artifactRoot,
+  codexHome,
+  codexZeroHome,
+  sqliteRoot,
+  statePath,
+  telemetryPath
+} from "./paths.mjs";
 import { runChecks } from "./run-checks.mjs";
 import { maybeSuggestStar } from "./star-prompt.mjs";
 
@@ -154,6 +161,7 @@ async function doctor() {
       !modeUsesLeanPrompt(mode) || await exists(leanPrompt)
     ],
     ["Custom binary", customBinary, await exists(customBinary)],
+    ["SQLite state", sqliteRoot(), true],
     ["Artifact store", artifactRoot(), true],
     ["Telemetry", telemetryPath(), true],
     ["Desktop launcher", desktopBinary || "not found", Boolean(desktopBinary)]
@@ -182,25 +190,18 @@ async function launchDesktop(args) {
   }
   const mode = await selectedInstallMode();
   const leanPrompt = await activeLeanPromptPath();
+  await fs.mkdir(sqliteRoot(), { recursive: true });
 
   const child = spawn(desktopBinary, [], {
     detached: true,
     stdio: "ignore",
     env: {
-      ...process.env,
+      ...buildLaunchEnvironment(),
       CODEX_CLI_PATH: customBinary,
       CODEX_APP_SERVER_FORCE_CLI: "1",
       CODEX_ZERO_RUNTIME_OVERRIDES: "1",
       ...(modeUsesScopedRuntime(mode) ? { CODEX_ZERO_SCOPED_RUNTIME: "1" } : {}),
-      ...(leanPrompt ? { CODEX_ZERO_INSTRUCTIONS_FILE: leanPrompt } : {}),
-      CODEX_ZERO_HOME: codexZeroHome(),
-      CODEX_ZERO_ARTIFACT_DIR: artifactRoot(),
-      CODEX_ZERO_TELEMETRY_FILE: telemetryPath(),
-      NO_COLOR: "1",
-      TERM: "dumb",
-      PAGER: "cat",
-      GIT_PAGER: "cat",
-      GH_PAGER: "cat"
+      ...(leanPrompt ? { CODEX_ZERO_INSTRUCTIONS_FILE: leanPrompt } : {})
     }
   });
   child.unref();
@@ -230,19 +231,10 @@ async function launch(args, stock) {
   const launchArguments = stock
     ? args
     : buildLaunchArguments(args, leanPrompt, mode);
+  if (!stock) await fs.mkdir(sqliteRoot(), { recursive: true });
   const child = spawn(executable, launchArguments, {
     stdio: "inherit",
-    env: {
-      ...process.env,
-      NO_COLOR: "1",
-      TERM: "dumb",
-      PAGER: "cat",
-      GIT_PAGER: "cat",
-      GH_PAGER: "cat",
-      CODEX_ZERO_HOME: codexZeroHome(),
-      CODEX_ZERO_ARTIFACT_DIR: artifactRoot(),
-      CODEX_ZERO_TELEMETRY_FILE: telemetryPath()
-    }
+    env: buildLaunchEnvironment({ optimized: !stock })
   });
   const exitCode = await new Promise((resolve, reject) => {
     child.once("error", reject);
@@ -283,6 +275,24 @@ export function buildLaunchArguments(args, leanPrompt, mode = SAFE_MODE) {
       : []),
     ...args
   ];
+}
+
+export function buildLaunchEnvironment({
+  environment = process.env,
+  optimized = true
+} = {}) {
+  return {
+    ...environment,
+    NO_COLOR: "1",
+    TERM: "dumb",
+    PAGER: "cat",
+    GIT_PAGER: "cat",
+    GH_PAGER: "cat",
+    CODEX_ZERO_HOME: codexZeroHome(environment),
+    CODEX_ZERO_ARTIFACT_DIR: artifactRoot(environment),
+    CODEX_ZERO_TELEMETRY_FILE: telemetryPath(environment),
+    ...(optimized ? { CODEX_SQLITE_HOME: sqliteRoot(environment) } : {})
+  };
 }
 
 async function promptMode(args) {

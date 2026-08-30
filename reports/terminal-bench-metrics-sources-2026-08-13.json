@@ -1,0 +1,156 @@
+{
+  "schema": "codexzero-terminal-bench-metrics-sources-v1",
+  "eligible_tasks": 88,
+  "excluded_tasks": [
+    "query-optimize"
+  ],
+  "campaigns": [
+    {
+      "id": "legacy_medium_prefix",
+      "root": "/home/sudhan/benchmarks/tb21-eight-way-20260730",
+      "include_profiles": [
+        "stock_codex",
+        "codexzero_safe",
+        "codexzero_max",
+        "ponytail",
+        "leanctx",
+        "rtk",
+        "caveman"
+      ]
+    },
+    {
+      "id": "legacy_low_extension",
+      "root": "/home/sudhan/benchmarks/tb21-alltools-fast-20260810",
+      "include_profiles": [
+        "stock_codex",
+        "codexzero_safe",
+        "codexzero_max",
+        "ponytail",
+        "leanctx",
+        "rtk",
+        "caveman"
+      ]
+    },
+    {
+      "id": "v050_medium_pilot",
+      "root": "/home/sudhan/benchmarks/tb21-v050-profiles-20260730",
+      "include_profiles": [
+        "stock_compat_0146",
+        "v050_safe",
+        "v050_standard",
+        "v050_focused"
+      ]
+    },
+    {
+      "id": "v050_medium_catchup",
+      "root": "/home/sudhan/benchmarks/tb21-v050-catchup-20260731",
+      "include_profiles": [
+        "stock_compat_0146",
+        "v050_safe",
+        "v050_standard",
+        "v050_focused"
+      ]
+    },
+    {
+      "id": "v050_low_extension",
+      "root": "/home/sudhan/benchmarks/tb21-v050-fast-20260810",
+      "include_profiles": [
+        "stock_compat_0146",
+        "v050_safe",
+        "v050_standard",
+        "v050_focused"
+      ]
+    },
+    {
+      "id": "tura_low_prefix",
+      "root": "/home/sudhan/benchmarks/tb21-tura-fast-20260811",
+      "include_profiles": [
+        "tura_balanced"
+      ]
+    },
+    {
+      "id": "tura_low_shard_01",
+      "root": "/home/sudhan/benchmarks/tb21-tura-fast-shard-01-20260812",
+      "include_profiles": [
+        "tura_balanced"
+      ]
+    },
+    {
+      "id": "tura_low_shard_02",
+      "root": "/home/sudhan/benchmarks/tb21-tura-fast-shard-02-20260812",
+      "include_profiles": [
+        "tura_balanced"
+      ]
+    },
+    {
+      "id": "tura_low_shard_03",
+      "root": "/home/sudhan/benchmarks/tb21-tura-fast-shard-03-20260812",
+      "include_profiles": [
+        "tura_balanced"
+      ]
+    },
+    {
+      "id": "tura_low_shard_04",
+      "root": "/home/sudhan/benchmarks/tb21-tura-fast-shard-04-20260812",
+      "include_profiles": [
+        "tura_balanced"
+      ]
+    },
+    {
+      "id": "tura_low_shard_05",
+      "root": "/home/sudhan/benchmarks/tb21-tura-fast-shard-05-20260812",
+      "include_profiles": [
+        "tura_balanced"
+      ]
+    },
+    {
+      "id": "tura_low_shard_06",
+      "root": "/home/sudhan/benchmarks/tb21-tura-fast-shard-06-20260812",
+      "include_profiles": [
+        "tura_balanced"
+      ]
+    },
+    {
+      "id": "tura_low_shard_07",
+      "root": "/home/sudhan/benchmarks/tb21-tura-fast-shard-07-20260812",
+      "include_profiles": [
+        "tura_balanced"
+      ]
+    },
+    {
+      "id": "tura_low_shard_08",
+      "root": "/home/sudhan/benchmarks/tb21-tura-fast-shard-08-20260812",
+      "include_profiles": [
+        "tura_balanced"
+      ]
+    }
+  ],
+  "profiles": {
+    "stock_codex": {"label": "Stock Codex 0.145", "group": "Legacy comparison"},
+    "codexzero_safe": {"label": "CodexZero Safe (legacy)", "group": "Legacy comparison"},
+    "codexzero_max": {"label": "CodexZero Max (legacy)", "group": "Legacy comparison"},
+    "ponytail": {"label": "Ponytail", "group": "Legacy comparison"},
+    "leanctx": {"label": "LeanCTX", "group": "Legacy comparison"},
+    "rtk": {"label": "RTK", "group": "Legacy comparison"},
+    "caveman": {"label": "Caveman", "group": "Legacy comparison"},
+    "tura_balanced": {"label": "Tura Balanced (low)", "group": "Other tool"},
+    "stock_compat_0146": {"label": "Stock Codex 0.146", "group": "v0.5 comparison"},
+    "v050_safe": {"label": "CodexZero v0.5 Safe", "group": "v0.5 comparison"},
+    "v050_standard": {"label": "CodexZero v0.5 Standard", "group": "v0.5 comparison"},
+    "v050_focused": {"label": "CodexZero v0.5 Focused", "group": "v0.5 comparison"}
+  },
+  "comparisons": [
+    {"candidate": "codexzero_safe", "baseline": "stock_codex"},
+    {"candidate": "codexzero_max", "baseline": "stock_codex"},
+    {"candidate": "ponytail", "baseline": "stock_codex"},
+    {"candidate": "leanctx", "baseline": "stock_codex"},
+    {"candidate": "rtk", "baseline": "stock_codex"},
+    {"candidate": "caveman", "baseline": "stock_codex"},
+    {"candidate": "v050_safe", "baseline": "stock_compat_0146"},
+    {"candidate": "v050_standard", "baseline": "stock_compat_0146"},
+    {"candidate": "v050_focused", "baseline": "stock_compat_0146"},
+    {"candidate": "tura_balanced", "baseline": "stock_codex"},
+    {"candidate": "tura_balanced", "baseline": "stock_compat_0146"},
+    {"candidate": "v050_focused", "baseline": "tura_balanced"}
+  ]
+}

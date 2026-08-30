@@ -19,6 +19,8 @@ The patched core is built from the official stable upstream tag `rust-v0.146.0`.
 
 CodexZero installs side by side, so it can coexist with other stock Codex versions. It never patches an installed executable. `codex-zero stock` resolves the user’s current stock `codex` command.
 
+CodexZero keeps its SQLite runtime files under `~/.codex/codexzero/sqlite`. This isolates version-specific migration history from stock Codex and Desktop, preventing healthy state created by one core from failing checksum validation in the other.
+
 Core patches are version-specific. A future upstream version needs a reviewed patch refresh and regression run before CodexZero claims binary compatibility. Unsupported stock versions still remain untouched and available through the fallback.
 
 The Standard, Max Savings, and Focused prompt is benchmarked against dated model-instruction snapshots. A future model can have a different baseline and should be remeasured. Focused requires the pinned core's code-mode runtime; Safe remains the compatibility fallback.
@@ -34,4 +36,4 @@ For binary optimizations:
 1. Quit Codex Desktop completely.
 2. Run `codex-zero desktop`.
 
-The launcher uses Desktop’s supported `CODEX_CLI_PATH` environment override and forces a fresh CLI-backed app server. In Standard, Max Savings, and Focused modes the side-by-side core receives the bundled `model_instructions_file`; Safe mode omits it. Standard is the install default. The signed Desktop executable remains unchanged. `codex-zero desktop --check` resolves the current installed executable without starting it.
+The launcher uses Desktop’s supported `CODEX_CLI_PATH` environment override, forces a fresh CLI-backed app server, and points that core at CodexZero's isolated SQLite directory. In Standard, Max Savings, and Focused modes the side-by-side core receives the bundled `model_instructions_file`; Safe mode omits it. Standard is the install default. The signed Desktop executable remains unchanged. `codex-zero desktop --check` resolves the current installed executable without starting it.
