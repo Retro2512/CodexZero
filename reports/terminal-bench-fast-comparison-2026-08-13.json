@@ -1,0 +1,200 @@
+{
+  "schema": "codexzero-tb21-fast-comparison-v1",
+  "generated_at": "2026-08-13T02:27:29.833497+00:00",
+  "scope": {
+    "tasks": 56,
+    "reasoning_effort": "low",
+    "model": "gpt-5.6-sol",
+    "query_optimize_excluded": "reproducible verifier timeout",
+    "alltools_cells": 448,
+    "v050_cells": 224,
+    "tura_corrected_cells": 56
+  },
+  "alltools": {
+    "stock_codex": {
+      "cells": 56,
+      "passes": 30,
+      "reward": 30.0,
+      "input_tokens": 22274482,
+      "cache_tokens": 20628096,
+      "output_tokens": 168345,
+      "cost_usd": 23.596328000000003,
+      "missing_cost": 12,
+      "exceptions": {
+        "NonZeroAgentExitCodeError": 11,
+        "AgentSafetyRefusalError": 2,
+        "AgentTimeoutError": 2
+      }
+    },
+    "codexzero_safe": {
+      "cells": 56,
+      "passes": 30,
+      "reward": 30.0,
+      "input_tokens": 24836527,
+      "cache_tokens": 23053824,
+      "output_tokens": 174552,
+      "cost_usd": 25.676987000000008,
+      "missing_cost": 12,
+      "exceptions": {
+        "NonZeroAgentExitCodeError": 11,
+        "AgentSafetyRefusalError": 2,
+        "AgentTimeoutError": 2
+      }
+    },
+    "codexzero_max": {
+      "cells": 56,
+      "passes": 28,
+      "reward": 28.0,
+      "input_tokens": 17419673,
+      "cache_tokens": 15692032,
+      "output_tokens": 153134,
+      "cost_usd": 21.07824100000001,
+      "missing_cost": 12,
+      "exceptions": {
+        "NonZeroAgentExitCodeError": 11,
+        "AgentSafetyRefusalError": 2,
+        "AgentTimeoutError": 2
+      }
+    },
+    "ponytail": {
+      "cells": 56,
+      "passes": 28,
+      "reward": 28.0,
+      "input_tokens": 24001410,
+      "cache_tokens": 22286976,
+      "output_tokens": 188199,
+      "cost_usd": 25.361628,
+      "missing_cost": 11,
+      "exceptions": {
+        "NonZeroAgentExitCodeError": 11,
+        "AgentSafetyRefusalError": 2,
+        "AgentTimeoutError": 3
+      }
+    },
+    "leanctx": {
+      "cells": 56,
+      "passes": 32,
+      "reward": 32.0,
+      "input_tokens": 36734358,
+      "cache_tokens": 34565504,
+      "output_tokens": 209238,
+      "cost_usd": 34.404162,
+      "missing_cost": 13,
+      "exceptions": {
+        "NonZeroAgentExitCodeError": 11,
+        "AgentSafetyRefusalError": 3,
+        "AgentTimeoutError": 3
+      }
+    },
+    "rtk": {
+      "cells": 56,
+      "passes": 30,
+      "reward": 30.0,
+      "input_tokens": 24316750,
+      "cache_tokens": 22586624,
+      "output_tokens": 193388,
+      "cost_usd": 25.745582000000002,
+      "missing_cost": 13,
+      "exceptions": {
+        "NonZeroAgentExitCodeError": 11,
+        "AgentSafetyRefusalError": 2,
+        "AgentTimeoutError": 1
+      }
+    },
+    "caveman": {
+      "cells": 56,
+      "passes": 28,
+      "reward": 28.0,
+      "input_tokens": 26743011,
+      "cache_tokens": 24670848,
+      "output_tokens": 181360,
+      "cost_usd": 28.137039,
+      "missing_cost": 12,
+      "exceptions": {
+        "NonZeroAgentExitCodeError": 11,
+        "AgentSafetyRefusalError": 2,
+        "AgentTimeoutError": 3
+      }
+    },
+    "tura_balanced": {
+      "cells": 56,
+      "passes": 38,
+      "reward": 38.0,
+      "input_tokens": 9442197,
+      "cache_tokens": 7882240,
+      "output_tokens": 275968,
+      "cost_usd": 20.019944999999996,
+      "missing_cost": 10,
+      "exceptions": {
+        "NonZeroAgentExitCodeError": 2,
+        "AgentTimeoutError": 8
+      }
+    }
+  },
+  "v050": {
+    "stock_compat_0146": {
+      "cells": 56,
+      "passes": 31,
+      "reward": 31.0,
+      "input_tokens": 22784107,
+      "cache_tokens": 21181568,
+      "output_tokens": 182348,
+      "cost_usd": 24.073918999999997,
+      "missing_cost": 13,
+      "exceptions": {
+        "NonZeroAgentExitCodeError": 11,
+        "AgentSafetyRefusalError": 3,
+        "AgentTimeoutError": 2
+      }
+    },
+    "v050_safe": {
+      "cells": 56,
+      "passes": 32,
+      "reward": 32.0,
+      "input_tokens": 31740837,
+      "cache_tokens": 30001280,
+      "output_tokens": 185605,
+      "cost_usd": 29.266575000000007,
+      "missing_cost": 13,
+      "exceptions": {
+        "NonZeroAgentExitCodeError": 11,
+        "AgentSafetyRefusalError": 2,
+        "AgentTimeoutError": 2
+      }
+    },
+    "v050_standard": {
+      "cells": 56,
+      "passes": 29,
+      "reward": 29.0,
+      "input_tokens": 20323932,
+      "cache_tokens": 18722432,
+      "output_tokens": 151468,
+      "cost_usd": 21.912755999999998,
+      "missing_cost": 12,
+      "exceptions": {
+        "NonZeroAgentExitCodeError": 11,
+        "AgentSafetyRefusalError": 2,
+        "AgentTimeoutError": 2
+      }
+    },
+    "v050_focused": {
+      "cells": 56,
+      "passes": 31,
+      "reward": 31.0,
+      "input_tokens": 17593717,
+      "cache_tokens": 16052096,
+      "output_tokens": 152409,
+      "cost_usd": 20.306423000000002,
+      "missing_cost": 12,
+      "exceptions": {
+        "NonZeroAgentExitCodeError": 11,
+        "AgentSafetyRefusalError": 2,
+        "AgentTimeoutError": 2
+      }
+    }
+  },
+  "notes": [
+    "Costs and tokens cover cells with provider usage only; missing_cost counts terminal failures without usage.",
+    "Tura was rerun with the corrected low-reasoning adapter; invalid ValueError cells from the first all-tools run are excluded."
+  ]
+}
