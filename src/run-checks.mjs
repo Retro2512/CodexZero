@@ -11,11 +11,12 @@ export async function runChecks(profileName, options = {}) {
   if (!Array.isArray(commands) || commands.length === 0) {
     throw new Error(`Unknown or empty check profile: ${profileName}`);
   }
+  // Validate the entire batch before a malformed later entry can leave partial work.
+  const normalizedCommands = commands.map(normalizeCommand);
 
   const startedAt = Date.now();
   const results = [];
-  for (const [index, command] of commands.entries()) {
-    const normalized = normalizeCommand(command);
+  for (const [index, normalized] of normalizedCommands.entries()) {
     options.onProgress?.({
       profile: profileName,
       current: index + 1,
@@ -36,8 +37,10 @@ export async function runChecks(profileName, options = {}) {
         stdout: stdoutArtifact,
         stderr: stderrArtifact
       },
-      stdout: modelOutput(result.stdout),
-      stderr: modelOutput(result.stderr)
+      ...(options.summaryOnly ? {} : {
+        stdout: modelOutput(result.stdout),
+        stderr: modelOutput(result.stderr)
+      })
     });
     if (result.exitCode !== 0 && !(profile?.continueOnFailure ?? configuration.continueOnFailure)) {
       break;
@@ -73,7 +76,7 @@ async function loadConfiguration(cwd, explicitPath) {
       ];
   for (const candidate of candidates) {
     try {
-      return JSON.parse(await fs.readFile(candidate, "utf8"));
+      return JSON.parse((await fs.readFile(candidate, "utf8")).replace(/^\uFEFF/u, ""));
     } catch (error) {
       if (error.code !== "ENOENT") throw error;
     }
@@ -111,7 +114,8 @@ function runOne(command, cwd) {
         GIT_PAGER: "cat",
         GH_PAGER: "cat"
       },
-      stdio: ["ignore", "pipe", "pipe"]
+      stdio: ["ignore", "pipe", "pipe"],
+      windowsHide: true
     });
     const stdout = [];
     const stderr = [];

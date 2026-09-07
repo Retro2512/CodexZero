@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { aggregateSavings, readTelemetry } from "./savings.mjs";
+import { readSavings } from "./telemetry-reader.mjs";
 import { codexZeroHome, telemetryPath } from "./paths.mjs";
 
 const REPOSITORY_URL = "https://github.com/Retro2512/CodexZero";
@@ -27,7 +27,7 @@ export async function maybeSuggestStar({
       return false;
     }
 
-    const savings = aggregateSavings(await readTelemetry(telemetryFile));
+    const savings = await readSavings(telemetryFile);
     const hasMeasuredBenefit =
       savings.measured.modelVisibleTokensEliminated > 0 ||
       savings.measured.modelCallsEliminated > 0;

@@ -59,8 +59,8 @@ The implementation began against:
 |---|---|
 | Codex Desktop | `26.721.4979.0` |
 | Stock Codex CLI | `0.139.0` |
-| Patched upstream tag | `rust-v0.151.0` |
-| Patched upstream commit | `78c2908` |
+| Patched upstream tag | `rust-v0.153.4` |
+| Patched upstream commit | `3d2ee51` |
 
 The Safe optimizer was required to preserve all of the following:
 
@@ -607,8 +607,8 @@ Release packages include Node. A source checkout can use Node.js 20 or newer.
 The patched core can be reproduced with:
 
 ```sh
-git clone --branch rust-v0.151.0 https://github.com/openai/codex.git upstream
-git -C upstream apply ../CodexZero/patches/codex-rust-v0.151.0.patch
+git clone --branch rust-v0.153.4 https://github.com/openai/codex.git upstream
+git -C upstream apply ../CodexZero/patches/codex-rust-v0.153.4.patch
 cargo build --manifest-path upstream/codex-rs/Cargo.toml -p codex-cli --release
 ```
 
@@ -1098,7 +1098,7 @@ removed per eligible result.
 
 | File | Purpose |
 |---|---|
-| `patches/codex-rust-v0.151.0.patch` | Complete reproducible Rust patch |
+| `patches/codex-rust-v0.153.4.patch` | Complete reproducible Rust patch |
 
 The upstream clone under `/work/` is local build material and is not tracked.
 
@@ -1301,8 +1301,8 @@ Useful development commands:
 npm test
 node bin/codex-zero.mjs doctor
 node bin/codex-zero.mjs savings --json
-git clone --depth 1 --branch rust-v0.151.0 https://github.com/openai/codex.git upstream
-git -C upstream apply --check ../patches/codex-rust-v0.151.0.patch
+git clone --depth 1 --branch rust-v0.153.4 https://github.com/openai/codex.git upstream
+git -C upstream apply --check ../patches/codex-rust-v0.153.4.patch
 ```
 
 The detailed machine-readable evidence remains in `reports/`. When this

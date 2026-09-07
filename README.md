@@ -97,6 +97,18 @@ codex-zero mode focused
 
 `safe` preserves the direct Codex tool surface and stock model instructions. `max-save` is the legacy name for Standard’s direct-tool, lean-prompt behavior. The published repeated 15% result predates these modes.
 
+Select Astra for a run:
+
+```text
+codex-zero run --model gpt-6-astra
+```
+
+For configured check batches, return statuses and saved output paths:
+
+```text
+codex-zero run-checks verify --summary
+```
+
 ## Compatibility
 
 - Windows x64
