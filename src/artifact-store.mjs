@@ -15,9 +15,22 @@ export async function storeRaw(bytes, root = artifactRoot()) {
     }
   } catch (error) {
     if (error.code !== "ENOENT") throw error;
-    const temporary = `${destination}.${process.pid}.tmp`;
-    await fs.writeFile(temporary, bytes, { flag: "wx" });
-    await fs.rename(temporary, destination);
+    const temporary = `${destination}.${process.pid}.${crypto.randomUUID()}.tmp`;
+    try {
+      await fs.writeFile(temporary, bytes, { flag: "wx", mode: 0o600 });
+      // Publish without replacing an object another writer already committed.
+      try {
+        await fs.link(temporary, destination);
+      } catch (publishError) {
+        if (publishError.code !== "EEXIST") throw publishError;
+        const existing = await fs.readFile(destination);
+        if (!existing.equals(bytes)) {
+          throw new Error(`Artifact hash collision or corruption at ${destination}`);
+        }
+      }
+    } finally {
+      await fs.rm(temporary, { force: true });
+    }
   }
   return { sha256, rawByteCount: bytes.length, path: destination };
 }

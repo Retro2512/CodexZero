@@ -4,12 +4,23 @@
   "bundled_prompt": {
     "id": "codex-core-lean-v1",
     "path": "codex-core-lean-v1.md",
-    "tokens": 1356,
-    "bytes": 7422,
-    "sha256": "2daa3187de4ab8ed7337cec2d16cfea8cfe6f02270bd4760796ec59702fcb4ab",
+    "tokens": 1141,
+    "bytes": 6225,
+    "sha256": "b534262b148ced20d4af9455211d6ad217ede99dd16224c0efe43e18fd616bdb",
     "keeps_concise_intermediary_updates": true
   },
   "references": [
+    {
+      "id": "gpt-6-astra-instructions-snapshot-2026-09-07",
+      "scope": "model_instructions",
+      "model": "gpt-6-astra",
+      "baseline_tokens": 4110,
+      "lean_tokens": 1141,
+      "tokens_removed_per_model_request": 2969,
+      "reduction_percent": 72.2,
+      "baseline_sha256": "152dfaeeb552876190962be1c12c93d426840ff12691f648261554a7675a6698",
+      "measured_on": "2026-09-07"
+    },
     {
       "id": "gpt-5.6-sol-instructions-snapshot-2026-07-24",
       "scope": "model_instructions",
@@ -69,5 +80,6 @@
     "Safe preserves model instructions. Standard, Max Savings, and Focused change only model_instructions_file and preserve global and project instructions.",
     "Prompt and tool-result reductions are reported separately because they measure different payload surfaces.",
     "Provider caching and plan accounting can change the practical effect; no request-limit conversion is claimed."
-  ]
+  ],
+  "primary_reference": "gpt-6-astra-instructions-snapshot-2026-09-07"
 }

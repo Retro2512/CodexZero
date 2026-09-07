@@ -1,6 +1,15 @@
 # Changelog
 
-## Unreleased
+## 0.6.0
+
+* Updated the core to Codex `0.153.4`.
+* Shortened the bundled prompt from 1,356 to 1,141 tokens and added an Astra reference measurement.
+* Made savings updates incremental, with recovery from partial writes and rotated logs.
+* Fixed concurrent saves of identical output.
+* Added `run-checks --summary` and validation before a check batch starts.
+* Preserved the caller's environment when launching stock Codex.
+* Fixed mode detection for installations written by Windows PowerShell.
+- Isolated CodexZero's SQLite runtime files from the stock Codex and Desktop cores so version-specific migration checksums cannot block startup.
 
 ## 0.5.0
 

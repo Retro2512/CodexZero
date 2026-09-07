@@ -42,11 +42,12 @@ test("mode switches without modifying prompt or global instruction files", async
   assert.equal(savings.status, 0);
   const summary = JSON.parse(savings.stdout);
   assert.equal(summary.promptBenchmark.active, true);
-  assert.equal(summary.promptBenchmark.referenceDifferencePerModelRequest, 2196);
-  assert.equal(summary.promptBenchmark.referenceReductionPercent, 61.8);
+  assert.equal(summary.promptBenchmark.referenceModel, "gpt-6-astra");
+  assert.equal(summary.promptBenchmark.referenceDifferencePerModelRequest, 2969);
+  assert.equal(summary.promptBenchmark.referenceReductionPercent, 72.2);
   assert.equal(
     summary.promptBenchmark.referenceScenarioAt50RequestsPerDay.per30Days,
-    3294000
+    4453500
   );
 });
 
@@ -148,6 +149,24 @@ test("Focused alone uses the scoped batching runtime", () => {
     assert.equal(args.includes("features.code_mode=true"), false);
     assert.equal(args.includes("features.code_mode_only=true"), false);
   }
+});
+
+test("Windows PowerShell metadata with a UTF8 BOM retains the selected mode", async (t) => {
+  const home = await fs.mkdtemp(path.join(os.tmpdir(), "codex-zero-bom-"));
+  t.after(() => fs.rm(home, { recursive: true, force: true }));
+  await fs.writeFile(path.join(home, "install.json"), '\uFEFF{"mode":"focused"}\n');
+  const result = run(["mode"], { ...process.env, CODEX_ZERO_HOME: home });
+  assert.equal(result.status, 0);
+  assert.equal(result.stdout.trim(), "focused");
+});
+
+test("Astra launches retain explicit model, effort and context choices", () => {
+  const requested = ["--model", "gpt-6-astra", "-c", 'model_reasoning_effort="max"',
+    "-c", "model_context_window=272000"];
+  const args = buildLaunchArguments(requested, "/prompts/lean.md", "standard");
+  assert.deepEqual(args.slice(-requested.length), requested);
+  assert.equal(args.filter((arg) => arg.startsWith("model_reasoning_effort=")).length, 1);
+  assert.equal(args.filter((arg) => arg.startsWith("model_context_window=")).length, 1);
 });
 
 test("Focused mode requires the prompt and records the new mode", async () => {

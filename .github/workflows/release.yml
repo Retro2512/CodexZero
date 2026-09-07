@@ -6,7 +6,7 @@ on:
       version:
         description: CodexZero release version
         required: true
-        default: 0.5.0
+        default: 0.6.0
       reuse_core_release:
         description: Reuse cores only when patches and runtime config match this release; leave blank to rebuild
         required: false
@@ -43,6 +43,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Verify release version and client tests
+        working-directory: codex-zero
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+        run: |
+          node --input-type=module -e 'import fs from "node:fs"; const version = JSON.parse(fs.readFileSync("package.json", "utf8")).version; if (process.env.RELEASE_VERSION !== version) throw new Error("Release version must match package.json");'
+          npm test
       - name: Verify reusable core lineage
         if: inputs.reuse_core_release != ''
         working-directory: codex-zero
@@ -88,9 +96,9 @@ jobs:
         if: inputs.reuse_core_release == ''
         shell: bash
         run: |
-          git -c core.autocrlf=false clone --depth 1 --branch rust-v0.146.0 \
+          git -c core.autocrlf=false clone --depth 1 --branch rust-v0.153.4 \
             https://github.com/openai/codex.git upstream
-          git -C upstream apply ../codex-zero/patches/codex-rust-v0.146.0.patch
+          git -C upstream apply ../codex-zero/patches/codex-rust-v0.153.4.patch
       - name: Build patched core
         if: inputs.reuse_core_release == ''
         shell: bash
@@ -183,5 +191,6 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ inputs.version }}
+          target_commitish: ${{ github.sha }}
           generate_release_notes: true
           files: artifacts/*

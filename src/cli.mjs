@@ -1,10 +1,17 @@
 import { execFile, spawn } from "node:child_process";
-import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
-import { aggregateSavings, formatSavings, readTelemetry } from "./savings.mjs";
-import { artifactRoot, codexHome, codexZeroHome, statePath, telemetryPath } from "./paths.mjs";
+import { formatSavings } from "./savings.mjs";
+import { readSavings } from "./telemetry-reader.mjs";
+import { startSavingsMonitor } from "./savings-monitor.mjs";
+import {
+  artifactRoot,
+  codexHome,
+  codexZeroHome,
+  sqliteRoot,
+  telemetryPath
+} from "./paths.mjs";
 import { runChecks } from "./run-checks.mjs";
 import { maybeSuggestStar } from "./star-prompt.mjs";
 
@@ -40,7 +47,7 @@ export async function main(args) {
 }
 
 async function savings(args) {
-  const summary = aggregateSavings(await readTelemetry());
+  const summary = await readSavings();
   const prompt = await promptBenchmarkSummary();
   if (args.includes("--json")) {
     console.log(JSON.stringify({ ...summary, promptBenchmark: prompt }, null, 2));
@@ -51,6 +58,11 @@ async function savings(args) {
 
 async function monitor(args) {
   const pidPath = path.join(codexZeroHome(), "monitor.pid");
+  const intervalArgument = args.find((item) => item.startsWith("--interval="));
+  const intervalMs = intervalArgument ? Number(intervalArgument.split("=")[1]) : 5000;
+  if (!Number.isFinite(intervalMs) || intervalMs < 250 || intervalMs > 2_147_483_647) {
+    throw new Error("Monitor interval must be between 250 and 2147483647 ms");
+  }
   if (args.includes("--start")) {
     await fs.mkdir(codexZeroHome(), { recursive: true });
     const existing = await readPid(pidPath);
@@ -59,11 +71,15 @@ async function monitor(args) {
       return;
     }
     const entrypoint = path.resolve(import.meta.dirname, "..", "bin", "codex-zero.mjs");
-    const child = spawn(process.execPath, [entrypoint, "monitor", "--service"], {
+    const child = spawn(process.execPath, [entrypoint, "monitor", "--service", `--interval=${intervalMs}`], {
       detached: true,
       stdio: "ignore",
       windowsHide: true,
       env: process.env
+    });
+    await new Promise((resolve, reject) => {
+      child.once("spawn", resolve);
+      child.once("error", reject);
     });
     child.unref();
     await fs.writeFile(pidPath, `${child.pid}\n`);
@@ -91,25 +107,21 @@ async function monitor(args) {
   }
   const once = args.includes("--once");
   const service = args.includes("--service");
-  const intervalArgument = args.find((item) => item.startsWith("--interval="));
-  const intervalMs = intervalArgument ? Number(intervalArgument.split("=")[1]) : 5000;
-  if (!Number.isFinite(intervalMs) || intervalMs < 250) {
-    throw new Error("Monitor interval must be at least 250 ms");
-  }
-  await persistSavings();
-  if (once) return;
+  const running = await startSavingsMonitor({ intervalMs });
+  if (once) { await running.close(); return; }
   if (!service) {
     console.log(`Monitoring ${telemetryPath()}`);
     console.log("Press Ctrl+C to stop.");
   }
-  await fs.mkdir(path.dirname(telemetryPath()), { recursive: true });
-  let timer;
-  fsSync.watch(path.dirname(telemetryPath()), (_event, filename) => {
-    if (filename && filename.toString() !== path.basename(telemetryPath())) return;
-    clearTimeout(timer);
-    timer = setTimeout(() => void persistSavings(), intervalMs);
+  await new Promise((resolve) => {
+    const stop = () => {
+      process.removeListener("SIGINT", stop);
+      process.removeListener("SIGTERM", stop);
+      void running.close().then(resolve);
+    };
+    process.once("SIGINT", stop);
+    process.once("SIGTERM", stop);
   });
-  await new Promise(() => {});
 }
 
 async function readPid(file) {
@@ -130,15 +142,6 @@ function processExists(pid) {
   }
 }
 
-async function persistSavings() {
-  const summary = aggregateSavings(await readTelemetry());
-  const destination = statePath();
-  await fs.mkdir(path.dirname(destination), { recursive: true });
-  const temporary = `${destination}.${process.pid}.tmp`;
-  await fs.writeFile(temporary, `${JSON.stringify(summary, null, 2)}\n`);
-  await fs.rename(temporary, destination);
-}
-
 async function doctor() {
   const home = codexHome();
   const customBinary = customBinaryPath();
@@ -154,6 +157,7 @@ async function doctor() {
       !modeUsesLeanPrompt(mode) || await exists(leanPrompt)
     ],
     ["Custom binary", customBinary, await exists(customBinary)],
+    ["SQLite state", sqliteRoot(), true],
     ["Artifact store", artifactRoot(), true],
     ["Telemetry", telemetryPath(), true],
     ["Desktop launcher", desktopBinary || "not found", Boolean(desktopBinary)]
@@ -182,26 +186,24 @@ async function launchDesktop(args) {
   }
   const mode = await selectedInstallMode();
   const leanPrompt = await activeLeanPromptPath();
+  await fs.mkdir(sqliteRoot(), { recursive: true });
 
   const child = spawn(desktopBinary, [], {
     detached: true,
     stdio: "ignore",
+    windowsHide: true,
     env: {
-      ...process.env,
+      ...buildLaunchEnvironment(),
       CODEX_CLI_PATH: customBinary,
       CODEX_APP_SERVER_FORCE_CLI: "1",
       CODEX_ZERO_RUNTIME_OVERRIDES: "1",
       ...(modeUsesScopedRuntime(mode) ? { CODEX_ZERO_SCOPED_RUNTIME: "1" } : {}),
-      ...(leanPrompt ? { CODEX_ZERO_INSTRUCTIONS_FILE: leanPrompt } : {}),
-      CODEX_ZERO_HOME: codexZeroHome(),
-      CODEX_ZERO_ARTIFACT_DIR: artifactRoot(),
-      CODEX_ZERO_TELEMETRY_FILE: telemetryPath(),
-      NO_COLOR: "1",
-      TERM: "dumb",
-      PAGER: "cat",
-      GIT_PAGER: "cat",
-      GH_PAGER: "cat"
+      ...(leanPrompt ? { CODEX_ZERO_INSTRUCTIONS_FILE: leanPrompt } : {})
     }
+  });
+  await new Promise((resolve, reject) => {
+    child.once("spawn", resolve);
+    child.once("error", reject);
   });
   child.unref();
   console.log("Codex Desktop started with the CodexZero side-by-side core.");
@@ -212,6 +214,7 @@ async function checks(args) {
   const profile = args.find((item) => !item.startsWith("-"));
   if (!profile) throw new Error("Usage: codex-zero run-checks <profile>");
   const result = await runChecks(profile, {
+    summaryOnly: args.includes("--summary"),
     onProgress: ({ current, total, command }) => {
       console.error(`[${current}/${total}] ${command}`);
     }
@@ -230,19 +233,10 @@ async function launch(args, stock) {
   const launchArguments = stock
     ? args
     : buildLaunchArguments(args, leanPrompt, mode);
+  if (!stock) await fs.mkdir(sqliteRoot(), { recursive: true });
   const child = spawn(executable, launchArguments, {
     stdio: "inherit",
-    env: {
-      ...process.env,
-      NO_COLOR: "1",
-      TERM: "dumb",
-      PAGER: "cat",
-      GIT_PAGER: "cat",
-      GH_PAGER: "cat",
-      CODEX_ZERO_HOME: codexZeroHome(),
-      CODEX_ZERO_ARTIFACT_DIR: artifactRoot(),
-      CODEX_ZERO_TELEMETRY_FILE: telemetryPath()
-    }
+    env: buildLaunchEnvironment({ optimized: !stock })
   });
   const exitCode = await new Promise((resolve, reject) => {
     child.once("error", reject);
@@ -285,6 +279,25 @@ export function buildLaunchArguments(args, leanPrompt, mode = SAFE_MODE) {
   ];
 }
 
+export function buildLaunchEnvironment({
+  environment = process.env,
+  optimized = true
+} = {}) {
+  if (!optimized) return { ...environment };
+  return {
+    ...environment,
+    NO_COLOR: "1",
+    TERM: "dumb",
+    PAGER: "cat",
+    GIT_PAGER: "cat",
+    GH_PAGER: "cat",
+    CODEX_ZERO_HOME: codexZeroHome(environment),
+    CODEX_ZERO_ARTIFACT_DIR: artifactRoot(environment),
+    CODEX_ZERO_TELEMETRY_FILE: telemetryPath(environment),
+    ...(optimized ? { CODEX_SQLITE_HOME: sqliteRoot(environment) } : {})
+  };
+}
+
 async function promptMode(args) {
   const requestedInput = args[0];
   const current = await selectedInstallMode();
@@ -324,7 +337,7 @@ async function promptMode(args) {
 async function readInstallMetadata() {
   try {
     return JSON.parse(
-      await fs.readFile(path.join(codexZeroHome(), "install.json"), "utf8")
+      (await fs.readFile(path.join(codexZeroHome(), "install.json"), "utf8")).replace(/^\uFEFF/u, "")
     );
   } catch {
     return null;
@@ -371,10 +384,10 @@ async function promptBenchmarkSummary() {
   }
   try {
     const manifest = JSON.parse(
-      await fs.readFile(path.join(codexZeroHome(), "prompts", "manifest.json"), "utf8")
+      (await fs.readFile(path.join(codexZeroHome(), "prompts", "manifest.json"), "utf8")).replace(/^\uFEFF/u, "")
     );
     const reference = manifest.references.find(
-      (item) => item.id === "gpt-5.6-sol-instructions-snapshot-2026-07-24"
+      (item) => item.id === (manifest.primary_reference || "gpt-5.6-sol-instructions-snapshot-2026-07-24")
     );
     return {
       mode,
@@ -382,6 +395,7 @@ async function promptBenchmarkSummary() {
       tokenizer: manifest.tokenizer,
       bundledPromptTokens: manifest.bundled_prompt.tokens,
       referenceId: reference.id,
+      referenceModel: reference.model,
       referenceTokens: reference.baseline_tokens,
       referenceDifferencePerModelRequest: reference.tokens_removed_per_model_request,
       referenceReductionPercent: reference.reduction_percent,
@@ -414,12 +428,9 @@ function formatPromptBenchmark(prompt) {
   return [
     `Prompt mode: ${prompt.mode}`,
     `Bundled lean prompt: ${prompt.bundledPromptTokens.toLocaleString()} tokens`,
-    `Dated reference: ${prompt.referenceTokens.toLocaleString()} → ${prompt.bundledPromptTokens.toLocaleString()}`,
+    `Dated reference (${prompt.referenceModel}): ${prompt.referenceTokens.toLocaleString()} → ${prompt.bundledPromptTokens.toLocaleString()}`,
     `Reference difference: ${prompt.referenceDifferencePerModelRequest.toLocaleString()} tokens/model request (${prompt.referenceReductionPercent.toFixed(1)}%)`,
-    `At 50 model requests/day: ${prompt.referenceScenarioAt50RequestsPerDay.per30Days.toLocaleString()} fewer reference tokens/30 days`,
-    `At 50 model requests/day: ${prompt.referenceScenarioAt50RequestsPerDay.perYear.toLocaleString()} fewer reference tokens/year`,
-    "Prompt figures are a dated reference comparison, not observed provider usage.",
-    "They are kept separate from the measured tool-result total above."
+    "Prompt comparison is separate from measured usage."
   ].join("\n");
 }
 
@@ -522,10 +533,10 @@ async function exists(value) {
 
 function help() {
   return [
-    "CodexZero — zero wasted turns",
+    "CodexZero",
     "",
-    "codex-zero run [codex arguments]    Run the side-by-side optimized CLI",
-    "codex-zero desktop                 Start Desktop with the side-by-side core",
+    "codex-zero run [codex arguments]    Run the optimized CLI",
+    "codex-zero desktop                 Start Desktop",
     "codex-zero desktop --check         Verify the Desktop executable path",
     "codex-zero stock [codex arguments]  Run the untouched stock CLI",
     "codex-zero savings [--json]         Show measured savings",
@@ -533,6 +544,7 @@ function help() {
     "codex-zero monitor --start|--stop   Manage the savings monitor service",
     "codex-zero monitor --status         Show monitor service status",
     "codex-zero run-checks <profile>     Run a deterministic local check batch",
+    "  --summary                        Return results and saved output paths",
     "codex-zero doctor                   Verify the installation"
   ].join("\n");
 }
