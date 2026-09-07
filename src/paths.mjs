@@ -19,6 +19,11 @@ export function artifactRoot(environment = process.env) {
     path.join(codexZeroHome(environment), "artifacts");
 }
 
+export function sqliteRoot(environment = process.env) {
+  return environment.CODEX_ZERO_SQLITE_HOME ||
+    path.join(codexZeroHome(environment), "sqlite");
+}
+
 export function statePath(environment = process.env) {
   return path.join(codexZeroHome(environment), "savings.json");
 }
