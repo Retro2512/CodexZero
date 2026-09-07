@@ -18,7 +18,11 @@ test("prompt manifest matches the bundled file and keeps progress updates", asyn
     createHash("sha256").update(prompt).digest("hex"),
     manifest.bundled_prompt.sha256
   );
-  assert.equal(manifest.bundled_prompt.tokens, 1356);
+  assert.equal(manifest.bundled_prompt.tokens, 1141);
+  const reference = manifest.references.find((item) => item.id === manifest.primary_reference);
+  assert.equal(reference.model, "gpt-6-astra");
+  assert.equal(reference.lean_tokens, manifest.bundled_prompt.tokens);
+  assert.equal(reference.tokens_removed_per_model_request, reference.baseline_tokens - reference.lean_tokens);
   assert.equal(manifest.bundled_prompt.keeps_concise_intermediary_updates, true);
   assert.match(prompt.toString("utf8"), /^## Intermediary updates$/mu);
 });

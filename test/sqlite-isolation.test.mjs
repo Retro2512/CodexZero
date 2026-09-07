@@ -39,3 +39,8 @@ test("stock launches do not opt into CodexZero's SQLite directory", () => {
 
   assert.equal("CODEX_SQLITE_HOME" in launchEnvironment, false);
 });
+
+test("stock launches preserve the exact caller environment", () => {
+  const environment = { TERM: "xterm-256color", PAGER: "less", NO_COLOR: "0", CUSTOM: "value" };
+  assert.deepEqual(buildLaunchEnvironment({ environment, optimized: false }), environment);
+});

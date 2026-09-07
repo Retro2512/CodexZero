@@ -65,11 +65,13 @@ is referenced.
 
 ### Validation batch runner
 
-`codex-zero run-checks <profile>` executes a repository-defined fixed command list locally. UI progress does not wake the model. One structured result includes every command, exit status, signal, and raw stdout/stderr artifact.
+`codex-zero run-checks <profile>` executes a repository-defined fixed command list locally. UI progress does not wake the model. One structured result includes every command, exit status, signal, and raw stdout/stderr artifact. `--summary` omits inline stdout and stderr while retaining the complete saved outputs and all command statuses. The entire command list is validated before execution.
 
 ### Monitor
 
-The monitor watches the telemetry directory for changes and atomically writes an aggregate state file. It does not poll Codex, invoke a model, or inspect conversation content.
+The monitor watches the telemetry directory and reads only appended bytes after its initial scan. It retains aggregate counters and at most one unfinished record, capped at 1 MiB. File identity, size, and a trailing byte anchor detect rotation, truncation, and common truncation followed by regrowth. Telemetry is an append only journal; arbitrary edits to earlier records require restarting the monitor.
+
+Updates are serialized and throttled so continuous output cannot postpone them. A lightweight filesystem check recovers missed notifications. Complete state is published atomically, and unchanged summaries are not rewritten. An unfinished final JSON record waits for the writer; malformed complete records report an error without committing partial counts. It does not poll Codex, invoke a model, or inspect conversation content.
 
 ### Desktop launcher
 

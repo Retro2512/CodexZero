@@ -36,7 +36,7 @@ def main() -> int:
     sources = parser.add_mutually_exclusive_group()
     sources.add_argument("--baseline", type=Path)
     sources.add_argument("--model-cache", type=Path)
-    parser.add_argument("--model", default="gpt-5.6-sol")
+    parser.add_argument("--model", default="gpt-6-astra")
     args = parser.parse_args()
 
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
@@ -62,13 +62,19 @@ def main() -> int:
         baseline = measure(args.baseline.resolve(), encoding)
     elif args.model_cache:
         cache = json.loads(args.model_cache.read_text(encoding="utf-8"))
-        models = cache.get("models", cache)
+        models = cache.get("models", []) if isinstance(cache, dict) else cache
         model = next((item for item in models if item.get("slug") == args.model), None)
-        if not model or not isinstance(model.get("base_instructions"), str):
-            raise SystemExit(f"model {args.model!r} has no base_instructions in the cache")
+        messages = (model or {}).get("model_messages") or {}
+        instructions = (model or {}).get("base_instructions")
+        if not isinstance(instructions, str):
+            instructions = messages.get("instructions_template")
+            if messages.get("instructions_variables") is not None:
+                raise SystemExit("Model instructions require template rendering; provide --baseline instead")
+        if not isinstance(instructions, str):
+            raise SystemExit(f"model {args.model!r} has no instruction text in the cache")
         baseline = measure_bytes(
-            model["base_instructions"].encode("utf-8"),
-            f"{args.model} base_instructions",
+            instructions.encode("utf-8"),
+            f"{args.model} model_instructions",
             encoding,
         )
 

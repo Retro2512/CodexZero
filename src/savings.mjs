@@ -1,30 +1,13 @@
-import fs from "node:fs/promises";
+import { TelemetryReader } from "./telemetry-reader.mjs";
 import { telemetryPath } from "./paths.mjs";
 
 export async function readTelemetry(file = telemetryPath()) {
-  let text;
-  try {
-    text = await fs.readFile(file, "utf8");
-  } catch (error) {
-    if (error.code === "ENOENT") return [];
-    throw error;
-  }
-
   const records = [];
-  for (const [index, line] of text.split(/\r?\n/u).entries()) {
-    if (!line.trim()) continue;
-    try {
-      const record = JSON.parse(line);
-      if (record.schema === "codex-zero-telemetry-v1") records.push(record);
-    } catch {
-      throw new Error(`Invalid telemetry JSON at line ${index + 1}`);
-    }
-  }
+  await new TelemetryReader(file).read({ final: true, onRecord: (record) => records.push(record) });
   return records;
 }
 
-export function aggregateSavings(records) {
-  const result = {
+export function aggregateSavings(records, result = {
     schema: "codex-zero-savings-v1",
     measured: {
       transformedPayloads: 0,
@@ -50,9 +33,10 @@ export function aggregateSavings(records) {
     },
     firstEventMs: null,
     lastEventMs: null
-  };
+  }) {
 
   for (const record of records) {
+    if (!record || typeof record !== "object") continue;
     if (Number.isFinite(record.timestamp_ms)) {
       result.firstEventMs = result.firstEventMs === null
         ? record.timestamp_ms
