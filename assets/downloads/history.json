@@ -237,7 +237,72 @@
       "date": "2026-09-07",
       "downloads": 276,
       "kind": "observed"
+    },
+    {
+      "date": "2026-09-08",
+      "downloads": 280,
+      "kind": "observed"
+    },
+    {
+      "date": "2026-09-09",
+      "downloads": 281,
+      "kind": "observed"
+    },
+    {
+      "date": "2026-09-10",
+      "downloads": 282,
+      "kind": "observed"
+    },
+    {
+      "date": "2026-09-11",
+      "downloads": 284,
+      "kind": "observed"
+    },
+    {
+      "date": "2026-09-12",
+      "downloads": 284,
+      "kind": "observed"
+    },
+    {
+      "date": "2026-09-13",
+      "downloads": 286,
+      "kind": "observed"
+    },
+    {
+      "date": "2026-09-14",
+      "downloads": 289,
+      "kind": "observed"
+    },
+    {
+      "date": "2026-09-15",
+      "downloads": 289,
+      "kind": "observed"
+    },
+    {
+      "date": "2026-09-16",
+      "downloads": 290,
+      "kind": "observed"
+    },
+    {
+      "date": "2026-09-17",
+      "downloads": 290,
+      "kind": "observed"
+    },
+    {
+      "date": "2026-09-18",
+      "downloads": 290,
+      "kind": "observed"
+    },
+    {
+      "date": "2026-09-19",
+      "downloads": 290,
+      "kind": "observed"
+    },
+    {
+      "date": "2026-09-20",
+      "downloads": 291,
+      "kind": "observed"
     }
   ],
-  "updated_at": "2026-09-07T12:42:14Z"
+  "updated_at": "2026-09-20T11:31:46Z"
 }
