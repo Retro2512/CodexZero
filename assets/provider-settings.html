@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Provider settings</title>
+  <style nonce="{{NONCE}}">
+    :root {
+      color-scheme: light;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #171714;
+      background: #f4f3ed;
+      font-synthesis: none;
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body { margin: 0; min-width: 320px; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .shell { width: min(920px, calc(100% - 40px)); margin: 0 auto; padding: 68px 0 96px; }
+    header { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; margin-bottom: 44px; }
+    h1 { margin: 0; font-size: clamp(34px, 6vw, 56px); line-height: .96; letter-spacing: -.055em; font-weight: 650; }
+    .save {
+      border: 0; border-radius: 7px; padding: 11px 20px; color: #fff; background: #191916;
+      font-weight: 650; box-shadow: 0 1px 1px #0002; transition: transform 120ms ease, background 120ms ease;
+    }
+    .save:hover { background: #34342e; }
+    .save:active { transform: translateY(1px); }
+    .save:disabled { cursor: wait; opacity: .55; }
+    .presets { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 34px; }
+    .preset, .remove {
+      border: 1px solid #d4d2c7; border-radius: 7px; background: transparent; color: #34342f; padding: 9px 13px;
+    }
+    .preset:hover, .remove:hover { border-color: #8f8d84; background: #faf9f5; }
+    #providers { display: grid; gap: 18px; }
+    .empty { color: #706e66; padding: 32px 0; }
+    .provider { border-top: 1px solid #cbc9be; padding: 26px 0 12px; }
+    .provider:first-child { border-top-color: #aaa89e; }
+    .providerHead { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 24px; }
+    .providerTitle { margin: 0; font-size: 20px; letter-spacing: -.02em; }
+    .remove { color: #8a2d27; padding: 7px 10px; }
+    .fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 24px; }
+    .wide { grid-column: 1 / -1; }
+    label { display: grid; gap: 7px; color: #525149; font-size: 13px; font-weight: 650; }
+    input, select {
+      width: 100%; border: 1px solid #c9c7bb; border-radius: 6px; padding: 11px 12px;
+      color: #171714; background: #faf9f5; outline: none;
+    }
+    input:focus, select:focus { border-color: #171714; box-shadow: 0 0 0 3px #1d1d1914; }
+    input:invalid:not(:focus):not(:placeholder-shown) { border-color: #a7433c; }
+    .toggle { align-self: end; min-height: 43px; display: flex; align-items: center; gap: 10px; }
+    .toggle input { width: 18px; height: 18px; margin: 0; accent-color: #191916; }
+    .presence { min-height: 18px; color: #77756c; font-size: 12px; font-weight: 500; }
+    #status { min-height: 22px; margin-top: 28px; font-size: 14px; font-weight: 600; }
+    #status[data-kind="error"] { color: #9b302a; }
+    #status[data-kind="success"] { color: #267044; }
+    @media (max-width: 650px) {
+      .shell { width: min(100% - 28px, 920px); padding-top: 38px; }
+      header { align-items: center; margin-bottom: 32px; }
+      h1 { font-size: 38px; }
+      .fields { grid-template-columns: 1fr; gap: 16px; }
+      .wide { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <h1>Providers</h1>
+      <button class="save" id="save" type="button">Save</button>
+    </header>
+    <nav class="presets" aria-label="Add provider">
+      <button class="preset" type="button" data-preset="claude">Add Claude</button>
+      <button class="preset" type="button" data-preset="zai">Add Z.ai</button>
+      <button class="preset" type="button" data-preset="custom">Add custom</button>
+    </nav>
+    <form id="form" novalidate>
+      <div id="providers"></div>
+    </form>
+    <p id="status" role="status" aria-live="polite"></p>
+  </main>
+  <template id="providerTemplate">
+    <section class="provider">
+      <div class="providerHead">
+        <h2 class="providerTitle">Provider</h2>
+        <button class="remove" type="button">Remove</button>
+      </div>
+      <div class="fields">
+        <label>Name<input name="name" required maxlength="100" autocomplete="off"></label>
+        <label>API type
+          <select name="apiType">
+            <option value="responses">Responses</option>
+            <option value="chat">Chat</option>
+            <option value="anthropic">Anthropic</option>
+          </select>
+        </label>
+        <label class="wide">Base URL<input name="baseUrl" type="url" required maxlength="2048" autocomplete="off"></label>
+        <label>Model<input name="model" required maxlength="256" autocomplete="off"></label>
+        <label>API key environment variable
+          <input name="apiKeyEnv" maxlength="128" pattern="[A-Za-z_][A-Za-z0-9_]*" autocomplete="off" spellcheck="false">
+          <span class="presence"></span>
+        </label>
+        <label class="directKeyField">API key
+          <input name="directKey" type="password" maxlength="16384" autocomplete="new-password" spellcheck="false">
+          <span class="presence directPresence"></span>
+        </label>
+        <label class="toggle clearKey"><input name="clearKey" type="checkbox">Remove saved key</label>
+        <label>Maximum output tokens<input name="maxOutputTokens" type="number" required min="1" max="1000000" step="1"></label>
+        <label class="toggle"><input name="enabled" type="checkbox">Enabled</label>
+      </div>
+    </section>
+  </template>
+  <script nonce="{{NONCE}}">
+    (() => {
+      "use strict";
+      const token = location.hash.length > 1 ? location.hash.slice(1) : "";
+      history.replaceState(null, "", location.pathname);
+
+      const form = document.querySelector("#form");
+      const list = document.querySelector("#providers");
+      const status = document.querySelector("#status");
+      const save = document.querySelector("#save");
+      const template = document.querySelector("#providerTemplate");
+      let providers = [];
+      let directKeySupported = false;
+
+      const presets = {
+        claude: { name: "Claude", apiType: "anthropic", baseUrl: "https://api.anthropic.com/v1", model: "", apiKeyEnv: "" },
+        zai: { name: "Z.ai", apiType: "chat", baseUrl: "https://api.z.ai/api/coding/paas/v4", model: "", apiKeyEnv: "" },
+        custom: { name: "Custom", apiType: "responses", baseUrl: "", model: "", apiKeyEnv: "" },
+      };
+
+      function message(value, kind = "") {
+        status.textContent = value;
+        status.dataset.kind = kind;
+      }
+
+      function identifier(name) {
+        const base = name.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "") || "provider";
+        let id = base;
+        let suffix = 2;
+        const used = new Set(providers.map((provider) => provider.id));
+        while (used.has(id)) id = `${base}_${suffix++}`;
+        return id;
+      }
+
+      function render() {
+        list.replaceChildren();
+        if (!providers.length) {
+          const empty = document.createElement("p");
+          empty.className = "empty";
+          empty.textContent = "No providers configured";
+          list.append(empty);
+          return;
+        }
+        providers.forEach((provider, index) => {
+          const section = template.content.firstElementChild.cloneNode(true);
+          const title = section.querySelector(".providerTitle");
+          title.textContent = provider.name || "New provider";
+          section.querySelector("[name=name]").value = provider.name;
+          section.querySelector("[name=apiType]").value = provider.apiType;
+          section.querySelector("[name=baseUrl]").value = provider.baseUrl;
+          section.querySelector("[name=model]").value = provider.model;
+          section.querySelector("[name=apiKeyEnv]").value = provider.apiKeyEnv;
+          section.querySelector("[name=maxOutputTokens]").value = provider.maxOutputTokens;
+          section.querySelector("[name=enabled]").checked = provider.enabled;
+          section.querySelector("[name=directKey]").value = provider.pendingKey || "";
+          section.querySelector("[name=clearKey]").checked = Boolean(provider.clearKey);
+          section.querySelector(".presence").textContent = provider.apiKeyEnv
+            ? (provider.apiKeyPresent ? "Available" : "Not found")
+            : "";
+          section.querySelector(".directPresence").textContent = provider.directKeyPresent ? "Saved" : "";
+          section.querySelector(".directKeyField").hidden = !directKeySupported;
+          section.querySelector(".clearKey").hidden = !directKeySupported || !provider.directKeyPresent;
+          section.querySelector("[name=name]").addEventListener("input", (event) => {
+            title.textContent = event.target.value || "New provider";
+          });
+          section.querySelector(".remove").addEventListener("click", () => {
+            capture();
+            providers.splice(index, 1);
+            render();
+            message("");
+          });
+          list.append(section);
+        });
+      }
+
+      function capture() {
+        const sections = [...list.querySelectorAll(".provider")];
+        sections.forEach((section, index) => {
+          providers[index] = {
+            ...providers[index],
+            name: section.querySelector("[name=name]").value.trim(),
+            apiType: section.querySelector("[name=apiType]").value,
+            baseUrl: section.querySelector("[name=baseUrl]").value.trim(),
+            model: section.querySelector("[name=model]").value.trim(),
+            apiKeyEnv: section.querySelector("[name=apiKeyEnv]").value.trim(),
+            maxOutputTokens: Number(section.querySelector("[name=maxOutputTokens]").value),
+            enabled: section.querySelector("[name=enabled]").checked,
+            pendingKey: section.querySelector("[name=directKey]").value,
+            clearKey: section.querySelector("[name=clearKey]").checked,
+          };
+        });
+      }
+
+      function payload() {
+        capture();
+        const keys = {};
+        const clearKeys = [];
+        const configured = providers.map((provider) => {
+          if (provider.pendingKey) keys[provider.id] = provider.pendingKey;
+          if (provider.clearKey) clearKeys.push(provider.id);
+          return {
+            id: provider.id,
+            name: provider.name,
+            apiType: provider.apiType,
+            baseUrl: provider.baseUrl,
+            model: provider.model,
+            apiKeyEnv: provider.apiKeyEnv,
+            maxOutputTokens: provider.maxOutputTokens,
+            enabled: provider.enabled,
+          };
+        });
+        return { providers: configured, keys, clearKeys };
+      }
+
+      async function request(options = {}) {
+        const response = await fetch("/api/providers", {
+          ...options,
+          headers: { Authorization: `Bearer ${token}`, ...(options.headers || {}) },
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || "Request failed");
+        return result;
+      }
+
+      document.querySelector(".presets").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-preset]");
+        if (!button) return;
+        capture();
+        const preset = presets[button.dataset.preset];
+        providers.push({ id: identifier(preset.name), ...preset, maxOutputTokens: 4096, enabled: true, apiKeyPresent: false });
+        render();
+        list.lastElementChild?.querySelector("[name=model]")?.focus();
+        message("");
+      });
+
+      save.addEventListener("click", async () => {
+        if (!form.reportValidity()) {
+          message("Complete the highlighted fields", "error");
+          return;
+        }
+        save.disabled = true;
+        message("");
+        try {
+          const result = await request({
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload()),
+          });
+          providers = result.providers;
+          directKeySupported = result.directKeySupported;
+          render();
+          message("Saved", "success");
+        } catch (error) {
+          message(error.message, "error");
+        } finally {
+          save.disabled = false;
+        }
+      });
+
+      if (!token) {
+        message("Open this page from Codex Zero", "error");
+        save.disabled = true;
+        return;
+      }
+      request().then((result) => {
+        providers = result.providers;
+        directKeySupported = result.directKeySupported;
+        render();
+      }).catch((error) => message(error.message, "error"));
+    })();
+  </script>
+</body>
+</html>

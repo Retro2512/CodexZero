@@ -89,6 +89,13 @@ for item in "$CODEX_HOME/config.toml" "$CODEX_HOME/codexzero.config.toml" "$INST
   if [ -e "$item" ]; then cp -R "$item" "$BACKUP_ROOT/"; fi
 done
 cp -R "$PACKAGE_ROOT/bin" "$PACKAGE_ROOT/src" "$PACKAGE_ROOT/scripts" "$INSTALL_ROOT/app/"
+if [ -f "$PACKAGE_ROOT/assets/provider-settings.html" ]; then
+  mkdir -p "$INSTALL_ROOT/app/assets"
+  cp "$PACKAGE_ROOT/assets/provider-settings.html" "$INSTALL_ROOT/app/assets/"
+  for asset in "$PACKAGE_ROOT"/assets/native-provider-* "$PACKAGE_ROOT"/assets/native-cache-ui.mjs "$PACKAGE_ROOT"/assets/model-pricing.mjs "$PACKAGE_ROOT"/assets/codexzero.*; do
+    if [ -f "$asset" ]; then cp "$asset" "$INSTALL_ROOT/app/assets/"; fi
+  done
+fi
 cp "$PACKAGE_ROOT/package.json" "$INSTALL_ROOT/app/"
 if [ -d "$PACKAGE_ROOT/prompts" ]; then
   cp -R "$PACKAGE_ROOT/prompts/." "$INSTALL_ROOT/prompts/"

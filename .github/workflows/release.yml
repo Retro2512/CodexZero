@@ -6,7 +6,7 @@ on:
       version:
         description: CodexZero release version
         required: true
-        default: 0.6.0
+        default: 0.7.0
       reuse_core_release:
         description: Reuse cores only when patches and runtime config match this release; leave blank to rebuild
         required: false
@@ -127,6 +127,8 @@ jobs:
             cp "$NODE_SOURCE" "package/runtime/$NODE_NAME"
           fi
           cp -R codex-zero/bin codex-zero/src codex-zero/config codex-zero/prompts codex-zero/scripts package/
+          mkdir -p package/assets
+          cp codex-zero/assets/provider-settings.html codex-zero/assets/native-provider-* codex-zero/assets/native-cache-ui.mjs codex-zero/assets/model-pricing.mjs codex-zero/assets/codexzero.* package/assets/
           cp codex-zero/package.json codex-zero/README.md codex-zero/LICENSE package/
           if [ "${{ runner.os }}" = "Windows" ]; then
             NODE_NAME="node.exe"
@@ -134,6 +136,7 @@ jobs:
             NODE_NAME="node"
           fi
           "package/runtime/$NODE_NAME" --version
+          "package/runtime/$NODE_NAME" codex-zero/scripts/verify-desktop-assets.mjs package
       - name: Verify Windows installer and in-place upgrade
         if: runner.os == 'Windows'
         shell: pwsh
@@ -146,6 +149,8 @@ jobs:
           $mode = (& "$env:CODEX_HOME\bin\codex-zero.cmd" mode).Trim()
           if ($mode -ne 'safe') { throw "Expected safe mode, got $mode" }
           & "$env:CODEX_HOME\bin\codex-zero.cmd" monitor --stop
+          & package\runtime\node.exe package\scripts\verify-desktop-assets.mjs "$env:CODEX_HOME\codexzero\app"
+          if ($LASTEXITCODE -ne 0) { throw 'Installed Desktop assets failed verification' }
       - name: Verify macOS installer and in-place upgrade
         if: runner.os == 'macOS'
         shell: bash
@@ -157,6 +162,7 @@ jobs:
           sh package/scripts/install.sh package safe
           test "$("$CODEX_HOME/bin/codex-zero" mode)" = "safe"
           "$CODEX_HOME/bin/codex-zero" monitor --stop
+          package/runtime/node package/scripts/verify-desktop-assets.mjs "$CODEX_HOME/codexzero/app"
       - name: Archive Windows package
         if: runner.os == 'Windows'
         shell: pwsh

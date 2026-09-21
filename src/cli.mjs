@@ -39,6 +39,7 @@ export async function main(args) {
   if (command === "run") return launch(rest, false);
   if (command === "stock") return launch(rest, true);
   if (command === "desktop") return launchDesktop(rest);
+  if (command === "providers") return providerSettings(rest);
   if (command === "help" || command === "--help" || command === "-h") {
     console.log(help());
     return;
@@ -169,6 +170,19 @@ async function doctor() {
 }
 
 async function launchDesktop(args) {
+  if (args.includes("--providers")) {
+    const desktopBinary = await resolveDesktopBinary();
+    if (!desktopBinary) throw new Error("Codex Desktop was not found");
+    const { prepareProviderLauncher, launchProviderDesktop } = await import("./provider-launcher.mjs");
+    if (args.includes("--check")) {
+      const result = await prepareProviderLauncher(desktopBinary);
+      console.log(JSON.stringify(result, null, 2));
+      return;
+    }
+    await launchProviderDesktop(desktopBinary);
+    console.log("Codex started with custom models");
+    return;
+  }
   const customBinary = customBinaryPath();
   if (!(await exists(customBinary))) {
     throw new Error(`Custom binary not found at ${customBinary}. Run the installer first.`);
@@ -208,6 +222,12 @@ async function launchDesktop(args) {
   child.unref();
   console.log("Codex Desktop started with the CodexZero side-by-side core.");
   await maybeSuggestStar();
+}
+
+async function providerSettings(args) {
+  if (args.length && args[0] !== "settings") throw new Error("Use providers settings");
+  await launchDesktop(["--providers"]);
+  console.log("Open Settings > Agent > Custom models");
 }
 
 async function checks(args) {
@@ -538,6 +558,8 @@ function help() {
     "codex-zero run [codex arguments]    Run the optimized CLI",
     "codex-zero desktop                 Start Desktop",
     "codex-zero desktop --check         Verify the Desktop executable path",
+    "codex-zero desktop --providers     Start Desktop with custom models",
+    "codex-zero providers settings      Configure custom models",
     "codex-zero stock [codex arguments]  Run the untouched stock CLI",
     "codex-zero savings [--json]         Show measured savings",
     "codex-zero mode [MODE]              Show or select safe|standard|max-save|focused",

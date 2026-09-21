@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.7.0
+
+* Added a colored context ring with an estimated cache countdown in Windows Desktop.
+* Added an API token cost estimate beside the context ring, including cached input and cache writes.
+* Added optional idle cache refreshes with a configurable duration and a toggle for each chat.
+* Added custom models to the Desktop picker, with provider settings inside the app.
+* Added a separate CodexZero Desktop icon and launcher.
+* Verified Desktop assets in release packages and installed copies.
+
 ## 0.6.0
 
 * Updated the core to Codex `0.153.4`.
