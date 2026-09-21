@@ -109,6 +109,22 @@ For configured check batches, return statuses and saved output paths:
 codex-zero run-checks verify --summary
 ```
 
+## Desktop cache and custom models
+
+On Windows, launch the Desktop features with:
+
+```text
+codex-zero desktop --providers
+```
+
+The context ring shows estimated cache warmth and the conversation's API token cost.
+Open Settings > Agent > Context cache to set an idle refresh duration, or toggle
+Keep warm for a chat in the ring's tooltip.
+
+Add Claude, Z.ai, or another provider under Settings > Agent > Custom models.
+[Setup and supported APIs](docs/custom-models.md)
+[Cache behavior and pricing](docs/cache-research.md)
+
 ## Compatibility
 
 - Windows x64
