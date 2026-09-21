@@ -1,45 +1,10 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { ConversationAccounting, KEEP_WARM_MESSAGE, shouldKeepWarm } from "./cache-accounting.mjs";
+import { CacheRolloutReader, KEEP_WARM_MESSAGE, shouldKeepWarm } from "./cache-accounting.mjs";
 import { atomicJson, cacheDirectory, readCacheSettings, readJson, validateThreadId } from "./cache-service.mjs";
 
-/** Incremental bounded reader; message content is discarded immediately. */
-export class CacheRolloutReader {
-  constructor(id, file) { this.id = id; this.file = file; this.turnHints = {}; this.reset(); }
-  reset() { this.offset = 0; this.pending = Buffer.alloc(0); this.accounting = new ConversationAccounting(this.id); }
-  async read() {
-    const handle = await fs.open(this.file, "r");
-    try {
-      const stat = await handle.stat();
-      if (this.identity !== `${stat.dev}:${stat.ino}` || stat.size < this.offset) this.reset();
-      this.identity = `${stat.dev}:${stat.ino}`;
-      const buffer = Buffer.alloc(64 * 1024);
-      while (this.offset < stat.size) {
-        const { bytesRead } = await handle.read(buffer, 0, Math.min(buffer.length, stat.size - this.offset), this.offset);
-        if (!bytesRead) break;
-        this.offset += bytesRead;
-        const bytes = Buffer.concat([this.pending, buffer.subarray(0, bytesRead)]);
-        let start = 0;
-        for (let end = bytes.indexOf(10); end >= 0; end = bytes.indexOf(10, start)) {
-          if (!this.skipping) {
-            try {
-              const record = JSON.parse(bytes.subarray(start, end).toString("utf8"));
-              const hint = record.type === "turn_context" && this.turnHints[record.payload?.turn_id];
-              if (hint) record.payload = { ...record.payload, service_tier: hint.tier, model: hint.model ?? record.payload.model };
-              this.accounting.accept(record);
-            }
-            catch { this.accounting.snapshot.cost.partial = true; }
-          }
-          this.skipping = false;
-          start = end + 1;
-        }
-        this.pending = Buffer.from(bytes.subarray(start));
-        if (this.pending.length > 4 * 1024 * 1024) { this.pending = Buffer.alloc(0); this.skipping = true; }
-      }
-      return this.accounting.snapshot;
-    } finally { await handle.close(); }
-  }
-}
+export { CacheRolloutReader } from "./cache-accounting.mjs";
+const ERROR_RETRY_MS = 30_000;
 
 export class CacheMonitor {
   constructor({ home, rpc, isBusy, enqueue, now = Date.now }) {
@@ -47,28 +12,37 @@ export class CacheMonitor {
     this.threads = new Map(); this.warming = new Map(); this.running = false; this.closed = false;
     this.cleanups = new Set();
   }
+  pause(entry, sticky = false) {
+    entry.error = "Refresh paused";
+    entry.errorAt = this.now();
+    entry.errorSticky = sticky;
+  }
   remember(result) {
     const thread = result?.thread;
     if (!thread?.id || !thread.path || thread.parentThreadId || thread.ephemeral) return;
     validateThreadId(thread.id);
     let entry = this.threads.get(thread.id);
     if (!entry || entry.file !== thread.path) {
-      entry = { file: thread.path, reader: new CacheRolloutReader(thread.id, thread.path), active: thread.status?.type === "active" };
+      entry = { ...entry, file: thread.path, reader: new CacheRolloutReader(thread.id, thread.path),
+        active: thread.status?.type === "active" };
       this.threads.set(thread.id, entry);
-    }
-    entry.model = result.model ?? thread.model;
+    } else if (thread.status?.type) entry.active = thread.status.type === "active";
+    const model = result.model ?? thread.model;
+    if (model != null) entry.model = model;
     if (Object.hasOwn(result, "serviceTier")) entry.tier = result.serviceTier;
-    entry.provider = result.modelProvider ?? thread.modelProvider;
+    const provider = result.modelProvider ?? thread.modelProvider;
+    if (provider != null) entry.provider = provider;
     entry.loaded = thread.status?.type !== "notLoaded";
     void this.tick();
   }
   userActivity(id) {
     const entry = this.threads.get(id);
-    if (entry) { entry.lastUserAt = this.now(); entry.error = null; }
+    if (entry) { entry.lastUserAt = this.now(); entry.error = null; entry.errorAt = null; entry.errorSticky = false; }
   }
   select(id, params, model) {
     const entry = this.threads.get(id);
     if (!entry) return;
+    entry.rerouted = false;
     entry.model = model;
     if (Object.hasOwn(params, "serviceTier")) entry.tier = params.serviceTier;
     entry.turnTier = params.serviceTierForTurn ?? entry.tier ?? null;
@@ -95,14 +69,14 @@ export class CacheMonitor {
     if (message.method === "turn/completed") {
       entry.active = false;
       if (this.warming.has(id)) {
-        if (p.turn?.status !== "completed") entry.error = "Refresh paused";
+        if (p.turn?.status !== "completed") this.pause(entry);
         this.warming.get(id).resolve(); this.warming.delete(id);
       } else entry.lastUserAt = this.now();
     }
     if (["thread/closed", "thread/archived", "thread/deleted"].includes(message.method)) entry.loaded = false;
     if (message.method === "thread/status/changed") entry.active = p.status?.type === "active";
-    if (message.method === "error") entry.error = "Refresh paused";
-    if (message.method === "model/rerouted") { entry.rerouted = true; entry.error = "Refresh paused"; }
+    if (message.method === "error") this.pause(entry);
+    if (message.method === "model/rerouted") { entry.rerouted = true; this.pause(entry, true); }
     if (message.method === "thread/compacted" || message.method === "model/rerouted") entry.reader.accounting.snapshot.invalidated = true;
   }
   async cancel(id) {
@@ -130,6 +104,7 @@ export class CacheMonitor {
       for (const [id, entry] of this.threads) {
         if (this.closed) break;
         try {
+          if (entry.error && !entry.errorSticky && this.now() - (entry.errorAt || 0) >= ERROR_RETRY_MS) entry.error = null;
           await entry.hintQueue;
           entry.reader.turnHints = await readJson(path.join(cacheDirectory(this.home), `${id}.turns.json`), {});
           const raw = await entry.reader.read();
@@ -189,7 +164,7 @@ export class CacheMonitor {
                   void warm.cleanup.finally(() => this.cleanups.delete(warm.cleanup)).catch(() => {});
                   lease = null;
                 } catch (error) {
-                  startedResolve(); resolve(); this.warming.delete(id); entry.error = "Refresh paused";
+                  startedResolve(); resolve(); this.warming.delete(id); this.pause(entry);
                   throw error;
                 }
               } finally {
@@ -197,7 +172,7 @@ export class CacheMonitor {
               }
             });
           }
-        } catch { entry.error = "Refresh paused"; }
+        } catch { this.pause(entry); }
       }
     } catch { /* Unreadable settings disable refreshes rather than sending traffic. */ }
   }
