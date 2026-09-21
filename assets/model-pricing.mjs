@@ -1,0 +1,102 @@
+// USD per 1 million tokens. `write` is the rate for tokens classified as
+// cache-write tokens, not a surcharge added to the ordinary input rate.
+export const PRICING_DATE = '2026-09-20';
+
+export const MODEL_PRICING = Object.freeze({
+  // Official alias target on PRICING_DATE: GPT-5.6 Sol.
+  'gpt-daybreak-blue-latest': Object.freeze({
+    input: 4, read: 0.4, write: 5, output: 20,
+    priority: Object.freeze({ input: 8, read: 0.8, write: 10, output: 40 }),
+    longContextThreshold: 272_000, longInputMultiplier: 2, longOutputMultiplier: 1.5,
+  }),
+  'gpt-6-astra': Object.freeze({
+    input: 10,
+    read: 1,
+    write: 12.5,
+    output: 50,
+    priority: Object.freeze({ input: 20, read: 2, write: 25, output: 100 }),
+    longContextThreshold: 272_000,
+    longInputMultiplier: 2,
+    longOutputMultiplier: 1.5,
+  }),
+  'gpt-5.6-sol': Object.freeze({
+    input: 4,
+    read: 0.4,
+    write: 5,
+    output: 20,
+    priority: Object.freeze({ input: 8, read: 0.8, write: 10, output: 40 }),
+    longContextThreshold: 272_000,
+    longInputMultiplier: 2,
+    longOutputMultiplier: 1.5,
+  }),
+  'gpt-5.6-terra': Object.freeze({
+    input: 2,
+    read: 0.2,
+    write: 2.5,
+    output: 12,
+    priority: Object.freeze({ input: 4, read: 0.4, write: 5, output: 24 }),
+    longContextThreshold: 272_000,
+    longInputMultiplier: 2,
+    longOutputMultiplier: 1.5,
+  }),
+  'gpt-5.6-luna': Object.freeze({
+    input: 0.2,
+    read: 0.02,
+    write: 0.25,
+    output: 1.2,
+    priority: Object.freeze({ input: 0.4, read: 0.04, write: 0.5, output: 2.4 }),
+    longContextThreshold: 272_000,
+    longInputMultiplier: 2,
+    longOutputMultiplier: 1.5,
+  }),
+  // GPT-5.5 has no separate cache-write charge, so cache-write tokens use the
+  // ordinary input rate. Its long-context multipliers are documented only for
+  // Standard, Batch, and Flex, not Fast/Priority.
+  'gpt-5.5': Object.freeze({
+    input: 5,
+    read: 0.5,
+    write: 5,
+    output: 30,
+    priority: Object.freeze({ input: 12.5, read: 1.25, write: 12.5, output: 75 }),
+    longContextThreshold: 272_000,
+    longInputMultiplier: 2,
+    longOutputMultiplier: 1.5,
+  }),
+  'gpt-5.3-codex': Object.freeze({
+    input: 1.75,
+    read: 0.175,
+    write: 1.75,
+    output: 14,
+    priority: Object.freeze({ input: 3.5, read: 0.35, write: 3.5, output: 28 }),
+  }),
+  'gpt-5.2-codex': Object.freeze({
+    input: 1.75,
+    read: 0.175,
+    write: 1.75,
+    output: 14,
+  }),
+  'gpt-5.1-codex': Object.freeze({
+    input: 1.25,
+    read: 0.125,
+    write: 1.25,
+    output: 10,
+  }),
+  'gpt-5.1-codex-max': Object.freeze({
+    input: 1.25,
+    read: 0.125,
+    write: 1.25,
+    output: 10,
+  }),
+  'gpt-5.1-codex-mini': Object.freeze({
+    input: 0.25,
+    read: 0.025,
+    write: 0.25,
+    output: 2,
+  }),
+  'gpt-5-codex': Object.freeze({
+    input: 1.25,
+    read: 0.125,
+    write: 1.25,
+    output: 10,
+  }),
+});

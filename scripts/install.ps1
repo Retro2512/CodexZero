@@ -98,6 +98,10 @@ $promptRoot = Join-Path $installRoot 'prompts'
 New-Item -ItemType Directory -Force -Path $appRoot, $binRoot, $promptRoot | Out-Null
 Copy-Item -LiteralPath (Join-Path $sourceRoot 'bin') -Destination $appRoot -Recurse -Force
 Copy-Item -LiteralPath (Join-Path $sourceRoot 'src') -Destination $appRoot -Recurse -Force
+if (Test-Path -LiteralPath (Join-Path $sourceRoot 'assets\provider-settings.html')) {
+    New-Item -ItemType Directory -Force -Path (Join-Path $appRoot 'assets') | Out-Null
+    Get-ChildItem -LiteralPath (Join-Path $sourceRoot 'assets') -File | Where-Object { $_.Name -in @('provider-settings.html', 'native-cache-ui.mjs', 'model-pricing.mjs') -or $_.Name -like 'native-provider-*' -or $_.Name -like 'codexzero.*' } | Copy-Item -Destination (Join-Path $appRoot 'assets') -Force
+}
 Copy-Item -LiteralPath (Join-Path $sourceRoot 'scripts') -Destination $appRoot -Recurse -Force
 Copy-Item -LiteralPath (Join-Path $sourceRoot 'package.json') -Destination $appRoot -Force
 if (Test-Path -LiteralPath $sourcePromptRoot) {
