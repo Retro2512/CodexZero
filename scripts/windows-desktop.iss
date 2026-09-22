@@ -115,14 +115,17 @@ begin
       Process := Processes.ItemIndex(Index);
       if Process.ProcessId = CurrentPid then Continue;
       if not VarIsNull(Process.ExecutablePath) then begin
-        Executable := Lowercase(Process.ExecutablePath);
+        // WMI values are variants. Assign before calling string functions.
+        Executable := Process.ExecutablePath;
+        Executable := Lowercase(Executable);
         if CheckingUninstall and (Process.ProcessId = UninstallerParentPid) then
           if CompareText(Executable, ExpandConstant('{uninstallexe}')) = 0 then Continue;
         if Pos(Root, Executable) = 1 then Exit;
       end;
       // The update helper runs in PowerShell outside the installation tree.
       if not VarIsNull(Process.CommandLine) then begin
-        CommandLine := Lowercase(Process.CommandLine);
+        CommandLine := Process.CommandLine;
+        CommandLine := Lowercase(CommandLine);
         if ((Pos('complete-desktop-update.ps1', CommandLine) > 0) or
             ((Pos('updates\.stage-', CommandLine) > 0) and
              (Pos('\complete.ps1', CommandLine) > 0))) and
