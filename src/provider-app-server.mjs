@@ -180,7 +180,7 @@ export async function runProviderAppServer({ core, args, home, input = process.s
         const provider = findProvider(await readProviders(home), model);
         if (provider || state?.modelProvider === PROVIDER_ID) {
           await switchProvider(params.threadId, model, provider);
-          let routed = provider ? customTurnParams(params) : params;
+          let routed = provider ? customTurnParams(params, provider) : params;
           if (state?.sandboxPolicy && !routed.sandboxPolicy && !routed.permissions) {
             routed = { ...routed, sandboxPolicy: state.sandboxPolicy };
           }

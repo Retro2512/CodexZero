@@ -4,8 +4,10 @@ import { readProviders } from "./provider-store.mjs";
 import { serveProviderResponse } from "./provider-adapters.mjs";
 import { findProvider } from "./provider-router.mjs";
 import { getProviderKey } from "./provider-secrets.mjs";
+import { recordProviderUsageVersion } from "./provider-pricing.mjs";
 
 export async function startProviderBridge({ home, environment = process.env } = {}) {
+  await recordProviderUsageVersion(home);
   const token = randomBytes(32).toString("hex");
   const server = http.createServer(async (req, res) => {
     const auth = Buffer.from(req.headers.authorization || "");

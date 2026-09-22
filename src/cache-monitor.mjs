@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { CacheRolloutReader, KEEP_WARM_MESSAGE, shouldKeepWarm } from "./cache-accounting.mjs";
 import { atomicJson, cacheDirectory, readCacheSettings, readJson, validateThreadId } from "./cache-service.mjs";
+import { readProviderPricing } from "./provider-pricing.mjs";
 
 export { CacheRolloutReader } from "./cache-accounting.mjs";
 const ERROR_RETRY_MS = 30_000;
@@ -101,11 +102,13 @@ export class CacheMonitor {
   async observe() {
     try {
       const settings = await readCacheSettings(this.home);
+      const providerPrices = await readProviderPricing(this.home);
       for (const [id, entry] of this.threads) {
         if (this.closed) break;
         try {
           if (entry.error && !entry.errorSticky && this.now() - (entry.errorAt || 0) >= ERROR_RETRY_MS) entry.error = null;
           await entry.hintQueue;
+          entry.reader.providerPrices = providerPrices;
           entry.reader.turnHints = await readJson(path.join(cacheDirectory(this.home), `${id}.turns.json`), {});
           const raw = await entry.reader.read();
           const snapshot = { ...raw, model: entry.model ?? raw.model, active: entry.active,

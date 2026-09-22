@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.7.2
+
+* Added updates through the existing download icon in Windows Desktop, with installation and reopening after a click.
+* Added custom context limits, reasoning controls, and token prices for custom models.
+* Improved cache usage and cost estimates for custom models.
+* Refreshed the app icon and social card.
+* Added a benchmark catalog.
+
+## 0.7.1
+
+* Fixed the cache countdown, context tooltip, and usage accounting.
+
 ## 0.7.0
 
 * Added a colored context ring with an estimated cache countdown in Windows Desktop.

@@ -1,0 +1,819 @@
+{
+  "schema": "codexzero-benchmark-catalog-v1",
+  "generated_on": "2026-09-21",
+  "human_index": "reports/BENCHMARK_CATALOG.md",
+  "scope": "Committed benchmark reports, ignored private benchmark roots, benchmark harnesses, and presentation data found in the repository.",
+  "model_coverage": {
+    "end_to_end_models": [
+      "gpt-5.6-sol"
+    ],
+    "end_to_end_efforts": [
+      "low",
+      "medium",
+      "high"
+    ],
+    "static_prompt_references": [
+      "gpt-5.6-sol",
+      "GPT-5.5 lineage",
+      "gpt-6-astra"
+    ],
+    "not_end_to_end_benchmarked": [
+      "gpt-6-astra",
+      "gpt-5.6-terra",
+      "gpt-5.6-luna",
+      "gpt-5.5",
+      "Claude",
+      "Gemini"
+    ]
+  },
+  "measured_usage_reduction_systems": [
+    "CodexZero Safe",
+    "CodexZero Standard",
+    "CodexZero Focused",
+    "CodexZero Max Savings",
+    "RTK",
+    "Caveman",
+    "RTK plus Caveman",
+    "Context Mode",
+    "LeanCTX",
+    "Headroom proxy only",
+    "Headroom default stack",
+    "Ponytail",
+    "Tamp Balanced L5",
+    "Tamp Max L9",
+    "Tura Direct",
+    "Tura Balanced",
+    "sqz",
+    "Squeez"
+  ],
+  "benchmark_families": [
+    {
+      "id": "terminal-bench-metrics-audit",
+      "status": "current-broadest-corpus",
+      "model": "gpt-5.6-sol",
+      "efforts": [
+        "low",
+        "medium"
+      ],
+      "scope": "88 tasks per full-coverage profile; Tura covers 56 low-effort tasks",
+      "systems": [
+        "Stock Codex 0.145",
+        "CodexZero Safe legacy",
+        "CodexZero Max legacy",
+        "Ponytail",
+        "LeanCTX",
+        "RTK",
+        "Caveman",
+        "Tura Balanced",
+        "Stock Codex 0.146",
+        "CodexZero v0.5 Safe",
+        "CodexZero v0.5 Standard",
+        "CodexZero v0.5 Focused"
+      ],
+      "files": [
+        "reports/terminal-bench-metrics-audit-2026-08-13.md",
+        "reports/terminal-bench-metrics-audit-2026-08-13.json",
+        "reports/terminal-bench-metrics-sources-2026-08-13.json",
+        "reports/terminal-bench-total-comparison-2026-08-13.json",
+        "reports/terminal-bench-fast-comparison-2026-08-13.md",
+        "reports/terminal-bench-fast-comparison-2026-08-13.json"
+      ]
+    },
+    {
+      "id": "terminal-bench-repeated",
+      "status": "current-public-headline",
+      "model": "gpt-5.6-sol",
+      "efforts": [
+        "medium"
+      ],
+      "scope": "12 tasks x 3 repetitions x 3 configurations",
+      "systems": [
+        "Codex",
+        "CodexZero Safe",
+        "Codex plus RTK"
+      ],
+      "key_result": "CodexZero matched Codex at 29/36 with 14.63% fewer tokens",
+      "files": [
+        "reports/terminal-bench-2.1-replication/README.md",
+        "reports/terminal-bench-2.1-replication/summary.json",
+        "reports/terminal-bench-2.1-replication/trials.json",
+        "reports/terminal-bench-2.1-replication/attempts.json",
+        "reports/terminal-bench-2.1-replication/preregistration.json",
+        "reports/terminal-bench-2.1-replication/infrastructure-addendum.json",
+        "reports/terminal-bench-2.1-replication/run-manifest.json"
+      ]
+    },
+    {
+      "id": "fast-micro",
+      "status": "completed",
+      "model": "gpt-5.6-sol",
+      "efforts": [
+        "medium",
+        "high"
+      ],
+      "scope": "327 fresh cells plus linked public results",
+      "systems": [
+        "Codex",
+        "CodexZero Safe",
+        "CodexZero Standard",
+        "CodexZero Focused",
+        "RTK",
+        "Caveman",
+        "RTK plus Caveman",
+        "Context Mode",
+        "LeanCTX",
+        "Headroom"
+      ],
+      "files": [
+        "reports/fast-benchmark-2026-07-28.md",
+        "reports/fast-benchmark-2026-07-28.json",
+        "reports/complete-comparison-2026-07-28.md",
+        "reports/complete-comparison-2026-07-28.json"
+      ]
+    },
+    {
+      "id": "five-way-isolated",
+      "status": "superseded-historical",
+      "model": "gpt-5.6-sol",
+      "efforts": [
+        "medium"
+      ],
+      "scope": "90 trials",
+      "systems": [
+        "Codex",
+        "CodexZero Max Savings",
+        "RTK",
+        "Caveman",
+        "RTK plus Caveman"
+      ],
+      "files": [
+        "reports/archive/five-way-benchmark.md",
+        "reports/archive/five-way-benchmark.json"
+      ]
+    },
+    {
+      "id": "factorial-combinations",
+      "status": "superseded-historical",
+      "model": "gpt-5.6-sol",
+      "efforts": [
+        "low"
+      ],
+      "scope": "36 cells across 12 combinations",
+      "systems": [
+        "CodexZero Safe",
+        "CodexZero Max Savings",
+        "RTK",
+        "Caveman"
+      ],
+      "files": [
+        "reports/archive/combination-benchmark.md",
+        "reports/archive/combination-benchmark.json"
+      ]
+    },
+    {
+      "id": "deepswe",
+      "status": "mixed-current-and-historical",
+      "model": "gpt-5.6-sol",
+      "efforts": [
+        "medium",
+        "high"
+      ],
+      "scope": "one-task pilot, three-task stress run, and ten-task historical five-way run",
+      "systems": [
+        "Codex",
+        "CodexZero",
+        "RTK",
+        "Caveman",
+        "RTK plus Caveman"
+      ],
+      "files": [
+        "reports/archive/deepswe-pilot.md",
+        "reports/archive/deepswe-pilot.json",
+        "reports/archive/deepswe-sol-high-10/README.md",
+        "reports/archive/deepswe-sol-high-10/summary.json",
+        "reports/archive/deepswe-sol-high-10/task-metrics.csv",
+        "reports/archive/deepswe-sol-high-10/provenance.json",
+        "reports/archive/deepswe-sol-high-paused/README.md"
+      ]
+    },
+    {
+      "id": "terminal-bench-mini",
+      "status": "superseded-historical",
+      "model": "gpt-5.6-sol",
+      "efforts": [
+        "medium"
+      ],
+      "scope": "12 tasks x 6 configurations",
+      "systems": [
+        "Codex",
+        "CodexZero Safe",
+        "CodexZero Max Savings",
+        "RTK",
+        "Caveman",
+        "RTK plus Caveman"
+      ],
+      "files": [
+        "reports/archive/terminal-bench-2.1-mini/README.md",
+        "reports/archive/terminal-bench-2.1-mini/summary.json",
+        "reports/archive/terminal-bench-2.1-mini/trials.json",
+        "reports/archive/terminal-bench-2.1-mini/attempts.json"
+      ]
+    },
+    {
+      "id": "additional-output-tools",
+      "status": "completed-screen",
+      "model": "gpt-5.6-sol",
+      "efforts": [
+        "medium"
+      ],
+      "scope": "three tasks per tool",
+      "systems": [
+        "sqz 1.3.0",
+        "Squeez 1.44.0"
+      ],
+      "files": [
+        "reports/additional-output-tools-comparison-2026-07-28.md",
+        "reports/additional-output-tools-comparison-2026-07-28.json",
+        "reports/additional-output-tools-screen-2026-07-28.md",
+        "reports/additional-output-tools-screen-2026-07-28.json"
+      ]
+    },
+    {
+      "id": "quick-max",
+      "status": "completed-directional",
+      "model": "gpt-5.6-sol",
+      "efforts": [
+        "high"
+      ],
+      "scope": "one task per cell",
+      "systems": [
+        "Previous Max",
+        "Direct-tool Max",
+        "Focused"
+      ],
+      "files": [
+        "reports/quick-max-benchmark-2026-07-26.md",
+        "reports/quick-max-benchmark-2026-07-26.json"
+      ]
+    },
+    {
+      "id": "fixture-replay",
+      "status": "superseded-static",
+      "model": null,
+      "efforts": [],
+      "scope": "deterministic payload replay",
+      "systems": [
+        "CodexZero payload transform"
+      ],
+      "files": [
+        "reports/archive/before-after.md",
+        "reports/archive/fixture-payload-report.json"
+      ]
+    },
+    {
+      "id": "prompt-token-counts",
+      "status": "static-only",
+      "model": null,
+      "efforts": [],
+      "scope": "tokenizer comparisons, not provider usage",
+      "systems": [
+        "CodexZero bundled prompt"
+      ],
+      "model_references": [
+        "gpt-5.6-sol",
+        "GPT-5.5 lineage",
+        "gpt-6-astra"
+      ],
+      "files": [
+        "reports/archive/prompt-benchmark.md",
+        "reports/archive/prompt-benchmark.json",
+        "reports/client-upgrade-2026-09-07.md"
+      ]
+    },
+    {
+      "id": "monitor-local-io",
+      "status": "local-implementation-benchmark",
+      "model": null,
+      "efforts": [],
+      "scope": "50,000 usage records plus 20 appends",
+      "systems": [
+        "Full reread",
+        "Incremental reader"
+      ],
+      "files": [
+        "reports/client-upgrade-2026-09-07.md"
+      ]
+    }
+  ],
+  "report_files": [
+    {
+      "path": "reports/acceptance-audit.md",
+      "bytes": 4237,
+      "extension": ".md"
+    },
+    {
+      "path": "reports/additional-output-tools-comparison-2026-07-28.json",
+      "bytes": 1960,
+      "extension": ".json",
+      "schema": "codexzero-additional-tools-screen-v1",
+      "model": "gpt-5.6-sol",
+      "effort": "medium"
+    },
+    {
+      "path": "reports/additional-output-tools-comparison-2026-07-28.md",
+      "bytes": 1087,
+      "extension": ".md"
+    },
+    {
+      "path": "reports/additional-output-tools-screen-2026-07-28.json",
+      "bytes": 150850,
+      "extension": ".json",
+      "schema": "codexzero-five-way-benchmark-v1",
+      "model": "gpt-5.6-sol",
+      "effort": "medium"
+    },
+    {
+      "path": "reports/additional-output-tools-screen-2026-07-28.md",
+      "bytes": 4913,
+      "extension": ".md"
+    },
+    {
+      "path": "reports/archive/assets/benchmark-overview-mobile.svg",
+      "bytes": 5082,
+      "extension": ".svg"
+    },
+    {
+      "path": "reports/archive/assets/benchmark-overview.svg",
+      "bytes": 5606,
+      "extension": ".svg"
+    },
+    {
+      "path": "reports/archive/assets/controlled-workloads.svg",
+      "bytes": 4666,
+      "extension": ".svg"
+    },
+    {
+      "path": "reports/archive/assets/deepswe-high.svg",
+      "bytes": 4595,
+      "extension": ".svg"
+    },
+    {
+      "path": "reports/archive/assets/deepswe-pilot.svg",
+      "bytes": 2650,
+      "extension": ".svg"
+    },
+    {
+      "path": "reports/archive/assets/full-factorial.svg",
+      "bytes": 9144,
+      "extension": ".svg"
+    },
+    {
+      "path": "reports/archive/assets/terminal-bench-six-way.svg",
+      "bytes": 5291,
+      "extension": ".svg"
+    },
+    {
+      "path": "reports/archive/before-after.md",
+      "bytes": 2691,
+      "extension": ".md"
+    },
+    {
+      "path": "reports/archive/combination-benchmark.json",
+      "bytes": 78073,
+      "extension": ".json",
+      "schema": "codexzero-combination-benchmark-v1",
+      "model": "gpt-5.6-sol",
+      "effort": "low"
+    },
+    {
+      "path": "reports/archive/combination-benchmark.md",
+      "bytes": 4925,
+      "extension": ".md"
+    },
+    {
+      "path": "reports/archive/deepswe-pilot.json",
+      "bytes": 5452,
+      "extension": ".json",
+      "schema": "codexzero-deepswe-pilot-v1",
+      "model": "gpt-5.6-sol",
+      "effort": "medium"
+    },
+    {
+      "path": "reports/archive/deepswe-pilot.md",
+      "bytes": 2507,
+      "extension": ".md"
+    },
+    {
+      "path": "reports/archive/deepswe-sol-high-10/provenance.json",
+      "bytes": 5982,
+      "extension": ".json",
+      "schema": "codexzero-deepswe-provenance-v1"
+    },
+    {
+      "path": "reports/archive/deepswe-sol-high-10/README.md",
+      "bytes": 6378,
+      "extension": ".md"
+    },
+    {
+      "path": "reports/archive/deepswe-sol-high-10/summary.json",
+      "bytes": 50534,
+      "extension": ".json",
+      "schema": "codexzero-deepswe-five-way-analysis-v1",
+      "model": "gpt-5.6-sol",
+      "effort": "high"
+    },
+    {
+      "path": "reports/archive/deepswe-sol-high-10/task-metrics.csv",
+      "bytes": 41421,
+      "extension": ".csv"
+    },
+    {
+      "path": "reports/archive/deepswe-sol-high-paused/pause-manifest.json",
+      "bytes": 9921,
+      "extension": ".json",
+      "schema": "codexzero-deepswe-pause-manifest-v1"
+    },
+    {
+      "path": "reports/archive/deepswe-sol-high-paused/provenance.json",
+      "bytes": 5689,
+      "extension": ".json",
+      "schema": "codexzero-deepswe-provenance-v1"
+    },
+    {
+      "path": "reports/archive/deepswe-sol-high-paused/README.md",
+      "bytes": 3340,
+      "extension": ".md"
+    },
+    {
+      "path": "reports/archive/deepswe-sol-high-paused/summary.json",
+      "bytes": 27324,
+      "extension": ".json",
+      "schema": "codexzero-deepswe-five-way-analysis-v1",
+      "model": "gpt-5.6-sol",
+      "effort": "high"
+    },
+    {
+      "path": "reports/archive/deepswe-sol-high-paused/task-metrics.csv",
+      "bytes": 16285,
+      "extension": ".csv"
+    },
+    {
+      "path": "reports/archive/five-way-benchmark.json",
+      "bytes": 1065017,
+      "extension": ".json",
+      "schema": "codexzero-five-way-benchmark-v1",
+      "model": "gpt-5.6-sol",
+      "effort": "medium"
+    },
+    {
+      "path": "reports/archive/five-way-benchmark.md",
+      "bytes": 8886,
+      "extension": ".md"
+    },
+    {
+      "path": "reports/archive/fixture-payload-report.json",
+      "bytes": 4846,
+      "extension": ".json",
+      "schema": "codex-zero-fixture-payload-report-v1"
+    },
+    {
+      "path": "reports/archive/prompt-benchmark.json",
+      "bytes": 2354,
+      "extension": ".json",
+      "schema": "codex-zero-prompt-report-v1"
+    },
+    {
+      "path": "reports/archive/prompt-benchmark.md",
+      "bytes": 2328,
+      "extension": ".md"
+    },
+    {
+      "path": "reports/archive/README.md",
+      "bytes": 671,
+      "extension": ".md"
+    },
+    {
+      "path": "reports/archive/terminal-bench-2.1-mini/attempts.json",
+      "bytes": 235716,
+      "extension": ".json"
+    },
+    {
+      "path": "reports/archive/terminal-bench-2.1-mini/preregistration.json",
+      "bytes": 15236,
+      "extension": ".json",
+      "schema": "codexzero-terminal-bench-preregistration-v1"
+    },
+    {
+      "path": "reports/archive/terminal-bench-2.1-mini/PREREGISTRATION.sha256",
+      "bytes": 87,
+      "extension": ".sha256"
+    },
+    {
+      "path": "reports/archive/terminal-bench-2.1-mini/README.md",
+      "bytes": 8272,
+      "extension": ".md"
+    },
+    {
+      "path": "reports/archive/terminal-bench-2.1-mini/run-manifest.json",
+      "bytes": 5550,
+      "extension": ".json",
+      "schema": "codexzero-terminal-bench-run-manifest-v1"
+    },
+    {
+      "path": "reports/archive/terminal-bench-2.1-mini/summary.json",
+      "bytes": 77207,
+      "extension": ".json",
+      "schema": "codexzero-terminal-bench-summary-v1"
+    },
+    {
+      "path": "reports/archive/terminal-bench-2.1-mini/trials.json",
+      "bytes": 202743,
+      "extension": ".json"
+    },
+    {
+      "path": "reports/BENCHMARK_CATALOG.md",
+      "bytes": 14118,
+      "extension": ".md"
+    },
+    {
+      "path": "reports/client-upgrade-2026-09-07.md",
+      "bytes": 4090,
+      "extension": ".md"
+    },
+    {
+      "path": "reports/complete-comparison-2026-07-28.json",
+      "bytes": 949057,
+      "extension": ".json",
+      "schema": "codexzero-complete-comparison-v1"
+    },
+    {
+      "path": "reports/complete-comparison-2026-07-28.md",
+      "bytes": 15992,
+      "extension": ".md"
+    },
+    {
+      "path": "reports/fast-benchmark-2026-07-28.json",
+      "bytes": 352996,
+      "extension": ".json",
+      "schema": "codexzero-fast-benchmark-analysis-v1"
+    },
+    {
+      "path": "reports/fast-benchmark-2026-07-28.md",
+      "bytes": 8123,
+      "extension": ".md"
+    },
+    {
+      "path": "reports/quick-max-benchmark-2026-07-26.json",
+      "bytes": 2173,
+      "extension": ".json",
+      "schema": "codex-zero-quick-max-benchmark-v1",
+      "model": "gpt-5.6-sol",
+      "effort": "high"
+    },
+    {
+      "path": "reports/quick-max-benchmark-2026-07-26.md",
+      "bytes": 2725,
+      "extension": ".md"
+    },
+    {
+      "path": "reports/terminal-bench-2.1-replication/attempts.json",
+      "bytes": 571400,
+      "extension": ".json"
+    },
+    {
+      "path": "reports/terminal-bench-2.1-replication/index.html",
+      "bytes": 2960,
+      "extension": ".html"
+    },
+    {
+      "path": "reports/terminal-bench-2.1-replication/infrastructure-addendum.json",
+      "bytes": 19648,
+      "extension": ".json",
+      "schema": "codexzero-terminal-bench-infrastructure-addendum-v1"
+    },
+    {
+      "path": "reports/terminal-bench-2.1-replication/INFRASTRUCTURE_ADDENDUM.sha256",
+      "bytes": 95,
+      "extension": ".sha256"
+    },
+    {
+      "path": "reports/terminal-bench-2.1-replication/preregistration.json",
+      "bytes": 23196,
+      "extension": ".json",
+      "schema": "codexzero-terminal-bench-replication-preregistration-v1"
+    },
+    {
+      "path": "reports/terminal-bench-2.1-replication/PREREGISTRATION.sha256",
+      "bytes": 87,
+      "extension": ".sha256"
+    },
+    {
+      "path": "reports/terminal-bench-2.1-replication/README.md",
+      "bytes": 241,
+      "extension": ".md"
+    },
+    {
+      "path": "reports/terminal-bench-2.1-replication/run-manifest.json",
+      "bytes": 5384,
+      "extension": ".json",
+      "schema": "codexzero-terminal-bench-replication-run-manifest-v1"
+    },
+    {
+      "path": "reports/terminal-bench-2.1-replication/summary.json",
+      "bytes": 22230,
+      "extension": ".json",
+      "schema": "codexzero-terminal-bench-replication-summary-v1"
+    },
+    {
+      "path": "reports/terminal-bench-2.1-replication/trials.json",
+      "bytes": 344123,
+      "extension": ".json"
+    },
+    {
+      "path": "reports/terminal-bench-fast-comparison-2026-08-13.json",
+      "bytes": 5227,
+      "extension": ".json",
+      "schema": "codexzero-tb21-fast-comparison-v1"
+    },
+    {
+      "path": "reports/terminal-bench-fast-comparison-2026-08-13.md",
+      "bytes": 1196,
+      "extension": ".md"
+    },
+    {
+      "path": "reports/terminal-bench-metrics-audit-2026-08-13.json",
+      "bytes": 718571,
+      "extension": ".json",
+      "schema": "codexzero-terminal-bench-metrics-audit-v1"
+    },
+    {
+      "path": "reports/terminal-bench-metrics-audit-2026-08-13.md",
+      "bytes": 8877,
+      "extension": ".md"
+    },
+    {
+      "path": "reports/terminal-bench-metrics-sources-2026-08-13.json",
+      "bytes": 4833,
+      "extension": ".json",
+      "schema": "codexzero-terminal-bench-metrics-sources-v1"
+    },
+    {
+      "path": "reports/terminal-bench-total-comparison-2026-08-13.json",
+      "bytes": 5584,
+      "extension": ".json",
+      "schema": "codexzero-total-terminal-bench-v1"
+    }
+  ],
+  "private_artifact_roots": [
+    {
+      "path": "private-artifacts/additional-tools-screen-20260728",
+      "files": 169,
+      "bytes": 611416
+    },
+    {
+      "path": "private-artifacts/baseline-20260723-013000",
+      "files": 49,
+      "bytes": 738520
+    },
+    {
+      "path": "private-artifacts/benchmark-smoke-home",
+      "files": 202,
+      "bytes": 30871859
+    },
+    {
+      "path": "private-artifacts/combination-benchmark-20260724T190721Z",
+      "files": 161,
+      "bytes": 1822745
+    },
+    {
+      "path": "private-artifacts/combination-benchmark-20260724T192736Z",
+      "files": 219,
+      "bytes": 4271083
+    },
+    {
+      "path": "private-artifacts/fast-benchmark-20260728T013916Z",
+      "files": 31948,
+      "bytes": 9274789063
+    },
+    {
+      "path": "private-artifacts/five-way-benchmark-20260724T205536Z",
+      "files": 667,
+      "bytes": 5481675
+    },
+    {
+      "path": "private-artifacts/five-way-smoke",
+      "files": 57,
+      "bytes": 172084
+    },
+    {
+      "path": "private-artifacts/leanctx-benchmark",
+      "files": 2644,
+      "bytes": 168655315
+    },
+    {
+      "path": "private-artifacts/ponytail-benchmark",
+      "files": 9690,
+      "bytes": 1413655935
+    },
+    {
+      "path": "private-artifacts/release-v0.1.3",
+      "files": 21,
+      "bytes": 597123254
+    },
+    {
+      "path": "private-artifacts/release-v0.1.4",
+      "files": 3,
+      "bytes": 289
+    },
+    {
+      "path": "private-artifacts/rtk-isolation-smoke",
+      "files": 1,
+      "bytes": 2859
+    },
+    {
+      "path": "private-artifacts/rtk-isolation-smoke2",
+      "files": 2,
+      "bytes": 3581
+    },
+    {
+      "path": "private-artifacts/rtk-isolation-smoke3",
+      "files": 2,
+      "bytes": 26099
+    },
+    {
+      "path": "private-artifacts/squeez-benchmark",
+      "files": 238,
+      "bytes": 31074903
+    },
+    {
+      "path": "private-artifacts/tamp-benchmark",
+      "files": 15043,
+      "bytes": 2156277974
+    },
+    {
+      "path": "private-artifacts/terminal-bench-2.1-mini",
+      "files": 1,
+      "bytes": 276072
+    },
+    {
+      "path": "private-artifacts/terminal-bench-2.1-replication",
+      "files": 1,
+      "bytes": 691195
+    },
+    {
+      "path": "private-artifacts/tura-investigation",
+      "files": 19758,
+      "bytes": 1247241379
+    },
+    {
+      "path": "private-artifacts/upstream-codex-0.145.0-alpha.30",
+      "files": 9,
+      "bytes": 566045184
+    }
+  ],
+  "harnesses_and_analyzers": [
+    "tools/analyze-deepswe-five-way.py",
+    "tools/analyze-deepswe-pilot.py",
+    "tools/analyze-past-usage.py",
+    "tools/analyze-prompt-metadata.py",
+    "tools/analyze-terminal-bench-metrics.py",
+    "tools/analyze-terminal-bench-replication.py",
+    "tools/analyze-terminal-bench.py",
+    "tools/benchmark-client.mjs",
+    "tools/benchmark-combinations.py",
+    "tools/benchmark-five-way.py",
+    "tools/benchmark-five-way-max-savings-v1.py",
+    "tools/capture-codex-runs.mjs",
+    "tools/capture-deepswe-provenance.py",
+    "tools/capture-fixtures.mjs",
+    "tools/count-codex-run-tokens.py",
+    "tools/count-fixture-tokens.py",
+    "tools/evaluate-fixture-payloads.py",
+    "tools/generate-benchmark-charts.py",
+    "tools/harbor_tura_agent.py",
+    "tools/harbor_tura_fast_agent.py",
+    "tools/harbor_tura_profiles.py",
+    "tools/measure-prompt-savings.py",
+    "tools/merge-deepswe-checkpoints.py",
+    "tools/pause-deepswe-five-way.py",
+    "tools/prepare-tura-gap-campaign.py",
+    "tools/prepare-tura-gap-campaigns.py",
+    "tools/run-deepswe-five-way.py",
+    "tools/run-deepswe-five-way-v2.py",
+    "tools/run-terminal-bench-eight-way.py",
+    "tools/run-terminal-bench-profile.py",
+    "tools/supervise-terminal-bench-eight-way.sh",
+    "tools/test-deepswe-harness.py",
+    "tools/test_terminal_bench_eight_way.py"
+  ],
+  "presentation": {
+    "paths": [
+      "benchmark-site",
+      "README.md",
+      "index.html",
+      "PROJECT_REFERENCE.md",
+      "assets/benchmarks"
+    ],
+    "note": "Normalized or selected mirrors; not independent evidence sources."
+  }
+}

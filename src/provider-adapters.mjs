@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { applyProviderReasoning } from "./provider-reasoning.mjs";
 
 const BODY_LIMIT = 10 * 1024 * 1024;
 const PROVIDER_TIMEOUT_MS = 120_000;
@@ -272,7 +273,7 @@ function toChatRequest(body, provider, items, tools) {
       },
     }));
     request.tool_choice = toChatToolChoice(body.tool_choice, tools);
-  } else if (body.tool_choice && body.tool_choice !== "none") {
+  } else if (body.tool_choice && !["auto", "none"].includes(body.tool_choice)) {
     throw new RequestError("Tool choice requires tools");
   }
   return request;
@@ -358,7 +359,7 @@ function toAnthropicRequest(body, provider, items, tools) {
       input_schema: tool.parameters,
     }));
     request.tool_choice = toAnthropicToolChoice(body.tool_choice, tools);
-  } else if (body.tool_choice && body.tool_choice !== "none") {
+  } else if (body.tool_choice && !["auto", "none"].includes(body.tool_choice)) {
     throw new RequestError("Tool choice requires tools");
   }
   return request;
@@ -374,14 +375,64 @@ function toAnthropicToolChoice(choice, tools) {
   throw new RequestError("Unsupported tool choice");
 }
 
-function usage(inputTokens = 0, outputTokens = 0) {
+function tokenCount(value) {
+  if (value === undefined || value === null) return 0;
+  if (!Number.isSafeInteger(value) || value < 0) throw new Error("Invalid provider usage");
+  return value;
+}
+
+function tokenSum(...values) {
+  const total = values.reduce((sum, value) => sum + value, 0);
+  if (!Number.isSafeInteger(total)) throw new Error("Invalid provider usage");
+  return total;
+}
+
+function usage({
+  inputTokens = 0,
+  cachedTokens = 0,
+  cacheWriteTokens = 0,
+  outputTokens = 0,
+  reasoningTokens = 0,
+} = {}) {
+  inputTokens = tokenCount(inputTokens);
+  cachedTokens = tokenCount(cachedTokens);
+  cacheWriteTokens = tokenCount(cacheWriteTokens);
+  outputTokens = tokenCount(outputTokens);
+  reasoningTokens = tokenCount(reasoningTokens);
+  if (cachedTokens > inputTokens || cacheWriteTokens > inputTokens || reasoningTokens > outputTokens) {
+    throw new Error("Invalid provider usage");
+  }
   return {
     input_tokens: inputTokens,
-    input_tokens_details: { cached_tokens: 0 },
+    input_tokens_details: { cached_tokens: cachedTokens, cache_write_tokens: cacheWriteTokens },
     output_tokens: outputTokens,
-    output_tokens_details: { reasoning_tokens: 0 },
-    total_tokens: inputTokens + outputTokens,
+    output_tokens_details: { reasoning_tokens: reasoningTokens },
+    total_tokens: tokenSum(inputTokens, outputTokens),
   };
+}
+
+function chatUsage(providerUsage) {
+  const inputTokens = tokenCount(providerUsage?.prompt_tokens);
+  const cachedTokens = tokenCount(
+    providerUsage?.prompt_tokens_details?.cached_tokens ?? providerUsage?.cached_tokens,
+  );
+  const cacheWriteTokens = tokenCount(providerUsage?.prompt_tokens_details?.cache_write_tokens);
+  const outputTokens = tokenCount(providerUsage?.completion_tokens);
+  const reasoningTokens = tokenCount(providerUsage?.completion_tokens_details?.reasoning_tokens);
+  return usage({ inputTokens, cachedTokens, cacheWriteTokens, outputTokens, reasoningTokens });
+}
+
+function anthropicUsage(providerUsage) {
+  const uncachedInputTokens = tokenCount(providerUsage?.input_tokens);
+  const cachedTokens = tokenCount(providerUsage?.cache_read_input_tokens);
+  const cacheWriteTokens = tokenCount(providerUsage?.cache_creation_input_tokens);
+  const inputTokens = tokenSum(uncachedInputTokens, cachedTokens, cacheWriteTokens);
+  return usage({
+    inputTokens,
+    cachedTokens,
+    cacheWriteTokens,
+    outputTokens: tokenCount(providerUsage?.output_tokens),
+  });
 }
 
 function fromChat(response, tools) {
@@ -407,7 +458,7 @@ function fromChat(response, tools) {
   }
   return {
     outputs,
-    usage: usage(response.usage?.prompt_tokens || 0, response.usage?.completion_tokens || 0),
+    usage: chatUsage(response.usage),
     providerId: response.id,
   };
 }
@@ -430,7 +481,7 @@ function fromAnthropic(response, tools) {
   }
   return {
     outputs,
-    usage: usage(response.usage?.input_tokens || 0, response.usage?.output_tokens || 0),
+    usage: anthropicUsage(response.usage),
     providerId: response.id,
   };
 }
@@ -602,6 +653,7 @@ export async function serveProviderResponse(req, res, { provider, apiKey, fetchI
 
     if (provider.apiType === "responses") {
       const nativeBody = { ...body, model: provider.model, stream: true };
+      applyProviderReasoning(nativeBody, body, provider);
       delete nativeBody.metadata;
       delete nativeBody.client_metadata;
       delete nativeBody.user;
@@ -624,6 +676,7 @@ export async function serveProviderResponse(req, res, { provider, apiKey, fetchI
     const upstreamBody = provider.apiType === "chat"
       ? toChatRequest(body, provider, items, tools)
       : toAnthropicRequest(body, provider, items, tools);
+    applyProviderReasoning(upstreamBody, body, provider);
     const path = provider.apiType === "chat" ? "chat/completions" : "messages";
     const upstream = await providerFetch(fetchImpl, endpoint(provider.baseUrl, path), provider.apiType, apiKey, upstreamBody, controller.signal);
     if (!upstream.ok) throw new Error("Provider request failed");

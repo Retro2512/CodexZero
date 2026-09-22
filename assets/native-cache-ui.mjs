@@ -87,12 +87,13 @@ function emptySnapshot(error = null) {
     override: null,
     enabled: false,
     warmth: { state: "unknown", remainingMs: null, estimated: true },
-    cost: { usd: null, uncachedUsd: null, partial: false },
+    cost: { usd: null, uncachedUsd: null, partial: false, label: "" },
+    keepWarmSupported: true,
     error,
   };
 }
 
-function normalizeSnapshot(value) {
+export function normalizeSnapshot(value) {
   if (!value || typeof value !== "object") throw new Error("Invalid cache result");
   const warmth = value.warmth && typeof value.warmth === "object" ? value.warmth : {};
   const cost = value.cost && typeof value.cost === "object" ? value.cost : {};
@@ -113,7 +114,9 @@ function normalizeSnapshot(value) {
       usd: validMoney(cost.usd),
       uncachedUsd: validMoney(cost.uncachedUsd),
       partial: cost.partial === true,
+      label: typeof cost.label === "string" ? cost.label.trim().slice(0, 80) : "",
     },
+    keepWarmSupported: value.keepWarmSupported !== false,
     error: typeof value.error === "string" && value.error ? "Cache status unavailable" : null,
   };
 }
@@ -154,6 +157,12 @@ function cacheLabel(snapshot, remainingMs) {
   if (snapshot.warmth.state === "cooling") return "Cache · Cooling";
   if (snapshot.warmth.state === "cold") return "Cache · 0:00 left";
   return "Cache · Unconfirmed";
+}
+
+export function cacheCostLabels(cost) {
+  const label = cost.label || "API equivalent";
+  const displayed = cost.partial ? `${label} · partial` : label;
+  return { displayed, accessible: cost.label ? displayed : label };
 }
 
 function cacheTime(remainingMs) {
@@ -348,9 +357,10 @@ export function createCacheIndicator(React) {
     const open = !dismissed && (hovered || focusWithin || pinned);
     const costText = snapshot.loading ? "…" : money(snapshot.cost.usd);
     const partialTitle = snapshot.cost.partial ? "Partial estimate" : undefined;
+    const { displayed: displayedCostLabel, accessible: accessibleCostLabel } = cacheCostLabels(snapshot.cost);
     const accessibleLabel = countText
-      ? `Context ${percentText}, ${countText}. ${status}. API equivalent ${costText}`
-      : `Context ${percentText}. ${status}. API equivalent ${costText}`;
+      ? `Context ${percentText}, ${countText}. ${status}. ${accessibleCostLabel} ${costText}`
+      : `Context ${percentText}. ${status}. ${accessibleCostLabel} ${costText}`;
 
     useLayoutEffect(() => {
       if (!open) return undefined;
@@ -485,7 +495,7 @@ export function createCacheIndicator(React) {
       },
         h("p", { className: "czci-title" }, status),
         h("p", { className: "czci-context" }, `${percentText} used · ${100 - Math.round(context.percent)}% left`, countText ? h("br") : null, countText),
-        h("label", { className: "czci-toggle" },
+        snapshot.keepWarmSupported ? h("label", { className: "czci-toggle" },
           h("input", {
             type: "checkbox",
             checked: snapshot.enabled,
@@ -493,9 +503,9 @@ export function createCacheIndicator(React) {
             onChange: changeEnabled,
           }),
           h("span", null, "Keep warm"),
-        ),
+        ) : null,
         h("dl", { className: "czci-prices", title: partialTitle },
-          h("dt", null, snapshot.cost.partial ? "API equivalent · partial" : "API equivalent"),
+          h("dt", null, displayedCostLabel),
           h("dd", null, costText),
           h("dt", null, "Without cache"),
           h("dd", null, money(snapshot.cost.uncachedUsd)),

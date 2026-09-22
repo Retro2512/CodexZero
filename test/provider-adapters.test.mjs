@@ -54,6 +54,17 @@ function sseEvents(text) {
   });
 }
 
+async function normalizedUsage(apiType, providerResponse) {
+  const res = new FakeResponse();
+  await serveProviderResponse(request({ input: "hello" }), res, {
+    provider: { apiType, baseUrl: "https://gateway.test/v1", model: "test-model" },
+    apiKey: "test-key",
+    fetchImpl: async () => new Response(JSON.stringify(providerResponse), { status: 200 }),
+  });
+  assert.equal(res.statusCode, 200, res.text());
+  return sseEvents(res.text()).at(-1).response.usage;
+}
+
 test("chat adapter maps request text images tools and emits Responses SSE", async () => {
   let call;
   const fetchImpl = async (url, init) => {
@@ -184,6 +195,100 @@ test("Anthropic adapter maps system content tool history and custom calls", asyn
   assert.equal(events.at(-1).response.output[1].namespace, "computer");
 });
 
+test("chat usage preserves cache reads cache writes and reasoning without double counting", async () => {
+  const normalized = await normalizedUsage("chat", {
+    choices: [{ message: { role: "assistant", content: "done" } }],
+    usage: {
+      prompt_tokens: 100,
+      prompt_tokens_details: { cached_tokens: 40, cache_write_tokens: 30 },
+      completion_tokens: 25,
+      completion_tokens_details: { reasoning_tokens: 7 },
+      total_tokens: 999,
+    },
+  });
+
+  assert.deepEqual(normalized, {
+    input_tokens: 100,
+    input_tokens_details: { cached_tokens: 40, cache_write_tokens: 30 },
+    output_tokens: 25,
+    output_tokens_details: { reasoning_tokens: 7 },
+    total_tokens: 125,
+  });
+});
+
+test("chat usage supports DeepInfra top level cached token counts without inventing cache hits", async () => {
+  const legacy = await normalizedUsage("chat", {
+    choices: [{ message: { role: "assistant", content: "done" } }],
+    usage: { prompt_tokens: 80, cached_tokens: 20, completion_tokens: 5 },
+  });
+  assert.deepEqual(legacy.input_tokens_details, { cached_tokens: 20, cache_write_tokens: 0 });
+
+  const explicitZero = await normalizedUsage("chat", {
+    choices: [{ message: { role: "assistant", content: "done" } }],
+    usage: {
+      prompt_tokens: 80,
+      cached_tokens: 20,
+      prompt_tokens_details: { cached_tokens: 0 },
+      completion_tokens: 5,
+    },
+  });
+  assert.deepEqual(explicitZero.input_tokens_details, { cached_tokens: 0, cache_write_tokens: 0 });
+
+  const absent = await normalizedUsage("chat", {
+    choices: [{ message: { role: "assistant", content: "done" } }],
+  });
+  assert.deepEqual(absent, {
+    input_tokens: 0,
+    input_tokens_details: { cached_tokens: 0, cache_write_tokens: 0 },
+    output_tokens: 0,
+    output_tokens_details: { reasoning_tokens: 0 },
+    total_tokens: 0,
+  });
+});
+
+test("Anthropic usage adds uncached cache read and cache creation input exactly once", async () => {
+  const normalized = await normalizedUsage("anthropic", {
+    content: [{ type: "text", text: "done" }],
+    usage: {
+      input_tokens: 11,
+      cache_read_input_tokens: 50,
+      cache_creation_input_tokens: 30,
+      output_tokens: 7,
+    },
+  });
+
+  assert.deepEqual(normalized, {
+    input_tokens: 91,
+    input_tokens_details: { cached_tokens: 50, cache_write_tokens: 30 },
+    output_tokens: 7,
+    output_tokens_details: { reasoning_tokens: 0 },
+    total_tokens: 98,
+  });
+});
+
+test("provider usage rejects invalid token counts", async () => {
+  const cases = [
+    ["chat", { prompt_tokens: -1, completion_tokens: 0 }],
+    ["chat", { prompt_tokens: 4, prompt_tokens_details: { cached_tokens: 5 }, completion_tokens: 0 }],
+    ["chat", { prompt_tokens: 4, completion_tokens: 2, completion_tokens_details: { reasoning_tokens: 3 } }],
+    ["chat", { prompt_tokens: Number.MAX_SAFE_INTEGER + 1, completion_tokens: 0 }],
+    ["anthropic", { input_tokens: Number.MAX_SAFE_INTEGER, cache_read_input_tokens: 1, output_tokens: 0 }],
+  ];
+
+  for (const [apiType, providerUsage] of cases) {
+    const res = new FakeResponse();
+    await serveProviderResponse(request({ input: "hello" }), res, {
+      provider: { apiType, baseUrl: "https://gateway.test/v1", model: "test-model" },
+      apiKey: "test-key",
+      fetchImpl: async () => new Response(JSON.stringify(apiType === "chat"
+        ? { choices: [{ message: { role: "assistant", content: "done" } }], usage: providerUsage }
+        : { content: [{ type: "text", text: "done" }], usage: providerUsage }), { status: 200 }),
+    });
+    assert.equal(res.statusCode, 502);
+    assert.equal(JSON.parse(res.text()).error.code, "provider_error");
+  }
+});
+
 test("native Responses pass through uses only provider headers and removes metadata", async () => {
   let call;
   const source = "event: response.completed\ndata: {\"type\":\"response.completed\"}\n\n";
@@ -238,6 +343,47 @@ test("local providers may omit authentication", async () => {
   assert.equal(res.statusCode, 200);
   assert.match(res.text(), /response\.completed/);
 });
+
+for (const apiType of ["chat", "anthropic"]) {
+  test(`${apiType} accepts automatic tool choice when no tools are available`, async () => {
+    for (const tools of [undefined, [], [{ type: "namespace", name: "empty", tools: [] }]]) {
+      for (const tool_choice of [undefined, "auto", "none"]) {
+        let sent;
+        const res = new FakeResponse();
+        await serveProviderResponse(request({ input: "hello", tools, tool_choice }), res, {
+          provider: { apiType, baseUrl: "https://gateway.test/v1", model: "glm-test" },
+          apiKey: "test-key",
+          fetchImpl: async (_url, init) => {
+            sent = JSON.parse(init.body);
+            return new Response(JSON.stringify(apiType === "chat"
+              ? { choices: [{ message: { role: "assistant", content: "hello" } }] }
+              : { content: [{ type: "text", text: "hello" }] }), { status: 200 });
+          },
+        });
+        assert.equal(res.statusCode, 200, res.text());
+        assert.ok(sent);
+        assert.equal(Object.hasOwn(sent, "tools"), false);
+        assert.equal(Object.hasOwn(sent, "tool_choice"), false);
+        assert.equal(sseEvents(res.text()).at(-1).type, "response.completed");
+      }
+    }
+  });
+
+  test(`${apiType} still rejects forced tool use when no tools are available`, async () => {
+    for (const tool_choice of ["required", { type: "function", name: "missing" }, { type: "custom", name: "missing" }]) {
+      let fetched = false;
+      const res = new FakeResponse();
+      await serveProviderResponse(request({ input: "hello", tools: [], tool_choice }), res, {
+        provider: { apiType, baseUrl: "https://gateway.test/v1", model: "glm-test" },
+        apiKey: "test-key",
+        fetchImpl: async () => { fetched = true; },
+      });
+      assert.equal(fetched, false);
+      assert.equal(res.statusCode, 400);
+      assert.equal(JSON.parse(res.text()).error.message, "Tool choice requires tools");
+    }
+  });
+}
 
 test("unsupported input and tool types return explicit client errors without fetching", async () => {
   for (const body of [
