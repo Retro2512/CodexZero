@@ -175,3 +175,7 @@ On macOS, quit Codex completely before running `codex-zero desktop`.
 ## More
 
 [Architecture](docs/architecture.md) &nbsp;·&nbsp; [Measurement](docs/measurement.md) &nbsp;·&nbsp; [Custom models](docs/custom-models.md) &nbsp;·&nbsp; [Cache research](docs/cache-research.md) &nbsp;·&nbsp; [Contributing](CONTRIBUTING.md) &nbsp;·&nbsp; [Security](SECURITY.md) &nbsp;·&nbsp; [Uninstall](docs/rollback.md)
+
+<img src="assets/downloads/history.svg" alt="CodexZero total package download history" width="900">
+
+<br>
