@@ -9,6 +9,8 @@ export const DESKTOP_ASSETS = Object.freeze([
   "assets/model-pricing.mjs", "assets/codexzero.ico", "assets/codexzero.png",
   "bin/provider-core.mjs", "bin/local-provider-app.mjs",
   "scripts/build-codexzero-launcher.ps1", "scripts/build-provider-local.ps1",
+  "assets/native-provider-updater.cjs", "assets/native-provider-update-release.cjs",
+  "scripts/complete-desktop-update.ps1",
 ]);
 
 export async function verifyDesktopAssets(root) {
