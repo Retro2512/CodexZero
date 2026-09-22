@@ -12,14 +12,17 @@ if (Test-Path -LiteralPath $destination) {
 $desktopPackage = Get-AppxPackage OpenAI.Codex | Select-Object -First 1
 if (!$desktopPackage) { throw 'Codex Desktop was not found.' }
 $desktopBinary = Join-Path $desktopPackage.InstallLocation 'app\ChatGPT.exe'
-$node = (Get-Command node.exe -ErrorAction Stop).Source
+$node = if (Test-Path -LiteralPath (Join-Path $source 'runtime\node.exe')) {
+    Join-Path $source 'runtime\node.exe'
+} else { (Get-Command node.exe -ErrorAction Stop).Source }
 New-Item -ItemType Directory -Path $destination | Out-Null
 foreach ($folder in @('src', 'bin')) {
     Copy-Item -LiteralPath (Join-Path $source $folder) -Destination $destination -Recurse
 }
+Copy-Item -LiteralPath (Join-Path $source 'scripts') -Destination $destination -Recurse
 New-Item -ItemType Directory -Path (Join-Path $destination 'assets'), (Join-Path $destination 'runtime') | Out-Null
 Copy-Item -LiteralPath (Join-Path $source 'assets\provider-settings.html') -Destination (Join-Path $destination 'assets')
-foreach ($asset in @('native-provider-settings.mjs', 'native-cache-ui.mjs', 'model-pricing.mjs', 'native-provider-main.cjs', 'native-provider-preload.cjs', 'native-provider-identity.cjs', 'codexzero.png', 'codexzero.ico')) {
+foreach ($asset in @('native-provider-settings.mjs', 'native-cache-ui.mjs', 'model-pricing.mjs', 'native-provider-main.cjs', 'native-provider-preload.cjs', 'native-provider-identity.cjs', 'native-provider-updater.cjs', 'native-provider-update-release.cjs', 'codexzero.png', 'codexzero.ico')) {
     Copy-Item -LiteralPath (Join-Path $source "assets\$asset") -Destination (Join-Path $destination 'assets')
 }
 Copy-Item -LiteralPath (Join-Path $source 'package.json') -Destination $destination

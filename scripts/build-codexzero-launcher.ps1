@@ -117,6 +117,24 @@ internal static class CodexZeroLauncher
         {
             string executablePath = Process.GetCurrentProcess().MainModule.FileName;
             string root = Path.GetDirectoryName(executablePath);
+            string launchRoot = root;
+            string pointer = Path.Combine(root, "current-build.txt");
+            if (File.Exists(pointer))
+            {
+                string relative = File.ReadAllText(pointer).Trim();
+                string selected = Path.GetFullPath(Path.Combine(root, relative));
+                string updates = Path.GetFullPath(Path.Combine(root, "updates")) + Path.DirectorySeparatorChar;
+                if (Path.IsPathRooted(relative) || !selected.StartsWith(updates, StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidDataException("Invalid update location.");
+                string updatedLauncher = Path.Combine(selected, "CodexZero.exe");
+                if (!File.Exists(updatedLauncher)) throw new FileNotFoundException("The update could not be opened.");
+                ProcessStartInfo updateInfo = new ProcessStartInfo {
+                    FileName = updatedLauncher, WorkingDirectory = selected, UseShellExecute = false, CreateNoWindow = true
+                };
+                updateInfo.EnvironmentVariables["CODEX_ZERO_LAUNCH_ROOT"] = launchRoot;
+                Process.Start(updateInfo);
+                return 0;
+            }
             string desktopBinary = Path.GetFullPath(Path.Combine(root, DesktopRelative));
             string core = Path.GetFullPath(Path.Combine(root, CoreRelative));
             string launcher = Path.GetFullPath(Path.Combine(root, LauncherRelative));
@@ -144,6 +162,7 @@ internal static class CodexZeroLauncher
             startInfo.EnvironmentVariables["CODEX_APP_SERVER_FORCE_CLI"] = "1";
             startInfo.EnvironmentVariables["CODEX_ZERO_PROVIDER_CORE"] = core;
             startInfo.EnvironmentVariables["CODEX_ZERO_DESKTOP"] = "1";
+            startInfo.EnvironmentVariables["CODEX_ZERO_LAUNCH_ROOT"] = Environment.GetEnvironmentVariable("CODEX_ZERO_LAUNCH_ROOT") ?? launchRoot;
             startInfo.EnvironmentVariables["CODEX_ELECTRON_USER_DATA_PATH"] = appData;
             Process.Start(startInfo);
             return 0;
