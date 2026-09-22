@@ -142,21 +142,31 @@ try {
     }
 
     $deadline = [System.DateTime]::UtcNow.AddSeconds(120)
-    while ($true) {
-        $parent = Get-Process -Id $ParentProcessId -ErrorAction SilentlyContinue
-        if ($null -eq $parent) {
-            break
+    $parent = Get-Process -Id $ParentProcessId -ErrorAction SilentlyContinue
+    if ($null -ne $parent) {
+        try {
+            $runningStartTicks = $null
+            try {
+                $null = $parent.Handle
+                $runningStartTicks = $parent.StartTime.ToUniversalTime().Ticks
+            } catch {
+                # Windows PowerShell can return a process whose StartTime is
+                # already unavailable by the time this property is read.
+                # Missing identity is safe only when that process has exited.
+                if (-not $parent.HasExited) { throw }
+            }
+            if ($runningStartTicks -eq $parsedParentStartTicks) {
+                # Hold the same process handle instead of looking up the PID
+                # again on each poll. A reused PID cannot extend this wait.
+                while (-not $parent.WaitForExit(250)) {
+                    if ([System.DateTime]::UtcNow -ge $deadline) {
+                        throw [System.TimeoutException]::new('The parent process did not exit in time.')
+                    }
+                }
+            }
+        } finally {
+            $parent.Dispose()
         }
-
-        $runningStartTicks = $parent.StartTime.ToUniversalTime().Ticks
-        if ($runningStartTicks -ne $parsedParentStartTicks) {
-            break
-        }
-
-        if ([System.DateTime]::UtcNow -ge $deadline) {
-            throw [System.TimeoutException]::new('The parent process did not exit in time.')
-        }
-        Start-Sleep -Milliseconds 250
     }
     $parentHasExited = $true
 

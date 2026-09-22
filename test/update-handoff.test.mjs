@@ -88,13 +88,14 @@ async function waitForLine(stream) {
 }
 
 async function waitForFile(filePath) {
-  for (let attempt = 0; attempt < 40; attempt += 1) {
+  for (let attempt = 0; attempt < 200; attempt += 1) {
     try {
-      return await fs.readFile(filePath, "utf8");
+      const content = await fs.readFile(filePath, "utf8");
+      if (content) return content;
     } catch (error) {
       if (error.code !== "ENOENT") throw error;
-      await new Promise((resolve) => setTimeout(resolve, 50));
     }
+    await new Promise((resolve) => setTimeout(resolve, 50));
   }
   throw new Error(`Timed out waiting for ${filePath}`);
 }
@@ -166,11 +167,20 @@ test("failed launcher start restores the previous pointer", {
   );
 });
 
-test("desktop update waits for the exact parent before switching and starts the stable launcher", {
-  skip: process.platform !== "win32"
-}, async (t) => {
+async function successfulHandoff(t, exitDuringIdentityRead = false) {
   const fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "codexzero-update-success-"));
-  t.after(() => removeFixture(fixtureRoot));
+  let parent;
+  let updater;
+  t.after(async () => {
+    for (const child of [updater, parent]) {
+      if (child && child.exitCode === null && child.signalCode === null) {
+        const closed = new Promise(resolve => child.once("close", resolve));
+        child.kill();
+        await closed;
+      }
+    }
+    await removeFixture(fixtureRoot);
+  });
 
   const launchRoot = path.join(fixtureRoot, "launch");
   const buildRoot = path.join(launchRoot, "updates", "next");
@@ -180,40 +190,70 @@ test("desktop update waits for the exact parent before switching and starts the 
   await fs.writeFile(path.join(buildRoot, "local-build.json"), "{}");
   await fs.writeFile(path.join(launchRoot, "current-build.txt"), "updates\\previous");
 
-  const parent = spawn(
+  parent = spawn(
     "powershell.exe",
     [
       "-NoProfile",
       "-NonInteractive",
       "-Command",
-      "[Console]::Out.WriteLine((Get-Process -Id $PID).StartTime.ToUniversalTime().Ticks); [Console]::Out.Flush(); Start-Sleep -Milliseconds 1400"
+      "[Console]::Out.WriteLine((Get-Process -Id $PID).StartTime.ToUniversalTime().Ticks); [Console]::Out.Flush(); if ($env:CODEXZERO_EXIT_GATE) { while (!(Test-Path -LiteralPath $env:CODEXZERO_EXIT_GATE)) { Start-Sleep -Milliseconds 25 } } else { $null = [Console]::In.ReadLine() }"
     ],
-    { windowsHide: true, stdio: ["ignore", "pipe", "pipe"] }
+    { windowsHide: true, stdio: ["pipe", "pipe", "pipe"],
+      env: { ...process.env, CODEXZERO_EXIT_GATE: exitDuringIdentityRead ? path.join(fixtureRoot, "exit-parent") : "" } }
   );
-  t.after(() => {
-    if (parent.exitCode === null) parent.kill();
-  });
   const parentStartTicks = await waitForLine(parent.stdout);
 
-  const updater = spawn(
+  const args = updaterArguments(launchRoot, buildRoot, parent.pid, parentStartTicks);
+  let injected = source;
+  if (exitDuringIdentityRead) {
+    // Stop the real fixture process after Get-Process has returned its object,
+    // but before identity access. This reproduces the PS5.1 CI race without
+    // relying on a particular machine speed or sleep duration.
+    const anchor = "                $null = $parent.Handle";
+    assert.equal(source.split(anchor).length, 2);
+    injected = source.replace(anchor, `
+                [IO.File]::WriteAllText($env:CODEXZERO_EXIT_GATE, 'exit')
+                $raceDeadline = [DateTime]::UtcNow.AddSeconds(10)
+                while (Get-Process -Id $ParentProcessId -ErrorAction SilentlyContinue) {
+                    if ([DateTime]::UtcNow -gt $raceDeadline) { throw 'Fixture process did not exit' }
+                    Start-Sleep -Milliseconds 25
+                }
+${anchor}`);
+  } else {
+    const anchor = "                while (-not $parent.WaitForExit(250)) {";
+    assert.equal(source.split(anchor).length, 2);
+    injected = source.replace(anchor, `[IO.File]::WriteAllText($env:CODEXZERO_WAIT_GATE, 'waiting')\n${anchor}`);
+  }
+  const fixtureScript = path.join(fixtureRoot, "handoff-fixture.ps1");
+  await fs.writeFile(fixtureScript, injected);
+  args[args.indexOf("-File") + 1] = fixtureScript;
+
+  updater = spawn(
     "powershell.exe",
-    updaterArguments(launchRoot, buildRoot, parent.pid, parentStartTicks),
-    { windowsHide: true, stdio: ["ignore", "pipe", "pipe"] }
+    args,
+    { windowsHide: true, stdio: ["ignore", "pipe", "pipe"],
+      env: { ...process.env, CODEXZERO_EXIT_GATE: exitDuringIdentityRead ? path.join(fixtureRoot, "exit-parent") : "",
+        CODEXZERO_WAIT_GATE: path.join(fixtureRoot, "waiting-for-parent") } }
   );
   const output = [];
   updater.stdout.on("data", (chunk) => output.push(chunk));
   updater.stderr.on("data", (chunk) => output.push(chunk));
-
-  await new Promise((resolve) => setTimeout(resolve, 300));
-  assert.equal(
-    await fs.readFile(path.join(launchRoot, "current-build.txt"), "utf8"),
-    "updates\\previous"
-  );
-
-  const status = await new Promise((resolve, reject) => {
+  const completion = new Promise((resolve, reject) => {
     updater.on("error", reject);
     updater.on("close", resolve);
   });
+
+  if (!exitDuringIdentityRead) {
+    assert.equal(await waitForFile(path.join(fixtureRoot, "waiting-for-parent")), "waiting");
+    assert.equal(updater.exitCode, null);
+    assert.equal(
+      await fs.readFile(path.join(launchRoot, "current-build.txt"), "utf8"),
+      "updates\\previous"
+    );
+    parent.stdin.end("exit\n");
+  }
+
+  const status = await completion;
   assert.equal(status, 0, Buffer.concat(output).toString("utf8"));
   assert.equal(
     await fs.readFile(path.join(launchRoot, "current-build.txt"), "utf8"),
@@ -223,4 +263,12 @@ test("desktop update waits for the exact parent before switching and starts the 
     await waitForFile(path.join(launchRoot, "launcher-started.txt")),
     "started"
   );
-});
+}
+
+test("desktop update waits for the exact parent before switching and starts the stable launcher", {
+  skip: process.platform !== "win32", timeout: 30000
+}, t => successfulHandoff(t));
+
+test("desktop update survives the parent exiting between discovery and identity access", {
+  skip: process.platform !== "win32", timeout: 30000
+}, t => successfulHandoff(t, true));

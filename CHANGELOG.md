@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.3
+
+* Fixed an intermittent failure when restarting after a Windows update.
+
 ## 0.7.2
 
 * Added updates through the existing download icon in Windows Desktop, with installation and reopening after a click.
