@@ -19,6 +19,24 @@ jobs:
       - run: npm test
       - run: node bin/codex-zero.mjs savings --json
 
+  setup:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Compile Windows desktop setup
+        shell: pwsh
+        run: |
+          # Release builds install and uninstall setup. This catches script errors on every push.
+          New-Item -ItemType Directory -Path kit\runtime, kit\assets | Out-Null
+          Copy-Item -Recurse bin, src, config, prompts, scripts -Destination kit
+          Copy-Item package.json -Destination kit
+          Copy-Item assets\codexzero.* -Destination kit\assets
+          Copy-Item (Get-Command node).Source -Destination kit\runtime\node.exe
+          & kit\scripts\build-desktop-setup.ps1 -PackageRoot kit -OutputDirectory setup-output
+
   patch:
     strategy:
       matrix:
