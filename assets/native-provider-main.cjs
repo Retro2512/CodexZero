@@ -2,6 +2,8 @@
 const { app, ipcMain } = require("electron");
 const path = require("node:path");
 const { pathToFileURL } = require("node:url");
+// Windows builds keep CodexZero beside the app. macOS keeps it inside the bundle.
+const root = process.platform === "darwin" ? path.join(process.resourcesPath, "codexzero") : path.resolve(process.resourcesPath, "..", "..");
 
 // The local build uses exactly the existing trusted main renderer boundary.
 function trusted(event) {
@@ -13,7 +15,7 @@ function trusted(event) {
 }
 let service;
 function configService() {
-  return service ??= import(pathToFileURL(path.resolve(process.resourcesPath, "..", "..", "src", "provider-config-service.mjs")).href);
+  return service ??= import(pathToFileURL(path.join(root, "src", "provider-config-service.mjs")).href);
 }
 ipcMain.handle("codexzero:providers:read", async event => {
   if (!trusted(event)) throw new Error("Provider settings are unavailable here");
@@ -29,7 +31,7 @@ ipcMain.handle("codexzero:providers:save", async (event, document) => {
 
 let cacheService;
 function cache() {
-  return cacheService ??= import(pathToFileURL(path.resolve(process.resourcesPath, "..", "..", "src", "cache-service.mjs")).href);
+  return cacheService ??= import(pathToFileURL(path.join(root, "src", "cache-service.mjs")).href);
 }
 for (const [operation, method] of Object.entries({ read: "readCacheSnapshot", settings: "saveCacheSettings", enabled: "setCacheEnabled", activity: "cacheActivity" })) {
   ipcMain.handle(`codexzero:cache:${operation}`, async (event, ...args) => {

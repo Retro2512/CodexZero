@@ -168,6 +168,18 @@ jobs:
           test "$("$CODEX_HOME/bin/codex-zero" mode)" = "safe"
           "$CODEX_HOME/bin/codex-zero" monitor --stop
           package/runtime/node package/scripts/verify-desktop-assets.mjs "$CODEX_HOME/codexzero/app"
+      - name: Verify macOS app install, upgrade and launch
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          apps="$RUNNER_TEMP/Applications"
+          # The first run downloads the official desktop. The second reuses it.
+          for run in 1 2; do
+            sh package/scripts/install-desktop-macos.sh "$PWD/package" --applications "$apps" --no-open --skip-installed
+          done
+          test "$(find "$apps" -maxdepth 1 -name '*.app' | wc -l | tr -d ' ')" = 1
+          ls "$HOME/Library/Caches/CodexZero/desktop/"*.zip
+          package/runtime/node package/scripts/verify-desktop-macos.mjs "$apps/CodexZero.app"
       - name: Build Windows desktop setup
         if: runner.os == 'Windows'
         shell: pwsh

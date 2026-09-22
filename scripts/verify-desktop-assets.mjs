@@ -15,6 +15,8 @@ export const DESKTOP_ASSETS = Object.freeze([
   "scripts/resolve-desktop.ps1", "scripts/desktop-upstream.json", "scripts/build-desktop-setup.ps1",
   "scripts/windows-desktop.iss", "scripts/verify-complete-desktop.mjs",
   "src/desktop-profile.mjs",
+  "assets/native-provider-environment.cjs", "bin/desktop-macos.mjs", "src/desktop-macos.mjs",
+  "scripts/install-desktop-macos.sh", "scripts/complete-desktop-update-macos.sh", "scripts/desktop-upstream-macos.json",
 ]);
 
 export async function verifyDesktopAssets(root) {
