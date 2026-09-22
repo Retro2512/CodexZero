@@ -108,7 +108,7 @@ try {
   if ($zip.Entries.Count -gt 100000) { throw 'Invalid update archive' }
   foreach ($entry in $zip.Entries) {
     $total += $entry.Length
-    if ($total -gt 4GB) { throw 'Update archive is too large' }
+    if ($total -gt 8GB) { throw 'Update archive is too large' }
     $target = [IO.Path]::GetFullPath([IO.Path]::Combine($Package, $entry.FullName))
     if (!$target.StartsWith($prefix, [StringComparison]::OrdinalIgnoreCase) -or $entry.FullName.Contains(':')) { throw 'Invalid update archive' }
   }
@@ -116,8 +116,16 @@ try {
 Expand-Archive -LiteralPath $Archive -DestinationPath $Package
 $metadata = Get-Content -Raw -LiteralPath (Join-Path $Package 'package.json') | ConvertFrom-Json
 if ($metadata.version -ne $Version) { throw 'Update version mismatch' }
-& (Join-Path $Package 'scripts\\build-provider-local.ps1') -OutputDirectory $Build
-if ($LASTEXITCODE -ne 0) { throw 'Update build failed' }
+if (Test-Path -LiteralPath (Join-Path $Package 'CodexZero.exe')) {
+  foreach ($file in @('local-build.json', 'desktop\\ChatGPT.exe', 'runtime\\node.exe', 'provider-runtime\\codex-custom-models.exe')) {
+    if (!(Test-Path -LiteralPath (Join-Path $Package $file) -PathType Leaf)) { throw 'Incomplete desktop update' }
+  }
+  New-Item -ItemType Directory -Path $Build | Out-Null
+  Get-ChildItem -LiteralPath $Package -Force | Copy-Item -Destination $Build -Recurse
+} else {
+  & (Join-Path $Package 'scripts\\build-provider-local.ps1') -OutputDirectory $Build
+  if ($LASTEXITCODE -ne 0) { throw 'Update build failed' }
+}
 if (!(Test-Path -LiteralPath (Join-Path $Build 'CodexZero.exe'))) { throw 'Update launcher missing' }
 `, "utf8");
   await runner(powershell, ["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", helper,

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.0
+
+* Added a complete Windows desktop download and setup executable.
+* Added automatic startup and Desktop and Start menu shortcuts after installation.
+* Kept existing Codex chats, skills and settings available without an import step.
+* Made desktop updates independent of an installed original Codex app.
+
 ## 0.7.3
 
 * Fixed an intermittent failure when restarting after a Windows update.

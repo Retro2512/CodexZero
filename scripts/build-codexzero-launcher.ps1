@@ -164,6 +164,23 @@ internal static class CodexZeroLauncher
             startInfo.EnvironmentVariables["CODEX_ZERO_DESKTOP"] = "1";
             startInfo.EnvironmentVariables["CODEX_ZERO_LAUNCH_ROOT"] = Environment.GetEnvironmentVariable("CODEX_ZERO_LAUNCH_ROOT") ?? launchRoot;
             startInfo.EnvironmentVariables["CODEX_ELECTRON_USER_DATA_PATH"] = appData;
+            // Match desktopProfileEnvironment: reuse the original Codex home,
+            // including its account, task index, skills, and desktop settings.
+            // Chromium keeps its separate profile; never copy its live databases.
+            string codexHome = Environment.GetEnvironmentVariable("CODEX_HOME");
+            if (String.IsNullOrEmpty(codexHome))
+                codexHome = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".codex");
+            startInfo.EnvironmentVariables["CODEX_HOME"] = codexHome;
+            string zeroHome = Environment.GetEnvironmentVariable("CODEX_ZERO_HOME");
+            if (String.IsNullOrEmpty(zeroHome)) zeroHome = Path.Combine(codexHome, "codexzero");
+            string optimizedSqlite = Environment.GetEnvironmentVariable("CODEX_ZERO_SQLITE_HOME");
+            if (String.IsNullOrEmpty(optimizedSqlite)) optimizedSqlite = Path.Combine(zeroHome, "sqlite");
+            string inheritedSqlite = Environment.GetEnvironmentVariable("CODEX_SQLITE_HOME");
+            if (!String.IsNullOrEmpty(inheritedSqlite) && String.Equals(
+                Path.GetFullPath(inheritedSqlite).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
+                Path.GetFullPath(optimizedSqlite).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
+                StringComparison.OrdinalIgnoreCase))
+                startInfo.EnvironmentVariables.Remove("CODEX_SQLITE_HOME");
             Process.Start(startInfo);
             return 0;
         }

@@ -2,11 +2,17 @@
 param(
     [string]$PackageRoot = (Split-Path -Parent $PSScriptRoot),
     [switch]$SkipMonitor,
+    [switch]$CliOnly,
+    [switch]$NoLaunch,
     [ValidateSet('ask', 'safe', 'standard', 'max-save', 'focused', 'command-output', 'full-lean')]
     [string]$Mode = 'ask'
 )
 
 $ErrorActionPreference = 'Stop'
+if (!$CliOnly -and (Test-Path -LiteralPath (Join-Path $PackageRoot 'CodexZero.exe'))) {
+    & (Join-Path $PSScriptRoot 'install-desktop.ps1') -PackageRoot $PackageRoot -NoLaunch:$NoLaunch
+    return
+}
 if ($Mode -eq 'command-output') { $Mode = 'safe' }
 if ($Mode -eq 'full-lean') { $Mode = 'max-save' }
 if ($Mode -eq 'ask') {

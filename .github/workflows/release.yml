@@ -6,11 +6,17 @@ on:
       version:
         description: CodexZero release version
         required: true
-        default: 0.7.3
+        default: 0.8.0
       reuse_core_release:
         description: Reuse cores only when patches and runtime config match this release; leave blank to rebuild
         required: false
         default: ''
+      desktop_url:
+        description: Pinned official Windows desktop MSIX URL matching the GUI patches
+        required: true
+      desktop_sha256:
+        description: SHA256 of the pinned Windows desktop MSIX
+        required: true
 
 permissions:
   contents: write
@@ -109,7 +115,8 @@ jobs:
         shell: bash
         run: |
           if [ -n "${{ inputs.reuse_core_release }}" ]; then
-            cp -R base package
+            mkdir package
+            cp -R base/dist base/runtime package/
           else
             mkdir -p "package/dist/${{ matrix.asset }}"
             if [ "${{ runner.os }}" = "Windows" ]; then
@@ -142,10 +149,10 @@ jobs:
         shell: pwsh
         run: |
           $env:CODEX_HOME = Join-Path $env:RUNNER_TEMP 'codexzero-home'
-          & package\scripts\install.ps1 -PackageRoot package -Mode standard
-          & package\scripts\install.ps1 -PackageRoot package -Mode focused
-          & package\scripts\install.ps1 -PackageRoot package -Mode max-save
-          & package\scripts\install.ps1 -PackageRoot package -Mode safe
+          & package\scripts\install.ps1 -PackageRoot package -Mode standard -CliOnly
+          & package\scripts\install.ps1 -PackageRoot package -Mode focused -CliOnly
+          & package\scripts\install.ps1 -PackageRoot package -Mode max-save -CliOnly
+          & package\scripts\install.ps1 -PackageRoot package -Mode safe -CliOnly
           $mode = (& "$env:CODEX_HOME\bin\codex-zero.cmd" mode).Trim()
           if ($mode -ne 'safe') { throw "Expected safe mode, got $mode" }
           & "$env:CODEX_HOME\bin\codex-zero.cmd" monitor --stop
@@ -163,10 +170,53 @@ jobs:
           test "$("$CODEX_HOME/bin/codex-zero" mode)" = "safe"
           "$CODEX_HOME/bin/codex-zero" monitor --stop
           package/runtime/node package/scripts/verify-desktop-assets.mjs "$CODEX_HOME/codexzero/app"
+      - name: Build complete Windows desktop
+        if: runner.os == 'Windows'
+        shell: pwsh
+        env:
+          DESKTOP_URL: ${{ inputs.desktop_url }}
+          DESKTOP_SHA256: ${{ inputs.desktop_sha256 }}
+        run: |
+          & package\scripts\build-desktop-release.ps1 -PackageRoot package -OutputDirectory desktop-package -UpstreamUrl $env:DESKTOP_URL -UpstreamSha256 $env:DESKTOP_SHA256
+          if ($LASTEXITCODE -ne 0) { throw 'Desktop build failed' }
+          $workspace = (Resolve-Path -LiteralPath '.').Path.TrimEnd('\') + '\'
+          $original = [IO.Path]::GetFullPath((Join-Path $workspace 'desktop-package'))
+          $relocated = [IO.Path]::GetFullPath((Join-Path $workspace 'desktop-relocated'))
+          foreach ($directory in @($original, $relocated)) {
+            if (!$directory.StartsWith($workspace, [StringComparison]::OrdinalIgnoreCase)) { throw 'Invalid desktop staging path' }
+          }
+          Move-Item -LiteralPath $original -Destination $relocated
+          & desktop-relocated\runtime\node.exe desktop-relocated\scripts\verify-complete-desktop.mjs desktop-relocated
+          if ($LASTEXITCODE -ne 0) { throw 'Relocated desktop failed verification' }
+          Move-Item -LiteralPath $relocated -Destination $original
+          & desktop-package\scripts\build-desktop-setup.ps1 -PackageRoot desktop-package -OutputDirectory .
+          if ($LASTEXITCODE -ne 0) { throw 'Desktop setup build failed' }
+      - name: Verify desktop setup and uninstall
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $target = Join-Path $env:RUNNER_TEMP 'CodexZero Desktop Test'
+          $setup = Start-Process -FilePath (Resolve-Path 'CodexZero-Setup-windows-x64.exe') -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/NOLAUNCH', "/DIR=`"$target`"" -Wait -PassThru -WindowStyle Hidden
+          if ($setup.ExitCode -ne 0) { throw 'Desktop setup failed' }
+          & "$target\runtime\node.exe" "$target\scripts\verify-complete-desktop.mjs" $target
+          if ($LASTEXITCODE -ne 0) { throw 'Installed desktop failed verification' }
+          $uninstall = Start-Process -FilePath "$target\unins000.exe" -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART' -Wait -PassThru -WindowStyle Hidden
+          if ($uninstall.ExitCode -ne 0) { throw 'Desktop uninstall failed' }
+          if (Test-Path -LiteralPath "$target\CodexZero.exe") { throw 'Desktop uninstall left the application installed' }
       - name: Archive Windows package
         if: runner.os == 'Windows'
         shell: pwsh
-        run: Compress-Archive -Path package\* -DestinationPath "codex-zero-${{ matrix.asset }}.zip"
+        run: |
+          Compress-Archive -Path package\* -DestinationPath "codex-zero-${{ matrix.asset }}.zip"
+          Compress-Archive -Path desktop-package\* -DestinationPath 'codex-zero-desktop-windows-x64.zip'
+      - name: Checksum Windows setup
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          foreach ($name in @('CodexZero-Setup-windows-x64.exe', 'codex-zero-desktop-windows-x64.zip')) {
+            $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $name).Hash.ToLowerInvariant()
+            [IO.File]::WriteAllText("$name.sha256", "$hash  $name`n")
+          }
       - name: Archive Unix package
         if: runner.os != 'Windows'
         shell: bash
@@ -185,6 +235,8 @@ jobs:
           name: codex-zero-${{ matrix.asset }}
           path: |
             codex-zero-${{ matrix.asset }}.*
+            CodexZero-Setup-windows-x64.exe*
+            codex-zero-desktop-windows-x64.zip*
 
   publish:
     needs: core

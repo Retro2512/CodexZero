@@ -33,7 +33,13 @@ Every selector also has an internal stock-payload fallback.
 
 ## Uninstall
 
-Windows:
+Windows desktop: uninstall CodexZero from Windows Settings. For an installation made with the ZIP script, run:
+
+```powershell
+& "$env:LOCALAPPDATA\Programs\CodexZero\uninstall-desktop.ps1"
+```
+
+Windows CLI:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File "$HOME\.codex\codexzero\app\scripts\uninstall.ps1"
@@ -45,4 +51,4 @@ macOS:
 sh "$HOME/.codex/codexzero/app/scripts/uninstall.sh"
 ```
 
-Installers create a timestamped backup under `~/.codex/backups/`. Uninstall removes CodexZero files and its separate profile. It does not remove stock Codex.
+CLI installers create a timestamped backup under `~/.codex/backups/`. Desktop uninstall keeps your Codex data and browser profile. It does not remove stock Codex.

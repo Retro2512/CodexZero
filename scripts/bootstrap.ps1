@@ -8,6 +8,24 @@ $ErrorActionPreference = 'Stop'
 $repo = 'Retro2512/CodexZero'
 $release = Invoke-RestMethod -Headers @{ 'User-Agent' = 'CodexZero installer' } `
     -Uri "https://api.github.com/repos/$repo/releases/latest"
+$setup = $release.assets | Where-Object { $_.name -eq 'CodexZero-Setup-windows-x64.exe' } | Select-Object -First 1
+if ($setup) {
+    $checksum = $release.assets | Where-Object { $_.name -eq 'CodexZero-Setup-windows-x64.exe.sha256' } | Select-Object -First 1
+    if (!$checksum) { throw 'The desktop installer checksum is missing.' }
+    $temp = Join-Path ([IO.Path]::GetTempPath()) "codex-zero-$([guid]::NewGuid())"
+    New-Item -ItemType Directory -Path $temp | Out-Null
+    $installer = Join-Path $temp 'CodexZero-Setup-windows-x64.exe'
+    Invoke-WebRequest -Uri $setup.browser_download_url -OutFile $installer
+    $checksumPath = Join-Path $temp 'setup.sha256'
+    Invoke-WebRequest -Uri $checksum.browser_download_url -OutFile $checksumPath
+    $expected = ((Get-Content -Raw -LiteralPath $checksumPath).Trim() -split '\s+')[0]
+    if ($expected -notmatch '^[a-fA-F0-9]{64}$' -or (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash -ne $expected) {
+        throw 'CodexZero installer checksum verification failed.'
+    }
+    $process = Start-Process -FilePath $installer -ArgumentList '/SP-', '/SILENT' -Wait -PassThru -WindowStyle Hidden
+    if ($process.ExitCode -ne 0) { throw "CodexZero installation failed ($($process.ExitCode))." }
+    return
+}
 $asset = $release.assets | Where-Object { $_.name -eq 'codex-zero-windows-x64.zip' } | Select-Object -First 1
 if (-not $asset) { throw 'The latest release has no Windows x64 package.' }
 $checksumAsset = $release.assets | Where-Object { $_.name -eq 'codex-zero-windows-x64.zip.sha256' } | Select-Object -First 1

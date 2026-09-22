@@ -1,4 +1,4 @@
-param([string]$OutputDirectory)
+param([string]$OutputDirectory, [string]$DesktopBinary)
 
 $ErrorActionPreference = 'Stop'
 $source = Split-Path -Parent $PSScriptRoot
@@ -9,15 +9,23 @@ $destination = [System.IO.Path]::GetFullPath($OutputDirectory)
 if (Test-Path -LiteralPath $destination) {
     throw "Build destination already exists. Choose a new directory."
 }
-$desktopPackage = Get-AppxPackage OpenAI.Codex | Select-Object -First 1
-if (!$desktopPackage) { throw 'Codex Desktop was not found.' }
-$desktopBinary = Join-Path $desktopPackage.InstallLocation 'app\ChatGPT.exe'
+if (!$DesktopBinary) {
+    $desktopPackage = Get-AppxPackage OpenAI.Codex | Select-Object -First 1
+    if (!$desktopPackage) { throw 'Codex Desktop was not found.' }
+    $DesktopBinary = Join-Path $desktopPackage.InstallLocation 'app\ChatGPT.exe'
+}
+$DesktopBinary = (Resolve-Path -LiteralPath $DesktopBinary).Path
 $node = if (Test-Path -LiteralPath (Join-Path $source 'runtime\node.exe')) {
     Join-Path $source 'runtime\node.exe'
 } else { (Get-Command node.exe -ErrorAction Stop).Source }
 New-Item -ItemType Directory -Path $destination | Out-Null
 foreach ($folder in @('src', 'bin')) {
     Copy-Item -LiteralPath (Join-Path $source $folder) -Destination $destination -Recurse
+}
+foreach ($folder in @('config', 'prompts', 'dist')) {
+    if (Test-Path -LiteralPath (Join-Path $source $folder)) {
+        Copy-Item -LiteralPath (Join-Path $source $folder) -Destination $destination -Recurse
+    }
 }
 Copy-Item -LiteralPath (Join-Path $source 'scripts') -Destination $destination -Recurse
 New-Item -ItemType Directory -Path (Join-Path $destination 'assets'), (Join-Path $destination 'runtime') | Out-Null
@@ -51,6 +59,14 @@ $builderPath = Join-Path $destination 'build-local.mjs'
 & (Join-Path $destination 'runtime\node.exe') $builderPath $destination $desktopBinary
 if ($LASTEXITCODE -ne 0) { throw 'Local runtime build failed.' }
 & (Join-Path $PSScriptRoot 'build-codexzero-launcher.ps1') -BuildRoot $destination
+if ($LASTEXITCODE -ne 0) { throw 'Desktop launcher build failed.' }
+# The compiled launchers already use relative paths. Keep distribution metadata
+# portable too, without embedding a maintainer's installed application location.
+$manifestPath = Join-Path $destination 'local-build.json'
+$manifest = Get-Content -Raw -LiteralPath $manifestPath | ConvertFrom-Json
+$manifest.desktopBinary = 'desktop\' + [IO.Path]::GetFileName($DesktopBinary)
+$manifest.PSObject.Properties.Remove('installedDesktop')
+$manifest | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $manifestPath -Encoding UTF8
 foreach ($item in @(
     @{ Name = 'Start Codex.cmd'; Mode = 'desktop' }
 )) {

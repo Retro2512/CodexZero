@@ -6,7 +6,7 @@ const require = createRequire(import.meta.url);
 const { CodexZeroUpdater } = require("../assets/native-provider-updater.cjs");
 const release = {
   tag_name: "v0.8.0", draft: false, prerelease: false,
-  assets: ["codex-zero-windows-x64.zip", "codex-zero-windows-x64.zip.sha256"].map(name => ({
+  assets: ["codex-zero-desktop-windows-x64.zip", "codex-zero-desktop-windows-x64.zip.sha256"].map(name => ({
     name, browser_download_url: `https://github.com/Retro2512/CodexZero/releases/download/v0.8.0/${name}`
   }))
 };
