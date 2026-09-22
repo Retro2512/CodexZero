@@ -13,7 +13,8 @@ The build prints its folder under `work/local-providers`.
 3. Add Claude, Z.ai coding, or a custom model. Enter the exact model ID and API key, then save.
 
 All configuration is inside Codex Settings. Each entry supports a name, API type,
-base URL, model ID, API key, environment variable, output token limit, and enabled state.
+base URL, model ID, API key, environment variable, context and output token limits,
+reasoning controls, token prices, and enabled state.
 Add one entry per model. Windows encrypts saved keys with DPAPI for your account.
 
 Restart the local build after changing the provider list to refresh the model picker.
@@ -55,7 +56,8 @@ This connects provider APIs; it does not import Claude Code login or subscriptio
 Chat Completions and Anthropic requests collect the provider response before
 emitting Codex response events. Text, images, function tools, custom tools, and
 namespaced tools are supported. Hosted web search is disabled for custom tasks.
-Unsupported payload types return an error. Custom tasks use a 32000 token context budget.
+Unsupported payload types return an error. Custom tasks default to a 32000 token
+context budget. Set a context limit for each model in Custom models settings.
 
 ## Verification
 

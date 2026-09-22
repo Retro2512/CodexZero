@@ -17,9 +17,9 @@ export function normalizeUsage(value) {
   return Object.values(usage).every(n => Number.isSafeInteger(n) && n >= 0) ? usage : null;
 }
 
-export function priceUsage(model, value, tier = "default") {
+export function priceUsage(model, value, tier = "default", providerPrices = {}) {
   const usage = normalizeUsage(value);
-  const price = MODEL_PRICING[model];
+  const price = providerPrices[model] ?? MODEL_PRICING[model];
   if (!usage || !price || !["default", "auto", "priority", "fast", null, undefined].includes(tier)) return null;
   const rate = tier === "priority" || tier === "fast" ? price.priority : price;
   if (!rate) return null;
@@ -32,7 +32,8 @@ export function priceUsage(model, value, tier = "default") {
   const input = ((usage.input - usage.read - write) * rate.input + usage.read * rate.read + write * (rate.write ?? 0)) * inMultiplier;
   const output = usage.output * rate.output * outMultiplier;
   // Reasoning tokens are already included in output, never charged a second time.
-  return { usd: (input + output) / 1e6, uncachedUsd: (usage.input * rate.input * inMultiplier + output) / 1e6 };
+  return { usd: (input + output) / 1e6, uncachedUsd: (usage.input * rate.input * inMultiplier + output) / 1e6,
+    ...(price.label ? { label: price.label } : {}) };
 }
 
 export function cacheWindowMs(model) {
@@ -65,7 +66,8 @@ export function shouldKeepWarm(snapshot, settings, now = Date.now()) {
 
 /** Aggregate only usage records. Never retain message bodies, instructions or tools. */
 export class ConversationAccounting {
-  constructor(id) {
+  constructor(id, providerPrices = {}) {
+    this.providerPrices = providerPrices;
     this.snapshot = { id, cacheSchemaVersion: 2, model: null, lastCacheAt: null, lastUserAt: null, invalidated: false,
       lastObservedAt: null, firstRequestAt: null, lastRequestAt: null,
       cost: { usd: 0, uncachedUsd: 0, partial: false }, requests: 0, pricedRequests: 0 };
@@ -123,9 +125,12 @@ export class ConversationAccounting {
     if (!exact) state.cost.partial = true;
     if (!exact && previous) return;
     if (!last.input && !last.output) return;
-    const cost = priceUsage(state.model, p.info.last_token_usage, this.tier);
+    const cost = priceUsage(state.model, p.info.last_token_usage, this.tier, this.providerPrices);
+    if (at < (this.providerPrices[state.model]?.cacheUsageSince ?? 0)) state.cost.partial = true;
     state.requests++;
     if (cost) {
+      if (cost.label || state.cost.label) state.cost.label = state.pricedRequests === 0 ? cost.label :
+        state.cost.label === cost.label ? cost.label : "API estimate";
       state.pricedRequests++;
       state.cost.usd += cost.usd;
       state.cost.uncachedUsd += cost.uncachedUsd;
@@ -137,6 +142,11 @@ export class ConversationAccounting {
 export class CacheRolloutReader {
   constructor(id, file) { this.id = id; this.file = file; this._turnHints = {}; this.reset(); }
   get turnHints() { return this._turnHints; }
+  set providerPrices(value) {
+    if (JSON.stringify(value) === JSON.stringify(this._providerPrices)) return;
+    this._providerPrices = value;
+    this.reset();
+  }
   set turnHints(value) {
     const next = value && typeof value === "object" ? value : {};
     const keys = new Set([...Object.keys(this._turnHints ?? {}), ...Object.keys(next)]);
@@ -150,7 +160,7 @@ export class CacheRolloutReader {
     this.pending = Buffer.alloc(0);
     this.skipping = false;
     this.seenTurnIds = new Set();
-    this.accounting = new ConversationAccounting(this.id);
+    this.accounting = new ConversationAccounting(this.id, this._providerPrices);
   }
   async read() {
     const handle = await fs.open(this.file, "r");

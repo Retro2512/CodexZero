@@ -37,8 +37,8 @@ test("real Codex core can select a custom model and complete a tool round trip",
   let toolName;
   const mock = http.createServer(async (req, res) => {
     if (req.method !== "POST") { res.writeHead(404); res.end(); return; }
-    let body = ""; for await (const chunk of req) body += chunk;
-    const payload = JSON.parse(body);
+    const chunks = []; for await (const chunk of req) chunks.push(chunk);
+    const payload = JSON.parse(Buffer.concat(chunks).toString("utf8"));
     requests.push({ url: req.url, body: payload, auth: req.headers.authorization });
     if (req.url === "/v1/responses") {
       const item = { type: "message", id: "msg_stock", role: "assistant", status: "completed", content: [{ type: "output_text", text: "STOCK_ROUTE_OK", annotations: [] }] };
@@ -60,12 +60,17 @@ test("real Codex core can select a custom model and complete a tool round trip",
         function: { name: toolName, arguments: JSON.stringify(toolName === "shell_command" ? { command: "echo provider-smoke" } : { cmd: "echo provider-smoke", max_output_tokens: 100 }) } }] };
     } else message = { role: "assistant", content: "CUSTOM_PROVIDER_OK" };
     res.writeHead(200, { "content-type": "application/json" });
-    res.end(JSON.stringify({ id: "chat_test", choices: [{ message, finish_reason: toolResult ? "stop" : "tool_calls" }], usage: { prompt_tokens: 10, completion_tokens: 4 } }));
+    const longProbe = JSON.stringify(payload.messages).includes("LONG_CONTEXT_PROBE");
+    res.end(JSON.stringify({ id: "chat_test", choices: [{ message, finish_reason: toolResult ? "stop" : "tool_calls" }], usage: {
+      prompt_tokens: longProbe ? 350000 : 10, completion_tokens: 4, prompt_tokens_details: { cached_tokens: 4, cache_write_tokens: 2 },
+      completion_tokens_details: { reasoning_tokens: 2 }
+    } }));
   });
   await new Promise(resolve => mock.listen(0, "127.0.0.1", resolve));
   const config = `openai_base_url = "http://127.0.0.1:${mock.address().port}/v1"\n[analytics]\nenabled = false\n`;
   await fs.writeFile(path.join(home, "config.toml"), config);
-  await saveProviders([{ id: "mock", name: "Mock coder", apiType: "chat", baseUrl: `http://127.0.0.1:${mock.address().port}/v1`, model: "mock-coder", apiKeyEnv: "CZ_TEST_API_KEY", enabled: true }], providerHome);
+  await saveProviders([{ id: "mock", name: "Mock coder", apiType: "chat", baseUrl: `http://127.0.0.1:${mock.address().port}/v1`, model: "mock-coder", apiKeyEnv: "CZ_TEST_API_KEY", enabled: true,
+    reasoningMode: "glm-template", contextWindow: 1048576, pricing: { input: .125, read: .05, output: .5, label: "API estimate" } }], providerHome);
   if (providerKeyStorageSupported) await updateProviderKeys({ keys: { mock: "mock-only-key" }, activeIds: ["mock"] }, providerHome);
   const spawnCore = () => spawn(process.env.CODEX_ZERO_TEST_LAUNCHER || process.execPath,
     process.env.CODEX_ZERO_TEST_LAUNCHER ? ["app-server"] : [path.resolve("bin/provider-core.mjs"), "app-server"], {
@@ -103,6 +108,7 @@ test("real Codex core can select a custom model and complete a tool round trip",
   child.stdin.write(JSON.stringify({ method: "initialized", params: {} }) + "\n");
   const models = await rpc("model/list", {});
   assert.ok(models.data.some(m => m.model === "custom/mock"));
+  assert.deepEqual(models.data.find(m => m.model === "custom/mock").supportedReasoningEfforts.map(e => e.reasoningEffort), ["low", "high", "max"]);
   assert.ok(models.data.some(m => !m.model.startsWith("custom/")));
   assert.equal((await rpc("config/batchWrite", { edits: [
     { keyPath: "model", value: "custom/mock", mergeStrategy: "upsert" },
@@ -110,7 +116,7 @@ test("real Codex core can select a custom model and complete a tool round trip",
   ] })).status, "okOverridden");
   const thread = await rpc("thread/start", { model: "custom/mock", cwd: root, approvalPolicy: "never", sandbox: "read-only" });
   assert.equal(thread.modelProvider, "codexzero_custom");
-  await rpc("turn/start", { threadId: thread.thread.id, model: "custom/mock", input: [{ type: "text", text: "Say hello", text_elements: [] }] });
+  await rpc("turn/start", { threadId: thread.thread.id, model: "custom/mock", effort: "low", input: [{ type: "text", text: "Say hello", text_elements: [] }] });
   const deadline = Date.now() + 40000;
   while (!notifications.some(n => n.method === "turn/completed") && Date.now() < deadline) await new Promise(resolve => setTimeout(resolve, 50));
   const complete = notifications.find(n => n.method === "turn/completed");
@@ -118,8 +124,26 @@ test("real Codex core can select a custom model and complete a tool round trip",
   assert.equal(complete.params.turn.status, "completed", JSON.stringify(complete));
   assert.ok(toolName, "The core must expose a command tool");
   assert.equal(requests.length, 2);
+  assert.ok(requests.every(r => r.body.reasoning_effort === "low"));
+  assert.ok(requests.every(r => r.body.chat_template_kwargs.reasoning_effort === "low"));
   assert.ok(requests.every(r => r.auth === "Bearer mock-only-key"));
   assert.ok(notifications.some(n => JSON.stringify(n).includes("CUSTOM_PROVIDER_OK")));
+  assert.ok(notifications.some(n => n.method === "thread/tokenUsage/updated" && n.params.tokenUsage.modelContextWindow === 996147),
+    "Custom models use the configured context window with a 5% reserve");
+  const lastUsage = notifications.filter(n => n.method === "thread/tokenUsage/updated").at(-1).params.tokenUsage.last;
+  assert.equal(lastUsage.cachedInputTokens, 4);
+  assert.equal(lastUsage.cacheWriteInputTokens, 2);
+  assert.equal(lastUsage.reasoningOutputTokens, 2);
+  const customCostFile = path.join(providerHome, "context-cache", `${thread.thread.id}.json`);
+  let customCost;
+  const customDeadline = Date.now() + 7000;
+  while (Date.now() < customDeadline) {
+    customCost = await fs.readFile(customCostFile, "utf8").then(JSON.parse).catch(() => null);
+    if (customCost?.pricedRequests === 2) break;
+    await new Promise(resolve => setTimeout(resolve, 50));
+  }
+  assert.equal(customCost?.cost.label, "API estimate");
+  assert.ok(Math.abs(customCost.cost.usd - .0000059) < 1e-12, "Reported cache tokens reach configured cost accounting");
   notifications.length = 0;
   await rpc("turn/start", { threadId: thread.thread.id, model: "gpt-5.5", input: [{ type: "text", text: "Use the normal route", text_elements: [] }] });
   let waitUntil = Date.now() + 20000;
@@ -140,12 +164,13 @@ test("real Codex core can select a custom model and complete a tool round trip",
   assert.ok(costSnapshot.cost.usd > 0, "Real core rollout usage reaches the API equivalent tracker");
   assert.equal(requests.length, 3, "Disabled keep warm sends no extra model requests");
   notifications.length = 0;
-  await rpc("turn/start", { threadId: thread.thread.id, model: "custom/mock", input: [{ type: "text", text: "Return to the custom route", text_elements: [] }] });
+  await rpc("turn/start", { threadId: thread.thread.id, model: "custom/mock", effort: "high", input: [{ type: "text", text: "Return to the custom route", text_elements: [] }] });
   waitUntil = Date.now() + 20000;
   while (!notifications.some(n => n.method === "turn/completed") && Date.now() < waitUntil) await new Promise(resolve => setTimeout(resolve, 50));
   assert.equal(notifications.find(n => n.method === "turn/completed")?.params.turn.status, "completed", JSON.stringify(notifications.slice(-4)));
   assert.equal(requests.at(-1).url, "/v1/chat/completions");
   assert.equal(requests.at(-1).body.model, "mock-coder");
+  assert.equal(requests.at(-1).body.reasoning_effort, "high");
   const exited = new Promise(resolve => child.once("exit", resolve));
   child.stdin.end(); await exited;
   child = spawnCore(); attach(child); notifications.length = 0;
@@ -158,6 +183,51 @@ test("real Codex core can select a custom model and complete a tool round trip",
   while (!notifications.some(n => n.method === "turn/completed") && Date.now() < waitUntil) await new Promise(resolve => setTimeout(resolve, 50));
   assert.equal(notifications.find(n => n.method === "turn/completed")?.params.turn.status, "completed", JSON.stringify(notifications.slice(-4)));
   assert.equal(requests.at(-1).auth, "Bearer mock-only-key");
+  notifications.length = 0;
+  const beforeCompaction = requests.length;
+  await rpc("thread/compact/start", { threadId: thread.thread.id });
+  waitUntil = Date.now() + 20000;
+  while (!notifications.some(n => n.method === "turn/completed") && Date.now() < waitUntil) await new Promise(resolve => setTimeout(resolve, 50));
+  assert.equal(notifications.find(n => n.method === "turn/completed")?.params.turn.status, "completed", JSON.stringify(notifications.slice(-4)));
+  assert.equal(requests.length, beforeCompaction + 1);
+  assert.equal(requests.at(-1).url, "/v1/chat/completions");
+  assert.equal(requests.at(-1).body.model, "mock-coder", "Compaction uses the selected custom model, not a subscription model");
+  assert.equal(requests.at(-1).auth, "Bearer mock-only-key");
   assert.equal(await fs.readFile(path.join(home, "config.toml"), "utf8"), config);
   assert.equal(await fs.stat(path.join(home, "auth.json")).then(() => true, () => false), false);
+  notifications.length = 0;
+  const longThread = await rpc("thread/start", { model: "custom/mock", cwd: root, approvalPolicy: "never", sandbox: "read-only" });
+  let beforeLong = requests.length;
+  // Dense Unicode stays within the independent per-message character limit.
+  const largePrompt = "LONG_CONTEXT_PROBE " + "測試".repeat(175000);
+  await rpc("turn/start", { threadId: longThread.thread.id, model: "custom/mock", input: [{ type: "text", text: largePrompt, text_elements: [] }] });
+  waitUntil = Date.now() + 20000;
+  while (!notifications.some(n => n.method === "turn/completed") && Date.now() < waitUntil) await new Promise(resolve => setTimeout(resolve, 50));
+  assert.equal(notifications.find(n => n.method === "turn/completed")?.params.turn.status, "completed", JSON.stringify(notifications.slice(-4)));
+  assert.equal(requests.length - beforeLong, 2, "350k context must not insert compaction into a tool round trip");
+  const providerText = requests.at(-1).body.messages.map(m => typeof m.content === "string" ? m.content :
+    (m.content ?? []).map(p => p.text ?? "").join("\n")).join("\n");
+  assert.ok(providerText.includes(largePrompt), "The full large prompt reaches the provider without truncation or Unicode corruption");
+  const largeUsage = notifications.filter(n => n.method === "thread/tokenUsage/updated").at(-1).params.tokenUsage;
+  assert.equal(largeUsage.last.inputTokens, 350000);
+  assert.equal(largeUsage.modelContextWindow, 996147);
+  notifications.length = 0;
+  beforeLong = requests.length;
+  await rpc("turn/start", { threadId: longThread.thread.id, input: [{ type: "text", text: "Continue beyond the old cap", text_elements: [] }] });
+  waitUntil = Date.now() + 20000;
+  while (!notifications.some(n => n.method === "turn/completed") && Date.now() < waitUntil) await new Promise(resolve => setTimeout(resolve, 50));
+  assert.equal(notifications.find(n => n.method === "turn/completed")?.params.turn.status, "completed", JSON.stringify(notifications.slice(-4)));
+  assert.equal(requests.length - beforeLong, 1, "350k context must not trigger preturn compaction");
+  for (const [settings, expected] of [
+    [{ effort: "low", collaborationMode: { mode: "default", settings: { model: "custom/mock", reasoning_effort: "high", developer_instructions: null } } }, "high"],
+    [{ effort: "low" }, "low"],
+    [{}, "low"],
+  ]) {
+    notifications.length = 0;
+    await rpc("turn/start", { threadId: longThread.thread.id, ...settings, input: [{ type: "text", text: "Continue with selected effort", text_elements: [] }] });
+    waitUntil = Date.now() + 20000;
+    while (!notifications.some(n => n.method === "turn/completed") && Date.now() < waitUntil) await new Promise(resolve => setTimeout(resolve, 50));
+    assert.equal(notifications.find(n => n.method === "turn/completed")?.params.turn.status, "completed");
+    assert.equal(requests.at(-1).body.reasoning_effort, expected, "Picker effort changes apply to existing tasks and survive subsequent turns");
+  }
 });

@@ -34,12 +34,15 @@ const STYLES = `
 .czps-advanced { grid-column: 1 / -1; margin-top: 2px; }
 .czps-advanced > summary { width: max-content; cursor: pointer; font-size: 12px; font-weight: 600; }
 .czps-advanced-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 16px; margin-top: 14px; }
+.czps-pricing { grid-column: 1 / -1; }
+.czps-pricing > summary { width: max-content; cursor: pointer; font-size: 12px; font-weight: 600; }
+.czps-pricing-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 16px; margin-top: 14px; }
 .czps-check { display: flex; align-items: center; gap: 8px; min-height: 34px; font-size: 12px; font-weight: 600; }
 .czps-check input { width: 16px; height: 16px; margin: 0; accent-color: currentColor; }
 .czps-actions { grid-column: 1 / -1; display: flex; justify-content: flex-end; padding-top: 2px; }
 .czps-remove { color: var(--color-text-danger, #c43b3b); }
 @media (max-width: 640px) {
-  .czps-fields, .czps-advanced-grid { grid-template-columns: 1fr; }
+  .czps-fields, .czps-advanced-grid, .czps-pricing-grid { grid-template-columns: 1fr; }
   .czps-wide, .czps-advanced, .czps-actions { grid-column: auto; }
   .czps-summary-meta { display: none; }
   .czps-fields { padding-left: 2px; }
@@ -57,6 +60,47 @@ function positiveInteger(value, fallback = 4096) {
   return Number.isInteger(number) && number >= 1 && number <= 1000000 ? number : fallback;
 }
 
+function contextWindow(value, fallback = 32000) {
+  const number = Number(value);
+  return Number.isInteger(number) && number >= 1024 && number <= 10000000 ? number : fallback;
+}
+
+export function serializeContextWindow(value) {
+  return value === "" || value === undefined ? undefined : contextWindow(value);
+}
+
+function price(value) {
+  const number = Number(value);
+  return value !== "" && Number.isFinite(number) && number >= 0 ? number : null;
+}
+
+function pricingDraft(value) {
+  const source = value && typeof value === "object" ? value : {};
+  return {
+    input: price(source.input) ?? "",
+    read: price(source.read) ?? "",
+    output: price(source.output) ?? "",
+    write: price(source.write) ?? "",
+    label: text(source.label, 80),
+  };
+}
+
+function hasPricing(value) {
+  return ["input", "read", "output", "write", "label"].some((field) => value[field] !== "");
+}
+
+export function serializePricing(value) {
+  const draft = pricingDraft(value);
+  if (!hasPricing(draft)) return undefined;
+  return {
+    input: price(draft.input),
+    read: price(draft.read),
+    output: price(draft.output),
+    ...(draft.write === "" ? {} : { write: price(draft.write) }),
+    ...(draft.label.trim() ? { label: text(draft.label.trim(), 80) } : {}),
+  };
+}
+
 function identifierSource(value) {
   return text(value, 100)
     .toLowerCase()
@@ -64,7 +108,7 @@ function identifierSource(value) {
     .replace(/^_+|_+$/g, "") || "provider";
 }
 
-function normalizeResult(result) {
+export function normalizeResult(result) {
   if (!result || !Array.isArray(result.providers)) throw new Error("Invalid provider result");
 
   const used = new Set();
@@ -84,6 +128,9 @@ function normalizeResult(result) {
       model: text(provider.model, 256),
       apiKeyEnv: text(provider.apiKeyEnv, 128),
       maxOutputTokens: positiveInteger(provider.maxOutputTokens),
+      contextWindow: provider.contextWindow === undefined ? "" : contextWindow(provider.contextWindow),
+      pricing: pricingDraft(provider.pricing),
+      reasoningMode: provider.reasoningMode ?? "auto",
       enabled: provider.enabled !== false,
       apiKeyPresent: Boolean(provider.apiKeyPresent),
       directKeyPresent: Boolean(provider.directKeyPresent),
@@ -155,6 +202,7 @@ export function createProviderSettings(React, jsxRuntime, Section) {
       setProviders((current) => current.map((provider, providerIndex) => {
         if (providerIndex !== index) return provider;
         if (field === "pendingKey") return { ...provider, pendingKey: value, clearKey: value ? false : provider.clearKey };
+        if (field === "apiType") return { ...provider, apiType: value, reasoningMode: "auto" };
         return { ...provider, [field]: value };
       }));
     }
@@ -177,6 +225,8 @@ export function createProviderSettings(React, jsxRuntime, Section) {
         model: "",
         apiKeyEnv: "",
         maxOutputTokens: 4096,
+        contextWindow: 32000,
+        pricing: pricingDraft(),
         enabled: true,
         apiKeyPresent: false,
         directKeyPresent: false,
@@ -195,6 +245,13 @@ export function createProviderSettings(React, jsxRuntime, Section) {
         }
         return current.filter((_, providerIndex) => providerIndex !== index);
       });
+    }
+
+    function updatePricing(index, field, value) {
+      clearMessage();
+      setProviders((current) => current.map((provider, providerIndex) => providerIndex === index
+        ? { ...provider, pricing: { ...provider.pricing, [field]: value } }
+        : provider));
     }
 
     async function save(event) {
@@ -227,6 +284,7 @@ export function createProviderSettings(React, jsxRuntime, Section) {
         } else if (directKeySupported && provider.clearKey) {
           clearKeys.add(provider.id);
         }
+        const pricing = serializePricing(provider.pricing);
         return {
           id: text(provider.id, 100),
           name: text(provider.name.trim(), 100),
@@ -235,6 +293,9 @@ export function createProviderSettings(React, jsxRuntime, Section) {
           model: text(provider.model.trim(), 256),
           apiKeyEnv: text(provider.apiKeyEnv.trim(), 128),
           maxOutputTokens: positiveInteger(provider.maxOutputTokens),
+          contextWindow: serializeContextWindow(provider.contextWindow),
+          ...(pricing ? { pricing } : {}),
+          reasoningMode: provider.reasoningMode ?? "auto",
           enabled: Boolean(provider.enabled),
         };
       });
@@ -267,6 +328,7 @@ export function createProviderSettings(React, jsxRuntime, Section) {
       const disabled = loading || saving;
       const modelSummary = provider.model || "Model not set";
       const envBadge = provider.apiKeyEnv ? (provider.apiKeyPresent ? "Available" : "Not found") : "";
+      const pricingConfigured = hasPricing(provider.pricing);
 
       return h("details", { className: "czps-provider", key: provider.id, open: provider.added ? true : undefined },
         h("summary", { className: "czps-summary" },
@@ -321,6 +383,24 @@ export function createProviderSettings(React, jsxRuntime, Section) {
           h("details", { className: "czps-advanced" },
             h("summary", null, "Advanced"),
             h("div", { className: "czps-advanced-grid" },
+              h("label", { className: "czps-field", htmlFor: `${prefix}-reasoning` },
+                fieldLabel("Reasoning"),
+                h("select", {
+                  className: "czps-select", id: `${prefix}-reasoning`, name: `${prefix}-reasoning`, value: provider.reasoningMode ?? "auto",
+                  onChange: (event) => updateProvider(index, "reasoningMode", event.target.value),
+                },
+                  h("option", { value: "auto" }, "Automatic"),
+                  h("option", { value: "none" }, "Provider default"),
+                  ...(provider.apiType === "anthropic" ? [h("option", { value: "anthropic", key: "anthropic" }, "Claude effort")] : [
+                    h("option", { value: "effort", key: "effort" }, "Low, medium, high"),
+                    h("option", { value: "effort-extended", key: "extended" }, "Low, medium, high, extra high"),
+                  ]),
+                  ...(provider.apiType === "chat" ? [
+                    h("option", { value: "glm", key: "glm" }, "GLM 5.3"),
+                    h("option", { value: "glm-template", key: "glm-template" }, "GLM 5.3 template"),
+                  ] : []),
+                ),
+              ),
               h("label", { className: "czps-field", htmlFor: `${prefix}-env` },
                 fieldLabel("API key environment variable", envBadge),
                 h("input", {
@@ -336,6 +416,59 @@ export function createProviderSettings(React, jsxRuntime, Section) {
                   value: provider.maxOutputTokens, required: true, min: 1, max: 1000000, step: 1,
                   onChange: (event) => updateProvider(index, "maxOutputTokens", event.target.value),
                 }),
+              ),
+              h("label", { className: "czps-field", htmlFor: `${prefix}-context-window` },
+                fieldLabel("Context window"),
+                h("input", {
+                  className: "czps-input", id: `${prefix}-context-window`, name: `${prefix}-context-window`, type: "number",
+                  value: provider.contextWindow, placeholder: "32000", min: 1024, max: 10000000, step: 1,
+                  onChange: (event) => updateProvider(index, "contextWindow", event.target.value),
+                }),
+              ),
+              h("details", { className: "czps-pricing", open: pricingConfigured ? true : undefined },
+                h("summary", null, "Pricing (USD per 1M tokens)"),
+                h("div", { className: "czps-pricing-grid" },
+                  h("label", { className: "czps-field", htmlFor: `${prefix}-price-input` },
+                    fieldLabel("Input"),
+                    h("input", {
+                      className: "czps-input", id: `${prefix}-price-input`, name: `${prefix}-price-input`, type: "number",
+                      value: provider.pricing.input, required: pricingConfigured, min: 0, step: "any",
+                      onChange: (event) => updatePricing(index, "input", event.target.value),
+                    }),
+                  ),
+                  h("label", { className: "czps-field", htmlFor: `${prefix}-price-read` },
+                    fieldLabel("Cached input"),
+                    h("input", {
+                      className: "czps-input", id: `${prefix}-price-read`, name: `${prefix}-price-read`, type: "number",
+                      value: provider.pricing.read, required: pricingConfigured, min: 0, step: "any",
+                      onChange: (event) => updatePricing(index, "read", event.target.value),
+                    }),
+                  ),
+                  h("label", { className: "czps-field", htmlFor: `${prefix}-price-output` },
+                    fieldLabel("Output"),
+                    h("input", {
+                      className: "czps-input", id: `${prefix}-price-output`, name: `${prefix}-price-output`, type: "number",
+                      value: provider.pricing.output, required: pricingConfigured, min: 0, step: "any",
+                      onChange: (event) => updatePricing(index, "output", event.target.value),
+                    }),
+                  ),
+                  h("label", { className: "czps-field", htmlFor: `${prefix}-price-write` },
+                    fieldLabel("Cache write"),
+                    h("input", {
+                      className: "czps-input", id: `${prefix}-price-write`, name: `${prefix}-price-write`, type: "number",
+                      value: provider.pricing.write, min: 0, step: "any",
+                      onChange: (event) => updatePricing(index, "write", event.target.value),
+                    }),
+                  ),
+                  h("label", { className: "czps-field czps-wide", htmlFor: `${prefix}-price-label` },
+                    fieldLabel("Pricing label"),
+                    h("input", {
+                      className: "czps-input", id: `${prefix}-price-label`, name: `${prefix}-price-label`,
+                      value: provider.pricing.label, maxLength: 80, autoComplete: "off",
+                      onChange: (event) => updatePricing(index, "label", event.target.value),
+                    }),
+                  ),
+                ),
               ),
               h("label", { className: "czps-check", htmlFor: `${prefix}-enabled` },
                 h("input", {

@@ -2,6 +2,7 @@ import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { codexZeroHome } from "./paths.mjs";
+import { REASONING_MODES } from "./provider-reasoning.mjs";
 
 const FILE_NAME = "providers.json";
 const API_TYPES = new Set(["responses", "chat", "anthropic"]);
@@ -51,7 +52,7 @@ function normalizeProvider(provider, index) {
   }
 
   const allowed = new Set([
-    "id", "name", "apiType", "baseUrl", "model", "apiKeyEnv", "maxOutputTokens", "enabled",
+    "id", "name", "apiType", "baseUrl", "model", "apiKeyEnv", "maxOutputTokens", "enabled", "contextWindow", "pricing", "reasoningMode",
   ]);
   for (const key of Object.keys(provider)) {
     if (!allowed.has(key)) fail(`Provider ${index + 1} contains an unsupported field`);
@@ -61,6 +62,10 @@ function normalizeProvider(provider, index) {
   if (provider.id !== id || !ID_PATTERN.test(id)) fail(`Provider ${index + 1} id must contain only lowercase letters, numbers, and underscores`);
   const name = text(provider.name, `Provider ${index + 1} name`, 100);
   if (!API_TYPES.has(provider.apiType)) fail(`Provider ${index + 1} apiType is invalid`);
+  if (provider.reasoningMode !== undefined && !REASONING_MODES.has(provider.reasoningMode)) fail("Invalid reasoning mode");
+  if (["glm", "glm-template"].includes(provider.reasoningMode) && provider.apiType !== "chat") fail("GLM reasoning requires Chat completions");
+  if (provider.reasoningMode === "anthropic" && provider.apiType !== "anthropic") fail("Claude effort requires Anthropic Messages");
+  if (["effort", "effort-extended"].includes(provider.reasoningMode) && provider.apiType === "anthropic") fail("Select Claude effort for Anthropic Messages");
   const endpoint = baseUrl(provider.baseUrl, index);
   const model = text(provider.model, `Provider ${index + 1} model`, 256);
 
@@ -76,6 +81,22 @@ function normalizeProvider(provider, index) {
   }
   const enabled = provider.enabled === undefined ? true : provider.enabled;
   if (typeof enabled !== "boolean") fail(`Provider ${index + 1} enabled must be a boolean`);
+  const contextWindow = provider.contextWindow;
+  if (contextWindow !== undefined && (!Number.isSafeInteger(contextWindow) || contextWindow < 1024 || contextWindow > 10_000_000 || maxOutputTokens >= contextWindow)) {
+    fail("Context window must exceed the output limit and be between 1024 and 10000000");
+  }
+  let pricing;
+  if (provider.pricing !== undefined) {
+    const value = provider.pricing;
+    if (!value || typeof value !== "object" || Array.isArray(value) || Object.keys(value).some(k => !["input", "read", "output", "write", "label"].includes(k))) fail("Invalid model pricing");
+    pricing = {};
+    for (const key of ["input", "read", "output", "write"]) {
+      if (key === "write" && value[key] === undefined) continue;
+      if (typeof value[key] !== "number" || !Number.isFinite(value[key]) || value[key] < 0 || value[key] > 1_000_000) fail("Enter a valid token rate");
+      pricing[key] = value[key];
+    }
+    if (value.label !== undefined) pricing.label = text(value.label, "Pricing label", 80);
+  }
 
   return {
     id,
@@ -86,6 +107,9 @@ function normalizeProvider(provider, index) {
     apiKeyEnv,
     maxOutputTokens,
     enabled,
+    ...(provider.reasoningMode !== undefined ? { reasoningMode: provider.reasoningMode } : {}),
+    ...(contextWindow !== undefined ? { contextWindow } : {}),
+    ...(pricing ? { pricing } : {}),
   };
 }
 

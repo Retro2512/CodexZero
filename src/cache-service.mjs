@@ -3,6 +3,7 @@ import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { codexHome, codexZeroHome } from "./paths.mjs";
 import { CacheRolloutReader, DEFAULT_CACHE_SETTINGS, warmth } from "./cache-accounting.mjs";
+import { readProviderPricing } from "./provider-pricing.mjs";
 
 const DISCOVERY_TTL_MS = 60_000;
 const MISSING_DISCOVERY_TTL_MS = 10_000;
@@ -144,6 +145,7 @@ function combine(id, snapshots, partial = false) {
     requests: selected.reduce((value, item) => value + item.requests, 0),
     pricedRequests: selected.reduce((value, item) => value + item.pricedRequests, 0),
     cost: {
+      ...(latest.cost.label ? { label: selected.every(s => s.cost.label === latest.cost.label) ? latest.cost.label : "API estimate" } : {}),
       usd: selected.reduce((value, item) => value + item.cost.usd, 0),
       uncachedUsd: selected.reduce((value, item) => value + item.cost.uncachedUsd, 0),
       partial: partial || selected.some(item => item.cost.partial),
@@ -163,10 +165,12 @@ async function discoveredSnapshot(id, home) {
     try { hints = await readJson(path.join(cacheDirectory(home), `${id}.turns.json`), {}); }
     catch { partial = true; }
     const activeFiles = new Set(files);
+    const providerPrices = await readProviderPricing(home);
     for (const file of state.readers.keys()) if (!activeFiles.has(file)) state.readers.delete(file);
     for (const file of files) {
       let reader = state.readers.get(file);
       if (!reader) { reader = new CacheRolloutReader(id, file); state.readers.set(file, reader); }
+      reader.providerPrices = providerPrices;
       reader.turnHints = hints;
       try { await reader.read(); }
       catch (error) {
@@ -214,6 +218,7 @@ export async function readCacheSnapshot(id, home) {
   }
   const override = settings.overrides?.[id] ?? null;
   return { settings: { enabled: settings.enabled, minutes: settings.minutes }, override,
+    keepWarmSupported: !snapshot?.model?.startsWith("custom/"),
     enabled: override ?? settings.enabled, warmth: warmth(snapshot),
     cost: snapshot?.cost ?? { usd: null, uncachedUsd: null, partial: false }, error: snapshot?.error ?? null };
 }

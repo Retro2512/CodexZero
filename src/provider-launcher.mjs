@@ -3,6 +3,7 @@ import path from "node:path";
 import { spawn, execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { codexZeroHome } from "./paths.mjs";
+import { prepareProviderContextCore } from "./provider-core-context.mjs";
 
 const execFileAsync = promisify(execFile);
 
@@ -31,6 +32,7 @@ export async function prepareProviderLauncher(desktopBinary, { home = codexZeroH
         try { await fs.copyFile(source, dest); } catch (error) { if (file === name || error.code !== "ENOENT") throw error; }
       }
     }
+    if (process.platform === "win32") core = await prepareProviderContextCore(core);
   }
   let launcher;
   if (process.platform === "win32") {
