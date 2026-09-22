@@ -11,6 +11,10 @@ export const DESKTOP_ASSETS = Object.freeze([
   "scripts/build-codexzero-launcher.ps1", "scripts/build-provider-local.ps1",
   "assets/native-provider-updater.cjs", "assets/native-provider-update-release.cjs",
   "scripts/complete-desktop-update.ps1",
+  "scripts/install-desktop.ps1", "scripts/uninstall-desktop.ps1",
+  "scripts/build-desktop-release.ps1", "scripts/build-desktop-setup.ps1",
+  "scripts/windows-desktop.iss", "scripts/verify-complete-desktop.mjs",
+  "src/desktop-profile.mjs",
 ]);
 
 export async function verifyDesktopAssets(root) {

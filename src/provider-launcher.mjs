@@ -4,6 +4,7 @@ import { spawn, execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { codexZeroHome } from "./paths.mjs";
 import { prepareProviderContextCore } from "./provider-core-context.mjs";
+import { desktopProfileEnvironment } from "./desktop-profile.mjs";
 
 const execFileAsync = promisify(execFile);
 
@@ -39,6 +40,13 @@ export async function prepareProviderLauncher(desktopBinary, { home = codexZeroH
     launcher = path.join(root, "codex-custom-models.exe");
     const source = path.join(root, "launcher.cs");
     const quote = value => `@"${value.replaceAll('"', '""')}"`;
+    // Release builds must survive extraction and installation at another path.
+    const bundledNode = path.join(home, "runtime", "node.exe");
+    const bundledEntry = path.join(home, "bin", "provider-core.mjs");
+    const portable = await fs.access(bundledNode).then(() => true, () => false)
+      && await fs.access(bundledEntry).then(() => true, () => false);
+    const nodeExpression = portable ? 'System.IO.Path.Combine(root, "runtime", "node.exe")' : quote(process.execPath);
+    const entryExpression = portable ? 'System.IO.Path.Combine(root, "bin", "provider-core.mjs")' : quote(entry);
     await fs.writeFile(source, `using System; using System.Diagnostics; using System.Text;
 class Launcher {
 static System.Threading.Thread Pump(System.IO.Stream input, System.IO.Stream output, bool closeOutput) {
@@ -60,7 +68,8 @@ static string Q(string s) {
   b.Append((char)92, slashes * 2); b.Append((char)34); return b.ToString();
 }
 static int Main(string[] args) {
-  var p = new ProcessStartInfo(); p.FileName = ${quote(process.execPath)}; p.Arguments = Q(${quote(entry)});
+  string root = System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ".."));
+  var p = new ProcessStartInfo(); p.FileName = ${nodeExpression}; p.Arguments = Q(${entryExpression});
   foreach (var a in args) p.Arguments += " " + Q(a);
   p.UseShellExecute = false; p.CreateNoWindow = true;
   p.RedirectStandardInput = true; p.RedirectStandardOutput = true; p.RedirectStandardError = true;
@@ -87,7 +96,7 @@ export async function launchProviderDesktop(desktopBinary) {
   const { application, launcher, core } = await prepareNativeProviderDesktop(desktopBinary);
   const child = spawn(application, [], {
     detached: true, stdio: "ignore", windowsHide: false,
-    env: { ...process.env, CODEX_CLI_PATH: launcher, CODEX_APP_SERVER_FORCE_CLI: "1", CODEX_ZERO_PROVIDER_CORE: core }
+    env: { ...desktopProfileEnvironment(), CODEX_CLI_PATH: launcher, CODEX_APP_SERVER_FORCE_CLI: "1", CODEX_ZERO_PROVIDER_CORE: core }
   });
   await new Promise((resolve, reject) => { child.once("spawn", resolve); child.once("error", reject); });
   child.unref();
