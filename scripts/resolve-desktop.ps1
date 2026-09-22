@@ -84,8 +84,9 @@ if (!(Test-Path -LiteralPath $cached)) {
     Move-Item -LiteralPath $partial -Destination $cached -Force
 }
 # Keep one verified package so later updates do not download it again.
+# Compare names only: the cache path may be given in short 8.3 form.
 Get-ChildItem -LiteralPath $CacheRoot -File -Force |
-    Where-Object { $_.FullName -ne $cached } |
+    Where-Object { $_.Name -ne [IO.Path]::GetFileName($cached) } |
     Remove-Item -Force -ErrorAction SilentlyContinue
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem

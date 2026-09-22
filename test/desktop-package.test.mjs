@@ -34,7 +34,9 @@ test('packaged provider launcher works after moving the entire application', { s
   const { stdout } = await run(path.join(installed, 'provider-runtime/codex-custom-models.exe'), args, { windowsHide: true });
   const result = JSON.parse(stdout);
   assert.deepEqual(result.args, args);
-  assert.equal(result.root.toLowerCase(), path.join(installed, 'bin').toLowerCase());
+  // The temporary folder may be reported in short 8.3 form.
+  const expected = await fs.realpath(path.join(installed, 'bin'));
+  assert.equal((await fs.realpath(result.root)).toLowerCase(), expected.toLowerCase());
 });
 
 test('desktop archive installation switches builds without touching Codex data', { skip: !windows }, async t => {
@@ -76,7 +78,7 @@ test('Windows release publishes setup without the desktop application while CLI 
   assert.match(workflow, /Compress-Archive -Path package/);
   assert.match(workflow, /CodexZero-Setup-windows-x64\.exe\.sha256/);
   assert.doesNotMatch(workflow, /desktop_url|desktop_sha256|codex-zero-desktop-windows-x64|desktop-package/);
-  assert.match(workflow, /publish:\n\s+needs: core\n\s+if: inputs\.publish/);
+  assert.match(workflow, /publish:\r?\n\s+needs: core\r?\n\s+if: inputs\.publish/);
   const bootstrap = await fs.readFile(path.join(repository, 'scripts/bootstrap.ps1'), 'utf8');
   assert.match(bootstrap, /CodexZero-Setup-windows-x64\.exe/);
   assert.match(bootstrap, /Get-FileHash/);
