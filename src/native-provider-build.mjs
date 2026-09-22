@@ -11,10 +11,12 @@ export async function prepareNativeProviderDesktop(installedDesktop, { home = co
   if (process.platform !== "win32") throw new Error("Native custom model settings currently require the Windows local build");
   const source = path.resolve(import.meta.dirname, "..");
   const hash = createHash("sha256");
+  const packageBytes = await fs.readFile(path.join(source, "package.json"));
+  hash.update(packageBytes);
   hash.update(installedDesktop);
   hash.update(String((await fs.stat(path.join(path.dirname(installedDesktop), "resources", "app.asar"))).mtimeMs));
   const files = [];
-  for (const folder of ["src", "bin", "assets"]) {
+  for (const folder of ["src", "bin", "assets", "scripts"]) {
     for (const name of (await fs.readdir(path.join(source, folder))).sort()) {
       const file = path.join(folder, name);
       if (!(await fs.stat(path.join(source, file))).isFile()) continue;
@@ -26,6 +28,7 @@ export async function prepareNativeProviderDesktop(installedDesktop, { home = co
   const manifest = path.join(root, "native-build.json");
   try { return JSON.parse(await fs.readFile(manifest, "utf8")); } catch (error) { if (error.code !== "ENOENT") throw error; }
   await fs.mkdir(root, { recursive: true });
+  await fs.writeFile(path.join(root, "package.json"), packageBytes);
   for (const file of files) {
     await fs.mkdir(path.dirname(path.join(root, file)), { recursive: true });
     await fs.copyFile(path.join(source, file), path.join(root, file));
@@ -77,6 +80,12 @@ export async function buildNativeProviderApp(installedDesktop, outputRoot) {
     const bootstrapName = Object.keys(archive.header.files[".vite"].files.build.files).find(name => /^bootstrap-[\w-]+\.js$/.test(name));
     if (!bootstrapName) throw new Error("This Codex version needs an updated desktop identity patch");
     let bootstrap = (await archive.read(`.vite/build/${bootstrapName}`)).toString("utf8");
+    bootstrap = patchNativeUpdater(bootstrap);
+    for (const name of ["native-provider-updater.cjs", "native-provider-update-release.cjs"]) {
+      replacements.set(`.vite/build/${name}`, await fs.readFile(path.join(assets, name)));
+    }
+    const { version } = JSON.parse(await fs.readFile(path.join(assets, "..", "package.json"), "utf8"));
+    replacements.set(".vite/build/codexzero-update-version.json", Buffer.from(JSON.stringify({ version })));
     for (const [before, after] of [
       ["o.app.setAppUserModelId(Ut(_j))", 'o.app.setAppUserModelId("CodexZero.Desktop")'],
       ["o.app.setName(n.Eo(_j))", 'o.app.setName("CodexZero")']
@@ -102,6 +111,12 @@ export async function buildNativeProviderApp(installedDesktop, outputRoot) {
     }
   } finally { await verify.close(); }
   return path.join(appRoot, path.basename(installedDesktop));
+}
+
+export function patchNativeUpdater(source) {
+  const anchor = "sparkleManager:new KT({";
+  if (source.split(anchor).length !== 2) throw new Error("This Codex version needs an updated updater patch");
+  return source.replace(anchor, 'sparkleManager:new(require("./native-provider-updater.cjs").CodexZeroUpdater)({');
 }
 
 export function patchCacheIndicator(source) {

@@ -151,6 +151,11 @@ export async function runProviderAppServer({ core, args, home, input = process.s
         if (!result.nextCursor) result.data.push(...providers.map(providerModel));
         emit({ id: message.id, result }); return;
       }
+      if (message.method === "thread/read") {
+        const result = await rpc(message.method, params);
+        remember(result, params);
+        emit({ id: message.id, result }); return;
+      }
       if (["thread/start", "thread/resume", "thread/fork"].includes(message.method)) {
         const provider = findProvider(await readProviders(home), params.model);
         let routed = provider ? customThreadParams(params, provider, bridge.baseUrl, bridge.token) : params;
