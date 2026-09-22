@@ -7,7 +7,7 @@ import test from "node:test";
 import updater from "../assets/native-provider-update-release.cjs";
 
 const { compareVersions, selectRelease, stageRelease } = updater;
-const archiveName = "codex-zero-desktop-windows-x64.zip";
+const archiveName = "codex-zero-windows-x64.zip";
 
 function githubRelease(tag = "v1.2.0") {
   const root = `https://github.com/Retro2512/CodexZero/releases/download/${tag}`;
@@ -132,11 +132,6 @@ test("stageRelease enforces canonical URLs and download size bounds", async t =>
   await assert.rejects(stageRelease(selected, directory, {
     fetchImpl: async () => new Response("x", { headers: { "content-length": "1073741825" } }),
   }), /size limit/);
-  await assert.rejects(stageRelease(selected, directory, {
-    fetchImpl: async url => url.endsWith('.sha256')
-      ? new Response(`${"0".repeat(64)}  ${archiveName}\n`)
-      : new Response('x', { headers: { 'content-length': '2147483649' } }),
-  }), /Release archive exceeds the size limit/);
 });
 
 test("stageRelease rejects a final response URL that downgrades HTTPS", async t => {

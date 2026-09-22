@@ -57,7 +57,9 @@ test('desktop archive installation switches builds without touching Codex data',
   await ps('install-desktop.ps1', args);
   const second = await fs.readFile(path.join(installed, 'current-build.txt'), 'utf8');
   assert.notEqual(first, second);
-  assert.equal(await fs.readFile(path.join(installed, first, 'CodexZero.exe'), 'utf8'), 'fixture');
+  assert.equal(await fs.readFile(path.join(installed, second, 'CodexZero.exe'), 'utf8'), 'fixture');
+  // The replaced build is removed once the new one is selected.
+  await assert.rejects(fs.access(path.join(installed, first)));
   assert.equal(await fs.readFile(path.join(home, 'auth.json'), 'utf8'), 'fixture account');
   await fs.unlink(path.join(source, 'desktop/ChatGPT.exe'));
   await assert.rejects(ps('install-desktop.ps1', args), /Incomplete desktop package/);
@@ -67,17 +69,29 @@ test('desktop archive installation switches builds without touching Codex data',
   assert.equal(await fs.readFile(path.join(home, 'auth.json'), 'utf8'), 'fixture account');
 });
 
-test('Windows release contains a desktop setup and full archive while CLI stays optional', async () => {
+test('Windows release publishes setup without the desktop application while CLI stays optional', async () => {
   const workflow = await fs.readFile(path.join(repository, '.github/workflows/release.yml'), 'utf8');
-  assert.match(workflow, /build-desktop-release\.ps1/);
-  assert.match(workflow, /build-desktop-setup\.ps1/);
-  assert.match(workflow, /Compress-Archive -Path desktop-package/);
+  assert.match(workflow, /build-desktop-setup\.ps1 -PackageRoot package/);
+  assert.match(workflow, /choco upgrade innosetup/);
   assert.match(workflow, /Compress-Archive -Path package/);
-  assert.match(workflow, /codex-zero-desktop-windows-x64\.zip/);
+  assert.match(workflow, /CodexZero-Setup-windows-x64\.exe\.sha256/);
+  assert.doesNotMatch(workflow, /desktop_url|desktop_sha256|codex-zero-desktop-windows-x64|desktop-package/);
+  assert.match(workflow, /publish:\n\s+needs: core\n\s+if: inputs\.publish/);
   const bootstrap = await fs.readFile(path.join(repository, 'scripts/bootstrap.ps1'), 'utf8');
   assert.match(bootstrap, /CodexZero-Setup-windows-x64\.exe/);
   assert.match(bootstrap, /Get-FileHash/);
+  assert.doesNotMatch(bootstrap, /-WindowStyle Hidden/);
   const installer = await fs.readFile(path.join(repository, 'scripts/install.ps1'), 'utf8');
-  assert.match(installer, /!\$CliOnly/);
+  assert.match(installer, /!\$CliOnly -and \(\$Desktop -or/);
   assert.match(installer, /install-desktop\.ps1/);
+});
+
+test('release packages assemble the desktop from the pinned official package', async () => {
+  const builder = await fs.readFile(path.join(repository, 'scripts/build-provider-local.ps1'), 'utf8');
+  assert.match(builder, /resolve-desktop\.ps1'\) -StagingRoot \$staging -DesktopPackage \$DesktopPackage/);
+  assert.doesNotMatch(builder, /Get-AppxPackage/);
+  const install = await fs.readFile(path.join(repository, 'scripts/install-desktop.ps1'), 'utf8');
+  assert.match(install, /build-provider-local\.ps1'\) -OutputDirectory \$destination -DesktopPackage \$DesktopPackage/);
+  const update = await fs.readFile(path.join(repository, 'assets/native-provider-update-release.cjs'), 'utf8');
+  assert.match(update, /const ARCHIVE_NAME = "codex-zero-windows-x64\.zip";/);
 });

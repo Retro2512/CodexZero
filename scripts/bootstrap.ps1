@@ -5,6 +5,8 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+# The progress display slows downloads considerably in Windows PowerShell.
+$ProgressPreference = 'SilentlyContinue'
 $repo = 'Retro2512/CodexZero'
 $release = Invoke-RestMethod -Headers @{ 'User-Agent' = 'CodexZero installer' } `
     -Uri "https://api.github.com/repos/$repo/releases/latest"
@@ -15,6 +17,7 @@ if ($setup) {
     $temp = Join-Path ([IO.Path]::GetTempPath()) "codex-zero-$([guid]::NewGuid())"
     New-Item -ItemType Directory -Path $temp | Out-Null
     $installer = Join-Path $temp 'CodexZero-Setup-windows-x64.exe'
+    Write-Host 'Downloading CodexZero...'
     Invoke-WebRequest -Uri $setup.browser_download_url -OutFile $installer
     $checksumPath = Join-Path $temp 'setup.sha256'
     Invoke-WebRequest -Uri $checksum.browser_download_url -OutFile $checksumPath
@@ -22,8 +25,11 @@ if ($setup) {
     if ($expected -notmatch '^[a-fA-F0-9]{64}$' -or (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash -ne $expected) {
         throw 'CodexZero installer checksum verification failed.'
     }
-    $process = Start-Process -FilePath $installer -ArgumentList '/SP-', '/SILENT' -Wait -PassThru -WindowStyle Hidden
+    Write-Host 'Installing CodexZero. Setup shows its progress and opens CodexZero when it is done.'
+    $process = Start-Process -FilePath $installer -ArgumentList '/SP-', '/SILENT' -Wait -PassThru
+    Remove-Item -LiteralPath $temp -Recurse -Force -ErrorAction SilentlyContinue
     if ($process.ExitCode -ne 0) { throw "CodexZero installation failed ($($process.ExitCode))." }
+    Write-Host 'CodexZero is installed.'
     return
 }
 $asset = $release.assets | Where-Object { $_.name -eq 'codex-zero-windows-x64.zip' } | Select-Object -First 1

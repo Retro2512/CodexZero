@@ -36,7 +36,7 @@ That fetches the CodexZero installer, checks it, and runs it. You end up with th
 
 Your Codex chats, skills and settings are already in it. Nothing to import.
 
-<sub>Rather do it by hand? Grab <b>CodexZero-Setup-windows-x64.exe</b> from the [latest release](https://github.com/Retro2512/CodexZero/releases/latest) and double-click it. Uninstall from Windows Settings like any other app.</sub>
+<sub>Rather do it by hand? [Download <b>CodexZero-Setup-windows-x64.exe</b>](https://github.com/Retro2512/CodexZero/releases/latest/download/CodexZero-Setup-windows-x64.exe) and double-click it. Uninstall from Windows Settings like any other app.</sub>
 
 ### macOS
 

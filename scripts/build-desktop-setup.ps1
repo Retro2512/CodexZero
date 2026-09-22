@@ -16,22 +16,34 @@ if ($OutputDirectory.Equals($PackageRoot, [System.StringComparison]::OrdinalIgno
     throw 'OutputDirectory must be outside PackageRoot.'
 }
 
-foreach ($relative in @('CodexZero.exe', 'desktop\ChatGPT.exe', 'runtime\node.exe',
-    'assets\codexzero.ico', 'bin\codex-zero.mjs', 'package.json', 'local-build.json')) {
+foreach ($relative in @('runtime\node.exe', 'assets\codexzero.ico', 'bin\codex-zero.mjs', 'package.json',
+    'scripts\install-desktop.ps1', 'scripts\build-provider-local.ps1', 'scripts\resolve-desktop.ps1', 'scripts\desktop-upstream.json')) {
     if (-not (Test-Path -LiteralPath (Join-Path $PackageRoot $relative) -PathType Leaf)) {
         throw "Required package file is missing: $relative"
     }
 }
-foreach ($relative in @('provider-runtime', 'src', 'scripts')) {
+foreach ($relative in @('src', 'scripts')) {
     if (-not (Test-Path -LiteralPath (Join-Path $PackageRoot $relative) -PathType Container)) {
         throw "Required package directory is missing: $relative"
     }
 }
+# Setup assembles the desktop on the user's computer. Never ship the app itself.
+foreach ($relative in @('desktop', 'provider-runtime', 'CodexZero.exe', 'local-build.json')) {
+    if (Test-Path -LiteralPath (Join-Path $PackageRoot $relative)) {
+        throw "Package must not contain an assembled desktop: $relative"
+    }
+}
 $package = Get-Content -Raw -LiteralPath (Join-Path $PackageRoot 'package.json') | ConvertFrom-Json
-$null = Get-Content -Raw -LiteralPath (Join-Path $PackageRoot 'local-build.json') | ConvertFrom-Json
 $version = [string]$package.version
 if ($version -notmatch '^\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$') {
     throw 'Package version is missing or invalid.'
+}
+$desktop = Get-Content -Raw -LiteralPath (Join-Path $PackageRoot 'scripts\desktop-upstream.json') | ConvertFrom-Json
+$desktopUri = [uri]$desktop.url
+if ($desktopUri.Scheme -ne 'https' -or $desktopUri.Host -notin @('persistent.oaistatic.com', 'cdn.openai.com') -or
+    [string]$desktop.sha256 -notmatch '^[a-fA-F0-9]{64}$' -or [string]$desktop.version -notmatch '^\d+\.\d+\.\d+\.\d+$' -or
+    [string]$desktop.publisherId -notmatch '^[a-z0-9]{13}$' -or [long]$desktop.size -le 0) {
+    throw 'The pinned desktop package is invalid.'
 }
 
 if ([string]::IsNullOrWhiteSpace($IsccPath)) {
@@ -49,6 +61,8 @@ if ([string]::IsNullOrWhiteSpace($IsccPath) -or -not (Test-Path -LiteralPath $Is
 
 $null = New-Item -ItemType Directory -Force -Path $OutputDirectory
 $arguments = @('/Qp', "/DPackageRoot=$PackageRoot", "/DOutputDirectory=$OutputDirectory", "/DAppVersion=$version",
+    "/DDesktopUrl=$($desktopUri.AbsoluteUri)", "/DDesktopSha256=$($desktop.sha256.ToLowerInvariant())", "/DDesktopSize=$([long]$desktop.size)",
+    "/DDesktopVersion=$($desktop.version)", "/DDesktopPublisher=$($desktop.publisherId)",
     (Join-Path $PSScriptRoot 'windows-desktop.iss'))
 & $IsccPath @arguments
 if ($LASTEXITCODE -ne 0) { throw "Inno Setup failed with exit code $LASTEXITCODE." }
