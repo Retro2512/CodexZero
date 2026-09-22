@@ -1,10 +1,11 @@
 "use strict";
 const fs = require("node:fs/promises");
+const os = require("node:os");
 const path = require("node:path");
 const { randomUUID } = require("node:crypto");
 const { execFile, spawn } = require("node:child_process");
 const { promisify } = require("node:util");
-const { selectRelease, stageRelease } = require("./native-provider-update-release.cjs");
+const { archiveName, selectRelease, stageRelease } = require("./native-provider-update-release.cjs");
 
 // Implement the native updater contract so the existing sidebar control,
 // progress state and restart action remain the sole update UI.
@@ -15,6 +16,7 @@ class CodexZeroUpdater {
     this.fetch = dependencies.fetch || globalThis.fetch;
     this.prepare = dependencies.prepare || prepareUpdate;
     this.version = dependencies.version || require("./codexzero-update-version.json").version;
+    this.archive = dependencies.archive || archiveName();
     this.state = "idle";
     this.release = null;
     this.busy = null;
@@ -29,7 +31,7 @@ class CodexZeroUpdater {
     this.timer.unref();
     this.electron.app.once("will-quit", () => clearInterval(this.timer));
   }
-  hasUpdater() { return process.platform === "win32" && process.arch === "x64"; }
+  hasUpdater() { return archiveName() !== null; }
   getUnavailableReason() { return this.hasUpdater() ? null : "unsupported platform"; }
   getIsUpdateReady() { return !!this.release && this.state === "ready"; }
   getSupportsAutoInstallWhenIdle() { return false; }
@@ -60,7 +62,7 @@ class CodexZeroUpdater {
           signal: AbortSignal.timeout(15000)
         });
         if (!response.ok) throw new Error("Release check failed");
-        this.release = selectRelease(await response.json(), this.version);
+        this.release = selectRelease(await response.json(), this.version, this.archive);
         this.setState(this.release ? "ready" : "idle");
       } catch { /* Keep a previously discovered update available while offline. */ }
     })().finally(() => { this.busy = null; });
@@ -86,6 +88,7 @@ class CodexZeroUpdater {
 }
 
 async function prepareUpdate(release, electron, setState) {
+  if (process.platform === "darwin") return prepareMacUpdate(release, setState);
   const root = path.resolve(process.resourcesPath, "..", "..");
   const launchRoot = path.resolve(process.env.CODEX_ZERO_LAUNCH_ROOT || root);
   await fs.access(path.join(launchRoot, "CodexZero.exe"));
@@ -135,4 +138,35 @@ if (!(Test-Path -LiteralPath (Join-Path $Build 'CodexZero.exe'))) { throw 'Updat
   child.unref();
 }
 
+// macOS replaces the whole application bundle after the app quits. The new
+// bundle is assembled outside it, from the release package and the pinned
+// official desktop, so a failed preparation leaves the running app untouched.
+async function prepareMacUpdate(release, setState) {
+  const root = path.join(process.resourcesPath, "codexzero");
+  const bundle = path.resolve(process.env.CODEX_ZERO_LAUNCH_ROOT || path.resolve(process.resourcesPath, "..", ".."));
+  if (path.extname(bundle) !== ".app") throw new Error("Invalid application location");
+  const stage = path.join(os.homedir(), "Library", "Caches", "CodexZero", "updates", `.stage-${randomUUID()}`);
+  await fs.mkdir(stage, { recursive: true });
+  const archive = await stageRelease(release, stage);
+  setState("installing");
+  const runner = promisify(execFile);
+  const { stdout: listing } = await runner("/usr/bin/tar", ["-tzf", archive], { maxBuffer: 64 * 1024 * 1024 });
+  for (const entry of listing.split("\n").filter(Boolean)) {
+    if (entry.startsWith("/") || entry.split("/").includes("..")) throw new Error("Invalid update archive");
+  }
+  const packageRoot = path.join(stage, "package");
+  await fs.mkdir(packageRoot);
+  await runner("/usr/bin/tar", ["-xzf", archive, "-C", packageRoot]);
+  const metadata = JSON.parse(await fs.readFile(path.join(packageRoot, "package.json"), "utf8"));
+  if (metadata.version !== release.version) throw new Error("Update version mismatch");
+  const build = path.join(stage, "CodexZero.app");
+  // The first update on a computer may also download the official desktop.
+  await runner(path.join(packageRoot, "runtime", "node"), [path.join(packageRoot, "bin", "desktop-macos.mjs"), "build",
+    "--package", packageRoot, "--output", build], { timeout: 60 * 60 * 1000, maxBuffer: 2 * 1024 * 1024 });
+  const handoff = path.join(stage, "complete.sh");
+  await fs.copyFile(path.join(root, "scripts", "complete-desktop-update-macos.sh"), handoff);
+  const child = spawn("/bin/sh", [handoff, bundle, build, String(process.pid)], { detached: true, stdio: "ignore" });
+  await new Promise((resolve, reject) => { child.once("spawn", resolve); child.once("error", reject); });
+  child.unref();
+}
 module.exports = { CodexZeroUpdater };

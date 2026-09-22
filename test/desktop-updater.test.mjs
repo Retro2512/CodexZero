@@ -22,7 +22,7 @@ function fixture(overrides = {}) {
     onUpdateReadyChanged: ready => events.push({ ready }),
     onUpdateLifecycleStateChanged: state => events.push(state),
     onInstallUpdatesRequested: () => events.push("nativeQuit")
-  }, { electron, version: "0.7.1", fetch: async () => ({ ok: true, json: async () => release }),
+  }, { electron, version: "0.7.1", archive: "codex-zero-windows-x64.zip", fetch: async () => ({ ok: true, json: async () => release }),
     prepare: async () => events.push("prepared"), ...overrides });
   updater.hasUpdater = () => true;
   return { updater, events };
