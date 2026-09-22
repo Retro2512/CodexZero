@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CodexZero README</title>
+<style>
+  :root{
+    --page:#f6f8fa; --canvas:#ffffff; --fg:#1f2328; --muted:#59636e;
+    --border:#d1d9e0; --border-soft:#d1d9e0b3; --link:#0969da;
+    --code-bg:#f6f8fa; --quote:#59636e; --quote-bar:#d1d9e0;
+    --chip:#ffffff; --chip-fg:#59636e;
+  }
+  :root[data-gh="dark"]{
+    --page:#010409; --canvas:#0d1117; --fg:#e6edf3; --muted:#9198a1;
+    --border:#3d444d; --border-soft:#3d444db3; --link:#4493f8;
+    --code-bg:#151b23; --quote:#9198a1; --quote-bar:#3d444d;
+    --chip:#151b23; --chip-fg:#9198a1;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--page); color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;
+    font-size:16px; line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .bar{
+    position:sticky; top:env(safe-area-inset-top,0px); z-index:20;
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    padding:10px 16px; background:var(--canvas);
+    border-bottom:1px solid var(--border);
+  }
+  .bar b{font-size:13px; font-weight:600}
+  .bar span{font-size:13px; color:var(--muted)}
+  .spacer{flex:1 1 auto; min-width:8px}
+  .toggle{display:flex; border:1px solid var(--border); border-radius:6px; overflow:hidden}
+  .toggle button{
+    appearance:none; border:0; background:var(--canvas); color:var(--muted);
+    font:inherit; font-size:12px; font-weight:600; padding:5px 12px; cursor:pointer;
+  }
+  .toggle button[aria-pressed="true"]{background:var(--code-bg); color:var(--fg)}
+  .toggle button:focus-visible{outline:2px solid var(--link); outline-offset:-2px}
+
+  .shell{max-width:1012px; margin:0 auto; padding-block:24px; padding-left:16px; padding-right:16px}
+  .filebox{background:var(--canvas); border:1px solid var(--border); border-radius:6px; overflow:hidden}
+  .filehead{
+    display:flex; align-items:center; gap:8px;
+    padding:8px 16px; border-bottom:1px solid var(--border); font-size:14px; color:var(--muted);
+  }
+  .filehead b{color:var(--fg); font-weight:600}
+  .md{padding:45px 32px}
+  @media (max-width:640px){ .md{padding:24px 16px} }
+
+  .md [align="center"] a img{display:inline-block; vertical-align:middle}
+  .md img{max-width:100%; height:auto; display:block}
+  .md p{margin:0 0 16px}
+  .md h2{
+    font-size:24px; font-weight:600; margin:24px 0 16px;
+    padding-bottom:.3em; border-bottom:1px solid var(--border-soft);
+  }
+  .md a{color:var(--link); text-decoration:none}
+  .md a:hover{text-decoration:underline}
+  .md code{
+    font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+    font-size:85%; background:var(--code-bg); padding:.2em .4em; border-radius:6px;
+    border:1px solid var(--border-soft);
+  }
+  .md pre{
+    background:var(--code-bg); border-radius:6px; padding:16px; overflow-x:auto;
+    margin:0 0 16px; font-size:85%; line-height:1.45;
+    font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  }
+  .md pre code{background:none; border:0; padding:0; font-size:100%}
+  .md blockquote{
+    margin:0 0 16px; padding:0 1em; color:var(--quote);
+    border-left:.25em solid var(--quote-bar);
+  }
+  .md blockquote p{margin:0}
+  .md blockquote strong{color:var(--fg)}
+  .md table{border-collapse:collapse; margin:0 0 16px; display:block; overflow-x:auto; width:max-content; max-width:100%}
+  .md th,.md td{border:1px solid var(--border); padding:6px 13px; text-align:left; vertical-align:top}
+  .md tr:nth-child(2n){background:var(--code-bg)}
+  .md th{font-weight:600}
+  .md td.num{text-align:right; font-variant-numeric:tabular-nums}
+  .md th.num{text-align:right}
+  .md ol,.md ul{margin:0 0 16px; padding-left:2em}
+  .md li{margin-top:.25em}
+  .md sub{font-size:85%; color:var(--muted)}
+  .md sub a{color:var(--link)}
+  .md details{
+    border:1px solid var(--border); border-radius:6px; padding:0 16px; margin:0 0 16px;
+  }
+  .md details[open]{padding-bottom:8px}
+  .md summary{
+    cursor:pointer; padding:12px 0; font-weight:600; list-style:revert;
+  }
+  .md summary:focus-visible{outline:2px solid var(--link); outline-offset:2px}
+  .center{text-align:center}
+  .badges{display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin:16px 0}
+  .badges img{height:20px; display:block}
+  .navline{margin:16px 0 0; font-weight:600}
+  .rule{height:1px; background:var(--border-soft); border:0; margin:24px 0}
+  .gap{height:24px}
+  .fine{font-size:85%; color:var(--muted)}
+
+  .install-command { position:relative; margin:0 0 16px; }
+  .md .install-command pre { background:#eff6ff; color:#0550ae; border:1px solid #80b7f0; padding:54px 16px 18px; }
+  :root[data-gh="dark"] .md .install-command pre { background:#102b25; color:#c9ff36; border-color:#467655; }
+  .copy-command { position:absolute; top:10px; right:10px; padding:5px 12px; border:1px solid var(--border); border-radius:6px; background:var(--canvas); color:var(--fg); font:inherit; font-size:12px; cursor:pointer; }
+  .copy-command:focus-visible { outline:2px solid var(--link); outline-offset:2px; }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <b>README preview</b>
+  <span>Retro2512/CodexZero</span>
+  <div class="spacer"></div>
+  <span>GitHub theme</span>
+  <div class="toggle" role="group" aria-label="GitHub theme">
+    <button id="btn-light" aria-pressed="false">Light</button>
+    <button id="btn-dark" aria-pressed="true">Dark</button>
+  </div>
+</div>
+
+<div class="shell">
+  <div class="filebox">
+    <div class="filehead"><b>README.md</b></div>
+    <article class="md">
+<div align="center">
+<p><img src="../assets/readme/hero.svg" alt="CodexZero. Fewer wasted tokens. 15% fewer tokens with the same benchmark score." width="900"></p>
+<p><a href="https://github.com/Retro2512/CodexZero/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Retro2512/CodexZero/actions/workflows/ci.yml/badge.svg" /></a>
+<a href="https://github.com/Retro2512/CodexZero/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/Retro2512/CodexZero?display_name=tag&amp;color=c9ff36&amp;labelColor=171713" /></a>
+<a href="../LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-f4f2e9?labelColor=171713" /></a></p>
+<p><strong><a href="#install">Install</a> &nbsp;·&nbsp; <a href="#the-numbers">The numbers</a> &nbsp;·&nbsp; <a href="#what-it-adds">What it adds</a> &nbsp;·&nbsp; <a href="#how-it-works">How it works</a></strong></p>
+</div>
+<p><br></p>
+<p><strong>CodexZero reduces repeated command output so Codex uses fewer tokens.</strong> It also adds custom models, a live cost counter and a cache warmer to the desktop app.</p>
+<p><br></p>
+<p><img src="../assets/readme/three-things.svg" alt="Less repetition in command output. Matching benchmark scores at 29/36. Custom models, a cost counter and a cache warmer." width="900"></p>
+<p><br></p>
+<h2 id="install">Install</h2>
+<p>For Windows x64, Intel Mac and Apple silicon Mac.</p>
+<p><strong>Windows</strong></p>
+<div class="install-command"><button type="button" class="copy-command" aria-live="polite" aria-label="Copy install command">Copy</button><pre><code class="language-powershell">irm https://raw.githubusercontent.com/Retro2512/CodexZero/main/scripts/bootstrap.ps1 | iex
+</code></pre></div>
+<p><strong>macOS</strong></p>
+<div class="install-command"><button type="button" class="copy-command" aria-live="polite" aria-label="Copy install command">Copy</button><pre><code class="language-sh">curl -fsSL https://raw.githubusercontent.com/Retro2512/CodexZero/main/scripts/bootstrap.sh | sh
+</code></pre></div>
+<p><sub><a href="../scripts/bootstrap.ps1">Windows installer</a> · <a href="../scripts/bootstrap.sh">macOS installer</a> · <a href="https://github.com/Retro2512/CodexZero/releases/latest">Download packages</a></sub></p>
+<p><br></p>
+<h2 id="commands">Commands</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>codex-zero run</code></td>
+<td>Run CodexZero.</td>
+</tr>
+<tr>
+<td><code>codex-zero savings</code></td>
+<td>See your token savings.</td>
+</tr>
+<tr>
+<td><code>codex-zero stock</code></td>
+<td>Run regular Codex.</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<h2 id="the-numbers">The numbers</h2>
+<p><img src="../assets/benchmarks/terminal-bench-repeated.svg" alt="Stock Codex processed 26.58 million tokens and CodexZero processed 22.69 million, both scoring 29 out of 36" width="900"></p>
+<p>We ran the same 12 software tasks, three times each, through stock Codex and through CodexZero.</p>
+<blockquote>
+<p><strong>Both scored 29 out of 36.</strong>
+CodexZero used <strong>3.89 million fewer tokens</strong>, a reduction of <strong>14.63%</strong>.</p>
+</blockquote>
+<details>
+<summary><b>Full benchmark comparison</b></summary>
+<p><br></p>
+<table>
+<thead>
+<tr>
+<th>Setup</th>
+<th style="text-align: right;">Score</th>
+<th style="text-align: right;">Total tokens</th>
+<th style="text-align: right;">vs. stock Codex</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Codex</td>
+<td style="text-align: right;">29/36</td>
+<td style="text-align: right;">26,580,391</td>
+<td style="text-align: right;">baseline</td>
+</tr>
+<tr>
+<td>CodexZero</td>
+<td style="text-align: right;">29/36</td>
+<td style="text-align: right;">22,691,418</td>
+<td style="text-align: right;"><strong>14.63% fewer</strong></td>
+</tr>
+</tbody>
+</table>
+<p>12 tasks · 3 repetitions per setup</p>
+<p><img src="../assets/benchmarks/complete-setup-comparison.png" alt="Token use, task result, cached input, and estimated cost across CodexZero and other Codex setups" width="900"></p>
+<ul>
+<li><a href="../reports/terminal-bench-2.1-replication/README.md">Repeated benchmark report</a></li>
+<li><a href="../docs/measurement.md">Measurement methodology</a></li>
+</ul>
+</details>
+<p><br></p>
+<h2 id="what-it-adds">What it adds</h2>
+<p><img src="../assets/readme/extras.svg" alt="The Codex model picker listing Codex models alongside Claude, Z.ai and a local model; and a context ring showing cache warmth, cost this chat, and a Keep warm toggle" width="900"></p>
+<p><strong>Custom models in the Codex dropdown.</strong> Add Claude, Z.ai or a local model alongside your Codex models. Switch between turns.
+<br><sub>Settings → Agent → Custom models · <a href="../docs/custom-models.md">setup and supported APIs</a></sub></p>
+<p><strong>Live cost and cache status.</strong> The context ring shows your conversation's API token cost and estimated cache warmth. Enable <em>Keep warm</em> to refresh the cache while the chat is idle.
+<br><sub>Settings → Agent → Context cache · <a href="../docs/cache-research.md">cache behaviour and pricing</a></sub></p>
+<p>On Windows, quit Codex, then launch the desktop features:</p>
+<pre><code class="language-text">codex-zero desktop --providers
+</code></pre>
+<p><br></p>
+<h2 id="how-it-works">How it works</h2>
+<p><img src="../assets/readme/how-it-works.svg" alt="Repeated warnings condensed into counts alongside the original error message" width="900"></p>
+<ol>
+<li>Your command runs.</li>
+<li>The full output is saved to your disk.</li>
+<li>Lines that repeat get collapsed into a count.</li>
+<li>Codex receives the shorter result, or the original if no tokens are saved.</li>
+</ol>
+<p><br></p>
+<h2 id="settings-and-compatibility">Settings and compatibility</h2>
+<details>
+<summary><b>Modes and commands</b></summary>
+<p><br></p>
+<p><strong>Standard</strong> is the default. It uses concise instructions and Codex's normal tools.</p>
+<pre><code class="language-text">codex-zero mode standard
+</code></pre>
+<p><strong>Focused</strong> can batch independent tool calls.</p>
+<pre><code class="language-text">codex-zero mode focused
+</code></pre>
+<p><code>safe</code> uses regular Codex tools and instructions. <code>max-save</code> is an alias for Standard.</p>
+<p>Pick a model for one run:</p>
+<pre><code class="language-text">codex-zero run --model gpt-6-astra
+</code></pre>
+<p>Run a configured batch of checks:</p>
+<pre><code class="language-text">codex-zero run-checks verify --summary
+</code></pre>
+</details>
+<details>
+<summary><b>Compatibility</b></summary>
+<p><br></p>
+<ul>
+<li>Windows x64 · Intel Mac · Apple silicon Mac</li>
+<li>Codex CLI and Codex Desktop</li>
+<li>Node.js 20+ if you're building from a source checkout</li>
+</ul>
+<p>Release packages include the runtime.</p>
+<p>Quit Codex completely before running <code>codex-zero desktop</code>.</p>
+<p><a href="../docs/compatibility.md">Full compatibility notes</a></p>
+</details>
+<p><br></p>
+<h2 id="more">More</h2>
+<p><a href="../docs/architecture.md">Architecture</a> &nbsp;·&nbsp; <a href="../docs/measurement.md">Measurement</a> &nbsp;·&nbsp; <a href="../docs/custom-models.md">Custom models</a> &nbsp;·&nbsp; <a href="../docs/cache-research.md">Cache research</a> &nbsp;·&nbsp; <a href="../CONTRIBUTING.md">Contributing</a> &nbsp;·&nbsp; <a href="../SECURITY.md">Security</a> &nbsp;·&nbsp; <a href="../docs/rollback.md">Uninstall</a></p>
+<p><img src="../assets/downloads/history.svg" alt="CodexZero total package download history" width="900"></p>
+<p><br></p>
+</article>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var light = document.getElementById('btn-light');
+    var dark = document.getElementById('btn-dark');
+    function set(mode) {
+      root.setAttribute('data-gh', mode);
+      light.setAttribute('aria-pressed', String(mode === 'light'));
+      dark.setAttribute('aria-pressed', String(mode === 'dark'));
+      try { localStorage.setItem('gh-theme', mode); } catch (e) {}
+    }
+    light.addEventListener('click', function () { set('light'); });
+    dark.addEventListener('click', function () { set('dark'); });
+    var saved = null;
+    try { saved = localStorage.getItem('gh-theme'); } catch (e) {}
+    set(saved === 'light' ? 'light' : 'dark');
+  })();
+</script>
+
+<script>
+  document.querySelectorAll('.copy-command').forEach(function (button) {
+    button.addEventListener('click', async function () {
+      var command = button.parentElement.querySelector('code').textContent.trim();
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(command);
+        } else {
+          var input = document.createElement('textarea');
+          input.value = command;
+          input.style.position = 'fixed';
+          input.style.opacity = '0';
+          document.body.appendChild(input);
+          input.select();
+          var copied = document.execCommand('copy');
+          input.remove();
+          button.focus();
+          if (!copied) throw new Error('Copy failed');
+        }
+        button.textContent = 'Copied';
+      } catch (error) {
+        button.textContent = 'Select to copy';
+        var selection = window.getSelection();
+        var range = document.createRange();
+        range.selectNodeContents(button.parentElement.querySelector('code'));
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+      setTimeout(function () { button.textContent = 'Copy'; }, 2000);
+    });
+  });
+</script>
+
+</body>
+</html>

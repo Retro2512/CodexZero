@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400" role="img" aria-labelledby="t d">
+  <title id="t">How CodexZero shrinks command output</title>
+  <desc id="d">Command output before and after repeated warnings are condensed into counts.</desc>
+  <rect width="1200" height="400" rx="16" fill="#171713"/>
+
+  <text x="24" y="40" fill="#8f8e85" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="700" letter-spacing="1.6">WHAT YOUR COMMAND PRINTED</text>
+  <rect x="24" y="56" width="496" height="268" rx="10" fill="#0f0f0c" stroke="#3d3d36"/>
+  <g font-family="Consolas,Menlo,monospace" font-size="14.5" fill="#6e6d65">
+    <text x="48" y="88" fill="#aaa99f">$ cargo build</text>
+    <text x="48" y="116">warning: unused import `std::fs`</text>
+    <text x="48" y="140">warning: unused import `std::fs`</text>
+    <text x="48" y="164">warning: unused import `std::fs`</text>
+    <text x="48" y="188">warning: unused import `std::fs`</text>
+    <text x="48" y="212">warning: unused import `std::fs`</text>
+    <text x="48" y="236">warning: unused import `std::path`</text>
+    <text x="48" y="260">warning: unused import `std::path`</text>
+    <text x="48" y="284" fill="#ff7759">error[E0308]: mismatched types</text>
+    <text x="48" y="308" fill="#6e6d65">   --&gt; src/main.rs:42:17</text>
+  </g>
+
+  <g transform="translate(548 176)" aria-hidden="true">
+    <path d="M0 14 L84 14 M70 2 L84 14 L70 26" fill="none" stroke="#c9ff36" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="42" y="-6" fill="#c9ff36" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="700" text-anchor="middle" letter-spacing="1.2">CODEXZERO</text>
+  </g>
+
+  <text x="680" y="40" fill="#8f8e85" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="700" letter-spacing="1.6">WHAT CODEX READS</text>
+  <rect x="680" y="56" width="496" height="268" rx="10" fill="#0f0f0c" stroke="#4a4a42"/>
+  <g font-family="Consolas,Menlo,monospace" font-size="14.5" fill="#d8d6cb">
+    <text x="704" y="88" fill="#aaa99f">$ cargo build</text>
+    <text x="704" y="116">warning: unused import `std::fs`</text>
+    <text x="704" y="140">warning: unused import `std::path`</text>
+    <text x="704" y="188" fill="#ff7759">error[E0308]: mismatched types</text>
+    <text x="704" y="212" fill="#6e6d65">   --&gt; src/main.rs:42:17</text>
+  </g>
+  <rect x="1000" y="102" width="40" height="20" rx="5" fill="#2a2a24"/>
+  <text x="1020" y="117" fill="#c9ff36" font-family="Consolas,Menlo,monospace" font-size="13" font-weight="700" text-anchor="middle">×5</text>
+  <rect x="1000" y="126" width="40" height="20" rx="5" fill="#2a2a24"/>
+  <text x="1020" y="141" fill="#c9ff36" font-family="Consolas,Menlo,monospace" font-size="13" font-weight="700" text-anchor="middle">×2</text>
+
+  <line x1="24" y1="348" x2="1176" y2="348" stroke="#2a2a24"/>
+  <text x="24" y="378" fill="#8f8e85" font-family="Arial,Helvetica,sans-serif" font-size="14.5">The full output is saved locally and available to Codex.</text>
+</svg>

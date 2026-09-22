@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400" role="img" aria-labelledby="t d">
+  <title id="t">CodexZero custom models, cost counter and cache status</title>
+  <desc id="d">Left: the Codex model picker listing Codex models alongside Claude, Z.ai and a local model. Right: a context ring showing the cache 68 percent warm, 43 cents spent in this chat, and a Keep warm toggle refreshing every 4 minutes.</desc>
+  <rect width="1200" height="400" rx="16" fill="#171713"/>
+
+  <text x="24" y="38" fill="#ff7759" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="700" letter-spacing="1.6">CUSTOM MODELS</text>
+  <rect x="24" y="56" width="536" height="300" rx="12" fill="#20201c" stroke="#3d3d36"/>
+  <text x="52" y="92" fill="#8f8e85" font-family="Arial,Helvetica,sans-serif" font-size="12.5" font-weight="700" letter-spacing="1.2">MODEL</text>
+
+  <rect x="40" y="106" width="504" height="44" rx="8" fill="#2a2a24"/>
+  <path d="M58 128 L66 136 L80 120" fill="none" stroke="#c9ff36" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="96" y="134" fill="#f4f2e9" font-family="Consolas,Menlo,monospace" font-size="15.5">gpt-6-astra</text>
+  <rect x="452" y="118" width="76" height="20" rx="5" fill="#171713"/>
+  <text x="490" y="133" fill="#aaa99f" font-family="Arial,Helvetica,sans-serif" font-size="11.5" font-weight="700" text-anchor="middle">CODEX</text>
+
+  <text x="96" y="182" fill="#d8d6cb" font-family="Consolas,Menlo,monospace" font-size="15.5">gpt-5-codex</text>
+  <rect x="452" y="166" width="76" height="20" rx="5" fill="#20201c" stroke="#3d3d36"/>
+  <text x="490" y="181" fill="#8f8e85" font-family="Arial,Helvetica,sans-serif" font-size="11.5" font-weight="700" text-anchor="middle">CODEX</text>
+
+  <text x="96" y="226" fill="#d8d6cb" font-family="Consolas,Menlo,monospace" font-size="15.5">claude-opus-5</text>
+  <rect x="452" y="210" width="76" height="20" rx="5" fill="#20201c" stroke="#3d3d36"/>
+  <text x="490" y="225" fill="#8f8e85" font-family="Arial,Helvetica,sans-serif" font-size="11.5" font-weight="700" text-anchor="middle">API KEY</text>
+
+  <text x="96" y="270" fill="#d8d6cb" font-family="Consolas,Menlo,monospace" font-size="15.5">glm-4.6</text>
+  <rect x="452" y="254" width="76" height="20" rx="5" fill="#20201c" stroke="#3d3d36"/>
+  <text x="490" y="269" fill="#8f8e85" font-family="Arial,Helvetica,sans-serif" font-size="11.5" font-weight="700" text-anchor="middle">API KEY</text>
+
+  <text x="96" y="314" fill="#d8d6cb" font-family="Consolas,Menlo,monospace" font-size="15.5">qwen3-coder:30b</text>
+  <rect x="452" y="298" width="76" height="20" rx="5" fill="#20201c" stroke="#3d3d36"/>
+  <text x="490" y="313" fill="#8f8e85" font-family="Arial,Helvetica,sans-serif" font-size="11.5" font-weight="700" text-anchor="middle">LOCAL</text>
+
+  <text x="616" y="38" fill="#ff7759" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="700" letter-spacing="1.6">LIVE COST AND CACHE</text>
+  <rect x="616" y="56" width="560" height="300" rx="12" fill="#20201c" stroke="#3d3d36"/>
+
+  <circle cx="742" cy="180" r="58" fill="none" stroke="#2a2a24" stroke-width="13"/>
+  <circle cx="742" cy="180" r="58" fill="none" stroke="#c9ff36" stroke-width="13" stroke-linecap="round"
+          stroke-dasharray="248 117" transform="rotate(-90 742 180)"/>
+  <text x="742" y="180" fill="#f4f2e9" font-family="Arial,Helvetica,sans-serif" font-size="34" font-weight="800" text-anchor="middle">68%</text>
+  <text x="742" y="202" fill="#8f8e85" font-family="Arial,Helvetica,sans-serif" font-size="12.5" text-anchor="middle">cache warm</text>
+
+  <text x="840" y="140" fill="#8f8e85" font-family="Arial,Helvetica,sans-serif" font-size="12.5" font-weight="700" letter-spacing="1.2">THIS CHAT</text>
+  <text x="840" y="182" fill="#f4f2e9" font-family="Arial,Helvetica,sans-serif" font-size="38" font-weight="800">$0.43</text>
+  <text x="840" y="208" fill="#8f8e85" font-family="Arial,Helvetica,sans-serif" font-size="13.5">API token cost</text>
+
+  <rect x="648" y="272" width="496" height="56" rx="9" fill="#171713" stroke="#3d3d36"/>
+  <rect x="672" y="291" width="36" height="20" rx="10" fill="#c9ff36"/>
+  <circle cx="698" cy="301" r="7.5" fill="#171713"/>
+  <text x="724" y="298" fill="#f4f2e9" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="700">Keep warm</text>
+  <text x="724" y="317" fill="#8f8e85" font-family="Arial,Helvetica,sans-serif" font-size="13">Refresh every 4 min while idle</text>
+</svg>

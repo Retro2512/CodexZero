@@ -1,164 +1,172 @@
 <div align="center">
-  <h1>CodexZero</h1>
-  <p><strong>Zero Wasted Tokens, Same Benchmark Scores &amp; Quality, More Usage Limits, Less Cost</strong></p>
-</div>
 
-![Highest recorded token reduction for CodexZero Max, CodexZero, RTK, standard Codex, Caveman, and RTK plus Caveman](assets/benchmarks/benchmark-overview.svg)
+<img src="assets/readme/hero.svg" alt="CodexZero. Fewer wasted tokens. 15% fewer tokens with the same benchmark score." width="900">
 
 [![CI](https://github.com/Retro2512/CodexZero/actions/workflows/ci.yml/badge.svg)](https://github.com/Retro2512/CodexZero/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/Retro2512/CodexZero?display_name=tag)](https://github.com/Retro2512/CodexZero/releases/latest)
-[![License: MIT](https://img.shields.io/badge/license-MIT-171713.svg)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/Retro2512/CodexZero?display_name=tag&color=c9ff36&labelColor=171713)](https://github.com/Retro2512/CodexZero/releases/latest)
+[![License: MIT](https://img.shields.io/badge/license-MIT-f4f2e9?labelColor=171713)](LICENSE)
 
-CodexZero recorded the largest token reduction in our completed comparisons. In the strongest repeated benchmark, it:
+**[Install](#install) &nbsp;·&nbsp; [The numbers](#the-numbers) &nbsp;·&nbsp; [What it adds](#what-it-adds) &nbsp;·&nbsp; [How it works](#how-it-works)**
 
-- used **15% fewer tokens**
-- matched Codex’s **29/36 task score**
-- processed **3.89 million fewer tokens**
-- ran the same 12 software tasks three times per setup
+</div>
 
-CodexZero installs beside Codex. Your regular CLI remains available, and the full command result stays available whenever Codex needs it.
+<br>
+
+**CodexZero reduces repeated command output so Codex uses fewer tokens.** It also adds custom models, a live cost counter and a cache warmer to the desktop app.
+
+<br>
+
+<img src="assets/readme/three-things.svg" alt="Less repetition in command output. Matching benchmark scores at 29/36. Custom models, a cost counter and a cache warmer." width="900">
+
+<br>
 
 ## Install
 
-### Windows
+For Windows x64, Intel Mac and Apple silicon Mac.
+
+**Windows**
 
 ```powershell
 irm https://raw.githubusercontent.com/Retro2512/CodexZero/main/scripts/bootstrap.ps1 | iex
 ```
 
-### macOS
+**macOS**
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/Retro2512/CodexZero/main/scripts/bootstrap.sh | sh
 ```
 
-Release packages include the runtime. Supported targets are Windows x64, Intel Mac, and Apple silicon Mac.
+<sub>[Windows installer](scripts/bootstrap.ps1) · [macOS installer](scripts/bootstrap.sh) · [Download packages](https://github.com/Retro2512/CodexZero/releases/latest)</sub>
 
-Prefer to inspect the installer first? Open the [Windows script](scripts/bootstrap.ps1), [macOS script](scripts/bootstrap.sh), or [latest release](https://github.com/Retro2512/CodexZero/releases/latest).
+<br>
 
-## Run it
+## Commands
 
-```text
-codex-zero run
-```
+| Command | Action |
+|---|---|
+| `codex-zero run` | Run CodexZero. |
+| `codex-zero savings` | See your token savings. |
+| `codex-zero stock` | Run regular Codex. |
 
-Use the optimized side-by-side CLI.
+<br>
 
-```text
-codex-zero savings
-```
+## The numbers
 
-See the tokens CodexZero saved on your own work.
+<img src="assets/benchmarks/terminal-bench-repeated.svg" alt="Stock Codex processed 26.58 million tokens and CodexZero processed 22.69 million, both scoring 29 out of 36" width="900">
 
-```text
-codex-zero stock
-```
+We ran the same 12 software tasks, three times each, through stock Codex and through CodexZero.
 
-Open regular Codex at any time.
+> **Both scored 29 out of 36.**
+> CodexZero used **3.89 million fewer tokens**, a reduction of **14.63%**.
 
-## The repeated result
+<details>
+<summary><b>Full benchmark comparison</b></summary>
 
-![Regular Codex processed 26.58 million tokens and CodexZero processed 22.69 million while both scored 29 out of 36; CodexZero Max is projected at 19.62 million](assets/benchmarks/terminal-bench-repeated.svg)
+<br>
 
-Codex and CodexZero each completed 12 software tasks three times. CodexZero matched the final task score while processing 22.69 million tokens instead of 26.58 million.
+| Setup | Score | Total tokens | vs. stock Codex |
+|---|---:|---:|---:|
+| Codex | 29/36 | 26,580,391 | baseline |
+| CodexZero | 29/36 | 22,691,418 | **14.63% fewer** |
 
-[Benchmark summary](reports/terminal-bench-2.1-replication/README.md)
+12 tasks · 3 repetitions per setup
 
-## Complete comparison
+<img src="assets/benchmarks/complete-setup-comparison.png" alt="Token use, task result, cached input, and estimated cost across CodexZero and other Codex setups" width="900">
 
-![Comparison of token use, task result, cached input, and estimated cost across CodexZero and other Codex setups](assets/benchmarks/complete-setup-comparison.png)
+- [Repeated benchmark report](reports/terminal-bench-2.1-replication/README.md)
+- [Measurement methodology](docs/measurement.md)
 
-CodexZero Standard and Max Savings both completed the comparison with fewer tokens than stock Codex. The chart marks failed runs, different setups, and smaller samples directly.
+</details>
 
-## How it works
+<br>
 
-CodexZero keeps the original command result available, removes repeated text when that produces a smaller result, and otherwise leaves the result alone.
+## What it adds
 
-1. Your command runs normally.
-2. CodexZero saves the full result locally.
-3. Repeated output can be represented more briefly.
-4. If the shorter result does not save tokens, Codex receives the original.
+<img src="assets/readme/extras.svg" alt="The Codex model picker listing Codex models alongside Claude, Z.ai and a local model; and a context ring showing cache warmth, cost this chat, and a Keep warm toggle" width="900">
 
-Your model, reasoning level, tools, project instructions, permissions, and existing Codex installation remain under your control.
+**Custom models in the Codex dropdown.** Add Claude, Z.ai or a local model alongside your Codex models. Switch between turns.
+<br><sub>Settings → Agent → Custom models · [setup and supported APIs](docs/custom-models.md)</sub>
 
-## Settings
+**Live cost and cache status.** The context ring shows your conversation's API token cost and estimated cache warmth. Enable *Keep warm* to refresh the cache while the chat is idle.
+<br><sub>Settings → Agent → Context cache · [cache behaviour and pricing](docs/cache-research.md)</sub>
 
-**Standard** is the default. It uses the bundled lean prompt with Codex’s direct tool surface. This is the fastest and lowest-cost profile in the paired quick benchmark.
-
-```text
-codex-zero mode standard
-```
-
-**Focused** adds a scoped runtime that can batch independent tool calls. Use it for tool-heavy work; the extra runtime layer can cost more on small tasks.
-
-```text
-codex-zero mode focused
-```
-
-`safe` preserves the direct Codex tool surface and stock model instructions. `max-save` is the legacy name for Standard’s direct-tool, lean-prompt behavior. The published repeated 15% result predates these modes.
-
-Select Astra for a run:
-
-```text
-codex-zero run --model gpt-6-astra
-```
-
-For configured check batches, return statuses and saved output paths:
-
-```text
-codex-zero run-checks verify --summary
-```
-
-## Desktop cache and custom models
-
-On Windows, launch the Desktop features with:
+On Windows, quit Codex, then launch the desktop features:
 
 ```text
 codex-zero desktop --providers
 ```
 
-The context ring shows estimated cache warmth and the conversation's API token cost.
-Open Settings > Agent > Context cache to set an idle refresh duration, or toggle
-Keep warm for a chat in the ring's tooltip.
+<br>
 
-Add Claude, Z.ai, or another provider under Settings > Agent > Custom models.
-[Setup and supported APIs](docs/custom-models.md)
-[Cache behavior and pricing](docs/cache-research.md)
+## How it works
 
-## Compatibility
+<img src="assets/readme/how-it-works.svg" alt="Repeated warnings condensed into counts alongside the original error message" width="900">
 
-- Windows x64
-- Intel Mac
-- Apple silicon Mac
-- Codex CLI and Codex Desktop
-- Node.js 20+ for source-checkout development
+1. Your command runs.
+2. The full output is saved to your disk.
+3. Lines that repeat get collapsed into a count.
+4. Codex receives the shorter result, or the original if no tokens are saved.
 
-For Desktop, quit Codex completely before running:
+<br>
+
+## Settings and compatibility
+
+<details>
+<summary><b>Modes and commands</b></summary>
+
+<br>
+
+**Standard** is the default. It uses concise instructions and Codex's normal tools.
 
 ```text
-codex-zero desktop
+codex-zero mode standard
 ```
 
-## Trust and control
+**Focused** can batch independent tool calls.
 
-- CodexZero is free and open source under the MIT license.
-- Regular Codex remains available through `codex-zero stock`.
-- Full command results stay available locally.
-- Errors, warnings, exit codes, and non-repeated lines are preserved.
-- `codex-zero savings` reports measured local results rather than a universal estimate.
+```text
+codex-zero mode focused
+```
 
-Token reductions do not translate directly into the same percentage reduction on every bill or plan. Output, caching, pricing, and workload shape the final result.
+`safe` uses regular Codex tools and instructions. `max-save` is an alias for Standard.
 
-## More information
+Pick a model for one run:
 
-- [Architecture](docs/architecture.md)
-- [Compatibility details](docs/compatibility.md)
-- [Security](SECURITY.md)
-- [Uninstall and rollback](docs/rollback.md)
-- [Contributing](CONTRIBUTING.md)
+```text
+codex-zero run --model gpt-6-astra
+```
 
-CodexZero is an independent project and is not an official OpenAI product.
+Run a configured batch of checks:
 
-## Downloads
+```text
+codex-zero run-checks verify --summary
+```
 
-![CodexZero total package download history](assets/downloads/history.svg)
+</details>
+
+<details>
+<summary><b>Compatibility</b></summary>
+
+<br>
+
+- Windows x64 · Intel Mac · Apple silicon Mac
+- Codex CLI and Codex Desktop
+- Node.js 20+ if you're building from a source checkout
+
+Release packages include the runtime.
+
+Quit Codex completely before running `codex-zero desktop`.
+
+[Full compatibility notes](docs/compatibility.md)
+
+</details>
+
+<br>
+
+## More
+
+[Architecture](docs/architecture.md) &nbsp;·&nbsp; [Measurement](docs/measurement.md) &nbsp;·&nbsp; [Custom models](docs/custom-models.md) &nbsp;·&nbsp; [Cache research](docs/cache-research.md) &nbsp;·&nbsp; [Contributing](CONTRIBUTING.md) &nbsp;·&nbsp; [Security](SECURITY.md) &nbsp;·&nbsp; [Uninstall](docs/rollback.md)
+
+<img src="assets/downloads/history.svg" alt="CodexZero total package download history" width="900">
+
+<br>
