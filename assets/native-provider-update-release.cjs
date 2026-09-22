@@ -4,11 +4,11 @@ const crypto = require("node:crypto");
 const fs = require("node:fs/promises");
 const path = require("node:path");
 
-const ARCHIVE_NAME = "codex-zero-desktop-windows-x64.zip";
+const ARCHIVE_NAME = "codex-zero-windows-x64.zip";
 const CHECKSUM_NAME = `${ARCHIVE_NAME}.sha256`;
 const RELEASE_ROOT = "https://github.com/Retro2512/CodexZero/releases/download";
 const MAX_CHECKSUM_BYTES = 8 * 1024;
-const MAX_ARCHIVE_BYTES = 2 * 1024 ** 3;
+const MAX_ARCHIVE_BYTES = 1024 ** 3;
 const DOWNLOAD_TIMEOUT_MS = 15 * 60 * 1000;
 const STABLE_VERSION = /^(?:v)?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/;
 
@@ -147,7 +147,7 @@ async function readBounded(response, maximum, label, controller) {
 
 function parseChecksum(buffer) {
   const text = buffer.toString("utf8");
-  const match = /^([0-9a-fA-F]{64})[ \t]+\*?(?:\.\/)?(codex-zero-desktop-windows-x64\.zip)\r?\n?$/.exec(text);
+  const match = /^([0-9a-fA-F]{64})[ \t]+\*?(?:\.\/)?(codex-zero-windows-x64\.zip)\r?\n?$/.exec(text);
   if (!match || match[2] !== ARCHIVE_NAME) throw new Error("Invalid release checksum");
   return match[1].toLowerCase();
 }

@@ -6,11 +6,11 @@ The Windows native CodexZero build uses the existing Desktop update indicator an
 
 The app checks `Retro2512/CodexZero` on startup and every 30 minutes. Only a newer published stable GitHub release is offered. Pushing commits alone does not trigger an update.
 
-Each release must have a version matching `package.json`, `codex-zero-desktop-windows-x64.zip`, and `codex-zero-desktop-windows-x64.zip.sha256`. The release workflow also retains the small `codex-zero-windows-x64.zip` and its checksum for older updaters that rebuild locally and cannot download the larger desktop archive. See [desktop releases](desktop-releases.md).
+Each release must have a version matching `package.json`, `codex-zero-windows-x64.zip`, and `codex-zero-windows-x64.zip.sha256`. See [desktop releases](desktop-releases.md).
 
 ## Install and restart
 
-Clicking the native update action downloads and verifies the archive and validates its paths and version. Complete desktop releases are copied directly into the stable launcher's `updates` directory without requiring an installed original Codex app. Legacy core only packages retain the local builder fallback. The current app stays open during preparation.
+Clicking the native update action downloads and verifies the archive, validates its paths and version, and builds a separate native Desktop copy under the stable launcher's `updates` directory. The build uses the pinned official desktop: the matching installed app, the verified package kept from setup, or a new resumable download of it. An installed original Codex app is not required. The current app stays open during preparation.
 
 After successful preparation, the native quit handler closes the app. A detached Windows PowerShell helper waits for that exact process to exit, atomically changes `current-build.txt`, then reopens the stable launcher. Existing shortcuts continue to work. The previous build and user data remain in place. A failed preparation keeps the current app running; a launcher start failure restores the prior pointer.
 

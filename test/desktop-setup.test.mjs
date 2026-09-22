@@ -11,14 +11,24 @@ const script = path.join(root, 'scripts', 'build-desktop-setup.ps1');
 const installer = readFileSync(path.join(root, 'scripts', 'windows-desktop.iss'), 'utf8');
 const windows = process.platform === 'win32';
 
-test('desktop setup is per user, independent, and opens the complete application', () => {
+test('desktop setup is per user, independent, and opens the assembled application', () => {
   assert.match(installer, /DefaultDirName=\{localappdata\}\\Programs\\CodexZero/);
   assert.match(installer, /PrivilegesRequired=lowest/);
   assert.match(installer, /ArchitecturesAllowed=x64compatible/);
-  assert.match(installer, /Source: "\{#PackageRoot\}\\\*"; DestDir: "\{app\}"/);
   assert.match(installer, /Name: "\{userprograms\}\\CodexZero"; Filename: "\{app\}\\CodexZero.exe"/);
   assert.match(installer, /Name: "\{userdesktop\}\\CodexZero"/);
   assert.match(installer, /Flags: nowait postinstall skipifsilent; Check: CanLaunch/);
+});
+
+test('setup downloads the pinned official desktop instead of bundling it', () => {
+  assert.match(installer, /#if Ver < EncodeVer\(6, 5, 0\)/);
+  assert.match(installer, /Source: "\{#PackageRoot\}\\\*"; DestDir: "\{tmp\}\\package"/);
+  assert.match(installer, /Source: "\{#DesktopUrl\}"; DestDir: "\{tmp\}"; DestName: "codex-desktop\.msix"; Hash: "\{#DesktopSha256\}"; ExternalSize: \{#DesktopSize\}; Flags: external download/);
+  assert.match(installer, /Check: NeedsDesktopDownload/);
+  assert.match(installer, /OpenAI\.Codex_\{#DesktopVersion\}_x64__\{#DesktopPublisher\}/);
+  assert.match(installer, /\{localappdata\}\\CodexZero\\cache\\desktop\\\{#DesktopVersion\}\.msix/);
+  assert.match(installer, /install-desktop\.ps1"' \+\s+' -PackageRoot "' \+ Package \+ '" -InstallRoot "' \+ ExpandConstant\('\{app\}'\) \+ '" -Installer setup -NoLaunch -SkipShortcuts'/);
+  assert.match(installer, /if not Started or \(ResultCode <> 0\) then\s+RaiseException/);
 });
 
 test('setup preserves user data and never kills original Codex processes', () => {
@@ -30,17 +40,19 @@ test('setup preserves user data and never kills original Codex processes', () =>
   assert.match(installer, /\\complete\.ps1/);
   assert.match(installer, /function PrepareToInstall/);
   assert.match(installer, /function InitializeUninstall/);
-  assert.doesNotMatch(installer, /taskkill|TerminateProcess|\.Terminate\(|\[UninstallDelete\]|\[InstallDelete\]/i);
+  assert.doesNotMatch(installer, /taskkill|TerminateProcess|\.Terminate\(|\[InstallDelete\]/i);
   assert.doesNotMatch(installer, /\.codex|\{userappdata\}|\\CodexZero\\Browser/);
+  const removed = installer.split('[UninstallDelete]')[1].split('[Run]')[0];
+  const names = [...removed.matchAll(/Name: "([^"]+)"/g)].map(match => match[1]);
+  assert.deepEqual(names, ['{app}\\updates', '{app}\\CodexZero.exe', '{app}\\current-build.txt',
+    '{app}\\update-failed.txt', '{localappdata}\\CodexZero\\cache']);
 });
 
-test('setup resets update selection only after successful file installation', () => {
-  assert.match(installer, /Excludes: "current-build.txt,update-failed.txt,updates\\\*"/);
-  assert.match(installer, /if CurStep = ssPostInstall then begin[\s\S]*DeleteFile\(ExpandConstant\('\{app\}\\current-build.txt'\)\)/);
+test('setup switches builds only after the desktop is assembled', () => {
+  assert.match(installer, /if CurStep = ssPostInstall then begin[\s\S]*AssembleDesktop\(\);[\s\S]*current-build\.txt/);
   assert.match(installer, /if not InstallReady then\s+RaiseException/);
   assert.match(installer, /function CanLaunch\(\): Boolean;[\s\S]*?Result := InstallReady/);
 });
-
 test('silent installs open the application unless NOLAUNCH is supplied', () => {
   assert.match(installer, /Flags: nowait postinstall skipifnotsilent; Check: CanLaunchSilently/);
   assert.match(installer, /Result := WizardSilent and CanLaunch\(\)/);
@@ -63,15 +75,16 @@ function fixture(t) {
   const packageRoot = path.join(dir, 'package with spaces');
   const output = path.join(dir, 'output with spaces');
   mkdirSync(packageRoot);
-  for (const relative of ['CodexZero.exe', 'desktop/ChatGPT.exe', 'runtime/node.exe',
-    'assets/codexzero.ico', 'bin/codex-zero.mjs', 'package.json', 'local-build.json']) {
+  for (const relative of ['runtime/node.exe', 'assets/codexzero.ico', 'bin/codex-zero.mjs', 'package.json',
+    'scripts/install-desktop.ps1', 'scripts/build-provider-local.ps1', 'scripts/resolve-desktop.ps1']) {
     const file = path.join(packageRoot, relative);
     mkdirSync(path.dirname(file), { recursive: true });
-    writeFileSync(file, relative === 'package.json' ? '{"version":"1.2.3"}' : relative.endsWith('.json') ? '{}' : 'fixture');
+    writeFileSync(file, relative === 'package.json' ? '{"version":"1.2.3"}' : 'fixture');
   }
-  for (const relative of ['provider-runtime', 'src', 'scripts']) mkdirSync(path.join(packageRoot, relative));
+  writeFileSync(path.join(packageRoot, 'scripts/desktop-upstream.json'), readFileSync(path.join(root, 'scripts/desktop-upstream.json')));
+  mkdirSync(path.join(packageRoot, 'src'));
   const compiler = path.join(dir, 'fake-iscc.cmd');
-  writeFileSync(compiler, `@echo off\r\necho fixture > "${path.join(output, 'CodexZero-Setup-windows-x64.exe')}"\r\nexit /b 0\r\n`);
+  writeFileSync(compiler, `@echo off\r\necho %* > "${path.join(dir, 'arguments.txt')}"\r\necho fixture > "${path.join(output, 'CodexZero-Setup-windows-x64.exe')}"\r\nexit /b 0\r\n`);
   return { dir, packageRoot, output, compiler };
 }
 
@@ -110,4 +123,38 @@ test('builder propagates compiler failures', { skip: !windows }, t => {
   const result = build(f);
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /Inno Setup failed with exit code 9/);
+});
+
+test('builder refuses to package an assembled desktop application', { skip: !windows }, t => {
+  for (const relative of ['desktop/ChatGPT.exe', 'provider-runtime/1/codex.exe', 'CodexZero.exe']) {
+    const f = fixture(t);
+    mkdirSync(path.dirname(path.join(f.packageRoot, relative)), { recursive: true });
+    writeFileSync(path.join(f.packageRoot, relative), 'fixture');
+    const result = build(f);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /Package must not contain an assembled desktop/);
+    assert.equal(existsSync(path.join(f.output, 'CodexZero-Setup-windows-x64.exe')), false);
+  }
+});
+
+test('builder passes the pinned official desktop to the compiler', { skip: !windows }, t => {
+  const f = fixture(t);
+  const pin = JSON.parse(readFileSync(path.join(root, 'scripts/desktop-upstream.json'), 'utf8'));
+  const result = build(f);
+  assert.equal(result.status, 0, result.stderr);
+  const args = readFileSync(path.join(f.dir, 'arguments.txt'), 'utf8');
+  assert.match(args, new RegExp(`/DDesktopUrl=${pin.url.replace(/[.?]/g, '\\$&')}`));
+  assert.match(args, new RegExp(`/DDesktopSha256=${pin.sha256}`));
+  assert.match(args, new RegExp(`/DDesktopSize=${pin.size}`));
+  assert.match(args, new RegExp(`/DDesktopVersion=${pin.version.replaceAll('.', '\\.')}`));
+  assert.match(args, new RegExp(`/DDesktopPublisher=${pin.publisherId}`));
+});
+
+test('builder rejects an unofficial desktop download', { skip: !windows }, t => {
+  const f = fixture(t);
+  const pin = JSON.parse(readFileSync(path.join(root, 'scripts/desktop-upstream.json'), 'utf8'));
+  writeFileSync(path.join(f.packageRoot, 'scripts/desktop-upstream.json'), JSON.stringify({ ...pin, url: 'https://example.com/ChatGPT-x64.msix' }));
+  const result = build(f);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /The pinned desktop package is invalid/);
 });

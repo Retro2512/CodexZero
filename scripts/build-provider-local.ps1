@@ -1,4 +1,4 @@
-param([string]$OutputDirectory, [string]$DesktopBinary)
+param([string]$OutputDirectory, [string]$DesktopBinary, [string]$DesktopPackage)
 
 $ErrorActionPreference = 'Stop'
 $source = Split-Path -Parent $PSScriptRoot
@@ -9,10 +9,17 @@ $destination = [System.IO.Path]::GetFullPath($OutputDirectory)
 if (Test-Path -LiteralPath $destination) {
     throw "Build destination already exists. Choose a new directory."
 }
+$staging = $null
+# Remove the extracted desktop whether or not the build succeeds.
+trap {
+    if ($staging) { Remove-Item -LiteralPath $staging -Recurse -Force -ErrorAction SilentlyContinue }
+    break
+}
 if (!$DesktopBinary) {
-    $desktopPackage = Get-AppxPackage OpenAI.Codex | Select-Object -First 1
-    if (!$desktopPackage) { throw 'Codex Desktop was not found.' }
-    $DesktopBinary = Join-Path $desktopPackage.InstallLocation 'app\ChatGPT.exe'
+    # Use the pinned official desktop. It is never shipped with CodexZero.
+    $staging = Join-Path ([IO.Path]::GetTempPath()) ('codexzero-desktop-' + [guid]::NewGuid().ToString('N'))
+    $resolved = & (Join-Path $PSScriptRoot 'resolve-desktop.ps1') -StagingRoot $staging -DesktopPackage $DesktopPackage
+    $DesktopBinary = @($resolved)[-1]
 }
 $DesktopBinary = (Resolve-Path -LiteralPath $DesktopBinary).Path
 $node = if (Test-Path -LiteralPath (Join-Path $source 'runtime\node.exe')) {
@@ -85,4 +92,5 @@ Your regular Codex shortcut still starts the regular app.
 No Codex login or subscription configuration is changed by this build.
 '@
 [System.IO.File]::WriteAllText((Join-Path $destination 'START HERE.txt'), $instructions)
+if ($staging) { Remove-Item -LiteralPath $staging -Recurse -Force -ErrorAction SilentlyContinue }
 Write-Output "Local test build ready: $destination"

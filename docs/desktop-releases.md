@@ -1,38 +1,52 @@
 # Desktop releases
 
-Windows releases contain a complete desktop application. The setup executable installs per user, creates shortcuts, and opens CodexZero. `codex-zero-desktop-windows-x64.zip` is portable and also supports `scripts/install.ps1`; `-CliOnly` keeps the terminal installation available. Neither desktop path requires an existing Codex installation or Node.js.
+Windows releases include `CodexZero-Setup-windows-x64.exe`. Setup installs per user, creates Desktop and Start menu shortcuts, and opens CodexZero. It needs no existing Codex installation, Node.js, or administrator rights.
 
-## Build
+Releases contain only CodexZero. The Codex desktop application is never published with them. Setup assembles it on the user's computer from the official package pinned in `scripts/desktop-upstream.json`:
 
-The release workflow requires `desktop_url` and `desktop_sha256` for an official Windows x64 MSIX matching the version pinned by the native UI and core patches. The build downloads and checks the digest, extracts without installing the original application, assembles CodexZero, and compiles the setup with Inno Setup 6. A changed upstream application fails the existing patch guards rather than producing an incompatible build.
+1. If the original app is installed at exactly the pinned version, setup uses it and downloads nothing.
+2. Otherwise setup downloads the pinned package from OpenAI's server and checks its size and SHA256. Setup shows the download on its progress bar.
+3. The verified package is kept in `%LOCALAPPDATA%\CodexZero\cache\desktop` so updates do not download it again. Only the pinned version is kept.
+4. `scripts/install-desktop.ps1` extracts the application, applies the CodexZero patches in a new `updates\<version>-<id>` build, then switches `current-build.txt` to it. Earlier builds are removed. A failed build leaves the current installation unchanged.
 
-For a local build against the installed, compatible application:
+Uninstall removes the builds, the launcher, and the download cache. Codex chats, settings, and sign-in stay.
+
+## Changing the pinned desktop
+
+The native patches fail closed on an unexpected application. Pin a new build only after the patches are verified against it:
+
+1. Download `https://persistent.oaistatic.com/codex-app-prod/releases/<version>/ChatGPT-x64.msix`. Do not use the unversioned `ChatGPT-x64.msix` address, because its contents change with each release.
+2. Record its version, SHA256, and size in `scripts/desktop-upstream.json`.
+3. Build and verify it locally:
 
 ```powershell
-$desktop = Join-Path (Get-AppxPackage OpenAI.Codex | Select-Object -First 1).InstallLocation 'app\ChatGPT.exe'
-scripts/build-desktop-release.ps1 -PackageRoot . -OutputDirectory work/desktop-package -DesktopBinary $desktop
-scripts/build-desktop-setup.ps1 -PackageRoot work/desktop-package -OutputDirectory work/release
+scripts/build-provider-local.ps1 -OutputDirectory work/desktop-check
+node scripts/verify-complete-desktop.mjs work/desktop-check
 ```
 
-Release packages must include `dist/windows-x64/codex-zero-core.exe` to retain the optional CLI. The CI assembly supplies this before the desktop build. A source checkout without `dist` builds only the desktop.
+4. Update the verified build in [desktop profile](desktop-profile.md).
 
-Publish these six Windows assets together:
+`build-provider-local.ps1` accepts `-DesktopBinary` to build against a different local application during development.
+
+## Release workflow
+
+The release workflow builds setup from the Windows package with Inno Setup 6.5 or later. It then installs it on a clean runner, installs again as an upgrade, verifies the assembled desktop each time, and uninstalls it. Clear `publish` to build and verify without creating a release. The setup builder rejects any package that already contains an assembled desktop.
+
+Publish these Windows assets together:
 
 * `CodexZero-Setup-windows-x64.exe`
 * `CodexZero-Setup-windows-x64.exe.sha256`
-* `codex-zero-desktop-windows-x64.zip`
-* `codex-zero-desktop-windows-x64.zip.sha256`
 * `codex-zero-windows-x64.zip`
 * `codex-zero-windows-x64.zip.sha256`
 
-Keep the last two assets as the small CLI package. Older desktop updaters have a 1 GiB download limit and rebuild from that package. New desktop updaters select the separate complete desktop archive, with a 2 GiB compressed limit and an 8 GiB extraction limit. Reusing a core copies only `dist` and `runtime`, never an old GUI or old source files.
+The ZIP package is the CLI installation and the update package. Desktop updates rebuild from it with the same pinned application. Run `scripts/install.ps1 -Desktop` from the extracted ZIP to install the desktop without setup, or `-CliOnly` for the terminal installation.
 
-The PowerShell bootstrap prefers the setup executable and checks its digest before running it. The legacy archive fallback supports releases published before desktop packaging. Setup accepts `/NOLAUNCH` for unattended verification. Code signing requires a release signing certificate; none is configured in this repository.
+The PowerShell bootstrap prefers setup and checks its digest before running it. Code signing requires a release signing certificate; none is configured in this repository.
 
 ## State and verification
 
-Desktop shares the existing Codex home, not a copied snapshot. See [profile behavior](desktop-profile.md). Never package any developer profile, credentials, sessions, or installed plugin data. Only application files and the distribution runtime are bundled.
+Desktop shares the existing Codex home, not a copied snapshot. See [profile behavior](desktop-profile.md). Never package any developer profile, credentials, sessions, or installed plugin data.
 
-Before publishing, verify a clean Windows install, relocation, upgrade, uninstall, and existing account/chats/plugin/connection behavior. Test with the original app closed. Do not treat source tests as proof that external authentication sessions or a newer stock database can be used by an older packaged desktop.
+Before publishing, verify a clean Windows install, upgrade, update, and uninstall, and existing account, chat, plugin, and connection behavior. Test with the original app closed. Do not treat source tests as proof that external authentication sessions or a newer stock database can be used by an older packaged desktop.
 
-The current complete desktop target is Windows x64. macOS archives retain the terminal installer; the native GUI patcher and updater are not yet portable to macOS. Do not publish those archives as a complete Mac desktop app.
+The current complete desktop target is Windows x64. macOS archives retain the terminal installer; the native GUI patcher and updater are not yet portable to macOS.

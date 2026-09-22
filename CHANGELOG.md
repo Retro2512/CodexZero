@@ -2,7 +2,7 @@
 
 ## 0.8.0
 
-* Added a complete Windows desktop download and setup executable.
+* Added a Windows setup executable that installs the complete desktop app.
 * Added automatic startup and Desktop and Start menu shortcuts after installation.
 * Kept existing Codex chats, skills and settings available without an import step.
 * Made desktop updates independent of an installed original Codex app.

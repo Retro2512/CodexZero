@@ -119,21 +119,6 @@ $ErrorActionPreference = 'Stop'
   assert.equal(await fs.readFile(path.join(matchingBuild, "CodexZero.exe"), "utf8"), "fixture launcher");
   assert.equal(await fs.readFile(path.join(matchingBuild, "builder-ran.txt"), "utf8"), "yes");
 
-  // Complete releases install directly, even when stock Codex is not installed.
-  const desktopSource = await createFixtureSource(root, "0.8.1");
-  for (const file of ['CodexZero.exe', 'local-build.json', 'desktop/ChatGPT.exe', 'runtime/node.exe', 'provider-runtime/codex-custom-models.exe']) {
-    await fs.mkdir(path.dirname(path.join(desktopSource, file)), { recursive: true });
-    await fs.writeFile(path.join(desktopSource, file), 'packaged desktop');
-  }
-  const desktopArchive = await createFixtureArchive(root, desktopSource, 'desktop.zip');
-  const desktopBuild = path.join(root, 'desktop-build');
-  await runPreparation(helper, desktopArchive, path.join(root, 'desktop-package'), desktopBuild, '0.8.1');
-  assert.equal(await fs.readFile(path.join(desktopBuild, 'CodexZero.exe'), 'utf8'), 'packaged desktop');
-  await assert.rejects(fs.access(path.join(desktopBuild, 'builder-ran.txt')));
-  await fs.unlink(path.join(desktopSource, 'runtime/node.exe'));
-  const incomplete = await createFixtureArchive(root, desktopSource, 'incomplete.zip');
-  await assert.rejects(runPreparation(helper, incomplete, path.join(root, 'incomplete-package'), path.join(root, 'incomplete-build'), '0.8.1'), /Incomplete desktop update/);
-
   const mismatchedSource = await createFixtureSource(root, "0.7.9");
   const mismatchedArchive = await createFixtureArchive(root, mismatchedSource, "mismatched.zip");
   const mismatchedBuild = path.join(root, "mismatched-build");
