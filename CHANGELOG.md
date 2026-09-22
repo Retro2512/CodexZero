@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.0
+
+* Added the CodexZero app for macOS on Apple silicon and Intel Macs.
+* The macOS one-line installer now sets up the app. The terminal command stays available.
+* Added in-app updates on macOS.
+
 ## 0.8.0
 
 * Added a Windows setup executable that installs the complete desktop app.

@@ -44,7 +44,11 @@ Your Codex chats, skills and settings are already in it. Nothing to import.
 curl -fsSL https://raw.githubusercontent.com/Retro2512/CodexZero/main/scripts/bootstrap.sh | sh
 ```
 
-That installs the `codex-zero` command alongside Codex. Your normal `codex` command still works.
+That fetches CodexZero, checks it, and sets up the CodexZero app in your Applications folder. It opens itself when it's done. No admin rights, nothing to configure.
+
+Your Codex chats, skills and settings are already in it. Nothing to import.
+
+<sub>Rather have the terminal command? Replace `| sh` with `| CODEX_ZERO_INSTALL=cli sh`. Uninstall the app by dragging it to the Trash.</sub>
 
 <sub>[Windows script](scripts/bootstrap.ps1) · [macOS script](scripts/bootstrap.sh) · [All downloads](https://github.com/Retro2512/CodexZero/releases/latest)</sub>
 
@@ -52,7 +56,7 @@ That installs the `codex-zero` command alongside Codex. Your normal `codex` comm
 
 ## Three commands
 
-On macOS, CodexZero is a command:
+With the terminal install, CodexZero is a command:
 
 | | |
 |---|---|
@@ -60,7 +64,7 @@ On macOS, CodexZero is a command:
 | `codex-zero savings` | See what you saved on your own work. |
 | `codex-zero stock` | Run regular Codex. |
 
-On Windows, open **CodexZero** from your Desktop or Start menu instead.
+With the app, open **CodexZero** from your Desktop, Start menu or Applications folder instead.
 
 <br>
 
@@ -103,7 +107,7 @@ Every tool we could get running, on the same workload, against stock Codex. Rows
 **See what a chat costs while you're in it.** The ring shows live cost and how warm your cache is. Turn on *Keep warm* and it tops the cache up while you're idle.
 <br><sub>Settings → Agent → Context cache · [cache behaviour and pricing](docs/cache-research.md)</sub>
 
-Both live in the CodexZero app on Windows.
+Both live in the CodexZero app.
 
 <br>
 
@@ -159,7 +163,7 @@ codex-zero run-checks verify --summary
 <br>
 
 - **Windows x64** — the CodexZero app, installed per user, updates itself
-- **Intel Mac · Apple silicon Mac** — the `codex-zero` command
+- **Intel Mac · Apple silicon Mac** — the CodexZero app on macOS 13 or later, updates itself, or the `codex-zero` command
 - Node.js 20+ if you're building from a source checkout
 
 Release packages include the runtime.
