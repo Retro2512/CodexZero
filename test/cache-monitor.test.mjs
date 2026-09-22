@@ -32,6 +32,13 @@ const usage = (input, read = 0, write = 0, output = 0) => ({
   cache_write_input_tokens: write,
   output_tokens: output,
 });
+const turn = (timestamp, model = "gpt-6-astra") => ({
+  timestamp, type: "turn_context", payload: { model },
+});
+const tokens = (timestamp, total, last = total) => ({
+  timestamp, type: "event_msg", payload: { type: "token_count",
+    info: { total_token_usage: total, last_token_usage: last } },
+});
 const rolloutRecords = ({ user = "real work", cacheAt = -29 * MINUTE, model = "gpt-6-astra", turnId } = {}) => {
   const first = usage(100, 20, 0, 10);
   return [
@@ -136,6 +143,119 @@ test("cache settings validate values and thread paths cannot escape the cache di
   assert.equal(await fs.access(cacheDirectory(home)).then(() => true, () => false), true);
 });
 
+test("invalid settings fall back safely instead of making cache status unavailable", async (t) => {
+  const home = await temporary(t);
+  await fs.mkdir(cacheDirectory(home), { recursive: true });
+  await fs.writeFile(path.join(cacheDirectory(home), "settings.json"), "{unfinished");
+  assert.deepEqual(await readCacheSettings(home), { enabled: false, minutes: 30, overrides: {}, activity: {} });
+  const snapshot = await readCacheSnapshot(null, home);
+  assert.equal(snapshot.enabled, false);
+  assert.equal(snapshot.warmth.state, "unknown");
+});
+
+test("snapshot reads discover and incrementally aggregate every rollout segment for a task", async (t) => {
+  const root = await temporary(t);
+  const home = path.join(root, "codexzero");
+  const sessions = path.join(root, "sessions", "2026", "01", "01");
+  const id = "discovered_thread";
+  const liveAt = offset => new Date(Date.now() + offset).toISOString();
+  await fs.mkdir(sessions, { recursive: true });
+  const meta = (timestamp, value = id) => ({ timestamp, type: "session_meta", payload: { id: value } });
+  const first = path.join(sessions, `rollout-one-${id}.jsonl`);
+  const second = path.join(sessions, `rollout-two-${id}.jsonl`);
+  const collision = path.join(sessions, `rollout-collision-${id}.jsonl`);
+  await fs.writeFile(first, [meta(liveAt(-40 * MINUTE)), turn(liveAt(-40 * MINUTE)),
+    tokens(liveAt(-39 * MINUTE), usage(100, 20, 0, 10))].map(line).join(""));
+  await fs.writeFile(second, [meta(liveAt(-35 * MINUTE)), turn(liveAt(-35 * MINUTE)),
+    tokens(liveAt(-31 * MINUTE), usage(50, 10, 0, 5))].map(line).join(""));
+  await fs.writeFile(collision, [meta(liveAt(-5 * MINUTE), "another_thread"), turn(liveAt(-5 * MINUTE)),
+    tokens(liveAt(-4 * MINUTE), usage(1_000, 0, 0, 100))].map(line).join(""));
+  await fs.mkdir(cacheDirectory(home), { recursive: true });
+  await fs.writeFile(path.join(cacheDirectory(home), `${id}.json`), "{broken");
+
+  let result = await readCacheSnapshot(id, home);
+  assert.equal(result.cost.usd, priceUsage("gpt-6-astra", usage(100, 20, 0, 10)).usd +
+    priceUsage("gpt-6-astra", usage(50, 10, 0, 5)).usd);
+  assert.equal(result.warmth.state, "cold");
+
+  await fs.appendFile(second, line(tokens(liveAt(-1 * MINUTE), usage(80, 20, 0, 8), usage(30, 10, 0, 3))));
+  result = await readCacheSnapshot(id, home);
+  assert.equal(result.warmth.state, "warm");
+  assert.equal(result.cost.usd, priceUsage("gpt-6-astra", usage(100, 20, 0, 10)).usd +
+    priceUsage("gpt-6-astra", usage(50, 10, 0, 5)).usd +
+    priceUsage("gpt-6-astra", usage(30, 10, 0, 3)).usd);
+  const concurrent = await Promise.all(Array.from({ length: 8 }, () => readCacheSnapshot(id, home)));
+  assert.ok(concurrent.every(value => value.cost.usd === result.cost.usd));
+});
+
+test("fresh first request gets a timer even with an old persisted cache miss", async (t) => {
+  const root = await temporary(t);
+  const home = path.join(root, "codexzero");
+  const sessions = path.join(root, "sessions");
+  const id = "fresh_miss";
+  const live = Date.now();
+  const timestamp = new Date(live).toISOString();
+  await fs.mkdir(sessions, { recursive: true });
+  const amount = usage(23_500, 0, 0, 20);
+  await fs.writeFile(path.join(sessions, `rollout-${id}.jsonl`), [
+    { timestamp, type: "session_meta", payload: { id } },
+    turn(timestamp, "gpt-5.6-sol"), tokens(timestamp, amount),
+  ].map(line).join(""));
+  await fs.mkdir(cacheDirectory(home), { recursive: true });
+  const persisted = { id, model: "gpt-5.6-sol", lastObservedAt: live, invalidated: true };
+  const file = path.join(cacheDirectory(home), `${id}.json`);
+  await fs.writeFile(file, JSON.stringify(persisted));
+  const result = await readCacheSnapshot(id, home);
+  assert.equal(result.warmth.state, "warm");
+  assert.ok(result.warmth.remainingMs > 29 * MINUTE && result.warmth.remainingMs <= 30 * MINUTE);
+  assert.equal(result.cost.usd, result.cost.uncachedUsd);
+  // New monitor invalidations still override history (provider changes, reroutes).
+  await fs.writeFile(file, JSON.stringify({ ...persisted, cacheSchemaVersion: 2 }));
+  assert.equal((await readCacheSnapshot(id, home)).warmth.state, "unknown");
+});
+
+test("discovery avoids overlapping resumed history and ignores stale monitor state", async (t) => {
+  const root = await temporary(t);
+  const home = path.join(root, "codexzero");
+  const sessions = path.join(root, "sessions", "2026", "01", "01");
+  const id = "overlap_thread";
+  const live = Date.now();
+  const liveAt = offset => new Date(live + offset).toISOString();
+  await fs.mkdir(sessions, { recursive: true });
+  const records = (firstAt, tokenAt, amount) => [
+    { timestamp: liveAt(firstAt), type: "session_meta", payload: { id } },
+    turn(liveAt(firstAt)), tokens(liveAt(tokenAt), amount),
+  ].map(line).join("");
+  const earlier = usage(100, 20, 0, 10);
+  const authoritative = usage(70, 30, 0, 7);
+  await fs.writeFile(path.join(sessions, `rollout-one-${id}.jsonl`), records(-5 * MINUTE, -3 * MINUTE, earlier));
+  await fs.writeFile(path.join(sessions, `rollout-two-${id}.jsonl`), records(-4 * MINUTE, -3 * MINUTE, authoritative));
+  await fs.mkdir(cacheDirectory(home), { recursive: true });
+  await fs.writeFile(path.join(cacheDirectory(home), `${id}.json`), JSON.stringify({
+    id, model: "unknown-old-model", lastObservedAt: live - 10 * MINUTE, invalidated: true,
+    error: "Refresh paused", cost: { usd: 0, uncachedUsd: 0, partial: false }, requests: 0, pricedRequests: 0,
+  }));
+
+  const result = await readCacheSnapshot(id, home);
+  assert.equal(result.cost.usd, priceUsage("gpt-6-astra", authoritative).usd);
+  assert.equal(result.cost.partial, true);
+  assert.equal(result.error, null);
+  assert.notEqual(result.warmth.state, "unknown");
+});
+
+test("an entirely unpriced snapshot reports an unknown cost rather than zero", async (t) => {
+  const home = await temporary(t);
+  await fs.mkdir(cacheDirectory(home), { recursive: true });
+  await fs.writeFile(path.join(cacheDirectory(home), "unpriced.json"), JSON.stringify({
+    id: "unpriced", model: "unknown-model", requests: 2, pricedRequests: 0,
+    cost: { usd: 0, uncachedUsd: 0, partial: true },
+  }));
+  const result = await readCacheSnapshot("unpriced", home);
+  assert.equal(result.cost.usd, null);
+  assert.equal(result.cost.uncachedUsd, null);
+  assert.equal(result.cost.partial, true);
+});
+
 test("rollout reader appends incrementally, preserves a partial final line, and does not rebill on rereads or restart", async (t) => {
   const { file } = await makeRollout(t);
   const records = rolloutRecords();
@@ -154,6 +274,19 @@ test("rollout reader appends incrementally, preserves a partial final line, and 
   const restarted = new CacheRolloutReader("thread_reader", file);
   assert.equal((await restarted.read()).requests, 1);
   assert.equal((await restarted.read()).requests, 1);
+});
+
+test("a late Fast hint replays an already observed turn exactly once at the correct rate", async (t) => {
+  const turnId = "late_fast_turn";
+  const { file } = await makeRollout(t, rolloutRecords({ turnId }));
+  const reader = new CacheRolloutReader("late_hint", file);
+  let snapshot = await reader.read();
+  assert.deepEqual(snapshot.cost, { ...priceUsage("gpt-6-astra", usage(100, 20, 0, 10)), partial: false });
+
+  reader.turnHints = { [turnId]: { tier: "fast", model: "gpt-6-astra" } };
+  snapshot = await reader.read();
+  assert.equal(snapshot.requests, 1);
+  assert.deepEqual(snapshot.cost, { ...priceUsage("gpt-6-astra", usage(100, 20, 0, 10), "fast"), partial: false });
 });
 
 test("monitor sends the exact keep warm message once to an eligible idle OpenAI thread and releases its lease on completion", async (t) => {
@@ -422,6 +555,28 @@ test("a failed refresh pauses further attempts", async (t) => {
   assert.equal(calls.filter((call) => call.method === "turn/start").length, 1);
   assert.equal(monitor.threads.get(id).error, "Refresh paused");
   assert.equal(JSON.parse(await fs.readFile(path.join(cacheDirectory(home), `${id}.json`), "utf8")).error, "Refresh paused");
+});
+
+test("a transient refresh failure gets one safe retry while the cache is still cooling", async (t) => {
+  const id = "retry_refresh";
+  const { home, file } = await makeRollout(t, rolloutRecords({ cacheAt: -28 * MINUTE }));
+  await saveCacheSettings({ enabled: true, minutes: 30 }, home);
+  let clock = NOW;
+  const calls = [];
+  const rpc = async (method, params) => {
+    calls.push({ method, params });
+    if (method === "thread/read") return { thread: { id, model: "gpt-6-astra", status: { type: "idle" } } };
+    if (method === "turn/start") throw new Error("temporary failure");
+    throw new Error(`unexpected RPC ${method}`);
+  };
+  const monitor = new CacheMonitor({ home, rpc, isBusy: () => false,
+    enqueue: (_id, task) => task(), now: () => clock });
+  t.after(() => monitor.close());
+  await quietRemember(monitor, { thread: { id, path: file, status: { type: "idle" } }, model: "gpt-6-astra", modelProvider: "openai" });
+  await monitor.tick();
+  clock += 61_000;
+  await monitor.tick();
+  assert.equal(calls.filter(call => call.method === "turn/start").length, 2);
 });
 
 test("cancel waits for the refresh turn to complete before a real turn can proceed", async (t) => {

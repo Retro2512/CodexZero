@@ -99,7 +99,8 @@ test("cache window and warmth are explicit estimates and expire deterministicall
   assert.equal(cacheWindowMs("unknown"), null);
 
   const snapshot = { model: "gpt-6-astra", lastCacheAt: NOW - 27 * MINUTE };
-  assert.deepEqual(warmth(snapshot, NOW), { state: "warm", remainingMs: 3 * MINUTE, estimated: true });
+  assert.deepEqual(warmth(snapshot, NOW), { state: "warm", remainingMs: 3 * MINUTE, windowMs: 30 * MINUTE, coolingThresholdMs: 2 * MINUTE, estimated: true });
+  assert.equal(warmth({ model: "gpt-5.3-codex", lastCacheAt: NOW }, NOW).windowMs, 5 * MINUTE);
   assert.equal(warmth({ ...snapshot, lastCacheAt: NOW - 29 * MINUTE }, NOW).state, "cooling");
   assert.equal(warmth({ ...snapshot, lastCacheAt: NOW - 30 * MINUTE }, NOW).state, "cold");
   assert.equal(warmth({ ...snapshot, invalidated: true }, NOW).state, "unknown");
@@ -118,6 +119,8 @@ test("keep warm requires eligibility, recent activity, and an expiring observed 
   };
   const settings = { enabled: true, minutes: 30, overrides: {}, activity: {} };
   assert.equal(shouldKeepWarm(snapshot, settings, NOW), true);
+  assert.equal(shouldKeepWarm({ ...snapshot, lastCacheAt: NOW - 28 * MINUTE }, settings, NOW), true);
+  assert.equal(shouldKeepWarm({ ...snapshot, lastCacheAt: NOW - 27 * MINUTE }, settings, NOW), false);
   assert.equal(shouldKeepWarm(snapshot, { ...settings, enabled: false }, NOW), false);
   assert.equal(shouldKeepWarm(snapshot, { ...settings, overrides: { thread_1: false } }, NOW), false);
   assert.equal(shouldKeepWarm(snapshot, { ...settings, overrides: { thread_1: true } }, NOW), true);
@@ -159,6 +162,47 @@ test("conversation accounting prices each monotonic request once and does not mi
   assert.equal(accounting.snapshot.requests, 3);
   assert.equal(accounting.snapshot.invalidated, true);
   assert.equal(warmth(accounting.snapshot, NOW).state, "unknown");
+});
+
+test("first cacheable request primes an estimated countdown without inventing cached billing", () => {
+  const accounting = new ConversationAccounting("fresh");
+  accounting.accept(turn(at(0)));
+  assert.equal(warmth(accounting.snapshot, NOW).state, "unknown");
+  const first = usage(23_500, 0, 0, 20);
+  accounting.accept(tokens(at(0), first));
+  assert.equal(warmth(accounting.snapshot, NOW).remainingMs, 30 * MINUTE);
+  assert.equal(accounting.snapshot.cost.usd, accounting.snapshot.cost.uncachedUsd);
+  accounting.accept(tokens(at(MINUTE), first));
+  assert.equal(warmth(accounting.snapshot, NOW + MINUTE).remainingMs, 29 * MINUTE);
+  assert.equal(warmth(accounting.snapshot, NOW + 30 * MINUTE).state, "cold");
+  accounting.accept(tokens(at(31 * MINUTE), usage(47_000, 0, 0, 40), first));
+  assert.equal(warmth(accounting.snapshot, NOW + 31 * MINUTE).remainingMs, 30 * MINUTE);
+  accounting.accept({timestamp:at(32 * MINUTE),type:"compacted",payload:{}});
+  assert.equal(warmth(accounting.snapshot, NOW + 32 * MINUTE).state, "unknown");
+});
+
+test("request based estimates require a known modern model and a cacheable input", () => {
+  for (const [model, input] of [["gpt-5.6-sol", 1023], ["unknown", 23_500], ["gpt-5.3-codex", 23_500]]) {
+    const accounting = new ConversationAccounting("small");
+    accounting.accept(turn(at(0), model));
+    accounting.accept(tokens(at(0), usage(input, 0, 0, 20)));
+    assert.equal(warmth(accounting.snapshot, NOW).state, "unknown");
+  }
+});
+
+test("an inexact cumulative update still records fresh cache evidence without guessing its cost", () => {
+  const accounting = new ConversationAccounting("thread_gap");
+  accounting.accept(turn(at(-10 * MINUTE), "gpt-5.6-sol"));
+  accounting.accept(tokens(at(-9 * MINUTE), usage(100, 20, 0, 10)));
+  const cost = accounting.snapshot.cost.usd;
+
+  accounting.accept(tokens(at(-2 * MINUTE), usage(250, 80, 0, 30), usage(50, 10, 0, 5)));
+  assert.equal(accounting.snapshot.requests, 1);
+  assert.equal(accounting.snapshot.cost.usd, cost);
+  assert.equal(accounting.snapshot.cost.partial, true);
+  assert.equal(accounting.snapshot.lastCacheAt, NOW - 2 * MINUTE);
+  assert.equal(accounting.snapshot.invalidated, false);
+  assert.equal(warmth(accounting.snapshot, NOW).state, "warm");
 });
 
 test("compaction and model switches invalidate lineage without billing reset totals twice", () => {

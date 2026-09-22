@@ -4,7 +4,7 @@ const path = require("node:path");
 const APP_ID = "CodexZero.Desktop";
 const root = path.resolve(process.resourcesPath, "..", "..");
 const icon = path.join(root, "assets", "codexzero.ico");
-const launcher = path.join(root, "CodexZero.exe");
+const launcher = path.join(process.env.CODEX_ZERO_LAUNCH_ROOT || root, "CodexZero.exe");
 
 app.on("browser-window-created", (_event, window) => {
   window.setIcon?.(icon);

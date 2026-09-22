@@ -49,3 +49,13 @@ test('CodexZero startup does not modify system shortcuts', async () => {
   assert.equal(env.CODEX_ZERO_SETUP_SHORTCUT, '1');
   assert.equal(shortcuts.length, 0);
 });
+
+test('updated windows retain the stable launcher for pinned relaunch', () => {
+  const launchRoot = path.resolve('stable-build');
+  const { listeners } = setup({ CODEX_ZERO_LAUNCH_ROOT: launchRoot });
+  let details;
+  listeners.get('browser-window-created')({}, {
+    setAppDetails(value) { details = value; }, setTitle() {}, on() {}
+  });
+  assert.equal(details.relaunchCommand, `"${path.join(launchRoot, 'CodexZero.exe')}"`);
+});
