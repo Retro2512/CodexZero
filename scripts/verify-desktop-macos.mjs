@@ -49,11 +49,16 @@ try {
     }
     throw new Error("CodexZero did not start its model core");
   }
+  console.log("CodexZero started its model core");
 } finally {
   for (const line of await processes()) {
     const pid = Number(line.split(/\s+/)[0]);
     if (pid) { try { process.kill(pid); } catch {} }
   }
-  await fs.rm(profile, { recursive: true, force: true });
+  // Let the app finish writing its profile before removing it.
+  for (let attempt = 0; attempt < 30 && (await processes()).length; attempt++) {
+    await new Promise(resolve => setTimeout(resolve, 500));
+  }
+  await fs.rm(profile, { recursive: true, force: true, maxRetries: 10, retryDelay: 500 });
 }
 console.log("CodexZero Mac app verified");
