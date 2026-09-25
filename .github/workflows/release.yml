@@ -6,7 +6,7 @@ on:
       version:
         description: CodexZero release version
         required: true
-        default: 0.9.0
+        default: 0.9.1
       reuse_core_release:
         description: Reuse cores only when patches and runtime config match this release; leave blank to rebuild
         required: false
@@ -251,7 +251,7 @@ jobs:
           tag_name: v${{ inputs.version }}
           target_commitish: ${{ github.sha }}
           body: |
-            CodexZero ${{ inputs.version }} adds the Mac app, project and chat colors and icons, and recent transcript reuse when switching tasks.
+            CodexZero ${{ inputs.version }} fixes Windows one line installation.
 
             Windows desktop setup and command packages are included below. [Install instructions](https://github.com/Retro2512/CodexZero#install).
           files: artifacts/*

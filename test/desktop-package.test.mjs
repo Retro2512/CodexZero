@@ -82,6 +82,8 @@ test('Windows release publishes setup without the desktop application while CLI 
   const bootstrap = await fs.readFile(path.join(repository, 'scripts/bootstrap.ps1'), 'utf8');
   assert.match(bootstrap, /CodexZero-Setup-windows-x64\.exe/);
   assert.match(bootstrap, /Get-FileHash/);
+  assert.match(bootstrap, /releases\/latest\/download/);
+  assert.doesNotMatch(bootstrap, /api\.github\.com/);
   assert.doesNotMatch(bootstrap, /-WindowStyle Hidden/);
   const installer = await fs.readFile(path.join(repository, 'scripts/install.ps1'), 'utf8');
   assert.match(installer, /!\$CliOnly -and \(\$Desktop -or/);
