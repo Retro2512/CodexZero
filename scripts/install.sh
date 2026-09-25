@@ -92,7 +92,7 @@ cp -R "$PACKAGE_ROOT/bin" "$PACKAGE_ROOT/src" "$PACKAGE_ROOT/scripts" "$INSTALL_
 if [ -f "$PACKAGE_ROOT/assets/provider-settings.html" ]; then
   mkdir -p "$INSTALL_ROOT/app/assets"
   cp "$PACKAGE_ROOT/assets/provider-settings.html" "$INSTALL_ROOT/app/assets/"
-  for asset in "$PACKAGE_ROOT"/assets/native-provider-* "$PACKAGE_ROOT"/assets/native-cache-ui.mjs "$PACKAGE_ROOT"/assets/model-pricing.mjs "$PACKAGE_ROOT"/assets/codexzero.*; do
+  for asset in "$PACKAGE_ROOT"/assets/native-provider-* "$PACKAGE_ROOT"/assets/native-sidebar-* "$PACKAGE_ROOT"/assets/native-cache-ui.mjs "$PACKAGE_ROOT"/assets/model-pricing.mjs "$PACKAGE_ROOT"/assets/sidebar-performance.mjs "$PACKAGE_ROOT"/assets/transcript-retention.mjs "$PACKAGE_ROOT"/assets/codexzero.*; do
     if [ -f "$asset" ]; then cp "$asset" "$INSTALL_ROOT/app/assets/"; fi
   done
 fi

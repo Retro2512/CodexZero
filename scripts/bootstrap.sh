@@ -16,6 +16,13 @@ EXPECTED="$(awk '{print $1}' "$TEMP/codex-zero.tar.gz.sha256")"
 ACTUAL="$(shasum -a 256 "$TEMP/codex-zero.tar.gz" | awk '{print $1}')"
 [ "$EXPECTED" = "$ACTUAL" ] || { echo "CodexZero package checksum verification failed." >&2; exit 1; }
 tar -C "$TEMP" -xzf "$TEMP/codex-zero.tar.gz"
+# The app is the default on macOS 13 or later. CODEX_ZERO_INSTALL=cli installs
+# the terminal command instead.
+if [ "${CODEX_ZERO_INSTALL:-app}" != "cli" ] && [ -f "$TEMP/scripts/install-desktop-macos.sh" ] &&
+  [ "$(sw_vers -productVersion | cut -d. -f1)" -ge 13 ]; then
+  sh "$TEMP/scripts/install-desktop-macos.sh" "$TEMP"
+  exit 0
+fi
 INSTALL_MODE="${CODEX_ZERO_INSTALL_MODE:-ask}"
 if ! grep -q 'max-save' "$TEMP/scripts/install.sh"; then
   case "$INSTALL_MODE" in

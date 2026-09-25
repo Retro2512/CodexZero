@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.9.0
+
+* Added the CodexZero app for macOS on Apple silicon and Intel Macs.
+* The macOS one-line installer now sets up the app. The terminal command stays available.
+* Added in-app updates on macOS.
+* Added colors and icons for projects and chats, with editing in the sidebar and automatic generation.
+* Reduced sidebar redraws and reused recent chat transcripts when switching tasks.
+* Moved cache history and project branding work off the desktop main process.
+* Added GPT-6 Sol and Luna cache cost estimates.
+
 ## 0.8.0
 
 * Added a Windows setup executable that installs the complete desktop app.
