@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.1
+
+* Fixed the Windows one line installer failing before download.
+
 ## 0.9.0
 
 * Added the CodexZero app for macOS on Apple silicon and Intel Macs.
