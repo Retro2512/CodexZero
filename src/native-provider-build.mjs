@@ -6,6 +6,10 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { openAsar, rewriteAsar } from "./asar-patch.mjs";
 import { codexZeroHome } from "./paths.mjs";
+import { sidebarIdentityReplacements } from "./sidebar-identity-patch.mjs";
+import { patchSidebarRenderer } from "./sidebar-performance.mjs";
+import { patchTranscriptRetention } from "./task-responsiveness.mjs";
+import { patchSelectionScroll } from "./scroll-scope-performance.mjs";
 
 export async function prepareNativeProviderDesktop(installedDesktop, { home = codexZeroHome() } = {}) {
   if (process.platform !== "win32") throw new Error("Native custom model settings currently require the Windows local build");
@@ -114,6 +118,16 @@ export async function nativeAppReplacements(archivePath, { platform = process.pl
     replacements.set(`.vite/build/${bootstrapName}`, Buffer.from(bootstrap));
     replacements.set(".vite/build/preload.js", Buffer.concat([await archive.read(".vite/build/preload.js"), Buffer.from("\n"), await fs.readFile(path.join(assets, "native-provider-preload.cjs"))]));
   } finally { await archive.close(); }
+  await sidebarIdentityReplacements(archivePath, replacements);
+  const initialPath = [...replacements.keys()].find(name => /^webview\/assets\/app-initial-[\w-]+\.js$/.test(name));
+  if (!initialPath) throw new Error("This Codex version needs an updated sidebar patch");
+  const initial = replacements.get(initialPath).toString("utf8");
+  replacements.set(initialPath, Buffer.from(patchTranscriptRetention(patchSidebarRenderer(initial))));
+  replacements.set("webview/assets/codexzero-sidebar-performance.js", await fs.readFile(path.join(assets, "sidebar-performance.mjs")));
+  replacements.set("webview/assets/codexzero-transcript-retention.js", await fs.readFile(path.join(assets, "transcript-retention.mjs")));
+  const primaryPath = [...replacements.keys()].find(name => /^webview\/assets\/app-primary-[\w-]+\.js$/.test(name));
+  if (!primaryPath) throw new Error("This Codex version needs an updated selection patch");
+  replacements.set(primaryPath, Buffer.from(patchSelectionScroll(replacements.get(primaryPath).toString("utf8"))));
   return replacements;
 }
 

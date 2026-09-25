@@ -40,6 +40,7 @@ export async function main(args) {
   if (command === "stock") return launch(rest, true);
   if (command === "desktop") return launchDesktop(rest);
   if (command === "providers") return providerSettings(rest);
+  if (command === "appearance") return (await import("./sidebar-appearance-client.mjs")).appearanceCommand(rest);
   if (command === "help" || command === "--help" || command === "-h") {
     console.log(help());
     return;
@@ -560,6 +561,9 @@ function help() {
     "codex-zero desktop --check         Verify the Desktop executable path",
     "codex-zero desktop --providers     Start Desktop with custom models",
     "codex-zero providers settings      Configure custom models",
+    "codex-zero appearance generate --project NAME  Set project logo and color",
+    "codex-zero appearance backfill --all  Create missing sidebar identities",
+    "codex-zero appearance list         List sidebar identities",
     "codex-zero stock [codex arguments]  Run the untouched stock CLI",
     "codex-zero savings [--json]         Show measured savings",
     "codex-zero mode [MODE]              Show or select safe|standard|max-save|focused",

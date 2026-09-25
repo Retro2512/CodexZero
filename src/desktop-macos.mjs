@@ -17,7 +17,8 @@ export const BUNDLE_ID = "com.codexzero.desktop";
 const RUNTIME_ITEMS = ["bin", "src", "scripts", "config", "prompts", "package.json"];
 const RUNTIME_ASSETS = ["provider-settings.html", "native-provider-settings.mjs", "native-cache-ui.mjs", "model-pricing.mjs",
   "native-provider-main.cjs", "native-provider-preload.cjs", "native-provider-identity.cjs", "native-provider-environment.cjs",
-  "native-provider-updater.cjs", "native-provider-update-release.cjs", "codexzero.png"];
+  "native-provider-updater.cjs", "native-provider-update-release.cjs", "native-sidebar-appearance-main.cjs",
+  "native-sidebar-identity.mjs", "sidebar-performance.mjs", "transcript-retention.mjs", "codexzero.png"];
 // The copy must not claim the original app's links, files, or Dock tile.
 const REMOVED_KEYS = ["CFBundleIconName", "CFBundleURLTypes", "CFBundleDocumentTypes", "UTExportedTypeDeclarations",
   "CFBundleAlternateNames", "NSDockTilePlugIn", "SUFeedURL"];
