@@ -133,7 +133,7 @@ jobs:
           fi
           cp -R codex-zero/bin codex-zero/src codex-zero/config codex-zero/prompts codex-zero/scripts package/
           mkdir -p package/assets
-          cp codex-zero/assets/provider-settings.html codex-zero/assets/native-provider-* codex-zero/assets/native-cache-ui.mjs codex-zero/assets/model-pricing.mjs codex-zero/assets/codexzero.* package/assets/
+          cp codex-zero/assets/provider-settings.html codex-zero/assets/native-provider-* codex-zero/assets/native-sidebar-* codex-zero/assets/native-cache-ui.mjs codex-zero/assets/model-pricing.mjs codex-zero/assets/sidebar-performance.mjs codex-zero/assets/transcript-retention.mjs codex-zero/assets/codexzero.* package/assets/
           cp codex-zero/package.json codex-zero/README.md codex-zero/LICENSE package/
           if [ "${{ runner.os }}" = "Windows" ]; then
             NODE_NAME="node.exe"
@@ -252,3 +252,44 @@ jobs:
           target_commitish: ${{ github.sha }}
           generate_release_notes: true
           files: artifacts/*
+
+  install-smoke:
+    needs: publish
+    if: inputs.publish
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-14]
+    runs-on: ${{ matrix.os }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Wait for the latest release
+        shell: bash
+        run: |
+          for attempt in {1..30}; do
+            latest="$(gh api repos/${{ github.repository }}/releases/latest --jq .tag_name)"
+            if [ "$latest" = "v${{ inputs.version }}" ]; then exit 0; fi
+            sleep 10
+          done
+          echo "The new release is not the latest release" >&2
+          exit 1
+      - name: Install with the published Windows command
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          irm https://raw.githubusercontent.com/${{ github.repository }}/main/scripts/bootstrap.ps1 | iex
+          $root = Join-Path $env:LOCALAPPDATA 'Programs\CodexZero'
+          $current = (Get-Content -Raw -LiteralPath (Join-Path $root 'current-build.txt')).Trim()
+          $build = Join-Path $root $current
+          $version = (Get-Content -Raw -LiteralPath (Join-Path $build 'package.json') | ConvertFrom-Json).version
+          if ($version -ne '${{ inputs.version }}') { throw "Installed $version instead of ${{ inputs.version }}" }
+      - name: Install with the published macOS command
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/main/scripts/bootstrap.sh | sh
+          app="$HOME/Applications/CodexZero.app"
+          test -d "$app"
+          installed="$(node -p 'require(process.argv[1]).version' "$app/Contents/Resources/codexzero/package.json")"
+          test "$installed" = '${{ inputs.version }}'

@@ -20,8 +20,9 @@ export function normalizeUsage(value) {
 export function priceUsage(model, value, tier = "default", providerPrices = {}) {
   const usage = normalizeUsage(value);
   const price = providerPrices[model] ?? MODEL_PRICING[model];
-  if (!usage || !price || !["default", "auto", "priority", "fast", null, undefined].includes(tier)) return null;
-  const rate = tier === "priority" || tier === "fast" ? price.priority : price;
+  if (!usage || !price || !["default", "auto", "priority", "fast", "batch", "flex", null, undefined].includes(tier)) return null;
+  const rate = tier === "priority" || tier === "fast" ? price.priority :
+    tier === "batch" || tier === "flex" ? price[tier] : price;
   if (!rate) return null;
   const write = rate.write == null ? 0 : usage.write;
   if (usage.read + write > usage.input) return null;
@@ -40,7 +41,7 @@ export function cacheWindowMs(model) {
   if (!MODEL_PRICING[model]) return null;
   // The app server exposes no retention policy or expiry. These are deliberately
   // estimates: new explicit caching uses 30m, legacy unknown policy uses 5m.
-  return /^(gpt-6-astra|gpt-5\.6-|gpt-5\.5$|gpt-daybreak-blue-latest$)/.test(model) ? 30 * MINUTE : 5 * MINUTE;
+  return /^(gpt-6-(astra|sol|luna)$|gpt-5\.6-|gpt-5\.5$|gpt-daybreak-blue-latest$)/.test(model) ? 30 * MINUTE : 5 * MINUTE;
 }
 
 export function warmth(snapshot, now = Date.now()) {

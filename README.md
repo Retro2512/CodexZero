@@ -107,7 +107,9 @@ Every tool we could get running, on the same workload, against stock Codex. Rows
 **See what a chat costs while you're in it.** The ring shows live cost and how warm your cache is. Turn on *Keep warm* and it tops the cache up while you're idle.
 <br><sub>Settings → Agent → Context cache · [cache behaviour and pricing](docs/cache-research.md)</sub>
 
-Both live in the CodexZero app.
+**Give projects and chats their own colors and icons.** Edit them from the sidebar.
+
+These live in the CodexZero app.
 
 <br>
 

@@ -31,8 +31,14 @@ ipcMain.handle("codexzero:providers:save", async (event, document) => {
 
 let cacheService;
 function cache() {
-  return cacheService ??= import(pathToFileURL(path.join(root, "src", "cache-service.mjs")).href);
+  return cacheService ??= import(pathToFileURL(path.join(root, "src", "cache-service-client.mjs")).href)
+    .then(({ createCacheServiceClient }) => createCacheServiceClient());
 }
+app.once?.("before-quit", event => {
+  if (!cacheService) return;
+  event.preventDefault();
+  void cacheService.then(client => client.close()).catch(() => {}).finally(() => app.quit());
+});
 for (const [operation, method] of Object.entries({ read: "readCacheSnapshot", settings: "saveCacheSettings", enabled: "setCacheEnabled", activity: "cacheActivity" })) {
   ipcMain.handle(`codexzero:cache:${operation}`, async (event, ...args) => {
     if (!trusted(event)) throw new Error("Cache settings are unavailable here");

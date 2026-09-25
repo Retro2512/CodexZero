@@ -37,7 +37,7 @@ foreach ($folder in @('config', 'prompts', 'dist')) {
 Copy-Item -LiteralPath (Join-Path $source 'scripts') -Destination $destination -Recurse
 New-Item -ItemType Directory -Path (Join-Path $destination 'assets'), (Join-Path $destination 'runtime') | Out-Null
 Copy-Item -LiteralPath (Join-Path $source 'assets\provider-settings.html') -Destination (Join-Path $destination 'assets')
-foreach ($asset in @('native-provider-settings.mjs', 'native-cache-ui.mjs', 'model-pricing.mjs', 'native-provider-main.cjs', 'native-provider-preload.cjs', 'native-provider-identity.cjs', 'native-provider-environment.cjs', 'native-provider-updater.cjs', 'native-provider-update-release.cjs', 'codexzero.png', 'codexzero.ico')) {
+foreach ($asset in @('native-provider-settings.mjs', 'native-cache-ui.mjs', 'model-pricing.mjs', 'native-provider-main.cjs', 'native-provider-preload.cjs', 'native-provider-identity.cjs', 'native-provider-environment.cjs', 'native-provider-updater.cjs', 'native-provider-update-release.cjs', 'native-sidebar-appearance-main.cjs', 'native-sidebar-identity.mjs', 'sidebar-performance.mjs', 'transcript-retention.mjs', 'codexzero.png', 'codexzero.ico')) {
     Copy-Item -LiteralPath (Join-Path $source "assets\$asset") -Destination (Join-Path $destination 'assets')
 }
 Copy-Item -LiteralPath (Join-Path $source 'package.json') -Destination $destination
