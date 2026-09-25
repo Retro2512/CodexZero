@@ -4,8 +4,12 @@ const crypto = require("node:crypto");
 const fs = require("node:fs/promises");
 const path = require("node:path");
 
-const ARCHIVE_NAME = "codex-zero-windows-x64.zip";
-const CHECKSUM_NAME = `${ARCHIVE_NAME}.sha256`;
+// Each platform updates from its own release package.
+const ARCHIVES = Object.freeze({
+  "win32-x64": "codex-zero-windows-x64.zip",
+  "darwin-arm64": "codex-zero-macos-arm64.tar.gz",
+  "darwin-x64": "codex-zero-macos-x64.tar.gz",
+});
 const RELEASE_ROOT = "https://github.com/Retro2512/CodexZero/releases/download";
 const MAX_CHECKSUM_BYTES = 8 * 1024;
 const MAX_ARCHIVE_BYTES = 1024 ** 3;
@@ -35,14 +39,19 @@ function compareVersions(a, b) {
   return 0;
 }
 
-function releaseUrls(tag) {
+function archiveName(platform = process.platform, arch = process.arch) {
+  return ARCHIVES[`${platform}-${arch}`] ?? null;
+}
+
+function releaseUrls(tag, archive) {
   return {
-    assetUrl: `${RELEASE_ROOT}/${tag}/${ARCHIVE_NAME}`,
-    checksumUrl: `${RELEASE_ROOT}/${tag}/${CHECKSUM_NAME}`,
+    assetUrl: `${RELEASE_ROOT}/${tag}/${archive}`,
+    checksumUrl: `${RELEASE_ROOT}/${tag}/${archive}.sha256`,
   };
 }
 
-function selectRelease(release, currentVersion) {
+function selectRelease(release, currentVersion, archive = archiveName()) {
+  if (!Object.values(ARCHIVES).includes(archive)) return null;
   if (!release || typeof release !== "object" || Array.isArray(release)) return null;
   if (release.draft !== false || release.prerelease !== false) return null;
 
@@ -52,17 +61,18 @@ function selectRelease(release, currentVersion) {
   if (compareVersions(release.tag_name, currentVersion) <= 0) return null;
   if (!Array.isArray(release.assets)) return null;
 
-  const archives = release.assets.filter(asset => asset && asset.name === ARCHIVE_NAME);
-  const checksums = release.assets.filter(asset => asset && asset.name === CHECKSUM_NAME);
+  const archives = release.assets.filter(item => item && item.name === archive);
+  const checksums = release.assets.filter(item => item && item.name === `${archive}.sha256`);
   if (archives.length !== 1 || checksums.length !== 1) return null;
 
-  const { assetUrl, checksumUrl } = releaseUrls(release.tag_name);
+  const { assetUrl, checksumUrl } = releaseUrls(release.tag_name, archive);
   if (archives[0].browser_download_url !== assetUrl) return null;
   if (checksums[0].browser_download_url !== checksumUrl) return null;
 
   return {
     version: tagVersion.version,
     tag: release.tag_name,
+    archive,
     assetUrl,
     checksumUrl,
   };
@@ -77,7 +87,8 @@ function validateSelectedRelease(release) {
   if (!tagVersion || !version || tagVersion.version !== version.version) {
     throw new TypeError("Invalid selected release version");
   }
-  const urls = releaseUrls(release.tag);
+  if (!Object.values(ARCHIVES).includes(release.archive)) throw new TypeError("Invalid selected release archive");
+  const urls = releaseUrls(release.tag, release.archive);
   if (release.assetUrl !== urls.assetUrl || release.checksumUrl !== urls.checksumUrl) {
     throw new TypeError("Invalid selected release URL");
   }
@@ -145,10 +156,10 @@ async function readBounded(response, maximum, label, controller) {
   return Buffer.concat(chunks, size);
 }
 
-function parseChecksum(buffer) {
+function parseChecksum(buffer, archive) {
   const text = buffer.toString("utf8");
-  const match = /^([0-9a-fA-F]{64})[ \t]+\*?(?:\.\/)?(codex-zero-windows-x64\.zip)\r?\n?$/.exec(text);
-  if (!match || match[2] !== ARCHIVE_NAME) throw new Error("Invalid release checksum");
+  const match = /^([0-9a-fA-F]{64})[ \t]+\*?(?:\.\/)?([A-Za-z0-9.-]+)\r?\n?$/.exec(text);
+  if (!match || match[2] !== archive) throw new Error("Invalid release checksum");
   return match[1].toLowerCase();
 }
 
@@ -199,13 +210,13 @@ async function stageRelease(release, targetDir, { fetchImpl = globalThis.fetch }
 
   const expected = await withTimedFetch(release.checksumUrl, fetchImpl, async (response, controller) => {
     const body = await readBounded(response, MAX_CHECKSUM_BYTES, "release checksum", controller);
-    return parseChecksum(body);
+    return parseChecksum(body, release.archive);
   });
 
   const directory = path.resolve(targetDir);
   await fs.mkdir(directory, { recursive: true });
-  const archivePath = path.join(directory, ARCHIVE_NAME);
-  const temporaryPath = path.join(directory, `.${ARCHIVE_NAME}.${crypto.randomUUID()}.tmp`);
+  const archivePath = path.join(directory, release.archive);
+  const temporaryPath = path.join(directory, `.${release.archive}.${crypto.randomUUID()}.tmp`);
 
   try {
     const staged = await withTimedFetch(release.assetUrl, fetchImpl,
@@ -222,6 +233,7 @@ async function stageRelease(release, targetDir, { fetchImpl = globalThis.fetch }
 }
 
 module.exports = {
+  archiveName,
   compareVersions,
   selectRelease,
   stageRelease,

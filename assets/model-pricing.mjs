@@ -1,6 +1,6 @@
 // USD per 1 million tokens. `write` is the rate for tokens classified as
 // cache-write tokens, not a surcharge added to the ordinary input rate.
-export const PRICING_DATE = '2026-09-20';
+export const PRICING_DATE = '2026-09-22';
 
 export const MODEL_PRICING = Object.freeze({
   // Official alias target on PRICING_DATE: GPT-5.6 Sol.
@@ -15,6 +15,32 @@ export const MODEL_PRICING = Object.freeze({
     write: 12.5,
     output: 50,
     priority: Object.freeze({ input: 20, read: 2, write: 25, output: 100 }),
+    batch: Object.freeze({ input: 5, read: 0.5, write: 6.25, output: 25 }),
+    flex: Object.freeze({ input: 5, read: 0.5, write: 6.25, output: 25 }),
+    longContextThreshold: 272_000,
+    longInputMultiplier: 2,
+    longOutputMultiplier: 1.5,
+  }),
+  'gpt-6-sol': Object.freeze({
+    input: 2,
+    read: 0.2,
+    write: 2.5,
+    output: 10,
+    priority: Object.freeze({ input: 4, read: 0.4, write: 5, output: 20 }),
+    batch: Object.freeze({ input: 1, read: 0.1, write: 1.25, output: 5 }),
+    flex: Object.freeze({ input: 1, read: 0.1, write: 1.25, output: 5 }),
+    longContextThreshold: 272_000,
+    longInputMultiplier: 2,
+    longOutputMultiplier: 1.5,
+  }),
+  'gpt-6-luna': Object.freeze({
+    input: 0.1,
+    read: 0.01,
+    write: 0.125,
+    output: 0.5,
+    priority: Object.freeze({ input: 0.2, read: 0.02, write: 0.25, output: 1 }),
+    batch: Object.freeze({ input: 0.05, read: 0.005, write: 0.0625, output: 0.25 }),
+    flex: Object.freeze({ input: 0.05, read: 0.005, write: 0.0625, output: 0.25 }),
     longContextThreshold: 272_000,
     longInputMultiplier: 2,
     longOutputMultiplier: 1.5,

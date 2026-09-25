@@ -1,6 +1,6 @@
 # OpenAI prompt cache research
 
-Verified against official OpenAI documentation on 2026-09-20. Prices are USD per 1 million tokens. This document distinguishes API billing from ChatGPT plan usage.
+Verified against official OpenAI documentation on 2026-09-22. Prices are USD per 1 million tokens. This document distinguishes API billing from ChatGPT plan usage.
 
 ## Current API prices
 
@@ -9,6 +9,8 @@ OpenAI renamed Priority processing to Fast mode on 2026-07-30. API requests may 
 | Model | Standard input | Standard cache read | Standard cache write | Standard output | Fast or Priority input | Fast or Priority cache read | Fast or Priority cache write | Fast or Priority output |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `gpt-6-astra` | $10.00 | $1.00 | $12.50 | $50.00 | $20.00 | $2.00 | $25.00 | $100.00 |
+| `gpt-6-sol` | $2.00 | $0.20 | $2.50 | $10.00 | $4.00 | $0.40 | $5.00 | $20.00 |
+| `gpt-6-luna` | $0.10 | $0.01 | $0.125 | $0.50 | $0.20 | $0.02 | $0.25 | $1.00 |
 | `gpt-5.6-sol` | $4.00 | $0.40 | $5.00 | $20.00 | $8.00 | $0.80 | $10.00 | $40.00 |
 | `gpt-5.6-terra` | $2.00 | $0.20 | $2.50 | $12.00 | $4.00 | $0.40 | $5.00 | $24.00 |
 | `gpt-5.6-luna` | $0.20 | $0.02 | $0.25 | $1.20 | $0.40 | $0.04 | $0.50 | $2.40 |
@@ -23,12 +25,28 @@ The current threshold is more than 272K input tokens. The higher rates apply to 
 | Model | Standard input | Standard cache read | Standard cache write | Standard output | Fast or Priority input | Fast or Priority cache read | Fast or Priority cache write | Fast or Priority output |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `gpt-6-astra` | $20.00 | $2.00 | $25.00 | $75.00 | $40.00 | $4.00 | $50.00 | $150.00 |
+| `gpt-6-sol` | $4.00 | $0.40 | $5.00 | $15.00 | $8.00 | $0.80 | $10.00 | $30.00 |
+| `gpt-6-luna` | $0.20 | $0.02 | $0.25 | $0.75 | $0.40 | $0.04 | $0.50 | $1.50 |
 | `gpt-5.6-sol` | $8.00 | $0.80 | $10.00 | $30.00 | $16.00 | $1.60 | $20.00 | $60.00 |
 | `gpt-5.6-terra` | $4.00 | $0.40 | $5.00 | $18.00 | $8.00 | $0.80 | $10.00 | $36.00 |
 | `gpt-5.6-luna` | $0.40 | $0.04 | $0.50 | $1.80 | $0.80 | $0.08 | $1.00 | $3.60 |
 | `gpt-5.5` | $10.00 | $1.00 | no separate charge | $45.00 | not published | not published | not published | not published |
 
 The Fast table does not publish long-context GPT-5.5 rates. Do not derive or display them.
+
+### GPT-6 Batch and Flex rates
+
+The published Batch and Flex rates match each other at 50 percent of Standard. They are API processing tiers, not Codex local task modes. Each row gives input, cached input, cache write, and output prices per million tokens. The long band applies to the full request when input exceeds 272K tokens.
+
+| Model | Short input | Short read | Short write | Short output | Long input | Long read | Long write | Long output |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `gpt-6-astra` | $5.00 | $0.50 | $6.25 | $25.00 | $10.00 | $1.00 | $12.50 | $37.50 |
+| `gpt-6-sol` | $1.00 | $0.10 | $1.25 | $5.00 | $2.00 | $0.20 | $2.50 | $7.50 |
+| `gpt-6-luna` | $0.05 | $0.005 | $0.0625 | $0.25 | $0.10 | $0.01 | $0.125 | $0.375 |
+
+The API Fast table is twice Standard for each GPT-6 token category. The `priority` request value is an alias for Fast, but actual response tier can differ if processing is downgraded. The response tier, rather than the requested tier, determines actual billing. CodexZero only has the requested local task tier and therefore shows an API equivalent estimate, not a bill.
+
+Regional processing adds 10 percent to eligible GPT-6 API rates. For Astra, Sol, and Luna, EU data residency supports Standard processing only, not Batch, Flex, or Fast. Cache entries cannot be reused across regional processing boundaries. CodexZero does not observe the API processing region and does not add this uplift to its local estimate. Other charges, such as tools, are separate from model token prices.
 
 ### Older GPT-5 Codex models
 
@@ -123,9 +141,17 @@ Every keep-warm request still incurs cached-input charges, plus uncached suffix 
 
 ## ChatGPT subscription implication
 
-API token prices are exact only when Codex is authenticated with an API key. OpenAI documents that API-key authentication uses Standard API pricing rather than included ChatGPT plan credits.
+With an API key, Codex follows API token pricing rather than ChatGPT plan credits. The API processing tier and region can change that price.
 
-When signed in with ChatGPT, Codex uses subscription access, plan allowances, or workspace credits. Model choice, context, reasoning, tool use, retrieval, caching, and speed affect that usage, but official documentation does not publish a token-to-plan-credit formula. Therefore:
+When signed in with ChatGPT, Codex uses subscription access, plan allowances, or workspace credits. OpenAI publishes the following Standard speed credit rates per million tokens for the GPT-6 lineup. Unlike API billing, Codex credit billing has no separate cache write charge.
+
+| Model | Input credits | Cached input credits | Output credits | Fast multiplier where available |
+| --- | ---: | ---: | ---: | ---: |
+| GPT-6 Astra | 250 | 25 | 1,250 | 2.5 times |
+| GPT-6 Sol | 50 | 5 | 250 | 2.5 times |
+| GPT-6 Luna | 2.5 | 0.25 | 12.5 | 2.5 times |
+
+These credit rates are not a formula for included subscription allowance. The amount of work allowed per plan varies with model, context, reasoning, tools, cache use, speed, and rollout. They also do not determine an Enterprise agreement's USD rate card. Therefore:
 
 * Show API-priced sessions as billed cost.
 * For ChatGPT-authenticated sessions, show token statistics and, if useful, an explicitly named API-equivalent estimate. Do not label it as the user's charged cost or credit consumption.
@@ -136,7 +162,7 @@ When signed in with ChatGPT, Codex uses subscription access, plan allowances, or
 
 The local build changes the existing composer context indicator and adds Context cache under Settings, Agent. Keep warm starts disabled with a 30 minute inactivity horizon. The per task switch overrides the global default. The duration is how long to continue idle refreshes after user activity, not a server retention request. Refresh messages do not renew that horizon. Draft input postpones refreshes, and active, queued, closed, failed, custom provider, and expired observations do not trigger refreshes. No work is scheduled while the app is closed.
 
-The countdown uses observed cache reads or writes from the task rollout. GPT 6 Astra, GPT 5.6, Daybreak Blue's current Sol alias, and GPT 5.5 use a 30 minute estimate. Older supported models whose actual retention policy is unavailable use a conservative five minute estimate. An elapsed estimate is not proof that the server discarded the prefix. Compaction, model changes and cache misses invalidate the observation. The indicator describes a reusable prefix, not a guarantee that every token in the current context is cached.
+The countdown uses observed cache reads or writes from the task rollout, plus a cacheable first request as estimated priming when cache write telemetry is absent. GPT-6 Astra, Sol, and Luna, GPT-5.6, Daybreak Blue's current Sol alias, and GPT-5.5 use a 30 minute estimate. Older supported models whose actual retention policy is unavailable use a conservative five minute estimate. An elapsed estimate is not proof that the server discarded the prefix. Compaction, model changes and cache misses invalidate the observation. The indicator describes a reusable prefix, not a guarantee that every token in the current context is cached.
 
 Costs are token based API equivalents in USD using the dated rate table. Each request uses its recorded model and context band. New turns persist the requested service tier because older rollout records do not necessarily include it. Historical records without a tier use Standard pricing; the app server does not expose the final upstream billing tier. Unknown prices or incomplete counters produce unavailable or partial estimates rather than invented rates. Tool fees, separate descendant tasks, regional uplifts and subscription credit accounting are not included. Refresh usage is included. Duplicate token notifications do not rebill, and counter resets are not treated as requests.
 
@@ -148,6 +174,8 @@ The app server resumes the same loaded task for each refresh and sends the reque
 * [Prompt cache diagnostics](https://developers.openai.com/api/docs/guides/prompt-caching/diagnostics)
 * [API pricing](https://developers.openai.com/api/docs/pricing)
 * [GPT-6 Astra model](https://developers.openai.com/api/docs/models/gpt-6-astra)
+* [GPT-6 Sol model](https://developers.openai.com/api/docs/models/gpt-6-sol)
+* [GPT-6 Luna model](https://developers.openai.com/api/docs/models/gpt-6-luna)
 * [GPT-5.6 Sol model](https://developers.openai.com/api/docs/models/gpt-5.6-sol)
 * [GPT-5.6 Terra model](https://developers.openai.com/api/docs/models/gpt-5.6-terra)
 * [GPT-5.6 Luna model](https://developers.openai.com/api/docs/models/gpt-5.6-luna)
@@ -160,3 +188,5 @@ The app server resumes the same loaded task for each refresh and sends the reque
 * [GPT-5 Codex model](https://developers.openai.com/api/docs/models/gpt-5-codex)
 * [Codex authentication](https://learn.chatgpt.com/docs/auth)
 * [Codex pricing and plan usage](https://learn.chatgpt.com/docs/pricing)
+* [Codex speed and Fast credit rates](https://learn.chatgpt.com/docs/agent-configuration/speed)
+* [API Fast mode](https://developers.openai.com/api/docs/guides/fast-mode)

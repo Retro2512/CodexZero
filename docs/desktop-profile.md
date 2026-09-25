@@ -6,7 +6,7 @@ The desktop launcher uses the core shipped with the compatible desktop build. It
 
 ## Shared state
 
-The following paths and behavior were verified in the desktop build `26.915.4065.0`:
+The following paths and behavior were verified in the Windows desktop build `26.915.4065.0`. The macOS app uses the matching build `26.915.31945`.
 
 * The core receives the existing home, retaining its account configuration, task rollouts and index, skills, and plugin configuration.
 * Desktop stores its global settings in `CODEX_HOME/.codex-global-state.json`, including persisted UI settings, rather than in Chromium's profile.

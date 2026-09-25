@@ -95,5 +95,5 @@ test('release packages assemble the desktop from the pinned official package', a
   const install = await fs.readFile(path.join(repository, 'scripts/install-desktop.ps1'), 'utf8');
   assert.match(install, /build-provider-local\.ps1'\) -OutputDirectory \$destination -DesktopPackage \$DesktopPackage/);
   const update = await fs.readFile(path.join(repository, 'assets/native-provider-update-release.cjs'), 'utf8');
-  assert.match(update, /const ARCHIVE_NAME = "codex-zero-windows-x64\.zip";/);
+  assert.match(update, /"win32-x64": "codex-zero-windows-x64\.zip"/);
 });

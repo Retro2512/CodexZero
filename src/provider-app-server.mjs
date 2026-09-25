@@ -14,7 +14,9 @@ export async function runProviderAppServer({ core, args, home, input = process.s
   const bridge = await startProviderBridge({ home, environment });
   const providerConfig = customThreadParams({}, { id: "unused" }, bridge.baseUrl, bridge.token).config[`model_providers.${PROVIDER_ID}`];
   const toml = `{ ${Object.entries(providerConfig).map(([k, v]) => `${k} = ${JSON.stringify(v)}`).join(", ")} }`;
-  const child = spawn(core, ["-c", `model_providers.${PROVIDER_ID}=${toml}`, ...args], {
+  const appearanceServer = path.resolve(import.meta.dirname, "..", "bin", "sidebar-appearance-mcp.mjs");
+  const appearanceConfig = `{ command = ${JSON.stringify(process.execPath)}, args = [${JSON.stringify(appearanceServer)}], env = { CODEX_ZERO_HOME = ${JSON.stringify(home ?? codexZeroHome(environment))} }, startup_timeout_sec = 5, tool_timeout_sec = 120 }`;
+  const child = spawn(core, ["-c", `model_providers.${PROVIDER_ID}=${toml}`, "-c", `mcp_servers.codexzero_appearance=${appearanceConfig}`, ...args], {
     env: environment, windowsHide: true, stdio: ["pipe", "pipe", "pipe"]
   });
   child.stderr.pipe(error, { end: false });
@@ -167,6 +169,7 @@ export async function runProviderAppServer({ core, args, home, input = process.s
             routed = customThreadParams(params, restored, bridge.baseUrl, bridge.token);
           }
         }
+        if (params.ephemeral) routed = { ...routed, config: { ...routed.config, "mcp_servers.codexzero_appearance": { enabled: false, command: "" } } };
         const result = await rpc(message.method, routed);
         remember(result, routed);
         emit({ id: message.id, result }); return;

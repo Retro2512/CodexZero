@@ -6,18 +6,20 @@ import path from "node:path";
 import test from "node:test";
 import updater from "../assets/native-provider-update-release.cjs";
 
-const { compareVersions, selectRelease, stageRelease } = updater;
+const { archiveName: platformArchive, compareVersions, selectRelease: selectForPlatform, stageRelease } = updater;
 const archiveName = "codex-zero-windows-x64.zip";
+// Tests use the Windows package so they behave the same on every host.
+const selectRelease = (release, version) => selectForPlatform(release, version, archiveName);
 
-function githubRelease(tag = "v1.2.0") {
+function githubRelease(tag = "v1.2.0", archive = archiveName) {
   const root = `https://github.com/Retro2512/CodexZero/releases/download/${tag}`;
   return {
     tag_name: tag,
     draft: false,
     prerelease: false,
     assets: [
-      { name: archiveName, browser_download_url: `${root}/${archiveName}` },
-      { name: `${archiveName}.sha256`, browser_download_url: `${root}/${archiveName}.sha256` },
+      { name: archive, browser_download_url: `${root}/${archive}` },
+      { name: `${archive}.sha256`, browser_download_url: `${root}/${archive}.sha256` },
     ],
   };
 }
@@ -35,6 +37,7 @@ test("selectRelease accepts only a newer complete release from the canonical rep
   assert.deepEqual(selectRelease(githubRelease(), "1.1.9"), {
     version: "1.2.0",
     tag: "v1.2.0",
+    archive: archiveName,
     assetUrl: `https://github.com/Retro2512/CodexZero/releases/download/v1.2.0/${archiveName}`,
     checksumUrl: `https://github.com/Retro2512/CodexZero/releases/download/v1.2.0/${archiveName}.sha256`,
   });
@@ -143,4 +146,30 @@ test("stageRelease rejects a final response URL that downgrades HTTPS", async t 
   await assert.rejects(stageRelease(selected, directory, {
     fetchImpl: async () => response,
   }), /must use HTTPS/);
+});
+
+test("each platform updates from its own release package", async t => {
+  assert.equal(platformArchive("win32", "x64"), "codex-zero-windows-x64.zip");
+  assert.equal(platformArchive("darwin", "arm64"), "codex-zero-macos-arm64.tar.gz");
+  assert.equal(platformArchive("darwin", "x64"), "codex-zero-macos-x64.tar.gz");
+  assert.equal(platformArchive("linux", "x64"), null);
+  assert.equal(selectForPlatform(githubRelease(), "1.1.0", null), null);
+  assert.equal(selectForPlatform(githubRelease(), "1.1.0", "codex-zero-macos-arm64.tar.gz"), null);
+
+  const mac = "codex-zero-macos-arm64.tar.gz";
+  const selected = selectForPlatform(githubRelease("v1.2.0", mac), "1.1.0", mac);
+  assert.equal(selected.archive, mac);
+  assert.equal(selected.assetUrl, `https://github.com/Retro2512/CodexZero/releases/download/v1.2.0/${mac}`);
+  await assert.rejects(stageRelease({ ...selected, archive: "other.tar.gz" }, os.tmpdir()), /Invalid selected release archive/);
+
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "codexzero-mac-update-"));
+  t.after(() => fs.rm(directory, { recursive: true, force: true }));
+  const payload = Buffer.from("mac package");
+  const digest = crypto.createHash("sha256").update(payload).digest("hex");
+  const fetchImpl = async url => url.endsWith(".sha256") ? new Response(`${digest}  ./${mac}\n`) : new Response(payload);
+  assert.equal(await stageRelease(selected, directory, { fetchImpl }), path.join(directory, mac));
+  // A checksum for another platform's package is never accepted.
+  await assert.rejects(stageRelease(selected, directory, {
+    fetchImpl: async url => url.endsWith(".sha256") ? new Response(`${digest}  codex-zero-windows-x64.zip\n`) : new Response(payload),
+  }), /Invalid release checksum/);
 });

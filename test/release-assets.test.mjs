@@ -23,10 +23,17 @@ test("a package missing its pricing or cache UI cannot pass verification", async
   await assert.rejects(verifyDesktopAssets(root), /native-cache-ui/);
 });
 
-test("release assembly and both installers include the context cache assets", async () => {
+test("release assembly and both installers include desktop feature assets", async () => {
   for (const relative of [".github/workflows/release.yml", "scripts/install.ps1", "scripts/install.sh"]) {
     const source = await fs.readFile(new URL(`../${relative}`, import.meta.url), "utf8");
-    assert.ok(source.includes("native-cache-ui.mjs"), relative);
-    assert.ok(source.includes("model-pricing.mjs"), relative);
+    for (const asset of ["native-cache-ui.mjs", "model-pricing.mjs", "native-sidebar-", "sidebar-performance.mjs", "transcript-retention.mjs"]) {
+      assert.ok(source.includes(asset), `${relative}: ${asset}`);
+    }
+  }
+  for (const relative of ["scripts/build-provider-local.ps1", "src/desktop-macos.mjs"]) {
+    const source = await fs.readFile(new URL(`../${relative}`, import.meta.url), "utf8");
+    for (const asset of ["native-sidebar-appearance-main.cjs", "native-sidebar-identity.mjs", "sidebar-performance.mjs", "transcript-retention.mjs"]) {
+      assert.ok(source.includes(asset), `${relative}: ${asset}`);
+    }
   }
 });
