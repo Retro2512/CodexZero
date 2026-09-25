@@ -250,7 +250,10 @@ jobs:
         with:
           tag_name: v${{ inputs.version }}
           target_commitish: ${{ github.sha }}
-          generate_release_notes: true
+          body: |
+            CodexZero ${{ inputs.version }} adds the Mac app, project and chat colors and icons, and recent transcript reuse when switching tasks.
+
+            Windows desktop setup and command packages are included below. [Install instructions](https://github.com/Retro2512/CodexZero#install).
           files: artifacts/*
 
   install-smoke:
