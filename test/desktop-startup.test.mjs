@@ -111,8 +111,10 @@ test("Desktop startup succeeds only after its child survives the verification wi
       /fixture remains connected/u);
     assert.equal(child.exitCode, null);
   } finally {
+    child.ref();
+    const closed = new Promise((resolve) => child.once("close", resolve));
     child.kill();
-    await new Promise((resolve) => child.once("close", resolve));
+    await closed;
   }
 });
 
