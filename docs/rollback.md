@@ -52,3 +52,7 @@ sh "$HOME/.codex/codexzero/app/scripts/uninstall.sh"
 ```
 
 CLI installers create a timestamped backup under `~/.codex/backups/`. Desktop uninstall keeps your Codex data and browser profile. It does not remove stock Codex.
+
+## Artifact store
+
+Run artifact pruning to remove raw outputs older than 30 days. The older than days option changes the cutoff. The dry run option previews candidates. Pruning is explicit and can remove raw outputs referenced by old sessions. Run artifact repair to restore private permissions.

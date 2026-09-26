@@ -235,4 +235,4 @@ Direct and scoped profiles must be measured separately. The required factorial i
 - Max Savings: legacy alias profile with direct tools and lean model instructions;
 - Focused: scoped code runtime, lean model instructions.
 
-For each cell, record initial tool-schema tokens, provider input/cached/output/reasoning tokens, model-visible calls, nested tool calls, wall time, weighted cost, verifier result, and changed paths. A projection trial is valid only when telemetry records `projection: "successful-check-v1"` and the raw artifact hash verifies.
+For each cell, record initial tool schema tokens, provider input/cached/output/reasoning tokens, model visible calls, nested tool calls, wall time, weighted cost, verifier result, and changed paths. Historical `successful-check-v1` projection measurements describe earlier releases. Current command compression preserves every line; verify codec round trips and the raw artifact hash when measuring it.

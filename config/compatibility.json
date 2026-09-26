@@ -16,7 +16,8 @@
   "platforms": [
     "windows-x64",
     "macos-x64",
-    "macos-arm64"
+    "macos-arm64",
+    "linux-x64"
   ],
   "fallback": "The stock codex command remains untouched and is available through codex-zero stock."
 }

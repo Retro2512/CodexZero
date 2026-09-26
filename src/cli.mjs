@@ -14,6 +14,7 @@ import {
 } from "./paths.mjs";
 import { runChecks } from "./run-checks.mjs";
 import { maybeSuggestStar } from "./star-prompt.mjs";
+import { startVerifiedDesktop, verifyAppServer } from "./desktop-startup.mjs";
 
 const execFileAsync = promisify(execFile);
 const SAFE_MODE = "safe";
@@ -41,6 +42,7 @@ export async function main(args) {
   if (command === "desktop") return launchDesktop(rest);
   if (command === "providers") return providerSettings(rest);
   if (command === "appearance") return (await import("./sidebar-appearance-client.mjs")).appearanceCommand(rest);
+  if (command === "artifacts") return artifacts(rest);
   if (command === "help" || command === "--help" || command === "-h") {
     console.log(help());
     return;
@@ -203,25 +205,22 @@ async function launchDesktop(args) {
   const leanPrompt = await activeLeanPromptPath();
   await fs.mkdir(sqliteRoot(), { recursive: true });
 
-  const child = spawn(desktopBinary, [], {
-    detached: true,
-    stdio: "ignore",
-    windowsHide: true,
-    env: {
-      ...buildLaunchEnvironment(),
-      CODEX_CLI_PATH: customBinary,
-      CODEX_APP_SERVER_FORCE_CLI: "1",
-      CODEX_ZERO_RUNTIME_OVERRIDES: "1",
-      ...(modeUsesScopedRuntime(mode) ? { CODEX_ZERO_SCOPED_RUNTIME: "1" } : {}),
-      ...(leanPrompt ? { CODEX_ZERO_INSTRUCTIONS_FILE: leanPrompt } : {})
-    }
+  const env = {
+    ...buildLaunchEnvironment(),
+    CODEX_CLI_PATH: customBinary,
+    CODEX_APP_SERVER_FORCE_CLI: "1",
+    CODEX_ZERO_RUNTIME_OVERRIDES: "1",
+    CODEX_ZERO_PROFILE: "codexzero"
+  };
+  if (modeUsesScopedRuntime(mode)) env.CODEX_ZERO_SCOPED_RUNTIME = "1";
+  else delete env.CODEX_ZERO_SCOPED_RUNTIME;
+  if (leanPrompt) env.CODEX_ZERO_INSTRUCTIONS_FILE = leanPrompt;
+  else delete env.CODEX_ZERO_INSTRUCTIONS_FILE;
+  await verifyAppServer(customBinary, env);
+  await startVerifiedDesktop(desktopBinary, env, {
+    logPath: path.join(codexZeroHome(), "desktop-startup.log")
   });
-  await new Promise((resolve, reject) => {
-    child.once("spawn", resolve);
-    child.once("error", reject);
-  });
-  child.unref();
-  console.log("Codex Desktop started with the CodexZero side-by-side core.");
+  console.log("Codex Desktop opened.");
   await maybeSuggestStar();
 }
 
@@ -229,6 +228,47 @@ async function providerSettings(args) {
   if (args.length && args[0] !== "settings") throw new Error("Use providers settings");
   await launchDesktop(["--providers"]);
   console.log("Open Settings > Agent > Custom models");
+}
+
+async function artifacts(args) {
+  const [action, ...options] = args;
+  if (action !== "prune" && action !== "repair") {
+    throw new Error("Use artifacts prune or artifacts repair");
+  }
+  let olderThanDays = 30;
+  let dryRun = false;
+  let json = false;
+  let daysSpecified = false;
+  for (let index = 0; index < options.length; index += 1) {
+    const option = options[index];
+    if (option === "--json" && !json) {
+      json = true;
+    } else if (action === "prune" && option === "--dry-run" && !dryRun) {
+      dryRun = true;
+    } else if (action === "prune" && option === "--older-than-days" && !daysSpecified) {
+      const value = options[++index];
+      olderThanDays = Number(value);
+      daysSpecified = true;
+      if (!value || !Number.isFinite(olderThanDays) || olderThanDays <= 0) {
+        throw new Error("Artifact age must be a positive number of days");
+      }
+    } else {
+      throw new Error(`Unknown artifacts option: ${option}`);
+    }
+  }
+  const { pruneArtifacts, repairArtifacts } = await import("./artifact-maintenance.mjs");
+  const result = action === "prune"
+    ? await pruneArtifacts({ olderThanDays, dryRun })
+    : await repairArtifacts({});
+  if (json) {
+    console.log(JSON.stringify(result, null, 2));
+  } else if (action === "prune") {
+    console.log(dryRun
+      ? `Would remove ${result.eligible} artifacts (${result.candidateBytes} bytes).`
+      : `Removed ${result.removed} artifacts (${result.bytesRemoved} bytes).`);
+  } else {
+    console.log(`Repaired ${result.directoriesRepaired} directories and ${result.filesRepaired} files.`);
+  }
 }
 
 async function checks(args) {
@@ -274,20 +314,6 @@ export function buildLaunchArguments(args, leanPrompt, mode = SAFE_MODE) {
     ...(leanPrompt
       ? ["-c", `model_instructions_file=${JSON.stringify(leanPrompt)}`]
       : []),
-    "-c",
-    "background_terminal_max_timeout=3600000",
-    "-c",
-    "features.unified_exec=true",
-    "-c",
-    "features.codex_zero_compact_exec_output=true",
-    "-c",
-    "features.codex_zero_lossless_terminal_codec=true",
-    "-c",
-    "features.codex_zero_command_aware_projection=true",
-    "-c",
-    "features.codex_zero_exact_duplicate_results=true",
-    "-c",
-    "features.codex_zero_event_driven_wait=true",
     ...(modeUsesScopedRuntime(mode)
       ? [
           "-c",
@@ -564,6 +590,8 @@ function help() {
     "codex-zero appearance generate --project NAME  Set project logo and color",
     "codex-zero appearance backfill --all  Create missing sidebar identities",
     "codex-zero appearance list         List sidebar identities",
+    "codex-zero artifacts prune [--older-than-days N] [--dry-run]  Remove old artifacts",
+    "codex-zero artifacts repair         Repair artifact permissions",
     "codex-zero stock [codex arguments]  Run the untouched stock CLI",
     "codex-zero savings [--json]         Show measured savings",
     "codex-zero mode [MODE]              Show or select safe|standard|max-save|focused",

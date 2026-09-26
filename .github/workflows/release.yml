@@ -6,7 +6,7 @@ on:
       version:
         description: CodexZero release version
         required: true
-        default: 0.9.1
+        default: 0.9.2
       reuse_core_release:
         description: Reuse cores only when patches and runtime config match this release; leave blank to rebuild
         required: false
@@ -17,10 +17,13 @@ on:
         default: true
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   core:
+    permissions:
+      contents: read
+      attestations: read
     strategy:
       fail-fast: false
       matrix:
@@ -33,6 +36,9 @@ jobs:
             binary: codex
           - os: macos-14
             asset: macos-arm64
+            binary: codex
+          - os: ubuntu-22.04
+            asset: linux-x64
             binary: codex
     runs-on: ${{ matrix.os }}
     steps:
@@ -84,14 +90,17 @@ jobs:
             ACTUAL="$(shasum -a 256 "reusable/$ARCHIVE" | awk '{print $1}')"
           fi
           test "$ACTUAL" = "$EXPECTED"
+          gh attestation verify "reusable/$ARCHIVE" \
+            --repo "${{ github.repository }}" \
+            --signer-workflow "${{ github.repository }}/.github/workflows/release.yml"
       - name: Extract reusable Windows package
         if: inputs.reuse_core_release != '' && runner.os == 'Windows'
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Path base | Out-Null
           Expand-Archive -LiteralPath "reusable\codex-zero-${{ matrix.asset }}.zip" -DestinationPath base
-      - name: Extract reusable macOS package
-        if: inputs.reuse_core_release != '' && runner.os == 'macOS'
+      - name: Extract reusable Unix package
+        if: inputs.reuse_core_release != '' && runner.os != 'Windows'
         shell: bash
         run: |
           mkdir base
@@ -142,6 +151,22 @@ jobs:
           fi
           "package/runtime/$NODE_NAME" --version
           "package/runtime/$NODE_NAME" codex-zero/scripts/verify-desktop-assets.mjs package
+      - name: Write release manifest
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+          SOURCE_COMMIT: ${{ github.sha }}
+          PLATFORM: ${{ matrix.asset }}
+        run: |
+          if [ -n "${{ inputs.reuse_core_release }}" ]; then
+            test -f base/release-manifest.json || { echo 'Reusable package lacks a release manifest; rebuild the core.' >&2; exit 1; }
+            UPSTREAM_COMMIT="$(node -p 'require("./base/release-manifest.json").upstream.commit')"
+            CORE_SOURCE_COMMIT="$(node -p 'require("./base/release-manifest.json").core.sourceCommit')"
+          else
+            UPSTREAM_COMMIT="$(git -C upstream rev-parse HEAD)"
+            CORE_SOURCE_COMMIT="$SOURCE_COMMIT"
+          fi
+          node codex-zero/scripts/write-release-manifest.mjs package "$RELEASE_VERSION" "$PLATFORM" "$SOURCE_COMMIT" "$UPSTREAM_COMMIT" "$CORE_SOURCE_COMMIT"
       - name: Verify Windows installer and in-place upgrade
         if: runner.os == 'Windows'
         shell: pwsh
@@ -168,6 +193,29 @@ jobs:
           test "$("$CODEX_HOME/bin/codex-zero" mode)" = "safe"
           "$CODEX_HOME/bin/codex-zero" monitor --stop
           package/runtime/node package/scripts/verify-desktop-assets.mjs "$CODEX_HOME/codexzero/app"
+      - name: Verify Linux CLI installer
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          export CODEX_HOME="$RUNNER_TEMP/codexzero-home"
+          sh package/scripts/install.sh package safe
+          test "$("$CODEX_HOME/bin/codex-zero" mode)" = "safe"
+          "$CODEX_HOME/bin/codex-zero" monitor --stop
+          test -f "$CODEX_HOME/codexzero/app/package.json"
+      - name: Verify packaged core startup
+        shell: bash
+        env:
+          CODEX_HOME: ${{ runner.temp }}/codexzero-home
+          CODEX_ZERO_RUNTIME_OVERRIDES: '1'
+          CODEX_ZERO_PROFILE: codexzero
+          CODEX_ZERO_SQLITE_HOME: ${{ runner.temp }}/codexzero-home/codexzero/sqlite
+        run: |
+          node --input-type=module <<'JS'
+          import path from 'node:path';
+          import { verifyAppServer } from './package/src/desktop-startup.mjs';
+          const binary = process.platform === 'win32' ? 'codex-zero-core.exe' : 'codex-zero-core';
+          await verifyAppServer(path.resolve('package/dist/${{ matrix.asset }}', binary), process.env, { timeoutMs: 30000 });
+          JS
       - name: Verify macOS app install, upgrade and launch
         if: runner.os == 'macOS'
         shell: bash
@@ -237,11 +285,40 @@ jobs:
             codex-zero-${{ matrix.asset }}.*
             CodexZero-Setup-windows-x64.exe*
 
-  publish:
+  attest:
     needs: core
     if: inputs.publish
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+      artifact-metadata: write
     steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+      - name: Attest release artifacts
+        uses: actions/attest@v4
+        with:
+          subject-path: artifacts/*
+
+  publish:
+    needs: [core, attest]
+    if: inputs.publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - name: Require passing CI for the release commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          RUN_ID="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml --commit "$GITHUB_SHA" --event push --limit 1 --json databaseId --jq '.[0].databaseId // empty')"
+          test -n "$RUN_ID" || { echo 'Run CI for the release commit before publishing.' >&2; exit 1; }
+          gh run watch "$RUN_ID" --repo "$GITHUB_REPOSITORY" --interval 30 --exit-status
       - uses: actions/download-artifact@v4
         with:
           path: artifacts
@@ -249,11 +326,17 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ inputs.version }}
+          name: CodexZero ${{ inputs.version }}
           target_commitish: ${{ github.sha }}
           body: |
-            CodexZero ${{ inputs.version }} fixes Windows one line installation.
+            * Fixed optimization settings being ignored at launch and reset during upgrades.
+            * Preserved every command output line in reversible compression.
+            * Added artifact permission repair and pruning.
+            * Added startup checks before opening Desktop.
+            * Added Linux x64 CLI packages.
+            * Added release manifests, build attestations and version pinning.
 
-            Windows desktop setup and command packages are included below. [Install instructions](https://github.com/Retro2512/CodexZero#install).
+            Windows, macOS and Linux x64 packages are below. [Install instructions](https://github.com/Retro2512/CodexZero#install).
           files: artifacts/*
 
   install-smoke:
@@ -262,10 +345,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, macos-14]
+        os: [windows-latest, macos-14, ubuntu-latest]
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      attestations: read
     env:
       GH_TOKEN: ${{ github.token }}
+      CODEX_ZERO_VERSION: ${{ inputs.version }}
+      CODEX_ZERO_VERIFY_ATTESTATION: '1'
     steps:
       - name: Wait for the latest release
         shell: bash
@@ -281,7 +369,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: powershell
         run: |
-          irm https://raw.githubusercontent.com/${{ github.repository }}/main/scripts/bootstrap.ps1 | iex
+          irm https://raw.githubusercontent.com/${{ github.repository }}/v${{ inputs.version }}/scripts/bootstrap.ps1 | iex
           $root = Join-Path $env:LOCALAPPDATA 'Programs\CodexZero'
           $current = (Get-Content -Raw -LiteralPath (Join-Path $root 'current-build.txt')).Trim()
           $build = Join-Path $root $current
@@ -291,8 +379,19 @@ jobs:
         if: runner.os == 'macOS'
         shell: bash
         run: |
-          curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/main/scripts/bootstrap.sh | sh
+          set -o pipefail
+          curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/v${{ inputs.version }}/scripts/bootstrap.sh | sh
           app="$HOME/Applications/CodexZero.app"
           test -d "$app"
           installed="$(node -p 'require(process.argv[1]).version' "$app/Contents/Resources/codexzero/package.json")"
           test "$installed" = '${{ inputs.version }}'
+      - name: Install with the published Linux command
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -o pipefail
+          export CODEX_HOME="$RUNNER_TEMP/codexzero-home"
+          export CODEX_ZERO_INSTALL_MODE=safe
+          curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/v${{ inputs.version }}/scripts/bootstrap.sh | sh
+          test "$("$CODEX_HOME/bin/codex-zero" mode)" = safe
+          "$CODEX_HOME/bin/codex-zero" monitor --stop

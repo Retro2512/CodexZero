@@ -33,15 +33,21 @@ case "$MODE" in
 esac
 CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
 INSTALL_ROOT="$CODEX_HOME/codexzero"
+if [ -L "$CODEX_HOME" ] || [ -L "$INSTALL_ROOT" ]; then
+  echo "CodexZero install paths must not be symbolic links." >&2
+  exit 1
+fi
 STAMP="$(date -u +%Y%m%d-%H%M%S)"
 BACKUP_ROOT="$CODEX_HOME/backups/codexzero-install-$STAMP"
 EXISTING_SHIM="$CODEX_HOME/bin/codex-zero"
 MONITOR_PID_PATH="$INSTALL_ROOT/monitor.pid"
 ARCH="$(uname -m)"
-case "$ARCH" in
-  arm64|aarch64) PLATFORM="macos-arm64" ;;
-  x86_64|amd64) PLATFORM="macos-x64" ;;
-  *) echo "Unsupported architecture: $ARCH" >&2; exit 1 ;;
+OS="$(uname -s)"
+case "$OS:$ARCH" in
+  Darwin:arm64|Darwin:aarch64) PLATFORM="macos-arm64" ;;
+  Darwin:x86_64|Darwin:amd64) PLATFORM="macos-x64" ;;
+  Linux:x86_64|Linux:amd64) PLATFORM="linux-x64" ;;
+  *) echo "Unsupported platform: $OS $ARCH" >&2; exit 1 ;;
 esac
 
 CORE="$PACKAGE_ROOT/dist/$PLATFORM/codex-zero-core"
@@ -107,7 +113,15 @@ if [ -x "$BUNDLED_NODE" ]; then
   chmod +x "$INSTALL_ROOT/bin/node"
   NODE="$INSTALL_ROOT/bin/node"
 fi
-cp "$PACKAGE_ROOT/config/codexzero.config.toml" "$CODEX_HOME/codexzero.config.toml"
+if [ ! -e "$CODEX_HOME/codexzero.config.toml" ]; then
+  cp "$PACKAGE_ROOT/config/codexzero.config.toml" "$CODEX_HOME/codexzero.config.toml"
+fi
+
+# Repair legacy artifact modes using the freshly installed command. The root is
+# explicit so an inherited artifact path cannot redirect this upgrade step.
+CODEX_HOME="$CODEX_HOME" CODEX_ZERO_HOME="$INSTALL_ROOT" \
+  CODEX_ZERO_ARTIFACT_DIR="$INSTALL_ROOT/artifacts" \
+  "$NODE" "$INSTALL_ROOT/app/bin/codex-zero.mjs" artifacts repair --json >/dev/null
 
 cat > "$CODEX_HOME/bin/codex-zero" <<EOF
 #!/usr/bin/env sh
@@ -143,4 +157,6 @@ MODE="$MODE" BACKUP_ROOT="$BACKUP_ROOT" LEAN_PROMPT_PATH="$LEAN_PROMPT_PATH" \
 printf '\nCodexZero installed.\n'
 printf 'Mode: %s\n' "$MODE"
 printf 'Add %s to PATH if needed.\n' "$CODEX_HOME/bin"
-printf 'Run: codex-zero run\nChange mode: codex-zero mode safe|standard|max-save|focused\nDesktop: codex-zero desktop\nSavings: codex-zero savings\nStock rollback: codex-zero stock\n'
+printf 'Run: codex-zero run\nChange mode: codex-zero mode safe|standard|max-save|focused\n'
+if [ "$OS" = Darwin ]; then printf 'Desktop: codex-zero desktop\n'; fi
+printf 'Savings: codex-zero savings\nStock rollback: codex-zero stock\n'

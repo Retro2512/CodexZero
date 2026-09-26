@@ -60,6 +60,7 @@ jobs:
         run: |
           manifest=upstream/codex-rs/Cargo.toml
           cargo test --locked --manifest-path "$manifest" -p codex-zero-codec
+          cargo test --locked --manifest-path "$manifest" -p codex-cli codex_zero
           cargo test --locked --manifest-path "$manifest" -p codex-core codex_zero
           cargo test --locked --manifest-path "$manifest" -p codex-core exact_duplicate_result_references_only_an_active_identical_output
           cargo test --locked --manifest-path "$manifest" -p codex-core post_tool_use_feedback_output

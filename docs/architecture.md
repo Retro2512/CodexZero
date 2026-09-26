@@ -39,11 +39,11 @@ Raw command output is written before a compact payload can be selected. The stor
 - verifies any existing object before reuse;
 - fails closed if an object at the expected hash has different bytes.
 
-### Command-aware projections
+### Command output compression
 
-Successful test, build, check, and lint commands with at least 80 output lines can produce a deterministic diagnostic projection. It keeps the opening context, warning/error/pass summaries with adjacent locations, and the final output tail. Failed commands and unknown command families are never projected.
+Command output uses reversible line encoding. Every output line remains represented, including findings in successful commands and compound commands. Exit status and diagnostic keywords never decide which lines survive.
 
-The raw artifact is stored first. The projection competes with the plain and reversible line-RLE candidates under the exact tokenizer, so it is selected only when it is the smallest representation. Telemetry records the projection identifier and raw artifact hash.
+The raw artifact is stored first. Compression is selected only when the exact tokenizer counts fewer tokens. The existing `codex_zero_command_aware_projection` setting remains accepted for configuration compatibility and now uses the reversible codec.
 
 ### Duplicate-result cache
 
@@ -75,7 +75,7 @@ Updates are serialized and throttled so continuous output cannot postpone them. 
 
 ### Desktop launcher
 
-`codex-zero desktop` starts the installed signed app with its supported `CODEX_CLI_PATH` override pointing at the side-by-side core. `CODEX_APP_SERVER_FORCE_CLI=1` prevents an existing daemon from bypassing that path. A custom runtime environment switch injects the same default-off feature overrides used by the CLI launcher. Focused passes `CODEX_ZERO_SCOPED_RUNTIME=1`; Standard, Max Savings, and Focused pass the installed prompt path through `CODEX_ZERO_INSTRUCTIONS_FILE`. The command refuses to launch while an existing Desktop process is active because a single-instance handoff would keep the old process environment.
+`codex-zero desktop` starts the installed app with `CODEX_CLI_PATH` pointing at the optimized core. `CODEX_APP_SERVER_FORCE_CLI=1` requests a fresh app server. The CLI and optimized Desktop load the selected profile without overriding feature choices. Focused passes `CODEX_ZERO_SCOPED_RUNTIME=1`; Standard, Max Savings, and Focused pass the installed prompt path through `CODEX_ZERO_INSTRUCTIONS_FILE`. Startup requires a successful core initialization probe and checks for early Desktop failure. An existing Desktop process must be closed first.
 
 ### Optimization modes
 
