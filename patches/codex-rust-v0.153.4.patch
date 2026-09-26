@@ -2755,7 +2755,7 @@ index 391b8b0..c286318 100644
      };
      let expected_header = "Chunk ID: abc123\nWall time: 1.2500 seconds\nProcess exited with code 0\nOriginal token count: 42000\nOutput:\n";
      assert_eq!(
-@@ -543,3 +552,131 @@ fn exec_command_tool_output_preserves_omission_metadata_when_truncated() {
+@@ -543,3 +552,144 @@ fn exec_command_tool_output_preserves_omission_metadata_when_truncated() {
      assert!(text.contains("Warning: truncated output (original token count: 42000)"));
      assert_eq!(text.matches(&marker).count(), 1);
  }
@@ -2840,8 +2840,9 @@ index 391b8b0..c286318 100644
 +            index * 17
 +        ));
 +    }
-+    raw_output.push_str(&"heartbeat\n".repeat(500));
++    raw_output.push_str(&"heartbeat\n".repeat(1000));
 +    raw_output.push_str("CRITICAL: vulnerable dependency found\ncustom finding 123\n");
++    raw_output.push_str(&"heartbeat\n".repeat(1000));
 +    raw_output.push_str("warning: deprecated fixture\nsrc/check.js:10\n");
 +    raw_output.push_str("Tests: 140 passed, 140 total\n");
 +    let raw_output = raw_output.into_bytes();
@@ -2851,7 +2852,7 @@ index 391b8b0..c286318 100644
 +        wall_time: std::time::Duration::from_millis(1250),
 +        raw_output: raw_output.clone(),
 +        truncation_policy: TruncationPolicy::Tokens(100_000),
-+        max_output_tokens: None,
++        max_output_tokens: Some(100_000),
 +        process_id: None,
 +        exit_code: Some(0),
 +        original_token_count: Some(2000),
@@ -2871,6 +2872,18 @@ index 391b8b0..c286318 100644
 +        serde_json::from_str(&selected).expect("compact payload should be JSON");
 +    assert!(payload["projection"].is_null());
 +    assert!(payload["original_line_count"].is_null());
++    assert_eq!(payload["codec"], "line-rle-v1");
++    let decoded = codex_zero_codec::decode_terminal(&codex_zero_codec::TerminalEncoding {
++        text: payload["output"].as_str().expect("encoded output").to_string(),
++        codec: Some("line-rle-v1"),
++        projection: None,
++        original_line_count: None,
++        presentation_changed: false,
++    })
++    .expect("reversible output");
++    assert_eq!(decoded.as_bytes(), raw_output.as_slice());
++    assert!(codex_zero_codec::token_count(&selected)
++        < codex_zero_codec::token_count(&output.response_text()));
 +    assert!(payload["output"].as_str().is_some_and(|text| {
 +        text.contains("warning: deprecated fixture")
 +            && text.contains("CRITICAL: vulnerable dependency found")
