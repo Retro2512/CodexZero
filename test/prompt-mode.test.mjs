@@ -96,7 +96,7 @@ test("missing install metadata defaults to Safe mode", () => {
   assert.equal(result.stdout.trim(), "safe");
 });
 
-test("Safe omits the prompt override while direct lean modes include it", () => {
+test("profile supplies optimization defaults while lean modes supply their prompt", () => {
   const safe = buildLaunchArguments(["--version"], null);
   const standard = buildLaunchArguments(
     ["--version"],
@@ -114,15 +114,18 @@ test("Safe omits the prompt override while direct lean modes include it", () => 
     true
   );
   for (const feature of [
+    "background_terminal_max_timeout=3600000",
+    "features.unified_exec=true",
     "features.codex_zero_compact_exec_output=true",
     "features.codex_zero_lossless_terminal_codec=true",
     "features.codex_zero_command_aware_projection=true",
     "features.codex_zero_exact_duplicate_results=true",
     "features.codex_zero_event_driven_wait=true"
   ]) {
-    assert.equal(safe.includes(feature), true);
-    assert.equal(max.includes(feature), true);
+    assert.equal(safe.includes(feature), false);
+    assert.equal(max.includes(feature), false);
   }
+  assert.deepEqual(safe, ["--profile", "codexzero", "--version"]);
 });
 
 test("Focused alone uses the scoped batching runtime", () => {
@@ -169,6 +172,12 @@ test("Astra launches retain explicit model, effort and context choices", () => {
   assert.equal(args.filter((arg) => arg.startsWith("model_context_window=")).length, 1);
 });
 
+test("explicit optimization choices are not overwritten by launcher defaults", () => {
+  const requested = ["-c", "features.unified_exec=false", "-c", "background_terminal_max_timeout=120000"];
+  const args = buildLaunchArguments(requested, null, "standard");
+  assert.deepEqual(args, ["--profile", "codexzero", ...requested]);
+});
+
 test("Focused mode requires the prompt and records the new mode", async () => {
   const home = await fs.mkdtemp(path.join(os.tmpdir(), "codex-zero-focused-"));
   const promptRoot = path.join(home, "prompts");
@@ -199,3 +208,10 @@ function run(args, env) {
     encoding: "utf8"
   });
 }
+
+test("upgrades preserve the user's existing optimization profile", async () => {
+  const unix = await fs.readFile(path.join(root, "scripts", "install.sh"), "utf8");
+  const windows = await fs.readFile(path.join(root, "scripts", "install.ps1"), "utf8");
+  assert.match(unix, /if \[ ! -e "\$CODEX_HOME\/codexzero\.config\.toml" \]; then\s+cp/u);
+  assert.match(windows, /if \(!\(Test-Path -LiteralPath \$profilePath\)\) \{\s+Copy-Item/u);
+});

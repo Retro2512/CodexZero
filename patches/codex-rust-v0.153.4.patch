@@ -1440,7 +1440,7 @@ index 351d1e6..278f8ed 100644
  similar = "2.7.0"
  symphonia = { version = "0.6.0", default-features = false, features = [
 diff --git a/codex-rs/cli/src/main.rs b/codex-rs/cli/src/main.rs
-index 71d0323..f3c4a5c 100644
+index 71d0323..81e5ce7 100644
 --- a/codex-rs/cli/src/main.rs
 +++ b/codex-rs/cli/src/main.rs
 @@ -1054,6 +1054,15 @@ async fn cli_main(
@@ -1448,18 +1448,33 @@ index 71d0323..f3c4a5c 100644
          subcommand,
      } = MultitoolCli::parse();
 +
-+    root_config_overrides
-+        .raw_overrides
-+        .extend(codex_zero_runtime_overrides(
-+            std::env::var_os("CODEX_ZERO_RUNTIME_OVERRIDES").as_deref(),
-+            std::env::var_os("CODEX_ZERO_INSTRUCTIONS_FILE").as_deref(),
-+            std::env::var_os("CODEX_ZERO_SCOPED_RUNTIME").as_deref(),
-+        ));
++    let mut runtime_overrides = codex_zero_runtime_overrides(
++        std::env::var_os("CODEX_ZERO_RUNTIME_OVERRIDES").as_deref(),
++        std::env::var_os("CODEX_ZERO_INSTRUCTIONS_FILE").as_deref(),
++        std::env::var_os("CODEX_ZERO_SCOPED_RUNTIME").as_deref(),
++    );
++    runtime_overrides.append(&mut root_config_overrides.raw_overrides);
++    root_config_overrides.raw_overrides = runtime_overrides;
 +
      // Fold --enable/--disable into config overrides so they flow to all subcommands.
      let toggle_overrides = feature_toggles.to_overrides()?;
      root_config_overrides.raw_overrides.extend(toggle_overrides);
-@@ -1821,6 +1830,44 @@ async fn cli_main(
+@@ -1287,7 +1296,13 @@ async fn cli_main(
+                     codex_app_server::run_main_with_transport_options(
+                         arg0_paths.clone(),
+                         root_config_overrides,
+-                        LoaderOverrides::default(),
++                        loader_overrides_for_profile(
++                            codex_zero_profile(
++                                std::env::var_os("CODEX_ZERO_RUNTIME_OVERRIDES").as_deref(),
++                                std::env::var_os("CODEX_ZERO_PROFILE").as_deref(),
++                            )?
++                            .as_ref(),
++                        )?,
+                         strict_config,
+                         analytics_default_enabled,
+                         transport,
+@@ -1821,6 +1836,46 @@ async fn cli_main(
      Ok(())
  }
  
@@ -1472,20 +1487,8 @@ index 71d0323..f3c4a5c 100644
 +        return Vec::new();
 +    }
 +
-+    let mut overrides = [
-+        "model_reasoning_effort=\"high\"",
-+        "model_reasoning_summary=\"none\"",
-+        "background_terminal_max_timeout=3600000",
-+        "features.unified_exec=true",
-+        "features.codex_zero_compact_exec_output=true",
-+        "features.codex_zero_lossless_terminal_codec=true",
-+        "features.codex_zero_command_aware_projection=true",
-+        "features.codex_zero_exact_duplicate_results=true",
-+        "features.codex_zero_event_driven_wait=true",
-+    ]
-+    .into_iter()
-+    .map(str::to_owned)
-+    .collect::<Vec<_>>();
++    // Defaults come from the selected profile, never command line overrides.
++    let mut overrides = Vec::new();
 +    if scoped_runtime == Some(std::ffi::OsStr::new("1")) {
 +        overrides.extend([
 +            "features.code_mode=true".to_string(),
@@ -1501,10 +1504,24 @@ index 71d0323..f3c4a5c 100644
 +    overrides
 +}
 +
++fn codex_zero_profile(
++    enabled: Option<&std::ffi::OsStr>,
++    profile: Option<&std::ffi::OsStr>,
++) -> anyhow::Result<Option<ProfileV2Name>> {
++    if enabled != Some(std::ffi::OsStr::new("1")) {
++        return Ok(None);
++    }
++    let name = profile.unwrap_or(std::ffi::OsStr::new("codexzero"));
++    let name = name
++        .to_str()
++        .ok_or_else(|| anyhow::anyhow!("Invalid CodexZero profile"))?;
++    Ok(Some(name.parse()?))
++}
++
  fn profile_v2_for_subcommand<'a>(
      interactive: &'a TuiCli,
      subcommand: &Subcommand,
-@@ -4946,6 +4993,62 @@ mod tests {
+@@ -4946,6 +5001,71 @@ mod tests {
          );
      }
  
@@ -1522,21 +1539,30 @@ index 71d0323..f3c4a5c 100644
 +    }
 +
 +    #[test]
-+    fn codex_zero_runtime_overrides_enable_every_guarded_feature() {
++    fn codex_zero_runtime_overrides_leave_profile_features_unchanged() {
 +        assert_eq!(
 +            codex_zero_runtime_overrides(Some(std::ffi::OsStr::new("1")), None, None),
-+            vec![
-+                "model_reasoning_effort=\"high\"",
-+                "model_reasoning_summary=\"none\"",
-+                "background_terminal_max_timeout=3600000",
-+                "features.unified_exec=true",
-+                "features.codex_zero_compact_exec_output=true",
-+                "features.codex_zero_lossless_terminal_codec=true",
-+                "features.codex_zero_command_aware_projection=true",
-+                "features.codex_zero_exact_duplicate_results=true",
-+                "features.codex_zero_event_driven_wait=true",
-+            ]
++            Vec::<String>::new()
 +        );
++    }
++
++    #[test]
++    fn codex_zero_desktop_loads_the_selected_profile() {
++        let enabled = Some(std::ffi::OsStr::new("1"));
++        assert!(
++            codex_zero_profile(None, Some(std::ffi::OsStr::new("codexzero")))
++                .unwrap()
++                .is_none()
++        );
++        let profile = codex_zero_profile(enabled, None).unwrap().unwrap();
++        assert_eq!(profile.to_string(), "codexzero");
++        let home = std::path::Path::new("/tmp/isolated-codex");
++        let overrides = loader_overrides_for_profile_at_codex_home(Some(&profile), home);
++        assert_eq!(
++            overrides.user_config_path,
++            Some(resolve_profile_v2_config_path(home, &profile))
++        );
++        assert!(codex_zero_profile(enabled, Some(std::ffi::OsStr::new("../escape"))).is_err());
 +    }
 +
 +    #[test]
@@ -1598,10 +1624,10 @@ index 0000000..18b6cc2
 +tempfile = { workspace = true }
 diff --git a/codex-rs/codex-zero-codec/src/lib.rs b/codex-rs/codex-zero-codec/src/lib.rs
 new file mode 100644
-index 0000000..046cd2d
+index 0000000..16d19bb
 --- /dev/null
 +++ b/codex-rs/codex-zero-codec/src/lib.rs
-@@ -0,0 +1,508 @@
+@@ -0,0 +1,423 @@
 +use anyhow::Context;
 +use anyhow::Result;
 +use serde::Deserialize;
@@ -1618,10 +1644,6 @@ index 0000000..046cd2d
 +use tiktoken_rs::o200k_base_singleton;
 +
 +const RLE_CODEC: &str = "line-rle-v1";
-+const SUCCESSFUL_CHECK_PROJECTION: &str = "successful-check-v1";
-+const MIN_PROJECTION_LINES: usize = 80;
-+const PROJECTION_TAIL_LINES: usize = 24;
-+const MAX_DIAGNOSTIC_LINES: usize = 56;
 +static NEXT_TEMP_ID: AtomicU64 = AtomicU64::new(0);
 +
 +#[derive(Debug, Clone, PartialEq, Eq)]
@@ -1694,13 +1716,15 @@ index 0000000..046cd2d
 +    let sha256 = sha256(raw);
 +    let directory = root.join("sha256");
 +    let path = directory.join(&sha256);
-+    fs::create_dir_all(&directory).with_context(|| {
++    private_directory(root, true)?;
++    private_directory(&directory, true).with_context(|| {
 +        format!(
 +            "failed to create artifact directory {}",
 +            directory.display()
 +        )
 +    })?;
 +    if path.exists() {
++        protect_regular_file(&path)?;
 +        let existing = fs::read(&path)
 +            .with_context(|| format!("failed to verify raw artifact {}", path.display()))?;
 +        anyhow::ensure!(
@@ -1708,15 +1732,21 @@ index 0000000..046cd2d
 +            "artifact hash collision or corruption at {}",
 +            path.display()
 +        );
++        refresh_artifact(&path)?;
 +    } else {
 +        let temporary = directory.join(format!(
 +            ".{sha256}.{}.{}.tmp",
 +            std::process::id(),
 +            NEXT_TEMP_ID.fetch_add(1, Ordering::Relaxed)
 +        ));
-+        let mut file = OpenOptions::new()
-+            .write(true)
-+            .create_new(true)
++        let mut options = OpenOptions::new();
++        options.write(true).create_new(true);
++        #[cfg(unix)]
++        {
++            use std::os::unix::fs::OpenOptionsExt;
++            options.mode(0o600);
++        }
++        let mut file = options
 +            .open(&temporary)
 +            .with_context(|| format!("failed to create raw artifact {}", temporary.display()))?;
 +        file.write_all(raw)
@@ -1727,6 +1757,7 @@ index 0000000..046cd2d
 +        if let Err(error) = fs::rename(&temporary, &path) {
 +            if path.exists() {
 +                let _ = fs::remove_file(&temporary);
++                protect_regular_file(&path)?;
 +                let existing = fs::read(&path).with_context(|| {
 +                    format!("failed to verify raced raw artifact {}", path.display())
 +                })?;
@@ -1735,6 +1766,7 @@ index 0000000..046cd2d
 +                    "artifact hash collision or corruption at {}",
 +                    path.display()
 +                );
++                refresh_artifact(&path)?;
 +            } else {
 +                return Err(error).with_context(|| {
 +                    format!(
@@ -1754,24 +1786,82 @@ index 0000000..046cd2d
 +    })
 +}
 +
++fn private_directory(path: &Path, repair: bool) -> Result<()> {
++    let mut builder = fs::DirBuilder::new();
++    builder.recursive(true);
++    #[cfg(unix)]
++    {
++        use std::os::unix::fs::DirBuilderExt;
++        builder.mode(0o700);
++    }
++    builder.create(path)?;
++    let metadata = fs::symlink_metadata(path)?;
++    anyhow::ensure!(
++        metadata.is_dir() && !metadata.file_type().is_symlink(),
++        "Invalid private directory"
++    );
++    #[cfg(unix)]
++    if repair {
++        use std::os::unix::fs::PermissionsExt;
++        fs::set_permissions(path, fs::Permissions::from_mode(0o700))?;
++    }
++    #[cfg(not(unix))]
++    let _ = repair;
++    Ok(())
++}
++
++fn protect_regular_file(path: &Path) -> Result<()> {
++    let metadata = fs::symlink_metadata(path)?;
++    anyhow::ensure!(
++        metadata.is_file() && !metadata.file_type().is_symlink(),
++        "Invalid private file"
++    );
++    #[cfg(unix)]
++    {
++        use std::os::unix::fs::PermissionsExt;
++        fs::set_permissions(path, fs::Permissions::from_mode(0o600))?;
++    }
++    Ok(())
++}
++
++fn refresh_artifact(path: &Path) -> Result<()> {
++    let file = OpenOptions::new().write(true).open(path)?;
++    file.set_times(fs::FileTimes::new().set_modified(std::time::SystemTime::now()))?;
++    Ok(())
++}
++
++pub fn append_telemetry_to(path: &Path, record: &serde_json::Value) -> Result<()> {
++    if let Some(parent) = path
++        .parent()
++        .filter(|parent| !parent.as_os_str().is_empty())
++    {
++        // Explicit telemetry paths may share a directory with unrelated files.
++        // New parents are private; existing parents are never chmodded here.
++        private_directory(parent, false)?;
++    }
++    match fs::symlink_metadata(path) {
++        Ok(_) => protect_regular_file(path)?,
++        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
++        Err(error) => return Err(error.into()),
++    }
++    let mut options = OpenOptions::new();
++    options.create(true).append(true);
++    #[cfg(unix)]
++    {
++        use std::os::unix::fs::OpenOptionsExt;
++        options.mode(0o600);
++    }
++    let mut file = options.open(path)?;
++    serde_json::to_writer(&mut file, record)?;
++    file.write_all(b"\n")?;
++    Ok(())
++}
++
 +pub fn append_telemetry(record: &serde_json::Value) -> Result<bool> {
 +    let Ok(path) = std::env::var("CODEX_ZERO_TELEMETRY_FILE") else {
 +        return Ok(false);
 +    };
-+    let path = PathBuf::from(path);
-+    if let Some(parent) = path.parent() {
-+        fs::create_dir_all(parent).with_context(|| {
-+            format!("failed to create telemetry directory {}", parent.display())
-+        })?;
-+    }
-+    let mut file = OpenOptions::new()
-+        .create(true)
-+        .append(true)
-+        .open(&path)
-+        .with_context(|| format!("failed to open telemetry file {}", path.display()))?;
-+    serde_json::to_writer(&mut file, record).context("failed to serialize telemetry record")?;
-+    file.write_all(b"\n")
-+        .context("failed to terminate telemetry record")?;
++    append_telemetry_to(Path::new(&path), record)?;
 +    Ok(true)
 +}
 +
@@ -1806,29 +1896,12 @@ index 0000000..046cd2d
 +
 +pub fn encode_command_output(
 +    raw: &[u8],
-+    command: Option<&str>,
-+    exit_code: Option<i32>,
++    _command: Option<&str>,
++    _exit_code: Option<i32>,
 +) -> TerminalEncoding {
-+    let encoded = encode_terminal(raw);
-+    let Some(command) = command else {
-+        return encoded;
-+    };
-+    let Some((projection, original_line_count)) =
-+        project_successful_check(&String::from_utf8_lossy(raw), command, exit_code)
-+    else {
-+        return encoded;
-+    };
-+    if token_count(&projection) >= token_count(&encoded.text) {
-+        return encoded;
-+    }
-+
-+    TerminalEncoding {
-+        text: projection,
-+        codec: None,
-+        projection: Some(SUCCESSFUL_CHECK_PROJECTION),
-+        original_line_count: Some(original_line_count),
-+        presentation_changed: encoded.presentation_changed,
-+    }
++    // A successful exit does not prove that any output line is irrelevant.
++    // Preserve the existing feature/API while using only reversible encoding.
++    encode_terminal(raw)
 +}
 +
 +pub fn decode_terminal(encoded: &TerminalEncoding) -> Result<String> {
@@ -1850,138 +1923,6 @@ index 0000000..046cd2d
 +        Some(codec) => anyhow::bail!("unsupported terminal codec {codec}"),
 +        None => Ok(encoded.text.clone()),
 +    }
-+}
-+
-+fn project_successful_check(
-+    output: &str,
-+    command: &str,
-+    exit_code: Option<i32>,
-+) -> Option<(String, usize)> {
-+    if exit_code != Some(0) || !is_check_command(command) {
-+        return None;
-+    }
-+    let normalized = normalize_line_endings_if_smaller(&strip_presentation_ansi(output));
-+    let lines = normalized.lines().collect::<Vec<_>>();
-+    if lines.len() < MIN_PROJECTION_LINES {
-+        return None;
-+    }
-+
-+    let mut selected = vec![false; lines.len()];
-+    for selected_line in selected.iter_mut().take(lines.len().min(3)) {
-+        *selected_line = true;
-+    }
-+    let mut diagnostic_count = 0;
-+    for (index, line) in lines.iter().enumerate() {
-+        if diagnostic_count >= MAX_DIAGNOSTIC_LINES || !is_diagnostic_line(line) {
-+            continue;
-+        }
-+        for selected_line in selected
-+            .iter_mut()
-+            .take((index + 1).min(lines.len() - 1) + 1)
-+            .skip(index.saturating_sub(1))
-+        {
-+            if !*selected_line {
-+                *selected_line = true;
-+                diagnostic_count += 1;
-+            }
-+        }
-+    }
-+    for selected_line in selected
-+        .iter_mut()
-+        .skip(lines.len().saturating_sub(PROJECTION_TAIL_LINES))
-+    {
-+        *selected_line = true;
-+    }
-+
-+    let mut projected = format!(
-+        "Successful check output projected from {} lines; full output is in the attached artifact.\n",
-+        lines.len()
-+    );
-+    let mut previous_index = None;
-+    let mut previous_line = None;
-+    let mut repeat_count = 0;
-+    for (index, line) in lines.iter().copied().enumerate() {
-+        if !selected[index] {
-+            continue;
-+        }
-+        if previous_index.is_some_and(|previous| index > previous + 1) {
-+            flush_projected_line(&mut projected, previous_line.take(), repeat_count);
-+            repeat_count = 0;
-+            projected.push_str("[...]\n");
-+        }
-+        if previous_line == Some(line) {
-+            repeat_count += 1;
-+        } else {
-+            flush_projected_line(&mut projected, previous_line.replace(line), repeat_count);
-+            repeat_count = 1;
-+        }
-+        previous_index = Some(index);
-+    }
-+    flush_projected_line(&mut projected, previous_line, repeat_count);
-+    Some((projected, lines.len()))
-+}
-+
-+fn flush_projected_line(output: &mut String, line: Option<&str>, count: usize) {
-+    let Some(line) = line else {
-+        return;
-+    };
-+    output.push_str(line);
-+    if count > 1 {
-+        output.push_str(&format!(" [repeated {count} times]"));
-+    }
-+    output.push('\n');
-+}
-+
-+fn is_check_command(command: &str) -> bool {
-+    let command = command.to_ascii_lowercase();
-+    [
-+        "cargo test",
-+        "cargo check",
-+        "cargo clippy",
-+        "npm test",
-+        "npm run test",
-+        "npm run build",
-+        "npm run check",
-+        "npm run lint",
-+        "pnpm test",
-+        "pnpm run test",
-+        "pnpm run build",
-+        "pnpm run check",
-+        "pnpm run lint",
-+        "yarn test",
-+        "yarn build",
-+        "yarn lint",
-+        "node --test",
-+        "pytest",
-+        "python -m pytest",
-+        "go test",
-+        "dotnet test",
-+        "gradle test",
-+        "gradlew test",
-+        "mvn test",
-+        "mvn verify",
-+        "swift test",
-+    ]
-+    .iter()
-+    .any(|pattern| command.contains(pattern))
-+}
-+
-+fn is_diagnostic_line(line: &str) -> bool {
-+    let line = line.to_ascii_lowercase();
-+    [
-+        "error",
-+        "warning",
-+        "failed",
-+        "failure",
-+        "passed",
-+        "pass ",
-+        "test result",
-+        "tests:",
-+        "summary",
-+        "success",
-+    ]
-+    .iter()
-+    .any(|marker| line.contains(marker))
 +}
 +
 +fn normalize_line_endings_if_smaller(text: &str) -> String {
@@ -2112,10 +2053,10 @@ index 0000000..046cd2d
 +mod tests;
 diff --git a/codex-rs/codex-zero-codec/src/lib_tests.rs b/codex-rs/codex-zero-codec/src/lib_tests.rs
 new file mode 100644
-index 0000000..609c66f
+index 0000000..7068219
 --- /dev/null
 +++ b/codex-rs/codex-zero-codec/src/lib_tests.rs
-@@ -0,0 +1,113 @@
+@@ -0,0 +1,225 @@
 +use super::*;
 +use pretty_assertions::assert_eq;
 +
@@ -2160,7 +2101,7 @@ index 0000000..609c66f
 +}
 +
 +#[test]
-+fn successful_checks_keep_diagnostics_and_tail_in_a_smaller_projection() {
++fn successful_checks_keep_every_line_in_a_smaller_encoding() {
 +    let mut output = String::from("test suite\nplatform windows\nstarting\n");
 +    output.push_str(&"heartbeat\n".repeat(100));
 +    output.push_str("warning: deprecated fixture\nsrc/check.js:10\n");
@@ -2169,13 +2110,13 @@ index 0000000..609c66f
 +
 +    let encoded = encode_command_output(output.as_bytes(), Some("npm test"), Some(0));
 +
-+    assert_eq!(encoded.projection, Some(SUCCESSFUL_CHECK_PROJECTION));
-+    assert_eq!(encoded.original_line_count, Some(146));
++    assert_eq!(encoded.projection, None);
++    assert_eq!(encoded.original_line_count, None);
 +    assert!(encoded.text.contains("warning: deprecated fixture"));
 +    assert!(encoded.text.contains("src/check.js:10"));
 +    assert!(encoded.text.contains("Tests: 12 passed, 12 total"));
 +    assert!(token_count(&encoded.text) < token_count(&output));
-+    assert!(decode_terminal(&encoded).is_err());
++    assert_eq!(decode_terminal(&encoded).unwrap(), output);
 +}
 +
 +#[test]
@@ -2215,6 +2156,21 @@ index 0000000..609c66f
 +}
 +
 +#[test]
++fn reused_artifacts_refresh_their_retention_age() {
++    let temp = tempfile::tempdir().unwrap();
++    let artifact = store_raw(temp.path(), b"recently used").unwrap();
++    let old = std::time::UNIX_EPOCH + std::time::Duration::from_secs(1);
++    OpenOptions::new()
++        .write(true)
++        .open(&artifact.path)
++        .unwrap()
++        .set_times(fs::FileTimes::new().set_modified(old))
++        .unwrap();
++    store_raw(temp.path(), b"recently used").unwrap();
++    assert!(fs::metadata(artifact.path).unwrap().modified().unwrap() > old);
++}
++
++#[test]
 +fn equal_or_larger_candidate_falls_back_to_original() {
 +    let original = "short";
 +    let selected = select_strictly_smaller(original, "not any shorter".to_string());
@@ -2228,6 +2184,103 @@ index 0000000..609c66f
 +            transformed: false,
 +        }
 +    );
++}
++
++#[test]
++fn successful_compound_commands_preserve_arbitrary_middle_findings() {
++    let mut output = (0..120)
++        .map(|index| format!("completed step {index}\n"))
++        .collect::<String>();
++    output.push_str("CRITICAL: vulnerable dependency found\nHIGH: audit finding\nvulnerability detected\ncustom status 123\n");
++    output.push_str(&"heartbeat\n".repeat(120));
++    for command in [
++        "npm test",
++        "npm test && scanner",
++        "echo npm test; scanner",
++        "unknown",
++    ] {
++        let encoded = encode_command_output(output.as_bytes(), Some(command), Some(0));
++        assert_eq!(encoded.projection, None);
++        assert_eq!(decode_terminal(&encoded).unwrap(), output);
++    }
++}
++
++#[test]
++fn successful_checks_never_cap_diagnostics() {
++    let output = (0..150)
++        .map(|index| format!("warning number {index}\n"))
++        .collect::<String>();
++    let encoded = encode_command_output(output.as_bytes(), Some("npm test"), Some(0));
++    assert_eq!(decode_terminal(&encoded).unwrap(), output);
++}
++
++#[cfg(unix)]
++#[test]
++fn artifact_and_telemetry_permissions_are_private_and_repaired() {
++    use std::os::unix::fs::PermissionsExt;
++    let temp = tempfile::tempdir().unwrap();
++    let root = temp.path().join("artifacts");
++    let artifact = store_raw(&root, b"private output").unwrap();
++    for directory in [&root, &root.join("sha256")] {
++        assert_eq!(
++            fs::metadata(directory).unwrap().permissions().mode() & 0o777,
++            0o700
++        );
++        fs::set_permissions(directory, fs::Permissions::from_mode(0o755)).unwrap();
++    }
++    assert_eq!(
++        fs::metadata(&artifact.path).unwrap().permissions().mode() & 0o777,
++        0o600
++    );
++    fs::set_permissions(&artifact.path, fs::Permissions::from_mode(0o644)).unwrap();
++    store_raw(&root, b"private output").unwrap();
++    assert_eq!(
++        fs::metadata(&artifact.path).unwrap().permissions().mode() & 0o777,
++        0o600
++    );
++    assert_eq!(
++        fs::metadata(&root).unwrap().permissions().mode() & 0o777,
++        0o700
++    );
++    assert_eq!(
++        fs::metadata(root.join("sha256"))
++            .unwrap()
++            .permissions()
++            .mode()
++            & 0o777,
++        0o700
++    );
++    let telemetry = temp.path().join("telemetry/record.jsonl");
++    append_telemetry_to(&telemetry, &serde_json::json!({"ok": true})).unwrap();
++    assert_eq!(
++        fs::metadata(&telemetry).unwrap().permissions().mode() & 0o777,
++        0o600
++    );
++    fs::set_permissions(&telemetry, fs::Permissions::from_mode(0o644)).unwrap();
++    append_telemetry_to(&telemetry, &serde_json::json!({"ok": true})).unwrap();
++    assert_eq!(
++        fs::metadata(&telemetry).unwrap().permissions().mode() & 0o777,
++        0o600
++    );
++}
++
++#[cfg(unix)]
++#[test]
++fn private_storage_rejects_symlinks() {
++    use std::os::unix::fs::symlink;
++    let temp = tempfile::tempdir().unwrap();
++    let outside = temp.path().join("outside");
++    fs::create_dir(&outside).unwrap();
++    let root = temp.path().join("artifacts");
++    symlink(&outside, &root).unwrap();
++    assert!(store_raw(&root, b"private").is_err());
++    assert!(!outside.join("sha256").exists());
++    let file = outside.join("file");
++    fs::write(&file, b"untouched").unwrap();
++    let telemetry = temp.path().join("telemetry.jsonl");
++    symlink(&file, &telemetry).unwrap();
++    assert!(append_telemetry_to(&telemetry, &serde_json::json!({})).is_err());
++    assert_eq!(fs::read(file).unwrap(), b"untouched");
 +}
 diff --git a/codex-rs/core/Cargo.toml b/codex-rs/core/Cargo.toml
 index eb0137c..cde8c4b 100644
@@ -2394,10 +2447,10 @@ index 5bf4101..42472e2 100644
                  TURN_TOKEN_USAGE_METRIC,
                  turn_token_usage.total_tokens,
 diff --git a/codex-rs/core/src/tools/context.rs b/codex-rs/core/src/tools/context.rs
-index 72f9481..43b28df 100644
+index 72f9481..83914a8 100644
 --- a/codex-rs/core/src/tools/context.rs
 +++ b/codex-rs/core/src/tools/context.rs
-@@ -21,11 +21,19 @@ use codex_utils_output_truncation::approx_token_count;
+@@ -21,11 +21,17 @@ use codex_utils_output_truncation::approx_token_count;
  use codex_utils_output_truncation::formatted_truncate_text;
  use codex_utils_output_truncation::truncate_function_output_payload;
  use codex_utils_output_truncation::truncate_text;
@@ -2406,8 +2459,6 @@ index 72f9481..43b28df 100644
 +use codex_zero_codec::store_raw;
  use serde::Serialize;
  use serde_json::Value as JsonValue;
-+use std::fs::OpenOptions;
-+use std::io::Write;
  use std::num::NonZeroUsize;
 +use std::path::PathBuf;
  use std::sync::Arc;
@@ -2417,7 +2468,7 @@ index 72f9481..43b28df 100644
  use tokio::sync::Mutex;
  use tokio_util::sync::CancellationToken;
  
-@@ -261,6 +269,22 @@ impl ToolOutput for FunctionToolOutput {
+@@ -261,6 +267,22 @@ impl ToolOutput for FunctionToolOutput {
          self.success.unwrap_or(true)
      }
  
@@ -2440,7 +2491,7 @@ index 72f9481..43b28df 100644
      fn to_response_item(&self, call_id: &str, payload: &ToolPayload) -> ResponseInputItem {
          function_tool_response(call_id, payload, self.body.clone(), self.success)
      }
-@@ -357,6 +381,9 @@ pub struct ExecCommandToolOutput {
+@@ -357,6 +379,9 @@ pub struct ExecCommandToolOutput {
      /// Bytes omitted by the output collection cap before model-facing truncation.
      pub output_omitted_bytes: Option<NonZeroUsize>,
      pub hook_command: Option<String>,
@@ -2450,7 +2501,7 @@ index 72f9481..43b28df 100644
  }
  
  impl ToolOutput for ExecCommandToolOutput {
-@@ -376,12 +403,58 @@ impl ToolOutput for ExecCommandToolOutput {
+@@ -376,12 +401,58 @@ impl ToolOutput for ExecCommandToolOutput {
          true
      }
  
@@ -2510,7 +2561,7 @@ index 72f9481..43b28df 100644
              }],
              Some(true),
          )
-@@ -539,6 +612,170 @@ impl ExecCommandToolOutput {
+@@ -539,6 +610,159 @@ impl ExecCommandToolOutput {
  
          format!("{header}\n{output}")
      }
@@ -2660,18 +2711,7 @@ index 72f9481..43b28df 100644
 +            "codec": codec,
 +            "projection": projection,
 +        });
-+        let Some(parent) = path.parent() else {
-+            return;
-+        };
-+        if std::fs::create_dir_all(parent).is_err() {
-+            return;
-+        }
-+        let Ok(mut file) = OpenOptions::new().create(true).append(true).open(path) else {
-+            return;
-+        };
-+        if serde_json::to_writer(&mut file, &record).is_ok() {
-+            let _ = file.write_all(b"\n");
-+        }
++        let _ = codex_zero_codec::append_telemetry_to(path, &record);
 +    }
 +}
 +
@@ -2682,7 +2722,7 @@ index 72f9481..43b28df 100644
  
  fn function_tool_response(
 diff --git a/codex-rs/core/src/tools/context_tests.rs b/codex-rs/core/src/tools/context_tests.rs
-index 391b8b0..ffe9c96 100644
+index 391b8b0..c286318 100644
 --- a/codex-rs/core/src/tools/context_tests.rs
 +++ b/codex-rs/core/src/tools/context_tests.rs
 @@ -413,6 +413,9 @@ fn exec_command_tool_output_formats_truncated_response() {
@@ -2715,7 +2755,7 @@ index 391b8b0..ffe9c96 100644
      };
      let expected_header = "Chunk ID: abc123\nWall time: 1.2500 seconds\nProcess exited with code 0\nOriginal token count: 42000\nOutput:\n";
      assert_eq!(
-@@ -543,3 +552,127 @@ fn exec_command_tool_output_preserves_omission_metadata_when_truncated() {
+@@ -543,3 +552,131 @@ fn exec_command_tool_output_preserves_omission_metadata_when_truncated() {
      assert!(text.contains("Warning: truncated output (original token count: 42000)"));
      assert_eq!(text.matches(&marker).count(), 1);
  }
@@ -2790,7 +2830,7 @@ index 391b8b0..ffe9c96 100644
 +}
 +
 +#[test]
-+fn codex_zero_successful_check_projection_is_artifact_backed_and_recorded() {
++fn codex_zero_successful_check_compression_is_lossless_and_recorded() {
 +    let temp = tempfile::tempdir().expect("temporary artifact directory");
 +    let telemetry_path = temp.path().join("telemetry.jsonl");
 +    let mut raw_output = String::from("test suite\nplatform windows\nstarting\n");
@@ -2800,6 +2840,8 @@ index 391b8b0..ffe9c96 100644
 +            index * 17
 +        ));
 +    }
++    raw_output.push_str(&"heartbeat\n".repeat(500));
++    raw_output.push_str("CRITICAL: vulnerable dependency found\ncustom finding 123\n");
 +    raw_output.push_str("warning: deprecated fixture\nsrc/check.js:10\n");
 +    raw_output.push_str("Tests: 140 passed, 140 total\n");
 +    let raw_output = raw_output.into_bytes();
@@ -2827,10 +2869,12 @@ index 391b8b0..ffe9c96 100644
 +    );
 +    let payload: serde_json::Value =
 +        serde_json::from_str(&selected).expect("compact payload should be JSON");
-+    assert_eq!(payload["projection"], "successful-check-v1");
-+    assert_eq!(payload["original_line_count"], 146);
++    assert!(payload["projection"].is_null());
++    assert!(payload["original_line_count"].is_null());
 +    assert!(payload["output"].as_str().is_some_and(|text| {
 +        text.contains("warning: deprecated fixture")
++            && text.contains("CRITICAL: vulnerable dependency found")
++            && text.contains("custom finding 123")
 +            && text.contains("Tests: 140 passed, 140 total")
 +    }));
 +    let sha = payload["artifact"]["sha256"]
@@ -2841,7 +2885,7 @@ index 391b8b0..ffe9c96 100644
 +        raw_output
 +    );
 +    let telemetry = std::fs::read_to_string(telemetry_path).expect("telemetry record");
-+    assert!(telemetry.contains(r#""projection":"successful-check-v1""#));
++    assert!(telemetry.contains(r#""projection":null"#));
 +}
 diff --git a/codex-rs/core/src/tools/exact_duplicate.rs b/codex-rs/core/src/tools/exact_duplicate.rs
 new file mode 100644

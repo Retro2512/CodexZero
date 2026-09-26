@@ -7,8 +7,11 @@
 | Windows x64 | `codex-zero-windows-x64.zip` |
 | macOS Intel | `codex-zero-macos-x64.tar.gz` |
 | macOS Apple silicon | `codex-zero-macos-arm64.tar.gz` |
+| Linux x64 | `codex-zero-linux-x64.tar.gz` |
 
 Release packages include a Node runtime for the wrapper and monitor. Source-checkout installs can use Node.js 20 or newer already on the system.
+
+The Linux package provides the terminal command. It does not include a Linux desktop application.
 
 ## Codex versions
 

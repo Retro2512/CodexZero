@@ -15,6 +15,10 @@
 
 Local telemetry contains numeric counters, event names, timestamps, booleans, and hashes. It does not need prompt text, tool-output content, commands, repository paths, environment variables, or credentials.
 
+## Artifact maintenance
+
+The artifact store uses private permissions. Pruning runs only when invoked and can remove raw outputs referenced by old sessions. Use the dry run option to preview candidates and the repair command to restore private permissions.
+
 ## Reporting a vulnerability
 
 Open a private GitHub security advisory for the repository. Do not place credentials, private tool output, or raw local artifacts in a public issue.

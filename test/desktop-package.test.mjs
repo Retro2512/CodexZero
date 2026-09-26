@@ -78,7 +78,8 @@ test('Windows release publishes setup without the desktop application while CLI 
   assert.match(workflow, /Compress-Archive -Path package/);
   assert.match(workflow, /CodexZero-Setup-windows-x64\.exe\.sha256/);
   assert.doesNotMatch(workflow, /desktop_url|desktop_sha256|codex-zero-desktop-windows-x64|desktop-package/);
-  assert.match(workflow, /publish:\r?\n\s+needs: core\r?\n\s+if: inputs\.publish/);
+  assert.match(workflow, /attest:\r?\n\s+needs: core\r?\n\s+if: inputs\.publish/);
+  assert.match(workflow, /publish:\r?\n\s+needs: \[core, attest\]\r?\n\s+if: inputs\.publish/);
   const bootstrap = await fs.readFile(path.join(repository, 'scripts/bootstrap.ps1'), 'utf8');
   assert.match(bootstrap, /CodexZero-Setup-windows-x64\.exe/);
   assert.match(bootstrap, /Get-FileHash/);

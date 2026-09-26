@@ -119,8 +119,11 @@ if (Test-Path -LiteralPath $bundledNode) {
     Copy-Item -LiteralPath $bundledNode -Destination (Join-Path $binRoot 'node.exe') -Force
     $nodeCommand = Join-Path $binRoot 'node.exe'
 }
-Copy-Item -LiteralPath (Join-Path $sourceRoot 'config\codexzero.config.toml') `
-    -Destination (Join-Path $codexHome 'codexzero.config.toml') -Force
+$profilePath = Join-Path $codexHome 'codexzero.config.toml'
+if (!(Test-Path -LiteralPath $profilePath)) {
+    Copy-Item -LiteralPath (Join-Path $sourceRoot 'config\codexzero.config.toml') `
+        -Destination $profilePath
+}
 
 $shimRoot = Join-Path $codexHome 'bin'
 New-Item -ItemType Directory -Force -Path $shimRoot | Out-Null

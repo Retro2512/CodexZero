@@ -50,6 +50,10 @@ For macOS, take the versioned `ChatGPT-darwin-arm64-<version>.zip` and `ChatGPT-
 
 ## Release workflow
 
+Each command package contains `release-manifest.json` with the full assembly source commit, original core build source commit, upstream Codex commit, and SHA256 hashes of its packaged files. GitHub build attestations identify the release workflow and artifact digests.
+
+Set `CODEX_ZERO_VERSION=0.9.2` to install an exact release rather than the default `latest`. Set `CODEX_ZERO_VERIFY_ATTESTATION=1` to verify its attestation with GitHub CLI before installation. Verification must succeed before setup starts. To verify a downloaded asset yourself, run `gh attestation verify <asset> --repo Retro2512/CodexZero --signer-workflow Retro2512/CodexZero/.github/workflows/release.yml`.
+
 The release workflow builds setup from the Windows package with Inno Setup 6.5 or later. On both Mac runners it installs the app, installs again as an upgrade, and launches it through Launch Services until it starts its custom model core. It then installs it on a clean runner, installs again as an upgrade, verifies the assembled desktop each time, and uninstalls it. Clear `publish` to build and verify without creating a release. The setup builder rejects any package that already contains an assembled desktop.
 
 Publish these Windows assets together:

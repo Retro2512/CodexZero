@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.9.2
+
+* Fixed feature settings being overridden at launch.
+* Kept every command output line in reversible compression.
+* Added private artifact permissions, permission repair and age based pruning.
+* Added core startup checks before opening Desktop.
+* Added Linux x64 CLI release packaging.
+* Added release manifests, build attestations and version pinning.
+
 ## 0.9.1
 
 * Fixed the Windows one line installer failing before download.
