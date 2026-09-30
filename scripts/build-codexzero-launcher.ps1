@@ -111,7 +111,7 @@ internal static class CodexZeroLauncher
     private const string LauncherRelative = __LAUNCHER_RELATIVE__;
 
     [STAThread]
-    private static int Main()
+    private static int Main(string[] args)
     {
         try
         {
@@ -129,7 +129,7 @@ internal static class CodexZeroLauncher
                 string updatedLauncher = Path.Combine(selected, "CodexZero.exe");
                 if (!File.Exists(updatedLauncher)) throw new FileNotFoundException("The update could not be opened.");
                 ProcessStartInfo updateInfo = new ProcessStartInfo {
-                    FileName = updatedLauncher, WorkingDirectory = selected, UseShellExecute = false, CreateNoWindow = true
+                    FileName = updatedLauncher, Arguments = JoinArguments(args), WorkingDirectory = selected, UseShellExecute = false, CreateNoWindow = true
                 };
                 updateInfo.EnvironmentVariables["CODEX_ZERO_LAUNCH_ROOT"] = launchRoot;
                 Process.Start(updateInfo);
@@ -153,7 +153,7 @@ internal static class CodexZeroLauncher
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
                 FileName = desktopBinary,
-                Arguments = QuoteArgument("--user-data-dir=" + browserData),
+                Arguments = QuoteArgument("--user-data-dir=" + browserData) + " " + JoinArguments(args),
                 WorkingDirectory = Path.GetDirectoryName(desktopBinary),
                 UseShellExecute = false,
                 CreateNoWindow = false
@@ -195,6 +195,11 @@ internal static class CodexZeroLauncher
             }
             return 1;
         }
+    }
+
+    private static string JoinArguments(string[] args)
+    {
+        return String.Join(" ", Array.ConvertAll(args, QuoteArgument));
     }
 
     private static string QuoteArgument(string value)

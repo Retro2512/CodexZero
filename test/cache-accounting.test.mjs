@@ -96,6 +96,7 @@ test("the 272k boundary applies long context multipliers only where documented",
 test("GPT-6 cache prices cover every published API tier in both context bands", () => {
   const models = [
     ["gpt-6-astra", [10, 1, 12.5, 50]],
+    ["gpt-6.1-sol", [2, 0.1, 2.5, 10]],
     ["gpt-6-sol", [2, 0.2, 2.5, 10]],
     ["gpt-6-luna", [0.1, 0.01, 0.125, 0.5]],
   ];
@@ -121,6 +122,7 @@ test("GPT-6 cache prices cover every published API tier in both context bands", 
 test("cache window and warmth are explicit estimates and expire deterministically", () => {
   assert.equal(cacheWindowMs("gpt-6-astra"), 30 * MINUTE);
   assert.equal(cacheWindowMs("gpt-6-sol"), 30 * MINUTE);
+  assert.equal(cacheWindowMs("gpt-6.1-sol"), 30 * MINUTE);
   assert.equal(cacheWindowMs("gpt-6-luna"), 30 * MINUTE);
   assert.equal(cacheWindowMs("gpt-5.3-codex"), 5 * MINUTE);
   assert.equal(cacheWindowMs("unknown"), null);
@@ -135,7 +137,7 @@ test("cache window and warmth are explicit estimates and expire deterministicall
 });
 
 test("new GPT-6 models prime an estimated cache window without counting a cache write", () => {
-  for (const model of ["gpt-6-sol", "gpt-6-luna"]) {
+  for (const model of ["gpt-6.1-sol", "gpt-6-sol", "gpt-6-luna"]) {
     const accounting = new ConversationAccounting(model);
     accounting.accept(turn(at(0), model));
     const first = usage(1_024, 0, 0, 1);
@@ -143,6 +145,24 @@ test("new GPT-6 models prime an estimated cache window without counting a cache 
     assert.equal(warmth(accounting.snapshot, NOW).remainingMs, 30 * MINUTE);
     assert.equal(accounting.snapshot.cost.usd, accounting.snapshot.cost.uncachedUsd);
   }
+});
+
+test("Sol 6.1 accounts for a cache write followed by a read at the new discounted rate", () => {
+  const accounting = new ConversationAccounting("sol61");
+  accounting.accept(turn(at(0), "gpt-6.1-sol"));
+  const first = usage(100_000, 0, 100_000, 1_000);
+  const second = usage(101_000, 100_000, 0, 1_000);
+  accounting.accept(tokens(at(0), first));
+  accounting.accept(tokens(at(MINUTE), usage(201_000, 100_000, 100_000, 2_000), second));
+  assert.ok(Math.abs(accounting.snapshot.cost.usd - 0.282) < 1e-12);
+  assert.ok(Math.abs(accounting.snapshot.cost.uncachedUsd - 0.422) < 1e-12);
+  assert.equal(accounting.snapshot.cost.partial, false);
+  assert.equal(accounting.snapshot.pricedRequests, 2);
+  assert.equal(warmth(accounting.snapshot, NOW + MINUTE).remainingMs, 30 * MINUTE);
+  assert.equal(priceUsage("gpt-6.1-sol", second).usd, 0.022);
+  assert.equal(priceUsage("gpt-6-sol", second).usd, 0.032);
+  assert.equal(priceUsage("gpt-6.1-sol", usage(10, 8, 3)), null);
+  assert.equal(priceUsage("gpt-6.1-sol", first, "ultrafast"), null);
 });
 
 test("keep warm requires eligibility, recent activity, and an expiring observed cache", () => {

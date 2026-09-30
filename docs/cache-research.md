@@ -2,6 +2,8 @@
 
 Verified against official OpenAI documentation on 2026-09-22. Prices are USD per 1 million tokens. This document distinguishes API billing from ChatGPT plan usage.
 
+GPT 6.1 Sol rates and cache lifetime verified on September 30, 2026 against [API pricing](https://developers.openai.com/api/docs/pricing) and [prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching).
+
 ## Current API prices
 
 OpenAI renamed Priority processing to Fast mode on 2026-07-30. API requests may still use either `service_tier: "priority"` or `service_tier: "fast"`. The following are the short-context rates from the current pricing page.
@@ -9,6 +11,7 @@ OpenAI renamed Priority processing to Fast mode on 2026-07-30. API requests may 
 | Model | Standard input | Standard cache read | Standard cache write | Standard output | Fast or Priority input | Fast or Priority cache read | Fast or Priority cache write | Fast or Priority output |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `gpt-6-astra` | $10.00 | $1.00 | $12.50 | $50.00 | $20.00 | $2.00 | $25.00 | $100.00 |
+| `gpt-6.1-sol` | $2.00 | $0.10 | $2.50 | $10.00 | $4.00 | $0.20 | $5.00 | $20.00 |
 | `gpt-6-sol` | $2.00 | $0.20 | $2.50 | $10.00 | $4.00 | $0.40 | $5.00 | $20.00 |
 | `gpt-6-luna` | $0.10 | $0.01 | $0.125 | $0.50 | $0.20 | $0.02 | $0.25 | $1.00 |
 | `gpt-5.6-sol` | $4.00 | $0.40 | $5.00 | $20.00 | $8.00 | $0.80 | $10.00 | $40.00 |
@@ -16,7 +19,7 @@ OpenAI renamed Priority processing to Fast mode on 2026-07-30. API requests may 
 | `gpt-5.6-luna` | $0.20 | $0.02 | $0.25 | $1.20 | $0.40 | $0.04 | $0.50 | $2.40 |
 | `gpt-5.5` below 272K context | $5.00 | $0.50 | no separate charge | $30.00 | $12.50 | $1.25 | no separate charge | $75.00 |
 
-For GPT-5.6 and later, cache reads are 0.1 times uncached input and cache writes are 1.25 times uncached input. A write is an alternative input-token rate, not an additive fee.
+For GPT 5.6 and later, cache writes are 1.25 times uncached input. Cache reads are 0.05 times uncached input for GPT 6.1 Sol and 0.1 times for the other models listed here. A write is an alternative input token rate, not an additive fee.
 
 ### Long-context rates
 
@@ -25,6 +28,7 @@ The current threshold is more than 272K input tokens. The higher rates apply to 
 | Model | Standard input | Standard cache read | Standard cache write | Standard output | Fast or Priority input | Fast or Priority cache read | Fast or Priority cache write | Fast or Priority output |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `gpt-6-astra` | $20.00 | $2.00 | $25.00 | $75.00 | $40.00 | $4.00 | $50.00 | $150.00 |
+| `gpt-6.1-sol` | $4.00 | $0.20 | $5.00 | $15.00 | $8.00 | $0.40 | $10.00 | $30.00 |
 | `gpt-6-sol` | $4.00 | $0.40 | $5.00 | $15.00 | $8.00 | $0.80 | $10.00 | $30.00 |
 | `gpt-6-luna` | $0.20 | $0.02 | $0.25 | $0.75 | $0.40 | $0.04 | $0.50 | $1.50 |
 | `gpt-5.6-sol` | $8.00 | $0.80 | $10.00 | $30.00 | $16.00 | $1.60 | $20.00 | $60.00 |
@@ -41,6 +45,7 @@ The published Batch and Flex rates match each other at 50 percent of Standard. T
 | Model | Short input | Short read | Short write | Short output | Long input | Long read | Long write | Long output |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `gpt-6-astra` | $5.00 | $0.50 | $6.25 | $25.00 | $10.00 | $1.00 | $12.50 | $37.50 |
+| `gpt-6.1-sol` | $1.00 | $0.05 | $1.25 | $5.00 | $2.00 | $0.10 | $2.50 | $7.50 |
 | `gpt-6-sol` | $1.00 | $0.10 | $1.25 | $5.00 | $2.00 | $0.20 | $2.50 | $7.50 |
 | `gpt-6-luna` | $0.05 | $0.005 | $0.0625 | $0.25 | $0.10 | $0.01 | $0.125 | $0.375 |
 

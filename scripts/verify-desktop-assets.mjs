@@ -6,6 +6,7 @@ export const DESKTOP_ASSETS = Object.freeze([
   "assets/provider-settings.html", "assets/native-provider-settings.mjs",
   "assets/native-provider-main.cjs", "assets/native-provider-preload.cjs",
   "assets/native-provider-identity.cjs", "assets/native-cache-ui.mjs",
+  "assets/native-notification-routing.cjs", "src/notification-routing-patch.mjs",
   "assets/model-pricing.mjs", "assets/codexzero.ico", "assets/codexzero.png",
   "assets/native-sidebar-appearance-main.cjs", "assets/native-sidebar-identity.mjs",
   "assets/sidebar-performance.mjs", "assets/transcript-retention.mjs",

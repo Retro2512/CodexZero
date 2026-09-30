@@ -3,7 +3,7 @@ import { EventEmitter } from "node:events";
 import { Readable } from "node:stream";
 import test from "node:test";
 
-import { serveProviderResponse } from "../src/provider-adapters.mjs";
+import { PROVIDER_BODY_LIMIT, serveProviderResponse } from "../src/provider-adapters.mjs";
 
 function request(body, headers = {}) {
   const req = Readable.from([JSON.stringify(body)]);
@@ -193,6 +193,99 @@ test("Anthropic adapter maps system content tool history and custom calls", asyn
   assert.equal(events.at(-1).response.output[1].call_id, "toolu_1");
   assert.equal(events.at(-1).response.output[1].name, "shell");
   assert.equal(events.at(-1).response.output[1].namespace, "computer");
+});
+
+test("chat tool images are multimodal and follow all parallel tool results", async () => {
+  for (const outputType of ["function_call_output", "custom_tool_call_output"]) {
+    for (const trailingMessage of [false, true]) {
+      let sent;
+      const image = { type: "input_image", image_url: "data:image/png;base64,YQ==", detail: "high" };
+      const callType = outputType === "function_call_output" ? "function_call" : "custom_tool_call";
+      const call = id => ({ type: callType, call_id: id, name: "view_image", arguments: "{}", input: "{}" });
+      const res = new FakeResponse();
+      await serveProviderResponse(request({ input: [
+        { role: "user", content: "Inspect both results" }, call("one"), call("two"),
+        { type: outputType, call_id: "one", output: [image] },
+        { type: outputType, call_id: "two", output: [{ type: "input_text", text: "Caption" }, image, image] },
+        ...(trailingMessage ? [{ role: "user", content: "Continue" }] : []),
+      ] }), res, {
+        provider: { apiType: "chat", baseUrl: "https://gateway.test/v1", model: "vision" }, apiKey: "test",
+        fetchImpl: async (url, init) => {
+          sent = JSON.parse(init.body);
+          return new Response(JSON.stringify({ choices: [{ message: { content: "ok" } }] }));
+        },
+      });
+      assert.equal(res.statusCode, 200, res.text());
+      assert.deepEqual(sent.messages.map(message => message.role), ["user", "assistant", "tool", "tool", "user", ...(trailingMessage ? ["user"] : [])]);
+      assert.deepEqual(sent.messages[1].tool_calls.map(call => call.id), ["one", "two"]);
+      assert.equal(sent.messages[2].tool_call_id, "one");
+      assert.equal(sent.messages[2].content, "Image result follows.");
+      assert.equal(sent.messages[3].content, "Caption");
+      assert.doesNotMatch(JSON.stringify(sent.messages.slice(0, 4)), /base64/);
+      const images = sent.messages[4].content.filter(part => part.type === "image_url");
+      assert.equal(images.length, 3);
+      assert.deepEqual(images[0], { type: "image_url", image_url: { url: image.image_url, detail: "high" } });
+      assert.match(sent.messages[4].content[0].text, /one/);
+      assert.match(sent.messages[4].content[2].text, /two/);
+    }
+  }
+});
+
+test("chat accepts image history above 10 MiB under the shared bridge limit", async () => {
+  const image = "data:image/png;base64," + "A".repeat(12 * 1024 * 1024);
+  const res = new FakeResponse();
+  let fetched = false;
+  await serveProviderResponse(request({ input: [
+    { type: "function_call", call_id: "large_image", name: "view_image", arguments: "{}" },
+    { type: "function_call_output", call_id: "large_image", output: [{ type: "input_image", image_url: image }] },
+  ] }), res, {
+    provider: { apiType: "chat", baseUrl: "https://gateway.test/v1", model: "vision" }, apiKey: "test",
+    fetchImpl: async (url, init) => {
+      fetched = true;
+      const sent = JSON.parse(init.body);
+      assert.equal(sent.messages.at(-1).content[1].image_url.url, image);
+      assert.equal(sent.messages[1].content, "Image result follows.");
+      return new Response(JSON.stringify({ choices: [{ message: { content: "ok" } }] }));
+    },
+  });
+  assert.equal(res.statusCode, 200, res.text());
+  assert.equal(fetched, true);
+});
+
+test("adapter still rejects streamed requests above the shared 32 MiB limit", async () => {
+  assert.equal(PROVIDER_BODY_LIMIT, 32 * 1024 * 1024);
+  const res = new FakeResponse();
+  let fetched = false;
+  const req = Readable.from([Buffer.alloc(PROVIDER_BODY_LIMIT, 32), Buffer.from(" ")]);
+  await serveProviderResponse(req, res, {
+    provider: { apiType: "chat", baseUrl: "https://gateway.test/v1", model: "vision" }, apiKey: "test",
+    fetchImpl: async () => { fetched = true; throw new Error("Must not fetch"); },
+  });
+  assert.equal(res.statusCode, 413);
+  assert.equal(JSON.parse(res.text()).error.code, "request_too_large");
+  assert.equal(fetched, false);
+});
+
+test("AnyRouter Anthropic requests include its required context header", async () => {
+  let call;
+  const res = new FakeResponse();
+  await serveProviderResponse(request({ input: "hello" }), res, {
+    provider: { apiType: "anthropic", baseUrl: "https://anyrouter.top/v1", model: "claude-opus-5-5" },
+    apiKey: "router-secret",
+    fetchImpl: async (url, init) => {
+      call = { url, headers: init.headers };
+      return new Response(JSON.stringify({
+        id: "msg_anyrouter",
+        content: [{ type: "text", text: "ok" }],
+        usage: { input_tokens: 1, output_tokens: 1 },
+      }), { status: 200 });
+    },
+  });
+
+  assert.equal(res.statusCode, 200);
+  assert.equal(call.url, "https://anyrouter.top/v1/messages");
+  assert.equal(call.headers["anthropic-beta"], "context-1m-2025-08-07");
+  assert.equal(call.headers["x-api-key"], "router-secret");
 });
 
 test("chat usage preserves cache reads cache writes and reasoning without double counting", async () => {
@@ -417,4 +510,19 @@ test("provider failures are generic and do not echo provider content or keys", a
     error: { message: "Provider request failed", type: "provider_error", code: "provider_error" },
   });
   assert.doesNotMatch(res.text(), /secret|401/i);
+});
+
+test("provider unavailability preserves status without exposing upstream details", async () => {
+  const res = new FakeResponse();
+  await serveProviderResponse(request({ input: "hello" }), res, {
+    provider: { apiType: "anthropic", baseUrl: "https://anyrouter.top/v1", model: "claude-opus-5-5" },
+    apiKey: "do-not-echo",
+    fetchImpl: async () => new Response("upstream secret details", { status: 503 }),
+  });
+
+  assert.equal(res.statusCode, 503);
+  assert.deepEqual(JSON.parse(res.text()), {
+    error: { message: "Provider unavailable", type: "provider_error", code: "provider_unavailable" },
+  });
+  assert.doesNotMatch(res.text(), /secret|upstream/i);
 });
