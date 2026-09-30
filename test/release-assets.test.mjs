@@ -26,7 +26,7 @@ test("a package missing its pricing or cache UI cannot pass verification", async
 test("release assembly and both installers include desktop feature assets", async () => {
   for (const relative of [".github/workflows/release.yml", "scripts/install.ps1", "scripts/install.sh"]) {
     const source = await fs.readFile(new URL(`../${relative}`, import.meta.url), "utf8");
-    for (const asset of ["native-cache-ui.mjs", "model-pricing.mjs", "native-sidebar-", "sidebar-performance.mjs", "transcript-retention.mjs"]) {
+    for (const asset of ["native-notification-routing.cjs", "native-cache-ui.mjs", "model-pricing.mjs", "native-sidebar-", "sidebar-performance.mjs", "transcript-retention.mjs"]) {
       assert.ok(source.includes(asset), `${relative}: ${asset}`);
     }
   }
