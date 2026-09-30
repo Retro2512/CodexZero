@@ -10,7 +10,11 @@ param(
     [int]$ParentProcessId,
 
     [Parameter(Mandatory = $true)]
-    [string]$ParentStartTicks
+    [string]$ParentStartTicks,
+
+    [string]$ReadyFile,
+    [string]$CancelFile,
+    [switch]$ShowFailureDialog
 )
 
 $ErrorActionPreference = 'Stop'
@@ -25,6 +29,7 @@ $stableLauncherPath = $null
 $resolvedLaunchRoot = $null
 $launcherStartFailed = $false
 $parentHasExited = $false
+$launchOutcomeUnknown = $false
 
 function Write-AtomicBytes {
     param(
@@ -78,6 +83,13 @@ function Restore-PreviousPointer {
                 [System.IO.File]::Delete($removedPath)
             }
         }
+    }
+}
+
+function Stop-IfCancelled {
+    if ($CancelFile -and [IO.File]::Exists($CancelFile)) {
+        if ($ReadyFile -and [IO.File]::Exists($ReadyFile)) { [IO.File]::Delete($ReadyFile) }
+        exit 0
     }
 }
 
@@ -141,6 +153,24 @@ try {
         throw 'The stable CodexZero launcher is missing.'
     }
 
+    # Confirm that this helper has parsed, validated the build and can run
+    # independently before the application is allowed to close.
+    if ($ReadyFile) {
+        $readyPath = [IO.Path]::GetFullPath($ReadyFile)
+        if ([IO.Path]::GetDirectoryName($readyPath) -ne [IO.Path]::GetFullPath($PSScriptRoot) -or
+            -not $readyPath.StartsWith($updatesPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+            throw 'Invalid handoff readiness location.'
+        }
+        if ($CancelFile) {
+            $cancelPath = [IO.Path]::GetFullPath($CancelFile)
+            if ([IO.Path]::GetDirectoryName($cancelPath) -ne [IO.Path]::GetDirectoryName($readyPath)) {
+                throw 'Invalid handoff cancellation location.'
+            }
+            Stop-IfCancelled
+        }
+        Write-AtomicText -DestinationPath $readyPath -Text 'ready'
+    }
+
     $deadline = [System.DateTime]::UtcNow.AddSeconds(120)
     $parent = Get-Process -Id $ParentProcessId -ErrorAction SilentlyContinue
     if ($null -ne $parent) {
@@ -159,6 +189,7 @@ try {
                 # Hold the same process handle instead of looking up the PID
                 # again on each poll. A reused PID cannot extend this wait.
                 while (-not $parent.WaitForExit(250)) {
+                    Stop-IfCancelled
                     if ([System.DateTime]::UtcNow -ge $deadline) {
                         throw [System.TimeoutException]::new('The parent process did not exit in time.')
                     }
@@ -169,6 +200,7 @@ try {
         }
     }
     $parentHasExited = $true
+    Stop-IfCancelled
 
     $pointerPath = Join-Path $resolvedLaunchRoot 'current-build.txt'
     $oldPointerExists = [System.IO.File]::Exists($pointerPath)
@@ -190,30 +222,42 @@ try {
     $pointerUpdated = $true
 
     try {
-        Start-Process -FilePath $stableLauncherPath -WorkingDirectory $resolvedLaunchRoot -WindowStyle Hidden -ErrorAction Stop
+        # The new launcher's update mode propagates early desktop startup
+        # failures through the stable launcher rather than reporting a spawn
+        # as a successful update. Old stable launchers exit immediately, so
+        # launch the validated new launcher directly for this first start.
+        $env:CODEX_ZERO_LAUNCH_ROOT = $resolvedLaunchRoot
+        $env:CODEX_ZERO_UPDATE_STARTUP = '1'
+        try {
+            $launched = Start-Process -FilePath $newExecutablePath -WorkingDirectory $resolvedBuildRoot -WindowStyle Hidden -PassThru -ErrorAction Stop
+            try {
+                if (-not $launched.WaitForExit(15000)) {
+                    # Do not reopen an older build alongside a launch that may
+                    # still complete. Never kill the user's app on a timeout.
+                    $launchOutcomeUnknown = $true
+                    throw 'The updated application startup could not be confirmed.'
+                }
+                if ($launched.ExitCode -ne 0) {
+                    throw 'The updated application did not start.'
+                }
+            } finally { $launched.Dispose() }
+        } finally { Remove-Item Env:CODEX_ZERO_UPDATE_STARTUP -ErrorAction SilentlyContinue }
     } catch {
         $launcherStartFailed = $true
         throw 'The updated launcher could not be started.'
     }
 } catch {
+    # A slow launcher is not a confirmed failure. Leave it and its selected
+    # build alone rather than reporting failure or opening a second instance.
+    if ($launchOutcomeUnknown) { exit 1 }
     $previousPointerRestored = $false
-    if ($pointerUpdated -and $null -ne $pointerPath) {
+    if ($pointerUpdated -and -not $launchOutcomeUnknown -and $null -ne $pointerPath) {
         try {
             Restore-PreviousPointer
             $pointerUpdated = $false
             $previousPointerRestored = $true
         } catch {
             # Continue so a generic failure marker can still be written.
-        }
-    }
-
-    $canReopenPrevious = $parentHasExited -and (-not $pointerUpdated) -and
-        (($launcherStartFailed -and $previousPointerRestored) -or (-not $launcherStartFailed))
-    if ($canReopenPrevious -and $null -ne $stableLauncherPath) {
-        try {
-            Start-Process -FilePath $stableLauncherPath -WorkingDirectory $resolvedLaunchRoot -WindowStyle Hidden -ErrorAction Stop
-        } catch {
-            # The failure marker below is the only persisted diagnostic.
         }
     }
 
@@ -235,6 +279,26 @@ try {
         } catch {
             # There is no safe secondary location for the failure marker.
         }
+    }
+    # This dialog belongs to the independent helper, not the exiting app.
+    # Older versions do not yet consume update-failed.txt on startup.
+    # Acknowledge it before reopening to avoid duplicate startup dialogs.
+    if ($ShowFailureDialog -and $parentHasExited) {
+        try {
+            Add-Type -AssemblyName System.Windows.Forms
+            [void][System.Windows.Forms.MessageBox]::Show('Could not update CodexZero. Try again.', 'CodexZero', 'OK', 'Error')
+            if ($null -ne $failurePath -and [IO.File]::Exists($failurePath)) {
+                [IO.File]::Delete($failurePath)
+            }
+        } catch { }
+    }
+    # Persist before reopening: startup must not race the failure marker.
+    $canReopenPrevious = $parentHasExited -and (-not $pointerUpdated) -and
+        (($launcherStartFailed -and $previousPointerRestored) -or (-not $launcherStartFailed))
+    if ($canReopenPrevious -and $null -ne $stableLauncherPath) {
+        try {
+            Start-Process -FilePath $stableLauncherPath -WorkingDirectory $resolvedLaunchRoot -WindowStyle Hidden -ErrorAction Stop
+        } catch { }
     }
     exit 1
 }

@@ -132,7 +132,14 @@ internal static class CodexZeroLauncher
                     FileName = updatedLauncher, Arguments = JoinArguments(args), WorkingDirectory = selected, UseShellExecute = false, CreateNoWindow = true
                 };
                 updateInfo.EnvironmentVariables["CODEX_ZERO_LAUNCH_ROOT"] = launchRoot;
-                Process.Start(updateInfo);
+                using (Process child = Process.Start(updateInfo))
+                {
+                    if (Environment.GetEnvironmentVariable("CODEX_ZERO_UPDATE_STARTUP") == "1")
+                    {
+                        if (!child.WaitForExit(12000)) return 1;
+                        return child.ExitCode;
+                    }
+                }
                 return 0;
             }
             string desktopBinary = Path.GetFullPath(Path.Combine(root, DesktopRelative));
@@ -158,6 +165,8 @@ internal static class CodexZeroLauncher
                 UseShellExecute = false,
                 CreateNoWindow = false
             };
+            // This flag is for the launcher only, not the app or its children.
+            startInfo.EnvironmentVariables.Remove("CODEX_ZERO_UPDATE_STARTUP");
             startInfo.EnvironmentVariables["CODEX_CLI_PATH"] = launcher;
             startInfo.EnvironmentVariables["CODEX_APP_SERVER_FORCE_CLI"] = "1";
             startInfo.EnvironmentVariables["CODEX_ZERO_PROVIDER_CORE"] = core;
@@ -181,14 +190,22 @@ internal static class CodexZeroLauncher
                 Path.GetFullPath(optimizedSqlite).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
                 StringComparison.OrdinalIgnoreCase))
                 startInfo.EnvironmentVariables.Remove("CODEX_SQLITE_HOME");
-            Process.Start(startInfo);
+            using (Process child = Process.Start(startInfo))
+            {
+                // A successful process creation is not a successful update.
+                // Electron can exit immediately with a JavaScript startup error
+                // or because an old instance still owns the profile lock.
+                if (Environment.GetEnvironmentVariable("CODEX_ZERO_UPDATE_STARTUP") == "1" && child.WaitForExit(5000))
+                    return 1;
+            }
             return 0;
         }
         catch (Exception exception)
         {
             try
             {
-                MessageBox.Show(exception.Message, "CodexZero", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (Environment.GetEnvironmentVariable("CODEX_ZERO_UPDATE_STARTUP") != "1")
+                    MessageBox.Show(exception.Message, "CodexZero", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch
             {

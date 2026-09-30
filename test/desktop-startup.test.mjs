@@ -106,9 +106,8 @@ test("Desktop startup succeeds only after its child survives the verification wi
   try {
     assert.equal(child.exitCode, null);
     assert.equal(child.signalCode, null);
-    await new Promise((resolve) => setTimeout(resolve, 400));
-    assert.match(await fs.readFile(path.join(path.dirname(script), "desktop.log"), "utf8"),
-      /fixture remains connected/u);
+    const logPath = path.join(path.dirname(script), "desktop.log");
+    await waitForLog(logPath, /fixture remains connected/u);
     assert.equal(child.exitCode, null);
   } finally {
     child.ref();
@@ -117,6 +116,15 @@ test("Desktop startup succeeds only after its child survives the verification wi
     await closed;
   }
 });
+
+async function waitForLog(logPath, pattern, timeoutMs = 3000) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (pattern.test(await fs.readFile(logPath, "utf8"))) return;
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+  assert.match(await fs.readFile(logPath, "utf8"), pattern);
+}
 
 async function writeFixture(t) {
   const directory = await fs.mkdtemp(path.join(os.tmpdir(), "codex-zero-desktop-startup-"));
