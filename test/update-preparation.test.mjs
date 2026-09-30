@@ -6,9 +6,11 @@ import path from "node:path";
 import test from "node:test";
 import vm from "node:vm";
 import { promisify } from "node:util";
+import { createRequire } from "node:module";
 
 const runFile = promisify(execFile);
 const updaterPath = new URL("../assets/native-provider-updater.cjs", import.meta.url);
+const require = createRequire(import.meta.url);
 
 async function embeddedPreparationScript() {
   const source = await fs.readFile(updaterPath, "utf8");
@@ -146,4 +148,58 @@ $ErrorActionPreference = 'Stop'
   await assert.rejects(fs.access(outside));
   await assert.rejects(fs.access(traversalPackage));
   await assert.rejects(fs.access(path.join(traversalBuild, "builder-ran.txt")));
+});
+
+test("Windows preparation waits for the new helper before allowing quit", {
+  skip: process.platform !== "win32", timeout: 60000
+}, async t => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "cz-update-end-to-end-"));
+  let cancel;
+  t.after(async () => {
+    await cancel?.();
+    await fs.rm(root, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 });
+  });
+  const launchRoot = path.join(root, "installed with spaces");
+  const runningRoot = path.join(launchRoot, "updates", "old");
+  await fs.mkdir(path.join(runningRoot, "scripts"), { recursive: true });
+  await fs.writeFile(path.join(launchRoot, "CodexZero.exe"), "not executed while parent lives");
+  await fs.writeFile(path.join(launchRoot, "current-build.txt"), "updates\\old");
+  await fs.writeFile(path.join(runningRoot, "scripts", "complete-desktop-update.ps1"), "throw 'Old helper must not run'");
+  const source = await createFixtureSource(root, "0.9.3");
+  await fs.copyFile(new URL("../scripts/complete-desktop-update.ps1", import.meta.url), path.join(source, "scripts", "complete-desktop-update.ps1"));
+  await fs.copyFile(new URL("../scripts/start-desktop-update.ps1", import.meta.url), path.join(source, "scripts", "start-desktop-update.ps1"));
+  await fs.appendFile(path.join(source, "scripts", "build-provider-local.ps1"), `
+New-Item -ItemType Directory -Path (Join-Path $OutputDirectory 'scripts') | Out-Null
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'complete-desktop-update.ps1') -Destination (Join-Path $OutputDirectory 'scripts')
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'start-desktop-update.ps1') -Destination (Join-Path $OutputDirectory 'scripts')
+[IO.File]::WriteAllText((Join-Path $OutputDirectory 'local-build.json'), '{}')
+`);
+  const archive = await createFixtureArchive(root, source, "release.zip");
+  const module = { exports: {} };
+  vm.runInNewContext(await fs.readFile(updaterPath, "utf8") + "\nmodule.exports.prepareUpdate = prepareUpdate;", {
+    module, setTimeout, process: {
+      platform: "win32", pid: process.pid,
+      resourcesPath: path.join(runningRoot, "desktop", "resources"),
+      env: { ...process.env, CODEX_ZERO_LAUNCH_ROOT: launchRoot }
+    },
+    require(name) {
+      if (name === "./native-provider-update-release.cjs") return { stageRelease: async () => archive };
+      return require(name);
+    }
+  });
+  const states = [];
+  cancel = await module.exports.prepareUpdate({ version: "0.9.3" }, {}, state => states.push(state));
+  assert.deepEqual(states, ["installing"]);
+  assert.equal(typeof cancel, "function");
+  const stage = (await fs.readdir(path.join(launchRoot, "updates"))).find(name => name.startsWith(".stage-"));
+  assert.equal(await fs.readFile(path.join(launchRoot, "updates", stage, "handoff-ready.txt"), "utf8"), "ready");
+  assert.equal(await fs.readFile(path.join(launchRoot, "current-build.txt"), "utf8"), "updates\\old");
+  await cancel();
+  const readyFile = path.join(launchRoot, "updates", stage, "handoff-ready.txt");
+  for (let attempt = 0; attempt < 100; attempt++) {
+    try { await fs.access(readyFile); } catch { break; }
+    await new Promise(resolve => setTimeout(resolve, 50));
+  }
+  await assert.rejects(fs.access(readyFile));
+  assert.equal(await fs.readFile(path.join(launchRoot, "current-build.txt"), "utf8"), "updates\\old");
 });

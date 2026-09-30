@@ -20,8 +20,13 @@ class CodexZeroUpdater {
     this.state = "idle";
     this.release = null;
     this.busy = null;
+    this.handingOff = false;
+    this.failurePath = dependencies.failurePath === undefined ? updateFailurePath() : dependencies.failurePath;
   }
   async initialize() {
+    // A detached helper cannot keep an Electron dialog alive after quit.
+    // Leave its failure on disk until the next app has displayed it.
+    await this.showPreviousFailure();
     this.electron.ipcMain.handle("codex_desktop:check-for-updates", async event => {
       if (this.options.isTrustedIpcEvent(event)) await this.checkForUpdates();
     });
@@ -30,6 +35,17 @@ class CodexZeroUpdater {
     this.timer = setInterval(() => void this.checkForUpdates(), 30 * 60 * 1000);
     this.timer.unref();
     this.electron.app.once("will-quit", () => clearInterval(this.timer));
+  }
+  async showPreviousFailure() {
+    if (!this.failurePath) return;
+    try {
+      const message = await fs.readFile(this.failurePath, "utf8");
+      await this.electron.app.whenReady();
+      await this.electron.dialog.showMessageBox({ type: "error", buttons: ["OK"],
+        message: "Could not update CodexZero. Try again." });
+      // Do not erase a different failure written while the dialog was open.
+      if (await fs.readFile(this.failurePath, "utf8") === message) await fs.unlink(this.failurePath);
+    } catch { /* Retain the marker if displaying or acknowledging it fails. */ }
   }
   hasUpdater() { return archiveName() !== null; }
   getUnavailableReason() { return this.hasUpdater() ? null : "unsupported platform"; }
@@ -54,7 +70,7 @@ class CodexZeroUpdater {
     this.options.onUpdateLifecycleStateChanged?.(state);
   }
   checkForUpdates() {
-    if (!this.hasUpdater() || this.busy) return this.busy || Promise.resolve();
+    if (!this.hasUpdater() || this.busy || this.handingOff) return this.busy || Promise.resolve();
     this.busy = (async () => {
       try {
         const response = await this.fetch("https://api.github.com/repos/Retro2512/CodexZero/releases/latest", {
@@ -69,15 +85,20 @@ class CodexZeroUpdater {
     return this.busy;
   }
   installUpdatesIfAvailable() {
-    if (this.busy || !this.release) return this.busy || Promise.resolve(false);
+    if (this.busy || !this.release || this.handingOff) return this.busy || Promise.resolve(false);
     this.busy = (async () => {
       this.setState("downloading");
+      let cancelHandoff;
       try {
-        await this.prepare(this.release, this.electron, state => this.setState(state));
-        if (this.options.onInstallUpdatesRequested) this.options.onInstallUpdatesRequested();
+        cancelHandoff = await this.prepare(this.release, this.electron, state => this.setState(state));
+        this.handingOff = true;
+        if (this.options.onInstallUpdatesRequested) await this.options.onInstallUpdatesRequested();
         else this.electron.app.quit();
         return true;
       } catch {
+        try { if (typeof cancelHandoff === "function") await cancelHandoff(); }
+        catch { /* Still restore the retry state if the helper already exited. */ }
+        this.handingOff = false;
         this.setState("ready");
         await this.electron.dialog.showMessageBox({ type: "error", buttons: ["OK"], message: "Could not update CodexZero. Try again." });
         return false;
@@ -85,6 +106,23 @@ class CodexZeroUpdater {
     })().finally(() => { this.busy = null; });
     return this.busy;
   }
+}
+
+function updateFailurePath() {
+  if (process.platform === "darwin") return path.join(os.homedir(), "Library", "Caches", "CodexZero", "update-failed.txt");
+  const root = process.env.CODEX_ZERO_LAUNCH_ROOT || (process.resourcesPath && path.resolve(process.resourcesPath, "..", ".."));
+  return root ? path.join(root, "update-failed.txt") : null;
+}
+
+async function waitForHandoff(child, readyFile, { timeout = 30000 } = {}) {
+  const deadline = Date.now() + timeout;
+  while (Date.now() < deadline) {
+    if (child && (child.exitCode !== null || child.signalCode !== null)) throw new Error("Update handoff stopped before it was ready");
+    try { if (await fs.readFile(readyFile, "utf8") === "ready") return; }
+    catch (error) { if (error.code !== "ENOENT") throw error; }
+    await new Promise(resolve => setTimeout(resolve, 50));
+  }
+  throw new Error("Update handoff did not become ready");
 }
 
 async function prepareUpdate(release, electron, setState) {
@@ -127,15 +165,24 @@ if (!(Test-Path -LiteralPath (Join-Path $Build 'CodexZero.exe'))) { throw 'Updat
     "-Archive", archive, "-Package", path.join(stage, "package"), "-Build", build, "-Version", release.version],
   // The first update on a computer may also download the official desktop.
   { windowsHide: true, timeout: 60 * 60 * 1000, maxBuffer: 2 * 1024 * 1024 });
-  // Copy the handoff out of the running build before exiting.
+  // Use the verified new package's helper so handoff fixes ship with updates.
   const handoff = path.join(stage, "complete.ps1");
-  await fs.copyFile(path.join(root, "scripts", "complete-desktop-update.ps1"), handoff);
+  await fs.copyFile(path.join(build, "scripts", "complete-desktop-update.ps1"), handoff);
+  const readyFile = path.join(stage, "handoff-ready.txt");
+  const cancelFile = path.join(stage, "handoff-cancel.txt");
   const { stdout } = await runner(powershell, ["-NoProfile", "-NonInteractive", "-Command", `(Get-Process -Id ${process.pid}).StartTime.ToUniversalTime().Ticks`], { windowsHide: true });
-  const child = spawn(powershell, ["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", handoff,
-    "-LaunchRoot", launchRoot, "-BuildRoot", build, "-ParentProcessId", String(process.pid), "-ParentStartTicks", stdout.trim()],
-  { detached: true, windowsHide: true, stdio: "ignore" });
-  await new Promise((resolve, reject) => { child.once("spawn", resolve); child.once("error", reject); });
-  child.unref();
+  const cancel = () => fs.writeFile(cancelFile, "cancelled", "utf8");
+  try {
+    // Start-Process gives the helper its own hidden console. Node's detached
+    // plus windowsHide combination can exit 0 without executing the script.
+    await runner(powershell, ["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File",
+      path.join(build, "scripts", "start-desktop-update.ps1"), "-Handoff", handoff,
+      "-LaunchRoot", launchRoot, "-BuildRoot", build, "-ParentProcessId", String(process.pid),
+      "-ParentStartTicks", stdout.trim(), "-ReadyFile", readyFile, "-CancelFile", cancelFile, "-ShowFailureDialog"],
+    { windowsHide: true, timeout: 30000 });
+    await waitForHandoff(null, readyFile);
+  } catch (error) { await cancel(); throw error; }
+  return cancel;
 }
 
 // macOS replaces the whole application bundle after the app quits. The new
@@ -168,5 +215,6 @@ async function prepareMacUpdate(release, setState) {
   const child = spawn("/bin/sh", [handoff, bundle, build, String(process.pid)], { detached: true, stdio: "ignore" });
   await new Promise((resolve, reject) => { child.once("spawn", resolve); child.once("error", reject); });
   child.unref();
+  return () => { if (child.exitCode === null && child.signalCode === null) child.kill(); };
 }
-module.exports = { CodexZeroUpdater };
+module.exports = { CodexZeroUpdater, waitForHandoff };
