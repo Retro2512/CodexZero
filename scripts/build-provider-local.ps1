@@ -1,4 +1,4 @@
-param([string]$OutputDirectory, [string]$DesktopBinary, [string]$DesktopPackage)
+param([string]$OutputDirectory, [string]$DesktopBinary, [string]$DesktopPackage, [string]$CoreBinary)
 
 $ErrorActionPreference = 'Stop'
 $source = Split-Path -Parent $PSScriptRoot
@@ -10,9 +10,19 @@ if (Test-Path -LiteralPath $destination) {
     throw "Build destination already exists. Choose a new directory."
 }
 $staging = $null
+$coreStaging = $null
+function Remove-BuildStaging([string]$Directory) {
+    if (!$Directory) { return }
+    $absolute = [IO.Path]::GetFullPath($Directory)
+    $tempPrefix = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\') + '\'
+    if (!$absolute.StartsWith($tempPrefix, [StringComparison]::OrdinalIgnoreCase) -or
+        [IO.Path]::GetFileName($absolute) -notmatch '^codexzero-(desktop|core)-[a-f0-9]{32}$') { throw 'Invalid staging directory.' }
+    if (Test-Path -LiteralPath $absolute) { Remove-Item -LiteralPath $absolute -Recurse -Force -ErrorAction SilentlyContinue }
+}
 # Remove the extracted desktop whether or not the build succeeds.
 trap {
-    if ($staging) { Remove-Item -LiteralPath $staging -Recurse -Force -ErrorAction SilentlyContinue }
+    Remove-BuildStaging $staging
+    Remove-BuildStaging $coreStaging
     break
 }
 if (!$DesktopBinary) {
@@ -22,6 +32,13 @@ if (!$DesktopBinary) {
     $DesktopBinary = @($resolved)[-1]
 }
 $DesktopBinary = (Resolve-Path -LiteralPath $DesktopBinary).Path
+if (!$CoreBinary) {
+    $coreStaging = Join-Path ([IO.Path]::GetTempPath()) ('codexzero-core-' + [guid]::NewGuid().ToString('N'))
+    $resolvedCore = & (Join-Path $PSScriptRoot 'resolve-desktop.ps1') -StagingRoot $coreStaging -CoreOnly `
+        -Manifest (Join-Path $PSScriptRoot 'core-upstream.json') -CacheRoot (Join-Path $env:LOCALAPPDATA 'CodexZero\cache\core')
+    $CoreBinary = @($resolvedCore)[-1]
+}
+$CoreBinary = (Resolve-Path -LiteralPath $CoreBinary).Path
 $node = if (Test-Path -LiteralPath (Join-Path $source 'runtime\node.exe')) {
     Join-Path $source 'runtime\node.exe'
 } else { (Get-Command node.exe -ErrorAction Stop).Source }
@@ -48,12 +65,12 @@ $builder = @'
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
-const [root, desktopBinary] = process.argv.slice(2);
+const [root, desktopBinary, sourceCore] = process.argv.slice(2);
 const { prepareProviderLauncher } = await import(pathToFileURL(path.join(root, 'src/provider-launcher.mjs')));
 const { buildNativeProviderApp } = await import(pathToFileURL(path.join(root, 'src/native-provider-build.mjs')));
 // Bundle the installed Desktop runtime, not an inherited development override.
 delete process.env.CODEX_ZERO_PROVIDER_CORE;
-const { core, launcher } = await prepareProviderLauncher(desktopBinary, { home: root });
+const { core, launcher } = await prepareProviderLauncher(desktopBinary, { home: root, sourceCore });
 const nativeDesktop = await buildNativeProviderApp(desktopBinary, root);
 await fs.writeFile(path.join(root, 'local-build.json'), JSON.stringify({
   builtAt: new Date().toISOString(), desktopBinary: nativeDesktop, installedDesktop: desktopBinary,
@@ -64,7 +81,7 @@ console.log(root);
 '@
 $builderPath = Join-Path $destination 'build-local.mjs'
 [System.IO.File]::WriteAllText($builderPath, $builder, [System.Text.UTF8Encoding]::new($false))
-& (Join-Path $destination 'runtime\node.exe') $builderPath $destination $desktopBinary
+& (Join-Path $destination 'runtime\node.exe') $builderPath $destination $desktopBinary $CoreBinary
 if ($LASTEXITCODE -ne 0) { throw 'Local runtime build failed.' }
 & (Join-Path $PSScriptRoot 'build-codexzero-launcher.ps1') -BuildRoot $destination
 if ($LASTEXITCODE -ne 0) { throw 'Desktop launcher build failed.' }
@@ -93,5 +110,6 @@ Your regular Codex shortcut still starts the regular app.
 No Codex login or subscription configuration is changed by this build.
 '@
 [System.IO.File]::WriteAllText((Join-Path $destination 'START HERE.txt'), $instructions)
-if ($staging) { Remove-Item -LiteralPath $staging -Recurse -Force -ErrorAction SilentlyContinue }
+Remove-BuildStaging $staging
+Remove-BuildStaging $coreStaging
 Write-Output "Local test build ready: $destination"

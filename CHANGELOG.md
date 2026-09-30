@@ -1,7 +1,11 @@
 # Changelog
 
-## Unreleased
+## 0.9.3
 
+* Added GPT 6.1 Sol support on Windows.
+* Models refresh automatically while the app is open.
+* Windows prepares compatible installed Codex updates in the background for the next launch.
+* Fixed update handoff and startup recovery.
 * Added GPT 6.1 Sol cache pricing and cache countdown support.
 * Fixed Windows notifications opening the originating task.
 * Preserved notification links when launching after an update.

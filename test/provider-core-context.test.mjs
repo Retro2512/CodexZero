@@ -6,7 +6,7 @@ import os from "node:os";
 import path from "node:path";
 import { spawn } from "node:child_process";
 import { createInterface } from "node:readline";
-import { patchProviderContextBytes, PROVIDER_CONTEXT_PATCH } from "../src/provider-core-context.mjs";
+import { patchProviderContextBytes, PROVIDER_CONTEXT_PATCHES } from "../src/provider-core-context.mjs";
 
 test("custom context patch rejects unrecognized cores without changing bytes", () => {
   const unknown = Buffer.from("an unsupported core version");
@@ -55,7 +55,7 @@ test("pinned context patch changes only the unknown model maximum and preserves 
 }, async () => {
   const source = await fs.readFile(process.env.CODEX_ZERO_TEST_BASE_CORE);
   const patched = patchProviderContextBytes(source);
-  const { offset, before, after, sourceSha256 } = PROVIDER_CONTEXT_PATCH;
+  const { offset, before, after, sourceSha256 } = PROVIDER_CONTEXT_PATCHES.find(patch => patch.sourceSha256 === createHash("sha256").update(source).digest("hex"));
   assert.equal(createHash("sha256").update(source).digest("hex"), sourceSha256);
   assert.equal(patched.length, source.length);
   assert.ok(patched.subarray(0, offset).equals(source.subarray(0, offset)));

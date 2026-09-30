@@ -1,5 +1,6 @@
 import { spawn } from "node:child_process";
 import { runProviderAppServer } from "../src/provider-app-server.mjs";
+import { selectUpdatedCore, launchCoreUpdateWorker } from "../src/core-updates.mjs";
 
 const core = process.env.CODEX_ZERO_PROVIDER_CORE;
 if (!core) throw new Error("Launch custom models through CodexZero");
@@ -12,8 +13,17 @@ if (serving) {
   if (listenIndex >= 0 && args[listenIndex + 1] !== "stdio://") {
     throw new Error("Custom models require the stdio app server transport");
   }
-  process.exitCode = await runProviderAppServer({ core, args });
+  const selectedCore = selectUpdatedCore(core);
+  // The app starts immediately using its already verified runtime. Discovery,
+  // copying and offline qualification happen in another process after startup.
+  const check = () => { try { launchCoreUpdateWorker(core); } catch { /* Keep the current runtime. */ } };
+  const firstCheck = setTimeout(check, 30_000);
+  // Allow for the first worker's startup delay before its 30 minute throttle.
+  const periodicCheck = setInterval(check, 31 * 60_000);
+  firstCheck.unref(); periodicCheck.unref();
+  try { process.exitCode = await runProviderAppServer({ core: selectedCore, args }); }
+  finally { clearTimeout(firstCheck); clearInterval(periodicCheck); }
 } else {
-  const child = spawn(core, args, { stdio: "inherit", windowsHide: true });
+  const child = spawn(selectUpdatedCore(core), args, { stdio: "inherit", windowsHide: true });
   process.exitCode = await new Promise((resolve, reject) => { child.once("exit", code => resolve(code ?? 1)); child.once("error", reject); });
 }

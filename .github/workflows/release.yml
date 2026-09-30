@@ -6,7 +6,7 @@ on:
       version:
         description: CodexZero release version
         required: true
-        default: 0.9.2
+        default: 0.9.3
       reuse_core_release:
         description: Reuse cores only when patches and runtime config match this release; leave blank to rebuild
         required: false
@@ -142,7 +142,7 @@ jobs:
           fi
           cp -R codex-zero/bin codex-zero/src codex-zero/config codex-zero/prompts codex-zero/scripts package/
           mkdir -p package/assets
-          cp codex-zero/assets/provider-settings.html codex-zero/assets/native-provider-* codex-zero/assets/native-sidebar-* codex-zero/assets/native-cache-ui.mjs codex-zero/assets/model-pricing.mjs codex-zero/assets/sidebar-performance.mjs codex-zero/assets/transcript-retention.mjs codex-zero/assets/codexzero.* package/assets/
+          cp codex-zero/assets/provider-settings.html codex-zero/assets/native-provider-* codex-zero/assets/native-sidebar-* codex-zero/assets/native-notification-routing.cjs codex-zero/assets/native-cache-ui.mjs codex-zero/assets/model-pricing.mjs codex-zero/assets/sidebar-performance.mjs codex-zero/assets/transcript-retention.mjs codex-zero/assets/codexzero.* package/assets/
           cp codex-zero/package.json codex-zero/README.md codex-zero/LICENSE package/
           if [ "${{ runner.os }}" = "Windows" ]; then
             NODE_NAME="node.exe"
@@ -250,6 +250,16 @@ jobs:
             $build = Join-Path $target (Get-Content -Raw -LiteralPath "$target\current-build.txt").Trim()
             & "$build\runtime\node.exe" "$build\scripts\verify-complete-desktop.mjs" $build
             if ($LASTEXITCODE -ne 0) { throw 'Installed desktop failed verification' }
+            if ($run -eq 1) {
+              $manifest = Get-Content -Raw -LiteralPath "$build\local-build.json" | ConvertFrom-Json
+              $env:CODEX_ZERO_TEST_CORE = Join-Path $build $manifest.core
+              $env:CODEX_ZERO_TEST_BASELINE = $env:CODEX_ZERO_TEST_CORE
+              $env:CODEX_ZERO_CORE_UPDATES = '0'
+              & "$build\runtime\node.exe" --test codex-zero/test/provider-runtime.test.mjs
+              if ($LASTEXITCODE -ne 0) { throw 'Desktop core compatibility checks failed' }
+              Remove-Item Env:CODEX_ZERO_TEST_CORE
+              Remove-Item Env:CODEX_ZERO_TEST_BASELINE
+            }
             if (!(Test-Path -Path "$cache\desktop\*.msix")) { throw 'Desktop download was not kept for updates' }
           }
           if (@(Get-ChildItem -LiteralPath "$target\updates" -Directory).Count -ne 1) { throw 'Setup kept an unused desktop build' }
@@ -329,12 +339,10 @@ jobs:
           name: CodexZero ${{ inputs.version }}
           target_commitish: ${{ github.sha }}
           body: |
-            * Fixed optimization settings being ignored at launch and reset during upgrades.
-            * Preserved every command output line in reversible compression.
-            * Added artifact permission repair and pruning.
-            * Added startup checks before opening Desktop.
-            * Added Linux x64 CLI packages.
-            * Added release manifests, build attestations and version pinning.
+            * Added GPT 6.1 Sol support on Windows.
+            * New models appear automatically as they become available to your account.
+            * Windows picks up compatible installed Codex updates in the background, ready for the next launch.
+            * Fixed update handoff and startup recovery.
 
             Windows, macOS and Linux x64 packages are below. [Install instructions](https://github.com/Retro2512/CodexZero#install).
           files: artifacts/*
