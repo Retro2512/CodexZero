@@ -7,6 +7,16 @@ const root = mac ? path.join(process.resourcesPath, "codexzero") : path.resolve(
 const icon = path.join(root, "assets", mac ? "codexzero.png" : "codexzero.ico");
 const launcher = path.join(process.env.CODEX_ZERO_LAUNCH_ROOT || root, "CodexZero.exe");
 
+if (process.platform === "win32") {
+  // Keep the official codex:// association untouched. Use the stable launcher
+  // so notification activation also survives an application update.
+  app.whenReady().then(() => {
+    if (!app.setAsDefaultProtocolClient("codexzero", launcher, [])) {
+      console.error("CodexZero notification protocol registration failed");
+    }
+  }).catch(error => console.error("CodexZero notification protocol registration failed", error));
+}
+
 app.on("browser-window-created", (_event, window) => {
   window.setIcon?.(icon);
   window.setTitle("CodexZero");

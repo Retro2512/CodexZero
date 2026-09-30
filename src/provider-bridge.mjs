@@ -1,7 +1,7 @@
 import http from "node:http";
 import { randomBytes, timingSafeEqual } from "node:crypto";
 import { readProviders } from "./provider-store.mjs";
-import { serveProviderResponse } from "./provider-adapters.mjs";
+import { PROVIDER_BODY_LIMIT, serveProviderResponse } from "./provider-adapters.mjs";
 import { findProvider } from "./provider-router.mjs";
 import { getProviderKey } from "./provider-secrets.mjs";
 import { recordProviderUsageVersion } from "./provider-pricing.mjs";
@@ -26,7 +26,7 @@ export async function startProviderBridge({ home, environment = process.env } = 
       let size = 0;
       for await (const chunk of req) {
         size += chunk.length;
-        if (size > 32 * 1024 * 1024) return reject(413, "Request is too large");
+        if (size > PROVIDER_BODY_LIMIT) return reject(413, "Request is too large");
         chunks.push(chunk);
       }
       const body = Buffer.concat(chunks);

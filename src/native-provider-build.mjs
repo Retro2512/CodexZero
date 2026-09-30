@@ -10,6 +10,8 @@ import { sidebarIdentityReplacements } from "./sidebar-identity-patch.mjs";
 import { patchSidebarRenderer } from "./sidebar-performance.mjs";
 import { patchTranscriptRetention } from "./task-responsiveness.mjs";
 import { patchSelectionScroll } from "./scroll-scope-performance.mjs";
+import { patchCopiedBrowserService } from "./browser-discovery-patch.mjs";
+import { patchNotificationBootstrap, patchNotificationMain } from "./notification-routing-patch.mjs";
 
 export async function prepareNativeProviderDesktop(installedDesktop, { home = codexZeroHome() } = {}) {
   if (process.platform !== "win32") throw new Error("Native custom model settings currently require the Windows local build");
@@ -60,6 +62,7 @@ export async function buildNativeProviderApp(installedDesktop, outputRoot) {
     recursive: true, force: false, errorOnExist: true,
     filter: source => source !== archivePath
   });
+  await patchCopiedBrowserService(appRoot);
   const patchedArchive = path.join(appRoot, "resources", "app.asar");
   await rewriteAsar(archivePath, patchedArchive, replacements);
   await verifyAppArchive(patchedArchive, replacements);
@@ -103,6 +106,14 @@ export async function nativeAppReplacements(archivePath, { platform = process.pl
     if (!bootstrapName) throw new Error("This Codex version needs an updated desktop identity patch");
     let bootstrap = (await archive.read(`.vite/build/${bootstrapName}`)).toString("utf8");
     bootstrap = patchNativeUpdater(bootstrap);
+    if (platform === "win32") {
+      bootstrap = patchNotificationBootstrap(bootstrap);
+      const mainNames = Object.keys(archive.header.files[".vite"].files.build.files).filter(name => /^main-[\w-]+\.js$/.test(name));
+      if (mainNames.length !== 1) throw new Error("This Codex version needs an updated notification routing patch");
+      const mainPath = `.vite/build/${mainNames[0]}`;
+      replacements.set(mainPath, Buffer.from(patchNotificationMain((await archive.read(mainPath)).toString("utf8"))));
+      replacements.set(".vite/build/native-notification-routing.cjs", await fs.readFile(path.join(assets, "native-notification-routing.cjs")));
+    }
     for (const name of ["native-provider-updater.cjs", "native-provider-update-release.cjs"]) {
       replacements.set(`.vite/build/${name}`, await fs.readFile(path.join(assets, name)));
     }

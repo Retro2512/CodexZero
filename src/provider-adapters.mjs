@@ -1,7 +1,8 @@
 import { randomUUID } from "node:crypto";
 import { applyProviderReasoning } from "./provider-reasoning.mjs";
 
-const BODY_LIMIT = 10 * 1024 * 1024;
+// Shared with the HTTP bridge; base64 image history can exceed 10 MiB.
+export const PROVIDER_BODY_LIMIT = 32 * 1024 * 1024;
 const PROVIDER_TIMEOUT_MS = 120_000;
 
 class RequestError extends Error {
@@ -12,6 +13,8 @@ class RequestError extends Error {
     this.code = code;
   }
 }
+
+class ProviderUnavailableError extends Error {}
 
 function id(prefix) {
   return `${prefix}_${randomUUID().replaceAll("-", "")}`;
@@ -49,7 +52,7 @@ async function readJson(req) {
   let size = 0;
   for await (const chunk of req) {
     size += Buffer.byteLength(chunk);
-    if (size > BODY_LIMIT) throw new RequestError("Request body is too large", 413, "request_too_large");
+    if (size > PROVIDER_BODY_LIMIT) throw new RequestError("Request body is too large", 413, "request_too_large");
     chunks.push(Buffer.from(chunk));
   }
   if (chunks.length === 0) throw new RequestError("Request body is required");
@@ -234,10 +237,17 @@ function pushChatAssistant(messages, piece) {
 
 function toChatRequest(body, provider, items, tools) {
   const messages = [];
+  const toolImages = [];
+  const flushToolImages = () => {
+    if (toolImages.length) messages.push({ role: "user", content: toolImages.splice(0) });
+  };
   const instructions = instructionText(body.instructions);
   if (instructions) messages.push({ role: "developer", content: instructions });
 
   for (const item of items) {
+    // Chat tool messages only accept text. Defer image parts until all tool
+    // results are delivered, so parallel calls retain their required ordering.
+    if (!["function_call_output", "custom_tool_call_output"].includes(item.type)) flushToolImages();
     if (item.type === "message") {
       if (item.role === "system" || item.role === "developer") {
         messages.push({ role: "developer", content: chatContent(item.content, item.role) });
@@ -251,9 +261,18 @@ function toChatRequest(body, provider, items, tools) {
       const mapped = declaredTool(tools, item.name, item.namespace);
       pushChatAssistant(messages, { tool_calls: [{ id: item.call_id, type: "function", function: { name: mapped?.providerName || item.name, arguments: args } }] });
     } else {
-      messages.push({ role: "tool", tool_call_id: item.call_id, content: textValue(item.output, "Tool output") });
+      if (Array.isArray(item.output) && item.output.some(part => part?.type === "input_image")) {
+        const parts = inputParts(item.output);
+        const text = parts.filter(part => part.type !== "input_image").map(part => part.text).join("\n");
+        messages.push({ role: "tool", tool_call_id: item.call_id, content: text || "Image result follows." });
+        toolImages.push({ type: "text", text: `Images from tool result ${item.call_id}:` },
+          ...chatContent(parts.filter(part => part.type === "input_image"), "user"));
+      } else {
+        messages.push({ role: "tool", tool_call_id: item.call_id, content: textValue(item.output, "Tool output") });
+      }
     }
   }
+  flushToolImages();
 
   const request = {
     model: provider.model,
@@ -595,25 +614,33 @@ function jsonError(res, statusCode, message, code) {
   res.end(JSON.stringify({ error: { message, type: statusCode >= 500 ? "provider_error" : "invalid_request_error", code } }));
 }
 
-function providerHeaders(apiType, apiKey) {
-  if (apiType === "anthropic") {
+function providerHeaders(provider, apiKey) {
+  if (provider.apiType === "anthropic") {
+    const anyRouter = new URL(provider.baseUrl).hostname === "anyrouter.top";
     return {
       "content-type": "application/json",
       ...(apiKey ? { "x-api-key": apiKey } : {}),
       "anthropic-version": "2023-06-01",
+      ...(anyRouter ? { "anthropic-beta": "context-1m-2025-08-07" } : {}),
     };
   }
   return { "content-type": "application/json", ...(apiKey ? { authorization: `Bearer ${apiKey}` } : {}) };
 }
 
-async function providerFetch(fetchImpl, url, apiType, apiKey, body, signal) {
+async function providerFetch(fetchImpl, url, provider, apiKey, body, signal) {
   return fetchImpl(url, {
     method: "POST",
-    headers: providerHeaders(apiType, apiKey),
+    headers: providerHeaders(provider, apiKey),
     body: JSON.stringify(body),
     signal,
     redirect: "error",
   });
+}
+
+function requireUpstreamOk(upstream) {
+  if (upstream.ok) return;
+  if (upstream.status === 503) throw new ProviderUnavailableError();
+  throw new Error("Provider request failed");
 }
 
 async function passNativeResponse(res, upstream) {
@@ -665,8 +692,8 @@ export async function serveProviderResponse(req, res, { provider, apiKey, fetchI
       delete nativeBody.organization;
       delete nativeBody.project;
       if (provider.maxOutputTokens !== undefined) nativeBody.max_output_tokens = provider.maxOutputTokens;
-      const upstream = await providerFetch(fetchImpl, endpoint(provider.baseUrl, "responses"), "responses", apiKey, nativeBody, controller.signal);
-      if (!upstream.ok) throw new Error("Provider request failed");
+      const upstream = await providerFetch(fetchImpl, endpoint(provider.baseUrl, "responses"), provider, apiKey, nativeBody, controller.signal);
+      requireUpstreamOk(upstream);
       await passNativeResponse(res, upstream);
       return;
     }
@@ -678,8 +705,8 @@ export async function serveProviderResponse(req, res, { provider, apiKey, fetchI
       : toAnthropicRequest(body, provider, items, tools);
     applyProviderReasoning(upstreamBody, body, provider);
     const path = provider.apiType === "chat" ? "chat/completions" : "messages";
-    const upstream = await providerFetch(fetchImpl, endpoint(provider.baseUrl, path), provider.apiType, apiKey, upstreamBody, controller.signal);
-    if (!upstream.ok) throw new Error("Provider request failed");
+    const upstream = await providerFetch(fetchImpl, endpoint(provider.baseUrl, path), provider, apiKey, upstreamBody, controller.signal);
+    requireUpstreamOk(upstream);
     let providerResponse;
     try { providerResponse = await upstream.json(); }
     catch { throw new Error("Provider returned invalid JSON"); }
@@ -691,6 +718,8 @@ export async function serveProviderResponse(req, res, { provider, apiKey, fetchI
     if (disconnected) return;
     if (error instanceof RequestError) {
       jsonError(res, error.statusCode, error.message, error.code);
+    } else if (error instanceof ProviderUnavailableError) {
+      jsonError(res, 503, "Provider unavailable", "provider_unavailable");
     } else if (controller.signal.aborted) {
       jsonError(res, 504, "Provider request timed out", "provider_timeout");
     } else {

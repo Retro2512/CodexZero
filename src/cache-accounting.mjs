@@ -41,7 +41,7 @@ export function cacheWindowMs(model) {
   if (!MODEL_PRICING[model]) return null;
   // The app server exposes no retention policy or expiry. These are deliberately
   // estimates: new explicit caching uses 30m, legacy unknown policy uses 5m.
-  return /^(gpt-6-(astra|sol|luna)$|gpt-5\.6-|gpt-5\.5$|gpt-daybreak-blue-latest$)/.test(model) ? 30 * MINUTE : 5 * MINUTE;
+  return /^(gpt-6-(astra|sol|luna)$|gpt-6\.1-sol$|gpt-5\.6-|gpt-5\.5$|gpt-daybreak-blue-latest$)/.test(model) ? 30 * MINUTE : 5 * MINUTE;
 }
 
 export function warmth(snapshot, now = Date.now()) {

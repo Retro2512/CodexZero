@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+* Added GPT 6.1 Sol cache pricing and cache countdown support.
+* Fixed Windows notifications opening the originating task.
+* Preserved notification links when launching after an update.
+* Improved browser discovery reliability.
+* Fixed image tool results and larger image histories with custom models.
+* Improved custom provider compatibility and error handling.
+
 ## 0.9.2
 
 * Fixed feature settings being overridden at launch.
