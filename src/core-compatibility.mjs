@@ -18,10 +18,12 @@ function ensureNotAborted(signal) {
   if (signal.aborted) throw signal.reason ?? new Error("Core compatibility check was cancelled");
 }
 
-function sanitizedChildEnvironment({ home, providerHome, sqliteHome, core }) {
-  const env = { ...process.env };
+export function sanitizedChildEnvironment({ home, providerHome, sqliteHome, core }, environment = process.env) {
+  const env = { ...environment };
   for (const key of Object.keys(env)) {
-    if (key.startsWith("CODEX_ZERO_TEST")) delete env[key];
+    // Do not inherit a desktop permission profile, account credentials, or
+    // other Codex settings that can change what this isolated probe exercises.
+    if (/^(CODEX_|OPENAI_)/i.test(key)) delete env[key];
   }
   return {
     ...env,
@@ -342,7 +344,11 @@ export async function verifyCoreCompatibility(core, { baseline, launcher, timeou
     // The isolated probe has no plugins or skills. Prevent marketplace clones
     // and bundled skill extraction into each temporary home. Core database
     // migrations and the full provider/tool checks still run normally.
-    const config = `openai_base_url = "http://127.0.0.1:${mock.address().port}/v1"\n[analytics]\nenabled = false\n[skills.bundled]\nenabled = false\n[features]\nplugins = false\n`;
+    // A fresh Windows host may have no sandbox backend selected. Enable its
+    // restricted-token backend so read-only commands really remain sandboxed,
+    // without installing sandbox accounts or requesting elevation.
+    const windowsSandbox = process.platform === "win32" ? '\n[windows]\nsandbox = "unelevated"\n' : "";
+    const config = `openai_base_url = "http://127.0.0.1:${mock.address().port}/v1"\n[analytics]\nenabled = false\n[skills.bundled]\nenabled = false\n[features]\nplugins = false\n${windowsSandbox}`;
     await fs.writeFile(path.join(home, "config.toml"), config);
 
     const envFor = executable => sanitizedChildEnvironment({ home, providerHome, sqliteHome, core: executable });
@@ -411,6 +417,9 @@ export async function verifyCoreCompatibility(core, { baseline, launcher, timeou
       assert.equal(complete.params.turn.status, "completed", JSON.stringify(complete));
       assert.ok(toolName, "The core must expose a command tool");
       assert.equal(requests.length, 2);
+      const toolOutput = requests.at(-1).body.messages.filter(message => message.role === "tool")
+        .map(message => message.content).join("\n");
+      assert.match(toolOutput, /(?:^|\r?\n)provider-smoke(?:\r?\n|$)/, "The sandboxed command must actually run");
       assert.ok(requests.every(request => request.body.reasoning_effort === "low"));
       assert.ok(requests.every(request => request.body.chat_template_kwargs.reasoning_effort === "low"));
       assert.ok(requests.every(request => request.auth === "Bearer mock-only-key"));
