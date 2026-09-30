@@ -20,7 +20,9 @@ test("custom picker entries and routing do not replace subscription defaults", (
 });
 
 test("real Codex core can select a custom model and complete a tool round trip", {
-  skip: !process.env.CODEX_ZERO_TEST_CORE, timeout: 90000,
+  // The verifier keeps its own 90s deadline. Leave time for bounded cleanup
+  // so a timeout reports the verifier failure rather than cancelling the test.
+  skip: !process.env.CODEX_ZERO_TEST_CORE, timeout: 120000,
 }, async () => {
   await verifyCoreCompatibility(process.env.CODEX_ZERO_TEST_CORE, {
     baseline: process.env.CODEX_ZERO_TEST_BASELINE,
