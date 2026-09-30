@@ -76,7 +76,8 @@ test("bootstrap accepts task links on startup and reuse, failing closed when ups
 
 test("compiled Windows launcher preserves activation arguments through updates", { skip: process.platform !== "win32" }, async t => {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), "cz-notification-launch-"));
-  t.after(() => fs.rm(root, { recursive: true, force: true }));
+  // The captured file can arrive just before Windows releases the fixture exe.
+  t.after(() => fs.rm(root, { recursive: true, force: true, maxRetries: 30, retryDelay: 100 }));
   const run = promisify(execFile);
   const desktop = path.join(root, "desktop.exe");
   const capture = path.join(root, "capture.cs");
