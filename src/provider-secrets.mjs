@@ -66,10 +66,13 @@ function powershell(script, input) {
       windowsHide: true,
       stdio: ["pipe", "pipe", "pipe"],
       env: {
+        // Stripping the normal Windows environment makes PowerShell startup
+        // and assembly loading stall on hosted Windows. Keep it intact, but
+        // never inherit PowerShell 7 module paths into Windows PowerShell 5.
+        ...process.env,
         SystemRoot: systemRoot,
         WINDIR: systemRoot,
-        TEMP: process.env.TEMP,
-        TMP: process.env.TMP,
+        PSModulePath: path.join(systemRoot, "System32", "WindowsPowerShell", "v1.0", "Modules"),
       },
     });
     const output = [];
