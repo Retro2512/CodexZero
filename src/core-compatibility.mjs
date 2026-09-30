@@ -202,23 +202,34 @@ function sqliteApi() {
   });
 }
 
-async function findSqliteFiles(root) {
-  const files = [];
+export async function findSqliteFiles(root) {
+  const candidates = [], files = [];
   async function visit(directory) {
     const entries = await fs.readdir(directory, { withFileTypes: true });
     for (const entry of entries) {
       const filename = path.join(directory, entry.name);
       if (entry.isDirectory()) await visit(filename);
-      else if (entry.isFile()) {
-        const header = await fs.open(filename, "r").then(async handle => {
-          try { const bytes = Buffer.alloc(16); const { bytesRead } = await handle.read(bytes, 0, bytes.length, 0); return bytes.subarray(0, bytesRead); }
-          finally { await handle.close(); }
-        }).catch(() => Buffer.alloc(0));
-        if (header.toString("binary") === "SQLite format 3\0") files.push(filename);
-      }
+      else if (entry.isFile()) candidates.push(filename);
     }
   }
   await visit(root);
+  // Check every header, including databases without a conventional extension,
+  // but don't serialize thousands of tiny Windows file operations. Keep the
+  // worker's file descriptor and I/O concurrency small and bounded.
+  let next = 0;
+  await Promise.all(Array.from({ length: Math.min(8, candidates.length) }, async () => {
+    while (next < candidates.length) {
+      const filename = candidates[next++];
+      const header = await fs.open(filename, "r").then(async handle => {
+        try { const bytes = Buffer.alloc(16); const { bytesRead } = await handle.read(bytes, 0, bytes.length, 0); return bytes.subarray(0, bytesRead); }
+        finally { await handle.close(); }
+      }).catch(error => {
+        if (error.code === "ENOENT") return Buffer.alloc(0);
+        throw error;
+      });
+      if (header.toString("binary") === "SQLite format 3\0") files.push(filename);
+    }
+  }));
   return files.sort();
 }
 
@@ -328,7 +339,10 @@ export async function verifyCoreCompatibility(core, { baseline, launcher, timeou
       mock.once("error", reject);
       mock.listen(0, "127.0.0.1", resolve);
     });
-    const config = `openai_base_url = "http://127.0.0.1:${mock.address().port}/v1"\n[analytics]\nenabled = false\n`;
+    // The isolated probe has no plugins or skills. Prevent marketplace clones
+    // and bundled skill extraction into each temporary home. Core database
+    // migrations and the full provider/tool checks still run normally.
+    const config = `openai_base_url = "http://127.0.0.1:${mock.address().port}/v1"\n[analytics]\nenabled = false\n[skills.bundled]\nenabled = false\n[features]\nplugins = false\n`;
     await fs.writeFile(path.join(home, "config.toml"), config);
 
     const envFor = executable => sanitizedChildEnvironment({ home, providerHome, sqliteHome, core: executable });
@@ -509,6 +523,12 @@ export async function verifyCoreCompatibility(core, { baseline, launcher, timeou
 
       assert.equal(mockFailure, undefined, mockFailure?.stack ?? "Offline mock server completed all requests");
       await client.close();
+      const tempEntries = await fs.readdir(path.join(home, ".tmp")).catch(error => {
+        if (error.code === "ENOENT") return [];
+        throw error;
+      });
+      assert.equal(tempEntries.some(name => name === "plugins" || name.startsWith("plugins-clone-")), false,
+        "Offline verification must not fetch a plugin marketplace");
 
       if (baseline) {
         const afterCandidate = await sqliteSchemaSnapshot(root, await sqliteApi());
