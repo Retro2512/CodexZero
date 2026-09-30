@@ -38,10 +38,11 @@ export function sanitizedChildEnvironment({ home, providerHome, sqliteHome, core
   };
 }
 
-function createCoreClient({ core, launcher, env, clients }) {
+function createCoreClient({ core, launcher, env, clients, trace }) {
   const executable = launcher || process.execPath;
   const args = launcher ? ["app-server"] : [path.resolve(import.meta.dirname, "../bin/provider-core.mjs"), "app-server"];
   const child = spawn(executable, args, { env, stdio: ["pipe", "pipe", "pipe"], windowsHide: true, detached: process.platform !== "win32" });
+  trace("client started");
   const lines = createInterface({ input: child.stdout });
   const pending = new Map();
   const notifications = [];
@@ -95,7 +96,10 @@ function createCoreClient({ core, launcher, env, clients }) {
       pending.delete(message.id);
       clearTimeout(item.timer);
       message.error ? item.reject(new Error(JSON.stringify(message.error))) : item.resolve(message.result);
-    } else notifications.push(message);
+    } else {
+      notifications.push(message);
+      if (["turn/completed", "item/completed"].includes(message.method)) trace(message.method);
+    }
   });
 
   const client = {
@@ -104,6 +108,7 @@ function createCoreClient({ core, launcher, env, clients }) {
     get stderr() { return stderr.toString("utf8"); },
     get exitError() { return exitError; },
     rpc(method, params) {
+      trace(`rpc ${method}`);
       return new Promise((resolve, reject) => {
         if (exitError || child.exitCode != null || child.signalCode != null) {
           reject(exitError ?? new Error(`Core app-server is not running${stderrSuffix()}`));
@@ -270,7 +275,7 @@ async function closeServer(server) {
   });
 }
 
-export async function verifyCoreCompatibility(core, { baseline, launcher, timeoutMs = 90_000 } = {}) {
+export async function verifyCoreCompatibility(core, { baseline, launcher, timeoutMs = 90_000, trace = () => {} } = {}) {
   if (typeof core !== "string" || core.length === 0) throw new TypeError("A core executable path is required");
   if (baseline != null && (typeof baseline !== "string" || baseline.length === 0)) throw new TypeError("Baseline must be a core executable path");
   if (launcher != null && (typeof launcher !== "string" || launcher.length === 0)) throw new TypeError("Launcher must be an executable path");
@@ -297,6 +302,7 @@ export async function verifyCoreCompatibility(core, { baseline, launcher, timeou
     let toolName;
     let mockFailure;
     mock.on("request", (req, res) => {
+      trace(`mock ${req.method} ${req.url}`);
       void (async () => {
         try {
           if (req.method !== "POST") { res.writeHead(404); res.end(); return; }
@@ -354,7 +360,7 @@ export async function verifyCoreCompatibility(core, { baseline, launcher, timeou
     const envFor = executable => sanitizedChildEnvironment({ home, providerHome, sqliteHome, core: executable });
     const startClient = executable => {
       ensureNotAborted(controller.signal);
-      return createCoreClient({ core: executable, launcher, env: envFor(executable), clients });
+      return createCoreClient({ core: executable, launcher, env: envFor(executable), clients, trace });
     };
     const waitForTimeout = new Promise((_, reject) => {
       timer = setTimeout(() => {
@@ -392,7 +398,11 @@ export async function verifyCoreCompatibility(core, { baseline, launcher, timeou
       ensureNotAborted(controller.signal);
       await saveProviders([{ id: "mock", name: "Mock coder", apiType: "chat", baseUrl: `http://127.0.0.1:${mock.address().port}/v1`, model: "mock-coder", apiKeyEnv: "CZ_TEST_API_KEY", enabled: true,
         reasoningMode: "glm-template", contextWindow: 1048576, pricing: { input: .125, read: .05, output: .5, label: "API estimate" } }], providerHome);
-      if (providerKeyStorageSupported) await updateProviderKeys({ keys: { mock: "mock-only-key" }, activeIds: ["mock"] }, providerHome);
+      if (providerKeyStorageSupported) {
+        trace("encrypt probe key");
+        await updateProviderKeys({ keys: { mock: "mock-only-key" }, activeIds: ["mock"] }, providerHome);
+        trace("probe key encrypted");
+      }
 
       let client = startClient(core);
       await initialize(client);

@@ -7,6 +7,27 @@ import { codexZeroHome } from "./paths.mjs";
 const FILE_NAME = "provider-secrets.json";
 const ID_PATTERN = /^[a-z0-9_]+$/;
 const writes = new Map();
+// Read the encrypted document on every request, but do not launch PowerShell
+// repeatedly for an unchanged key. Rotation in another process invalidates the
+// entry immediately; concurrent requests share just one decryption.
+export function createProviderKeyCache(decrypt, { maxEntries = 32, ttlMs = 300_000, now = Date.now } = {}) {
+  const entries = new Map();
+  return async (identity, ciphertext) => {
+    const existing = entries.get(identity);
+    if (!ciphertext) { entries.delete(identity); return ""; }
+    if (existing?.ciphertext === ciphertext && existing.expires > now()) return existing.promise;
+    entries.delete(identity);
+    while (entries.size >= maxEntries) entries.delete(entries.keys().next().value);
+    const entry = { ciphertext, expires: now() + ttlMs };
+    entry.promise = Promise.resolve().then(() => decrypt(ciphertext)).catch(error => {
+      if (entries.get(identity) === entry) entries.delete(identity);
+      throw error;
+    });
+    entries.set(identity, entry);
+    return entry.promise;
+  };
+}
+const decryptedKey = createProviderKeyCache(ciphertext => powershell(DECRYPT, ciphertext));
 const ENCRYPT = String.raw`$ErrorActionPreference='Stop';$plain=[Console]::In.ReadToEnd();$bytes=[Text.Encoding]::UTF8.GetBytes($plain);try{$sealed=[Security.Cryptography.ProtectedData]::Protect($bytes,$null,[Security.Cryptography.DataProtectionScope]::CurrentUser);[Console]::Out.Write([Convert]::ToBase64String($sealed))}finally{[Array]::Clear($bytes,0,$bytes.Length)}`;
 const DECRYPT = String.raw`$ErrorActionPreference='Stop';$text=[Console]::In.ReadToEnd();$sealed=[Convert]::FromBase64String($text);$bytes=[Security.Cryptography.ProtectedData]::Unprotect($sealed,$null,[Security.Cryptography.DataProtectionScope]::CurrentUser);try{[Console]::Out.Write([Text.Encoding]::UTF8.GetString($bytes))}finally{[Array]::Clear($bytes,0,$bytes.Length);[Array]::Clear($sealed,0,$sealed.Length)}`;
 
@@ -89,8 +110,9 @@ export async function hasProviderKey(provider, home = codexZeroHome()) {
 export async function getProviderKey(provider, home = codexZeroHome(), environment = process.env) {
   if (provider?.apiKeyEnv && environment[provider.apiKeyEnv]) return environment[provider.apiKeyEnv];
   if (!providerKeyStorageSupported) return "";
-  const ciphertext = (await readDocument(home))[idOf(provider)];
-  return ciphertext ? powershell(DECRYPT, ciphertext) : "";
+  const id = idOf(provider);
+  const ciphertext = (await readDocument(home))[id];
+  return decryptedKey(JSON.stringify([path.resolve(home), id]), ciphertext);
 }
 
 export function updateProviderKeys({ keys = {}, clear = [], activeIds = [] }, home = codexZeroHome()) {

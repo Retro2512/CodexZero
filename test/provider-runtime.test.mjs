@@ -24,8 +24,10 @@ test("real Codex core can select a custom model and complete a tool round trip",
   // so a timeout reports the verifier failure rather than cancelling the test.
   skip: !process.env.CODEX_ZERO_TEST_CORE, timeout: 120000,
 }, async () => {
+  const started = Date.now();
   await verifyCoreCompatibility(process.env.CODEX_ZERO_TEST_CORE, {
     baseline: process.env.CODEX_ZERO_TEST_BASELINE,
     launcher: process.env.CODEX_ZERO_TEST_LAUNCHER,
+    trace: process.env.CI ? message => console.log(`Compatibility +${Date.now() - started}ms: ${message}`) : undefined,
   });
 });
