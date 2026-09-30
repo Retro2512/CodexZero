@@ -281,7 +281,8 @@ test("desktop update survives the parent exiting between discovery and identity 
 test("production Windows launcher confirms startup and rolls back early desktop exits", {
   skip: process.platform !== "win32", timeout: 60000
 }, async t => {
-  const fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "cz-real-launcher-"));
+  // The launcher resolves the long Windows path, including on 8.3 TEMP roots.
+  const fixtureRoot = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), "cz-real-launcher-")));
   t.after(() => removeFixture(fixtureRoot));
   const launchRoot = path.join(fixtureRoot, "installed app");
   const buildRoot = path.join(launchRoot, "updates", "next build");
