@@ -12,6 +12,7 @@ import { patchTranscriptRetention } from "./task-responsiveness.mjs";
 import { patchSelectionScroll } from "./scroll-scope-performance.mjs";
 import { patchCopiedBrowserService } from "./browser-discovery-patch.mjs";
 import { patchNotificationBootstrap, patchNotificationMain } from "./notification-routing-patch.mjs";
+import { patchModelRefresh } from "./model-refresh-patch.mjs";
 
 export async function prepareNativeProviderDesktop(installedDesktop, { home = codexZeroHome() } = {}) {
   if (process.platform !== "win32") throw new Error("Native custom model settings currently require the Windows local build");
@@ -133,7 +134,7 @@ export async function nativeAppReplacements(archivePath, { platform = process.pl
   const initialPath = [...replacements.keys()].find(name => /^webview\/assets\/app-initial-[\w-]+\.js$/.test(name));
   if (!initialPath) throw new Error("This Codex version needs an updated sidebar patch");
   const initial = replacements.get(initialPath).toString("utf8");
-  replacements.set(initialPath, Buffer.from(patchTranscriptRetention(patchSidebarRenderer(initial))));
+  replacements.set(initialPath, Buffer.from(patchModelRefresh(patchTranscriptRetention(patchSidebarRenderer(initial)))));
   replacements.set("webview/assets/codexzero-sidebar-performance.js", await fs.readFile(path.join(assets, "sidebar-performance.mjs")));
   replacements.set("webview/assets/codexzero-transcript-retention.js", await fs.readFile(path.join(assets, "transcript-retention.mjs")));
   const primaryPath = [...replacements.keys()].find(name => /^webview\/assets\/app-primary-[\w-]+\.js$/.test(name));

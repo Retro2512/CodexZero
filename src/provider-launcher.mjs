@@ -8,13 +8,13 @@ import { desktopProfileEnvironment } from "./desktop-profile.mjs";
 
 const execFileAsync = promisify(execFile);
 
-export async function prepareProviderLauncher(desktopBinary, { home = codexZeroHome() } = {}) {
+export async function prepareProviderLauncher(desktopBinary, { home = codexZeroHome(), sourceCore } = {}) {
   const root = path.join(home, "provider-runtime");
   await fs.mkdir(root, { recursive: true });
   const entry = path.resolve(import.meta.dirname, "..", "bin", "provider-core.mjs");
   let core = process.env.CODEX_ZERO_PROVIDER_CORE;
   if (!core) {
-    const resources = process.platform === "win32"
+    const resources = sourceCore ? path.dirname(sourceCore) : process.platform === "win32"
       ? path.join(path.dirname(desktopBinary), "resources")
       : path.resolve(path.dirname(desktopBinary), "..", "Resources");
     const name = process.platform === "win32" ? "codex.exe" : "codex";

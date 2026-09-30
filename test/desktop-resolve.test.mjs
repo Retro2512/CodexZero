@@ -72,6 +72,26 @@ test('desktop package that does not match the pinned checksum is rejected', { sk
   await assert.rejects(fs.access(path.join(f.cache, `${pinned.version}.msix`)));
 });
 
+test('independent core extraction keeps only the matching runtime companions', { skip: !windows }, async t => {
+  const f = await fixture(t, ['app/ChatGPT.exe', 'app/resources/app.asar', 'app/resources/codex.exe',
+    'app/resources/codex-code-mode-host.exe', 'app/resources/rg.exe', 'app/resources/unrelated.exe']);
+  const { stdout } = await resolve(f, ['-DesktopPackage', f.archive, '-CoreOnly']);
+  assert.equal(stdout.trim().toLowerCase(), path.join(f.staging, 'app/resources/codex.exe').toLowerCase());
+  assert.deepEqual((await fs.readdir(path.join(f.staging, 'app/resources'))).sort(),
+    ['codex-code-mode-host.exe', 'codex.exe', 'rg.exe'].sort());
+  await assert.rejects(fs.access(path.join(f.staging, 'app/ChatGPT.exe')));
+});
+
+test('Windows runtime pin advances independently of the interface pin', async () => {
+  const core = JSON.parse(await fs.readFile(path.join(repository, 'scripts/core-upstream.json'), 'utf8'));
+  assert.notEqual(core.version, pinned.version);
+  assert.match(core.sha256, /^[0-9a-f]{64}$/);
+  assert.ok(core.url.includes(`/releases/${core.version}/ChatGPT-x64.msix`));
+  const builder = await fs.readFile(path.join(repository, 'scripts/build-provider-local.ps1'), 'utf8');
+  assert.match(builder, /-CoreOnly/);
+  assert.match(builder, /prepareProviderLauncher\(desktopBinary, \{ home: root, sourceCore \}\)/);
+});
+
 test('desktop package entries cannot escape the staging folder', { skip: !windows }, async t => {
   for (const entry of ['app/..%2F..%2Fescape.txt', 'app/%5C..%5Cescape.txt', 'app/C%3A/escape.txt']) {
     const f = await fixture(t, ['app/ChatGPT.exe', entry]);

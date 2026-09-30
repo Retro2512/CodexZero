@@ -4,7 +4,8 @@ param(
     [string]$DesktopPackage,
     [switch]$SkipInstalled,
     [string]$Manifest,
-    [string]$CacheRoot
+    [string]$CacheRoot,
+    [switch]$CoreOnly
 )
 # Resolves the official desktop application that CodexZero is assembled from.
 # Releases never contain it. It comes from the matching installed app, a
@@ -41,7 +42,7 @@ if (!$SkipInstalled) {
             Select-Object -First 1
     } catch { $installed = $null }
     if ($installed) {
-        $binary = Join-Path $installed.InstallLocation 'app\ChatGPT.exe'
+        $binary = if ($CoreOnly) { Join-Path $installed.InstallLocation 'app\resources\codex.exe' } else { Join-Path $installed.InstallLocation 'app\ChatGPT.exe' }
         if (Test-Path -LiteralPath $binary -PathType Leaf) {
             Write-Output $binary
             return
@@ -97,6 +98,7 @@ try {
     $total = 0L
     foreach ($entry in $zip.Entries) {
         if (!$entry.FullName.StartsWith('app/', [StringComparison]::Ordinal)) { continue }
+        if ($CoreOnly -and $entry.FullName -notmatch '^app/resources/(codex\.exe|codex-code-mode-host\.exe|codex-command-runner\.exe|codex-windows-sandbox-setup\.exe|codex-windows-sandbox-service\.exe|rg\.exe)$') { continue }
         # Package part names are percent-encoded, for example %40 for @.
         $name = [Uri]::UnescapeDataString($entry.FullName)
         $total += $entry.Length
@@ -111,6 +113,6 @@ try {
         [IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $target, $false)
     }
 } finally { $zip.Dispose() }
-$binary = Join-Path $StagingRoot 'app\ChatGPT.exe'
+$binary = if ($CoreOnly) { Join-Path $StagingRoot 'app\resources\codex.exe' } else { Join-Path $StagingRoot 'app\ChatGPT.exe' }
 if (!(Test-Path -LiteralPath $binary -PathType Leaf)) { throw 'Invalid desktop package.' }
 Write-Output $binary
