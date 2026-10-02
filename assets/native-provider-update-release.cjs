@@ -3,6 +3,7 @@
 const crypto = require("node:crypto");
 const fs = require("node:fs/promises");
 const path = require("node:path");
+const { execFile } = require("node:child_process");
 
 // Each platform updates from its own release package.
 const ARCHIVES = Object.freeze({
@@ -201,7 +202,22 @@ async function downloadArchive(response, temporaryPath, controller) {
   return { sha256: hash.digest("hex"), size };
 }
 
-async function stageRelease(release, targetDir, { fetchImpl = globalThis.fetch } = {}) {
+// The checksum file above is hosted next to the archive, so a compromised
+// release upload could forge both together. Independently verify GitHub's
+// signed build attestation (Sigstore-backed, tied to the release workflow's
+// identity) before an update is ever installed.
+function verifyReleaseAttestation(archivePath) {
+  return new Promise((resolve, reject) => {
+    execFile("gh", ["attestation", "verify", archivePath, "--repo", "Retro2512/CodexZero",
+      "--signer-workflow", "Retro2512/CodexZero/.github/workflows/release.yml"], error => {
+      if (error) reject(new Error("Release attestation verification failed"));
+      else resolve();
+    });
+  });
+}
+
+async function stageRelease(release, targetDir,
+  { fetchImpl = globalThis.fetch, verifyAttestation = verifyReleaseAttestation } = {}) {
   validateSelectedRelease(release);
   if (typeof targetDir !== "string" || targetDir.length === 0) {
     throw new TypeError("A target directory is required");
@@ -224,6 +240,7 @@ async function stageRelease(release, targetDir, { fetchImpl = globalThis.fetch }
     if (!crypto.timingSafeEqual(Buffer.from(staged.sha256, "hex"), Buffer.from(expected, "hex"))) {
       throw new Error("Release checksum does not match");
     }
+    await verifyAttestation(temporaryPath);
     await fs.rename(temporaryPath, archivePath);
     return archivePath;
   } catch (error) {
