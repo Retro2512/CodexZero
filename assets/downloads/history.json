@@ -372,7 +372,12 @@
       "date": "2026-10-04",
       "downloads": 606,
       "kind": "observed"
+    },
+    {
+      "date": "2026-10-05",
+      "downloads": 607,
+      "kind": "observed"
     }
   ],
-  "updated_at": "2026-10-04T12:28:29Z"
+  "updated_at": "2026-10-05T14:51:05Z"
 }
