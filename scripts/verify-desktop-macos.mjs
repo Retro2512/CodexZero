@@ -6,6 +6,7 @@ import os from "node:os";
 import path from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
+import { verifyProviderHelper } from "./verify-provider-helper.mjs";
 
 const run = promisify(execFile);
 const app = path.resolve(process.argv[2] ?? "");
@@ -28,6 +29,7 @@ const { stdout: version } = await run(path.join(resources, "codexzero", "provide
   env: { ...process.env, CODEX_ZERO_PROVIDER_CORE: path.join(resources, "codexzero", "provider-runtime", "codex-zero-core") }, timeout: 30000
 });
 check(/^codex-cli\s+/m.test(version), "The custom model core did not start");
+await verifyProviderHelper(path.join(resources, "codexzero", "provider-runtime", "codex-custom-models"));
 
 // Launch like the Dock does and wait for the app to start its model core.
 const profile = await fs.mkdtemp(path.join(os.tmpdir(), "codexzero-launch-"));

@@ -7,6 +7,7 @@ import { execFile, spawn } from "node:child_process";
 import { promisify } from "node:util";
 import { rewriteAsar } from "./asar-patch.mjs";
 import { nativeAppReplacements, verifyAppArchive } from "./native-provider-build.mjs";
+import { CORE_BINDING_NAME, writeProviderCoreBinding } from "./provider-core-binding.mjs";
 
 const run = promisify(execFile);
 const OFFICIAL_HOSTS = new Set(["persistent.oaistatic.com", "cdn.openai.com"]);
@@ -53,7 +54,7 @@ export function providerLauncherScript() {
   return `#!/bin/sh
 # Runs the CodexZero provider router with the runtime inside this bundle.
 root="$(cd "$(dirname "$0")/.." && pwd)"
-exec "$root/runtime/node" "$root/bin/provider-core.mjs" "$@"
+CODEX_ZERO_CORE_BINDING="$root/provider-runtime/${CORE_BINDING_NAME}" exec "$root/runtime/node" "$root/bin/provider-core.mjs" "$@"
 `;
 }
 
@@ -204,7 +205,8 @@ export async function assembleMacDesktop({ packageRoot, sourceApp, output }) {
   await fs.copyFile(node, path.join(root, "runtime", "node"));
   await fs.chmod(path.join(root, "runtime", "node"), 0o755);
   await fs.mkdir(path.join(root, "provider-runtime"));
-  await installPackagedMacCore({ packageRoot, resources });
+  const core = await installPackagedMacCore({ packageRoot, resources });
+  await writeProviderCoreBinding(path.join(root, "provider-runtime"), core);
   await fs.writeFile(path.join(root, "provider-runtime", "codex-custom-models"), providerLauncherScript(), { mode: 0o755 });
   await writeIcon(packageRoot, resources);
 

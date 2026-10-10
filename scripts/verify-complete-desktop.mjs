@@ -3,6 +3,7 @@ import path from 'node:path';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { verifyDesktopAssets } from './verify-desktop-assets.mjs';
+import { verifyProviderHelper } from './verify-provider-helper.mjs';
 
 const root = path.resolve(process.argv[2]);
 await verifyDesktopAssets(root);
@@ -20,4 +21,5 @@ const { stdout } = await promisify(execFile)(path.join(root, manifest.launcher),
   windowsHide: true, timeout: 30000,
 });
 if (!/^codex-cli\s+/m.test(stdout)) throw new Error('Packaged desktop core did not start.');
+await verifyProviderHelper(path.join(root, manifest.launcher));
 console.log('Complete desktop package verified');
