@@ -13,6 +13,7 @@ import { patchSelectionScroll } from "./scroll-scope-performance.mjs";
 import { patchCopiedBrowserService } from "./browser-discovery-patch.mjs";
 import { patchNotificationBootstrap, patchNotificationMain } from "./notification-routing-patch.mjs";
 import { patchModelRefresh } from "./model-refresh-patch.mjs";
+import { patchThreadVisibilityMain, patchThreadVisibilityRenderer } from "./thread-visibility-patch.mjs";
 
 export async function prepareNativeProviderDesktop(installedDesktop, { home = codexZeroHome() } = {}) {
   if (process.platform !== "win32") throw new Error("Native custom model settings currently require the Windows local build");
@@ -107,14 +108,17 @@ export async function nativeAppReplacements(archivePath, { platform = process.pl
     if (!bootstrapName) throw new Error("This Codex version needs an updated desktop identity patch");
     let bootstrap = (await archive.read(`.vite/build/${bootstrapName}`)).toString("utf8");
     bootstrap = patchNativeUpdater(bootstrap);
+    const mainNames = Object.keys(archive.header.files[".vite"].files.build.files).filter(name => /^main-[\w-]+\.js$/.test(name));
+    if (mainNames.length !== 1) throw new Error("This Codex version needs an updated thread visibility patch");
+    const mainPath = `.vite/build/${mainNames[0]}`;
+    let main = patchThreadVisibilityMain((await archive.read(mainPath)).toString("utf8"));
+    replacements.set(".vite/build/native-sidebar-threads.cjs", await fs.readFile(path.join(assets, "native-sidebar-threads.cjs")));
     if (platform === "win32") {
       bootstrap = patchNotificationBootstrap(bootstrap);
-      const mainNames = Object.keys(archive.header.files[".vite"].files.build.files).filter(name => /^main-[\w-]+\.js$/.test(name));
-      if (mainNames.length !== 1) throw new Error("This Codex version needs an updated notification routing patch");
-      const mainPath = `.vite/build/${mainNames[0]}`;
-      replacements.set(mainPath, Buffer.from(patchNotificationMain((await archive.read(mainPath)).toString("utf8"))));
+      main = patchNotificationMain(main);
       replacements.set(".vite/build/native-notification-routing.cjs", await fs.readFile(path.join(assets, "native-notification-routing.cjs")));
     }
+    replacements.set(mainPath, Buffer.from(main));
     for (const name of ["native-provider-updater.cjs", "native-provider-update-release.cjs"]) {
       replacements.set(`.vite/build/${name}`, await fs.readFile(path.join(assets, name)));
     }
@@ -134,7 +138,7 @@ export async function nativeAppReplacements(archivePath, { platform = process.pl
   const initialPath = [...replacements.keys()].find(name => /^webview\/assets\/app-initial-[\w-]+\.js$/.test(name));
   if (!initialPath) throw new Error("This Codex version needs an updated sidebar patch");
   const initial = replacements.get(initialPath).toString("utf8");
-  replacements.set(initialPath, Buffer.from(patchModelRefresh(patchTranscriptRetention(patchSidebarRenderer(initial)))));
+  replacements.set(initialPath, Buffer.from(patchThreadVisibilityRenderer(patchModelRefresh(patchTranscriptRetention(patchSidebarRenderer(initial))))));
   replacements.set("webview/assets/codexzero-sidebar-performance.js", await fs.readFile(path.join(assets, "sidebar-performance.mjs")));
   replacements.set("webview/assets/codexzero-transcript-retention.js", await fs.readFile(path.join(assets, "transcript-retention.mjs")));
   const primaryPath = [...replacements.keys()].find(name => /^webview\/assets\/app-primary-[\w-]+\.js$/.test(name));

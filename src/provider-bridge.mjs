@@ -5,9 +5,22 @@ import { PROVIDER_BODY_LIMIT, serveProviderResponse } from "./provider-adapters.
 import { findProvider } from "./provider-router.mjs";
 import { getProviderKey } from "./provider-secrets.mjs";
 import { recordProviderUsageVersion } from "./provider-pricing.mjs";
+import { discovery } from "./provider-rtk.mjs";
+import { createProviderUsageLedger } from "./provider-usage-ledger.mjs";
 
 export async function startProviderBridge({ home, environment = process.env } = {}) {
   await recordProviderUsageVersion(home);
+  const rtkRuntime = discovery({ environment });
+  const ledger = createProviderUsageLedger({ home, environment });
+  const discoveries = new Map();
+  let ledgerFailureReported = false;
+  const recordAttempt = async record => {
+    try { await ledger.recordAttempt(record); }
+    catch {
+      if (!ledgerFailureReported) process.stderr.write("CodexZero could not record provider usage\n");
+      ledgerFailureReported = true;
+    }
+  };
   const token = randomBytes(32).toString("hex");
   const server = http.createServer(async (req, res) => {
     const auth = Buffer.from(req.headers.authorization || "");
@@ -41,7 +54,18 @@ export async function startProviderBridge({ home, environment = process.env } = 
       const replay = Readable.from([body]);
       replay.headers = { "content-type": "application/json" };
       res.once("close", () => { if (!res.writableEnded) replay.destroy(); });
-      await serveProviderResponse(replay, res, { provider, apiKey });
+      const candidate = req.headers["thread-id"] ?? req.headers["session-id"];
+      const threadId = typeof candidate === "string" && /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(candidate) ? candidate : undefined;
+      const discoveryKey = threadId ? `${provider.id}/${threadId}` : undefined;
+      let discoveryState;
+      if (discoveryKey) {
+        const now = Date.now();
+        for (const [key, value] of discoveries) if (now - value.lastUsed > 60 * 60 * 1000) discoveries.delete(key);
+        let state = discoveries.get(discoveryKey);
+        if (!state) { state = { loaded: new Set(), lastUsed: now }; discoveries.set(discoveryKey, state); }
+        state.lastUsed = now; discoveryState = state.loaded;
+      }
+      await serveProviderResponse(replay, res, { provider, apiKey, rtkRuntime, recordAttempt, threadId, discoveryState });
     } catch {
       if (!res.headersSent) reject(502, "The custom provider request failed");
       else res.end();

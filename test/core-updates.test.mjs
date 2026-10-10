@@ -63,6 +63,18 @@ test("stages a verified update and selects only its unchanged prepared core", as
   assert.equal(selectUpdatedCore(f.fallback, f.options), f.fallback);
 });
 
+test("packaged patched cores never select or stage a stock runtime", async t => {
+  const f = await fixture(t);
+  await f.stock("aabbccdd", "0.199.0");
+  const patched = path.join(f.root, "codex-zero-core.exe");
+  await fs.writeFile(patched, "0.162.1");
+  assert.equal(selectUpdatedCore(patched, f.options), patched);
+  assert.equal((await checkForCoreUpdate(patched, f.options)).status, "unsupported");
+  assert.equal(launchCoreUpdateWorker(patched, f.options), null);
+  assert.equal(f.probes.length, 0);
+  assert.equal(await fs.access(f.home).then(() => true, () => false), false);
+});
+
 test("rejects unsigned, older, and incompatible candidates without rollback", async t => {
   const f = await fixture(t);
   await f.stock("aabbccdd", "0.154.0");

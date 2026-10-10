@@ -1,10 +1,14 @@
 export const REASONING_MODES = new Set(["auto", "none", "effort", "effort-extended", "glm", "glm-template", "anthropic"]);
 
+export function isGlmProvider(provider = {}) {
+  return provider.apiType === "chat" && /(?:^|\/)glm-5\.3(?:-|$)/i.test(provider.model ?? "");
+}
+
 export function providerReasoning(provider = {}) {
   let mode = provider.reasoningMode ?? "auto";
   if (mode === "auto") {
     // GLM 5.3 accepts low/high/max, not the stock picker's medium/xhigh.
-    const glm = /(?:^|\/)glm-5\.3(?:-|$)/i.test(provider.model ?? "");
+    const glm = isGlmProvider(provider);
     let host;
     try { host = new URL(provider.baseUrl).hostname; } catch {}
     mode = provider.apiType === "chat" && glm && host === "api.arnict.com" ? "glm-template"

@@ -4,6 +4,8 @@ import { randomUUID } from "node:crypto";
 import { codexHome, codexZeroHome } from "./paths.mjs";
 import { CacheRolloutReader, DEFAULT_CACHE_SETTINGS, warmth } from "./cache-accounting.mjs";
 import { readProviderPricing } from "./provider-pricing.mjs";
+import { readUnreportedProviderUsage, readProviderSessionUsage } from "./provider-usage-reader.mjs";
+import { combineSessionStats } from "./session-statistics.mjs";
 
 const DISCOVERY_TTL_MS = 60_000;
 const MISSING_DISCOVERY_TTL_MS = 10_000;
@@ -136,6 +138,7 @@ function combine(id, snapshots, partial = false) {
   const latest = selected.reduce((a, b) => (a.lastObservedAt || 0) > (b.lastObservedAt || 0) ? a : b);
   return {
     id,
+    sessionStats: combineSessionStats(selected),
     cacheSchemaVersion: latest.cacheSchemaVersion,
     model: latest.model,
     lastCacheAt: selected.reduce((value, item) => Math.max(value || 0, item.lastCacheAt || 0), 0) || null,
@@ -216,9 +219,41 @@ export async function readCacheSnapshot(id, home) {
       snapshot.cost = { usd: null, uncachedUsd: null, partial: true };
     }
   }
+  let cost = snapshot?.cost ?? { usd: null, uncachedUsd: null, partial: false };
+  let sessionStats = snapshot?.sessionStats ?? null;
+  if (id != null && /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(id)) {
+    let extra;
+    try { extra = await readUnreportedProviderUsage(id, { home }); }
+    catch { extra = { requests: 0, pricedRequests: 0, extraCostUsd: 0, extraUncachedUsd: 0, partial: true }; }
+    if (extra.requests || extra.partial) {
+      const baseKnown = typeof cost.usd === "number" && Number.isFinite(cost.usd);
+      const anyPriced = baseKnown || extra.pricedRequests > 0;
+      cost = { ...cost,
+        ...(extra.pricedRequests ? { label: cost.label ?? "API estimate" } : {}),
+        usd: anyPriced ? (baseKnown ? cost.usd : 0) + extra.extraCostUsd : null,
+        uncachedUsd: anyPriced ? (typeof cost.uncachedUsd === "number" ? cost.uncachedUsd : 0) + extra.extraUncachedUsd : null,
+        partial: cost.partial || extra.partial || (Boolean(snapshot?.requests) && !baseKnown),
+      };
+      // Missing provider usage is an unknown bill, not a free request.
+      if (extra.partial && cost.usd === 0) { cost.usd = null; cost.uncachedUsd = null; }
+    }
+    try {
+      const usage = await readProviderSessionUsage(id, { home });
+      if (sessionStats && (usage.requests || usage.partial)) {
+        const inputTokens = sessionStats.inputTokens + usage.inputTokens;
+        const outputTokens = sessionStats.outputTokens + usage.outputTokens;
+        const cachedInputTokens = sessionStats.cachedInputTokens + usage.cachedInputTokens;
+        sessionStats = { ...sessionStats, inputTokens, outputTokens, cachedInputTokens,
+          totalTokens: inputTokens + outputTokens, modelSteps: sessionStats.modelSteps + usage.requests,
+          cacheHitRate: inputTokens ? cachedInputTokens / inputTokens : null,
+          partial: sessionStats.partial || usage.partial };
+      }
+    } catch { if (sessionStats) sessionStats = { ...sessionStats, partial: true }; }
+  }
   const override = settings.overrides?.[id] ?? null;
   return { settings: { enabled: settings.enabled, minutes: settings.minutes }, override,
     keepWarmSupported: !snapshot?.model?.startsWith("custom/"),
     enabled: override ?? settings.enabled, warmth: warmth(snapshot),
-    cost: snapshot?.cost ?? { usd: null, uncachedUsd: null, partial: false }, error: snapshot?.error ?? null };
+    sessionStats,
+    cost, error: snapshot?.error ?? null };
 }

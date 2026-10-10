@@ -27,7 +27,8 @@ window.remaining = 1800000;
 window.codexZeroCache = {
  read: async id => { window.reads.push(id); if(window.fail) throw Error('Transient'); return {
  settings:{enabled:false,minutes:30},enabled:window.enabled||false,
- warmth:{state:window.warmthState||'warm',remainingMs:window.warmthState==='unknown'?null:window.remaining,windowMs:1800000},cost:{usd:1.25,uncachedUsd:2.5}
+ warmth:{state:window.warmthState||'warm',remainingMs:window.warmthState==='unknown'?null:window.remaining,windowMs:1800000},cost:{usd:1.25,uncachedUsd:2.5},
+ sessionStats:{turns:40,modelSteps:969,llmTimeMs:36642000,toolTimeMs:2195000,avgTtftMs:31200,tokensPerSecond:80,totalTokens:142000000,cacheHitRate:.97}
  }; },
  setEnabled: async (id,enabled) => { window.saved.push({id,enabled}); window.enabled=enabled; return window.codexZeroCache.read(id); },
  activity: async () => {}
@@ -58,9 +59,23 @@ try {
   const page=await browser.newPage({viewport:{width:800,height:600}});
   const errors=[]; page.on('pageerror',e=>errors.push(e.message));
   await page.goto(`http://127.0.0.1:${server.address().port}`);
-  const button=page.locator('.czci-button'), panel=page.locator('.czci-popover');
+  const button=page.locator('.czci-button'), panel=page.locator('.czci-popover:not(.czss-panel)');
   await button.waitFor();
   await page.waitForFunction(()=>document.querySelector('.czci-cost')?.textContent==='~$1.25');
+  const statsButton=page.locator('.czss-button'), statsPanel=page.locator('.czss-panel');
+  assert.equal(await statsButton.textContent(),'40 turns · 969 steps');
+  await statsButton.hover();
+  await statsPanel.waitFor({state:'visible'});
+  assert.deepEqual(await statsPanel.locator('dd').allTextContents(),['610m42s','36m35s','31.2s','80 tok/s','142M','97%']);
+  assert.equal(await panel.count(),0,'Stats hover does not open context controls');
+  assert.ok(await statsPanel.evaluate(el=>{const r=el.getBoundingClientRect();return el.matches(':popover-open')&&r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight&&el.contains(document.elementFromPoint(r.x+20,r.y+20));}));
+  if (process.env.SESSION_UI_SCREENSHOT) await page.screenshot({path:process.env.SESSION_UI_SCREENSHOT});
+  await page.keyboard.press('Escape');
+  await statsPanel.waitFor({state:'detached'});
+  await statsButton.click();
+  await statsPanel.waitFor({state:'visible'});
+  await page.locator('#outside').click();
+  await statsPanel.waitFor({state:'detached'});
   assert.match(await page.locator('.czci-time').textContent(), /^~(30:00|29:59)$/);
   assert.ok(await page.locator('.czci-track').evaluate(el=>{
     const [r,g,b]=getComputedStyle(el).stroke.match(/[\d.]+/g).map(Number);return g>r&&g>b;

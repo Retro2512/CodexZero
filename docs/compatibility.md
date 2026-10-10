@@ -15,7 +15,7 @@ The Linux package provides the terminal command. It does not include a Linux des
 
 ## Codex versions
 
-The patched core is built from the official stable upstream tag `rust-v0.153.4`. Earlier releases were verified alongside:
+The patched core is built from the official stable upstream tag `rust-v0.162.1`. Earlier releases were verified alongside:
 
 - Codex Desktop package `26.721.4979.0` with embedded runtime `0.146.0-alpha.3.1`;
 - stock Codex CLI `0.139.0`.

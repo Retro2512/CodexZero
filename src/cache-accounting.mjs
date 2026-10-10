@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 
 import { MODEL_PRICING } from "../assets/model-pricing.mjs";
+import { SessionStatisticsAccumulator } from "./session-statistics.mjs";
 
 export const KEEP_WARM_MESSAGE = 'Ignore this message - Reply Only "OK"';
 export const MINUTE = 60_000;
@@ -69,15 +70,19 @@ export function shouldKeepWarm(snapshot, settings, now = Date.now()) {
 export class ConversationAccounting {
   constructor(id, providerPrices = {}) {
     this.providerPrices = providerPrices;
+    this.sessionStatistics = new SessionStatisticsAccumulator();
     this.snapshot = { id, cacheSchemaVersion: 2, model: null, lastCacheAt: null, lastUserAt: null, invalidated: false,
       lastObservedAt: null, firstRequestAt: null, lastRequestAt: null,
       cost: { usd: 0, uncachedUsd: 0, partial: false }, requests: 0, pricedRequests: 0 };
+    Object.defineProperty(this.snapshot, "sessionStats", { enumerable: true,
+      get: () => this.sessionStatistics.snapshot });
     this.total = null;
     this.tier = null;
     this.keepWarmTurn = false;
   }
 
   accept(record) {
+    this.sessionStatistics.accept(record);
     const { type, payload: p } = record;
     if (!p) return;
     const at = Date.parse(record.timestamp);
@@ -101,7 +106,7 @@ export class ConversationAccounting {
       this.keepWarmTurn = p.message?.trim() === KEEP_WARM_MESSAGE;
       if (!this.keepWarmTurn) state.lastUserAt = at;
     }
-    if (["task_complete", "task_completed"].includes(p.type) && !this.keepWarmTurn) state.lastUserAt = Math.max(state.lastUserAt || 0, at);
+    if (["task_complete", "task_completed", "turn_complete"].includes(p.type) && !this.keepWarmTurn) state.lastUserAt = Math.max(state.lastUserAt || 0, at);
     if (p.type !== "token_count" || !p.info) return;
     const total = normalizeUsage(p.info.total_token_usage);
     const last = normalizeUsage(p.info.last_token_usage);
@@ -186,13 +191,20 @@ export class CacheRolloutReader {
               const hint = record.type === "turn_context" && this.turnHints[record.payload?.turn_id];
               if (hint) record.payload = { ...record.payload, service_tier: hint.tier, model: hint.model ?? record.payload.model };
               this.accounting.accept(record);
-            } catch { this.accounting.snapshot.cost.partial = true; }
+            } catch {
+              this.accounting.snapshot.cost.partial = true;
+              this.accounting.sessionStatistics.markPartial();
+            }
           }
           this.skipping = false;
           start = end + 1;
         }
         this.pending = Buffer.from(bytes.subarray(start));
-        if (this.pending.length > 4 * 1024 * 1024) { this.pending = Buffer.alloc(0); this.skipping = true; }
+        if (this.pending.length > 4 * 1024 * 1024) {
+          this.pending = Buffer.alloc(0); this.skipping = true;
+          this.accounting.snapshot.cost.partial = true;
+          this.accounting.sessionStatistics.markPartial();
+        }
       }
       return this.accounting.snapshot;
     } finally { await handle.close(); }

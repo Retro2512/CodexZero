@@ -21,11 +21,11 @@ for (const key of ["CFBundleURLTypes", "CFBundleDocumentTypes", "UTExportedTypeD
   check(await absent(key), `The app still claims ${key}`);
 }
 await run("/usr/bin/codesign", ["--verify", "--deep", "--strict", app]);
-for (const file of ["codexzero.icns", "codex", "codexzero/runtime/node", "codexzero/bin/provider-core.mjs", "codexzero/provider-runtime/codex-custom-models"]) {
+for (const file of ["codexzero.icns", "codex", "codexzero/runtime/node", "codexzero/bin/provider-core.mjs", "codexzero/provider-runtime/codex-custom-models", "codexzero/provider-runtime/codex-zero-core", "codexzero/provider-runtime/codex-code-mode-host"]) {
   await fs.access(path.join(resources, file));
 }
 const { stdout: version } = await run(path.join(resources, "codexzero", "provider-runtime", "codex-custom-models"), ["--version"], {
-  env: { ...process.env, CODEX_ZERO_PROVIDER_CORE: path.join(resources, "codex") }, timeout: 30000
+  env: { ...process.env, CODEX_ZERO_PROVIDER_CORE: path.join(resources, "codexzero", "provider-runtime", "codex-zero-core") }, timeout: 30000
 });
 check(/^codex-cli\s+/m.test(version), "The custom model core did not start");
 
@@ -39,7 +39,7 @@ try {
   let started = false;
   for (let attempt = 0; attempt < 120 && !started; attempt++) {
     await new Promise(resolve => setTimeout(resolve, 1000));
-    started = (await processes()).some(line => line.includes("codexzero/bin/provider-core.mjs"));
+    started = (await processes()).some(line => line.includes("codexzero/provider-runtime/codex-zero-core"));
   }
   if (!started) {
     console.error((await processes()).join("\n") || "CodexZero is not running.");

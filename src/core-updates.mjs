@@ -27,6 +27,10 @@ function context(options = {}) {
 
 function enabled(options) { return (options.environment || process.env).CODEX_ZERO_CORE_UPDATES !== "0"; }
 
+export function isPackagedPatchedCore(core) {
+  return typeof core === "string" && /^codex-zero-core(?:\.exe)?$/i.test(path.basename(core));
+}
+
 function stamp(file) {
   const s = fs.statSync(file);
   if (!s.isFile()) throw new Error("Not a core file");
@@ -71,7 +75,7 @@ function validEntry(home, entry) {
 
 // This is intentionally only small local metadata and stat reads on the launch path.
 export function selectUpdatedCore(fallback, options = {}) {
-  if (!enabled(options) || context(options).platform !== "win32") return fallback;
+  if (isPackagedPatchedCore(fallback) || !enabled(options) || context(options).platform !== "win32") return fallback;
   try {
     const { home } = context(options);
     const state = readState(home);
@@ -277,7 +281,7 @@ async function copyCandidate(source, home, verifySignature, prepareCore, protect
 
 export async function checkForCoreUpdate(fallback, options = {}) {
   const { home, stockRoot, platform } = context(options);
-  if (platform !== "win32" || !enabled(options)) return { status: "unsupported" };
+  if (isPackagedPatchedCore(fallback) || platform !== "win32" || !enabled(options)) return { status: "unsupported" };
   const unlock = await lock(home);
   if (!unlock) return { status: "busy" };
   let state;
@@ -328,7 +332,7 @@ export async function checkForCoreUpdate(fallback, options = {}) {
 }
 
 export function launchCoreUpdateWorker(fallback, options = {}) {
-  if (context(options).platform !== "win32" || !enabled(options)) return null;
+  if (isPackagedPatchedCore(fallback) || context(options).platform !== "win32" || !enabled(options)) return null;
   const worker = fileURLToPath(new URL("../bin/core-update-worker.mjs", import.meta.url));
   const args = [worker, path.resolve(fallback)];
   if (options.releaseId) args.push(options.releaseId);

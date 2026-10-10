@@ -32,7 +32,7 @@ test("release assembly and both installers include desktop feature assets", asyn
   }
   for (const relative of ["scripts/build-provider-local.ps1", "src/desktop-macos.mjs"]) {
     const source = await fs.readFile(new URL(`../${relative}`, import.meta.url), "utf8");
-    for (const asset of ["native-sidebar-appearance-main.cjs", "native-sidebar-identity.mjs", "sidebar-performance.mjs", "transcript-retention.mjs"]) {
+    for (const asset of ["native-sidebar-appearance-main.cjs", "native-sidebar-identity.mjs", "native-sidebar-threads.cjs", "sidebar-performance.mjs", "transcript-retention.mjs"]) {
       assert.ok(source.includes(asset), `${relative}: ${asset}`);
     }
   }

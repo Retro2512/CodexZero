@@ -18,7 +18,7 @@ const RUNTIME_ITEMS = ["bin", "src", "scripts", "config", "prompts", "package.js
 const RUNTIME_ASSETS = ["provider-settings.html", "native-provider-settings.mjs", "native-cache-ui.mjs", "model-pricing.mjs",
   "native-provider-main.cjs", "native-provider-preload.cjs", "native-provider-identity.cjs", "native-provider-environment.cjs",
   "native-provider-updater.cjs", "native-provider-update-release.cjs", "native-sidebar-appearance-main.cjs",
-  "native-sidebar-identity.mjs", "sidebar-performance.mjs", "transcript-retention.mjs", "codexzero.png"];
+  "native-sidebar-identity.mjs", "native-sidebar-threads.cjs", "sidebar-performance.mjs", "transcript-retention.mjs", "codexzero.png"];
 // The copy must not claim the original app's links, files, or Dock tile.
 const REMOVED_KEYS = ["CFBundleIconName", "CFBundleURLTypes", "CFBundleDocumentTypes", "UTExportedTypeDeclarations",
   "CFBundleAlternateNames", "NSDockTilePlugIn", "SUFeedURL"];
@@ -55,6 +55,24 @@ export function providerLauncherScript() {
 root="$(cd "$(dirname "$0")/.." && pwd)"
 exec "$root/runtime/node" "$root/bin/provider-core.mjs" "$@"
 `;
+}
+
+export async function installPackagedMacCore({ packageRoot, resources, arch = process.arch }) {
+  if (!["arm64", "x64"].includes(arch)) throw new Error("This Mac is not supported.");
+  const source = path.join(packageRoot, "dist", `macos-${arch}`, "codex-zero-core");
+  await fs.access(source);
+  const runtime = path.join(resources, "codexzero", "provider-runtime");
+  await fs.mkdir(runtime, { recursive: true });
+  const core = path.join(runtime, "codex-zero-core");
+  await fs.copyFile(source, core);
+  await fs.chmod(core, 0o755);
+  for (const name of ["codex-code-mode-host", "codex-command-runner", "rg"]) {
+    const packaged = path.join(path.dirname(source), name);
+    const companion = await fs.access(packaged).then(() => packaged, () => path.join(resources, name));
+    try { await fs.copyFile(companion, path.join(runtime, name)); }
+    catch (error) { if (error.code !== "ENOENT") throw error; }
+  }
+  return core;
 }
 
 export async function asarHeaderHash(file) {
@@ -186,6 +204,7 @@ export async function assembleMacDesktop({ packageRoot, sourceApp, output }) {
   await fs.copyFile(node, path.join(root, "runtime", "node"));
   await fs.chmod(path.join(root, "runtime", "node"), 0o755);
   await fs.mkdir(path.join(root, "provider-runtime"));
+  await installPackagedMacCore({ packageRoot, resources });
   await fs.writeFile(path.join(root, "provider-runtime", "codex-custom-models"), providerLauncherScript(), { mode: 0o755 });
   await writeIcon(packageRoot, resources);
 
