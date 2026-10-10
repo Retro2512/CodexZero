@@ -4697,6 +4697,20 @@ index 395cc95..10b5bd7 100644
  #[tokio::test]
  async fn code_mode_only_exposes_configured_dynamic_namespace_directly() {
      let plan = probe_with(
+diff --git a/codex-rs/core/src/tools/user_messaging_tests.rs b/codex-rs/core/src/tools/user_messaging_tests.rs
+index 6a46eb3..8b13e46 100644
+--- a/codex-rs/core/src/tools/user_messaging_tests.rs
++++ b/codex-rs/core/src/tools/user_messaging_tests.rs
+@@ -46,6 +46,9 @@ fn messaging_result(name: &str, input: Value, success: bool) -> AnyToolResult {
+             "Message sent.".to_owned(),
+             Some(success),
+         )),
++        session: None,
++        exact_source_fingerprint: None,
++        exact_duplicate_results_enabled: false,
+         post_tool_use_payload: Some(PostToolUsePayload {
+             tool_name: HookToolName::new(name),
+             tool_use_id: "message-call".to_owned(),
 diff --git a/codex-rs/core/src/unified_exec/mod.rs b/codex-rs/core/src/unified_exec/mod.rs
 index 28af9b0..fec4a16 100644
 --- a/codex-rs/core/src/unified_exec/mod.rs
