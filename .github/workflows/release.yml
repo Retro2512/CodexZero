@@ -6,7 +6,7 @@ on:
       version:
         description: CodexZero release version
         required: true
-        default: 0.9.3
+        default: 0.10.0
       reuse_core_release:
         description: Reuse cores only when patches and runtime config match this release; leave blank to rebuild
         required: false
@@ -109,15 +109,20 @@ jobs:
         if: inputs.reuse_core_release == ''
         shell: bash
         run: |
-          git -c core.autocrlf=false clone --depth 1 --branch rust-v0.153.4 \
+          git -c core.autocrlf=false clone --depth 1 --branch rust-v0.162.1 \
             https://github.com/openai/codex.git upstream
-          git -C upstream apply ../codex-zero/patches/codex-rust-v0.153.4.patch
+          git -C upstream apply ../codex-zero/patches/codex-rust-v0.162.1.patch
       - name: Build patched core
         if: inputs.reuse_core_release == ''
         shell: bash
         env:
           CARGO_BUILD_JOBS: 2
-        run: cargo build --locked --manifest-path upstream/codex-rs/Cargo.toml -p codex-cli --release
+        run: |
+          packages=(-p codex-cli -p codex-code-mode-host)
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            packages+=(-p codex-windows-sandbox -p codex-windows-sandbox-service)
+          fi
+          cargo build --locked --manifest-path upstream/codex-rs/Cargo.toml "${packages[@]}" --release
       - name: Assemble package
         shell: bash
         run: |
@@ -137,6 +142,13 @@ jobs:
             fi
             cp "upstream/codex-rs/target/release/${{ matrix.binary }}" \
               "package/dist/${{ matrix.asset }}/$CORE_NAME"
+            if [ "${{ runner.os }}" = "Windows" ]; then
+              for companion in codex-code-mode-host codex-command-runner codex-windows-sandbox-setup codex-windows-sandbox-service; do
+                cp "upstream/codex-rs/target/release/$companion.exe" "package/dist/${{ matrix.asset }}/$companion.exe"
+              done
+            else
+              cp upstream/codex-rs/target/release/codex-code-mode-host "package/dist/${{ matrix.asset }}/codex-code-mode-host"
+            fi
             mkdir -p package/runtime
             cp "$NODE_SOURCE" "package/runtime/$NODE_NAME"
           fi
@@ -228,6 +240,18 @@ jobs:
           test "$(find "$apps" -maxdepth 1 -name '*.app' | wc -l | tr -d ' ')" = 1
           ls "$HOME/Library/Caches/CodexZero/desktop/"*.zip
           package/runtime/node package/scripts/verify-desktop-macos.mjs "$apps/CodexZero.app"
+      - name: Verify custom models and task history against packaged core
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            CORE_NAME="codex-zero-core.exe"
+          else
+            CORE_NAME="codex-zero-core"
+          fi
+          export CODEX_ZERO_TEST_CORE="$PWD/package/dist/${{ matrix.asset }}/$CORE_NAME"
+          export CODEXZERO_TEST_CORE="$CODEX_ZERO_TEST_CORE"
+          export CODEX_ZERO_CORE_UPDATES=0
+          node --test codex-zero/test/provider-glm-core.test.mjs codex-zero/test/thread-list-runtime.test.mjs
       - name: Build Windows desktop setup
         if: runner.os == 'Windows'
         shell: pwsh
@@ -339,10 +363,11 @@ jobs:
           name: CodexZero ${{ inputs.version }}
           target_commitish: ${{ github.sha }}
           body: |
-            * Added GPT 6.1 Sol support on Windows.
-            * New models appear automatically as they become available to your account.
-            * Windows picks up compatible installed Codex updates in the background, ready for the next launch.
-            * Fixed update handoff and startup recovery.
+            * Added session statistics with turns, steps, timing, token totals and cache hits.
+            * Updated the compiled core to Codex 0.162.1.
+            * Improved custom model streaming, tool discovery and usage accounting.
+            * Fixed missing tasks, sidebar ordering and project assignments.
+            * Improved custom model switching and compaction.
 
             Windows, macOS and Linux x64 packages are below. [Install instructions](https://github.com/Retro2512/CodexZero#install).
           files: artifacts/*

@@ -4,8 +4,8 @@ import path from "node:path";
 import test from "node:test";
 
 const root = path.resolve(import.meta.dirname, "..");
-const upstreamTag = "rust-v0.153.4";
-const upstreamVersion = "0.153.4";
+const upstreamTag = "rust-v0.162.1";
+const upstreamVersion = "0.162.1";
 const patchName = `codex-${upstreamTag}.patch`;
 
 test("all active build paths use the verified upstream release", async () => {
@@ -14,7 +14,7 @@ test("all active build paths use the verified upstream release", async () => {
   );
 
   assert.equal(compatibility.core.upstreamTag, upstreamTag);
-  assert.equal(compatibility.core.upstreamCommit, "3d2ee51");
+  assert.equal(compatibility.core.upstreamCommit, "092d3acd6bec3e3a14bdc7e7a2810ab628ab759d");
 
   const requiredPins = new Map([
     ["CONTRIBUTING.md", [upstreamTag, patchName]],
@@ -49,7 +49,7 @@ test("the pinned patch is complete and contains no merge residue", async () => {
     "utf8"
   );
 
-  assert.match(patch, /^diff --git a\/MODULE\.bazel\.lock/mu);
+  assert.match(patch, /^diff --git a\/codex-rs\/Cargo\.lock/mu);
   assert.match(patch, /codex-rs\/codex-zero-codec\/src\/lib\.rs/u);
   assert.match(patch, /codex-rs\/core\/src\/tools\/exact_duplicate\.rs/u);
   assert.doesNotMatch(patch, /0\.146\.0/u);

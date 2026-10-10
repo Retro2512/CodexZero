@@ -1,12 +1,12 @@
 {
   "schema": "codex-zero-compatibility-v1",
   "core": {
-    "upstreamTag": "rust-v0.153.4",
-    "upstreamCommit": "3d2ee51",
+    "upstreamTag": "rust-v0.162.1",
+    "upstreamCommit": "092d3acd6bec3e3a14bdc7e7a2810ab628ab759d",
     "desktopPackageVerified": "26.721.4979.0",
     "desktopRuntimeVerified": "0.146.0-alpha.3.1",
     "stockCliCoexistenceVerified": "0.139.0",
-    "upstreamReleaseCheckedOn": "2026-09-07",
+    "upstreamReleaseCheckedOn": "2026-10-10",
     "desktopVerificationAppliesToCurrentCore": false
   },
   "sqliteState": {

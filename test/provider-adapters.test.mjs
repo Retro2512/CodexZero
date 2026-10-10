@@ -54,6 +54,100 @@ function sseEvents(text) {
   });
 }
 
+test("chat retries reasoning only replies after tools and accounts for every attempt", async () => {
+  const bodies = [];
+  const attempts = [];
+  const res = new FakeResponse();
+  await serveProviderResponse(request({ input: [
+    { type: "function_call", call_id: "previous", name: "clock", arguments: "{}" },
+    { type: "function_call_output", call_id: "previous", output: "12:00" },
+  ] }), res, {
+    provider: { apiType: "chat", baseUrl: "https://gateway.test/v1", model: "zai/glm-5.3-flash-uncensored" },
+    apiKey: "test-key",
+    recordAttempt: async record => attempts.push(record),
+    fetchImpl: async (_url, init) => {
+      bodies.push(JSON.parse(init.body));
+      return Response.json({
+        choices: [{ finish_reason: "stop", message: bodies.length < 3
+          ? { content: bodies.length === 1 ? null : " \n", reasoning_content: "hidden reasoning" }
+          : { content: "It is noon." } }],
+        usage: { prompt_tokens: 10, completion_tokens: 4, prompt_tokens_details: { cached_tokens: 5 }, completion_tokens_details: { reasoning_tokens: 2 } },
+      });
+    },
+  });
+  assert.equal(bodies.length, 3);
+  assert.deepEqual(bodies[0], bodies[1]);
+  assert.deepEqual(bodies[1], bodies[2]);
+  const completed = sseEvents(res.text()).at(-1);
+  assert.equal(completed.type, "response.completed");
+  assert.equal(completed.response.output[0].content[0].text, "It is noon.");
+  assert.equal(completed.response.usage.input_tokens, 10);
+  assert.equal(completed.response.usage.input_tokens_details.cached_tokens, 5);
+  assert.equal(completed.response.usage.output_tokens, 4);
+  assert.equal(completed.response.usage.output_tokens_details.reasoning_tokens, 2);
+  assert.deepEqual(attempts.map(record => record.includedInCoreUsage), [false, false, true]);
+  assert.equal(attempts.reduce((sum, record) => sum + record.usage.input_tokens, 0), 30);
+  assert.equal(attempts.reduce((sum, record) => sum + record.usage.output_tokens, 0), 12);
+  assert.doesNotMatch(res.text(), /hidden reasoning/);
+});
+
+test("chat persistent empty output fails instead of silently completing", async () => {
+  let calls = 0;
+  const res = new FakeResponse();
+  await serveProviderResponse(request({ input: "hello" }), res, {
+    provider: { apiType: "chat", baseUrl: "https://gateway.test/v1", model: "glm" }, apiKey: "",
+    fetchImpl: async () => { calls++; return Response.json({ choices: [{ message: { content: null }, finish_reason: "stop" }] }); },
+  });
+  assert.equal(calls, 3);
+  assert.equal(res.statusCode, 502);
+  assert.equal(JSON.parse(res.text()).error.code, "provider_empty_response");
+  assert.doesNotMatch(res.text(), /response.completed/);
+});
+
+test("chat never retries a valid tool call with no text", async () => {
+  let calls = 0;
+  const res = new FakeResponse();
+  await serveProviderResponse(request({ input: "hello", tools: [{ type: "function", name: "clock" }] }), res, {
+    provider: { apiType: "chat", baseUrl: "https://gateway.test/v1", model: "glm" }, apiKey: "",
+    fetchImpl: async () => { calls++; return Response.json({ choices: [{ finish_reason: "tool_calls", message: {
+      content: null, tool_calls: [{ id: "next", type: "function", function: { name: "clock", arguments: "{}" } }],
+    } }] }); },
+  });
+  assert.equal(calls, 1);
+  assert.equal(sseEvents(res.text()).at(-1).response.output[0].call_id, "next");
+});
+
+for (const [reason, code] of [["length", "provider_output_limit"], ["content_filter", "provider_content_filter"]]) {
+  test(`chat ${reason} is not emitted as a complete answer or retried`, async () => {
+    let calls = 0;
+    const res = new FakeResponse();
+    await serveProviderResponse(request({ input: "hello" }), res, {
+      provider: { apiType: "chat", baseUrl: "https://gateway.test/v1", model: "glm" }, apiKey: "",
+      fetchImpl: async () => { calls++; return Response.json({ choices: [{ finish_reason: reason, message: { content: "partial" } }] }); },
+    });
+    assert.equal(calls, 1);
+    assert.equal(res.statusCode, 502);
+    assert.equal(JSON.parse(res.text()).error.code, code);
+    assert.doesNotMatch(res.text(), /response.completed/);
+  });
+}
+
+test("disconnect during an empty reply prevents another provider call", async () => {
+  let calls = 0;
+  const req = request({ input: "hello" });
+  const res = new FakeResponse();
+  await serveProviderResponse(req, res, {
+    provider: { apiType: "chat", baseUrl: "https://gateway.test/v1", model: "glm" }, apiKey: "",
+    fetchImpl: async () => {
+      calls++;
+      req.emit("aborted");
+      return Response.json({ choices: [{ message: { content: null } }] });
+    },
+  });
+  assert.equal(calls, 1);
+  assert.equal(res.text(), "");
+});
+
 async function normalizedUsage(apiType, providerResponse) {
   const res = new FakeResponse();
   await serveProviderResponse(request({ input: "hello" }), res, {
@@ -363,6 +457,7 @@ test("provider usage rejects invalid token counts", async () => {
   const cases = [
     ["chat", { prompt_tokens: -1, completion_tokens: 0 }],
     ["chat", { prompt_tokens: 4, prompt_tokens_details: { cached_tokens: 5 }, completion_tokens: 0 }],
+      ["chat", { prompt_tokens: 4, prompt_tokens_details: { cached_tokens: 3, cache_write_tokens: 2 }, completion_tokens: 0 }],
     ["chat", { prompt_tokens: 4, completion_tokens: 2, completion_tokens_details: { reasoning_tokens: 3 } }],
     ["chat", { prompt_tokens: Number.MAX_SAFE_INTEGER + 1, completion_tokens: 0 }],
     ["anthropic", { input_tokens: Number.MAX_SAFE_INTEGER, cache_read_input_tokens: 1, output_tokens: 0 }],
@@ -525,4 +620,126 @@ test("provider unavailability preserves status without exposing upstream details
     error: { message: "Provider unavailable", type: "provider_error", code: "provider_unavailable" },
   });
   assert.doesNotMatch(res.text(), /secret|upstream/i);
+});
+
+const glmProvider = { id: "glm_test", apiType: "chat", baseUrl: "https://gateway.test/v1",
+  model: "zai/glm-5.3-flash-uncensored", maxOutputTokens: 131072 };
+const chatChunk = (delta, finish_reason = null) => ({ id: "stream_test", choices: [{ index: 0, delta, finish_reason }] });
+const streamFrame = value => `data: ${typeof value === "string" ? value : JSON.stringify(value)}\n\n`;
+const streamUsage = { prompt_tokens: 100, completion_tokens: 8,
+  prompt_tokens_details: { cached_tokens: 90 }, completion_tokens_details: { reasoning_tokens: 2 } };
+
+test("GLM streams visible text before completion and emits each assembled tool once", async () => {
+  const res = new FakeResponse(), attempts = [];
+  const source = Readable.from((async function* () {
+    yield Buffer.from(streamFrame(chatChunk({ content: "Checking " })));
+    // The downstream delta must have arrived before another upstream chunk.
+    await new Promise(resolve => setImmediate(resolve));
+    assert.match(res.text(), /response.output_text.delta/);
+    assert.doesNotMatch(res.text(), /response.completed/);
+    yield Buffer.from(streamFrame(chatChunk({ content: "now", tool_calls: [{ index: 0, id: "call_live", type: "function",
+      function: { name: "clock", arguments: '{"zone":' } }] })));
+    yield Buffer.from(streamFrame(chatChunk({ tool_calls: [{ index: 0, function: { arguments: '"UTC"}' } }] }, "tool_calls")));
+    yield Buffer.from(streamFrame({ choices: [], usage: streamUsage }) + streamFrame("[DONE]"));
+  })());
+  await serveProviderResponse(request({ input: "hello", tools: [{ type: "function", name: "clock" }], reasoning: { effort: "high" } }), res, {
+    provider: glmProvider, apiKey: "", rtkRuntime: { available: true }, recordAttempt: async record => attempts.push(record),
+    fetchImpl: async (_url, init) => {
+      const body = JSON.parse(init.body);
+      assert.equal(body.stream, true);
+      assert.deepEqual(body.stream_options, { include_usage: true });
+      assert.match(body.messages[0].content, /Use rtk/);
+      assert.equal(body.max_completion_tokens, 131072);
+      return new Response(source, { headers: { "content-type": "text/event-stream" } });
+    },
+  });
+  const events = sseEvents(res.text());
+  assert.equal(events.at(-1).type, "response.completed");
+  const done = events.filter(event => event.type === "response.output_item.done");
+  assert.equal(done.length, 2);
+  assert.equal(done[0].item.content[0].text, "Checking now");
+  assert.equal(done[1].item.arguments, '{"zone":"UTC"}');
+  assert.equal(attempts.length, 1);
+  assert.equal(attempts[0].usageKnown, true);
+  assert.equal(attempts[0].usage.input_tokens, 100);
+  assert.equal(attempts[0].status, "completed");
+});
+
+test("GLM output limit retains streamed text and billing but never executes partial tools", async () => {
+  const res = new FakeResponse(), attempts = [];
+  const frames = [chatChunk({ content: "Partial" }), chatChunk({ tool_calls: [{ index: 0, id: "partial_tool", type: "function",
+    function: { name: "clock", arguments: '{"unfinished":' } }] }, "length"), { choices: [], usage: streamUsage }, "[DONE]"];
+  await serveProviderResponse(request({ input: "hello", tools: [{ type: "function", name: "clock" }] }), res, {
+    provider: glmProvider, apiKey: "", recordAttempt: async record => attempts.push(record),
+    fetchImpl: async () => new Response(frames.map(streamFrame).join(""), { headers: { "content-type": "text/event-stream" } }),
+  });
+  const events = sseEvents(res.text());
+  assert.equal(events.at(-1).type, "response.failed");
+  assert.equal(events.at(-1).response.error.code, "provider_output_limit");
+  assert.equal(events.at(-1).response.usage.input_tokens, 100);
+  assert.ok(!events.some(event => event.item?.type === "function_call"));
+  assert.equal(attempts[0].status, "output_limit");
+  assert.equal(attempts[0].usageKnown, true);
+});
+
+test("persistent blank GLM streams record all failed attempts without invented zero usage", async () => {
+  const res = new FakeResponse(), attempts = [];
+  await serveProviderResponse(request({ input: "hello" }), res, {
+    provider: glmProvider, apiKey: "", recordAttempt: async record => attempts.push(record),
+    fetchImpl: async () => new Response([chatChunk({ reasoning_content: "hidden" }, "stop"), "[DONE]"].map(streamFrame).join(""),
+      { headers: { "content-type": "text/event-stream" } }),
+  });
+  assert.equal(res.statusCode, 502);
+  assert.equal(attempts.length, 3);
+  assert.ok(attempts.every(record => record.status === "empty" && record.usageKnown === false && record.usage === null));
+  assert.doesNotMatch(res.text(), /response.completed|hidden/);
+});
+
+test("a truncated stream records received usage and reports failure after its visible delta", async () => {
+  const res = new FakeResponse(), attempts = [];
+  await serveProviderResponse(request({ input: "hello" }), res, {
+    provider: glmProvider, apiKey: "", recordAttempt: async record => attempts.push(record),
+    fetchImpl: async () => new Response([chatChunk({ content: "Visible" }), { choices: [], usage: streamUsage }].map(streamFrame).join(""),
+      { headers: { "content-type": "text/event-stream" } }),
+  });
+  assert.equal(sseEvents(res.text()).at(-1).type, "response.failed");
+  assert.equal(attempts[0].status, "invalid_response");
+  assert.equal(attempts[0].usageKnown, true);
+});
+
+test("client tool search maps to a Chat function and discovered schemas load on the next call", async () => {
+  const search = { type: "tool_search", execution: "client", description: "Find deferred tools", parameters: {
+    type: "object", properties: { query: { type: "string" } }, required: ["query"] } };
+  const deferred = { type: "namespace", name: "calendar", tools: [{ type: "function", name: "events", defer_loading: true,
+    parameters: { type: "object", properties: { date: { type: "string" } } } }] };
+  const first = new FakeResponse();
+  await serveProviderResponse(request({ input: "find calendar", tools: [search, deferred] }), first, {
+    provider: glmProvider, apiKey: "", fetchImpl: async (_url, init) => {
+      const body = JSON.parse(init.body);
+      assert.deepEqual(body.tools.map(tool => tool.function.name), ["tool_search"]);
+      return Response.json({ choices: [{ finish_reason: "tool_calls", message: { tool_calls: [{ id: "search_one", type: "function",
+        function: { name: "tool_search", arguments: '{"query":"calendar events"}' } }] } }], usage: streamUsage });
+    },
+  });
+  const searchCall = sseEvents(first.text()).at(-1).response.output[0];
+  assert.equal(searchCall.type, "tool_search_call");
+  assert.equal(searchCall.execution, "client");
+  assert.deepEqual(searchCall.arguments, { query: "calendar events" });
+  const second = new FakeResponse();
+  await serveProviderResponse(request({ input: [searchCall, { type: "tool_search_output", execution: "client", call_id: "search_one",
+    status: "completed", tools: [deferred] }], tools: [search, deferred] }), second, {
+    provider: glmProvider, apiKey: "", fetchImpl: async (_url, init) => {
+      const body = JSON.parse(init.body);
+      assert.deepEqual(body.tools.map(tool => tool.function.name), ["tool_search", "calendar__events"]);
+      assert.equal(body.messages[0].tool_calls[0].function.name, "tool_search");
+      assert.equal(body.messages[1].role, "tool");
+      assert.match(body.messages[1].content, /calendar.events/);
+      assert.doesNotMatch(body.messages[1].content, /properties|parameters/);
+      return Response.json({ choices: [{ finish_reason: "tool_calls", message: { tool_calls: [{ id: "events_one", type: "function",
+        function: { name: "calendar__events", arguments: '{"date":"today"}' } }] } }] });
+    },
+  });
+  const loadedCall = sseEvents(second.text()).at(-1).response.output[0];
+  assert.equal(loadedCall.name, "events");
+  assert.equal(loadedCall.namespace, "calendar");
 });

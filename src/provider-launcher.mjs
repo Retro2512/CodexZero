@@ -8,32 +8,39 @@ import { desktopProfileEnvironment } from "./desktop-profile.mjs";
 
 const execFileAsync = promisify(execFile);
 
+export async function copyProviderRuntime(desktopBinary, { root, sourceCore, platform = process.platform } = {}) {
+  const desktopResources = platform === "win32"
+    ? path.join(path.dirname(desktopBinary), "resources")
+    : path.resolve(path.dirname(desktopBinary), "..", "Resources");
+  const standardName = platform === "win32" ? "codex.exe" : "codex";
+  const source = sourceCore ?? path.join(desktopResources, standardName);
+  const patched = /^codex-zero-core(?:\.exe)?$/.test(path.basename(source));
+  const name = patched ? path.basename(source) : standardName;
+  const info = await fs.stat(source);
+  const versionRoot = path.join(root, `${name}-${info.size}-${info.mtimeMs.toString().replace(".", "_")}`);
+  await fs.mkdir(versionRoot, { recursive: true });
+  const core = path.join(versionRoot, name);
+  if (!await fs.access(core).then(() => true, () => false)) await fs.copyFile(source, core);
+  const companions = platform === "win32"
+    ? ["codex-code-mode-host.exe", "codex-command-runner.exe", "codex-windows-sandbox-setup.exe", "codex-windows-sandbox-service.exe", "rg.exe"]
+    : ["codex-code-mode-host", "codex-command-runner", "rg"];
+  for (const file of companions) {
+    const adjacent = path.join(path.dirname(source), file);
+    const companion = await fs.access(adjacent).then(() => adjacent, () => path.join(desktopResources, file));
+    const destination = path.join(versionRoot, file);
+    try { if (!await fs.access(destination).then(() => true, () => false)) await fs.copyFile(companion, destination); }
+    catch (error) { if (error.code !== "ENOENT") throw error; }
+  }
+  return platform === "win32" && !patched ? prepareProviderContextCore(core) : core;
+}
+
 export async function prepareProviderLauncher(desktopBinary, { home = codexZeroHome(), sourceCore } = {}) {
   const root = path.join(home, "provider-runtime");
   await fs.mkdir(root, { recursive: true });
   const entry = path.resolve(import.meta.dirname, "..", "bin", "provider-core.mjs");
   let core = process.env.CODEX_ZERO_PROVIDER_CORE;
   if (!core) {
-    const resources = sourceCore ? path.dirname(sourceCore) : process.platform === "win32"
-      ? path.join(path.dirname(desktopBinary), "resources")
-      : path.resolve(path.dirname(desktopBinary), "..", "Resources");
-    const name = process.platform === "win32" ? "codex.exe" : "codex";
-    // A versioned copy can execute outside the Windows packaged app container.
-    const version = (await fs.stat(path.join(resources, name))).mtimeMs.toString().replace(".", "_");
-    const versionRoot = path.join(root, version);
-    await fs.mkdir(versionRoot, { recursive: true });
-    core = path.join(versionRoot, name);
-    const companions = process.platform === "win32"
-      ? [name, "codex-code-mode-host.exe", "codex-command-runner.exe", "codex-windows-sandbox-setup.exe", "codex-windows-sandbox-service.exe", "rg.exe"]
-      : [name, "codex-code-mode-host", "rg"];
-    for (const file of companions) {
-      const source = path.join(resources, file);
-      const dest = path.join(versionRoot, file);
-      try { await fs.access(dest); } catch {
-        try { await fs.copyFile(source, dest); } catch (error) { if (file === name || error.code !== "ENOENT") throw error; }
-      }
-    }
-    if (process.platform === "win32") core = await prepareProviderContextCore(core);
+    core = await copyProviderRuntime(desktopBinary, { root, sourceCore });
   }
   let launcher;
   if (process.platform === "win32") {

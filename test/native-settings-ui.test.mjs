@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { cacheCostLabels, normalizeSnapshot } from "../assets/native-cache-ui.mjs";
+import { cacheCostLabels, normalizeSnapshot, normalizeSessionStats, sessionDuration, sessionRate } from "../assets/native-cache-ui.mjs";
 import { normalizeResult, serializePricing, serializeContextWindow } from "../assets/native-provider-settings.mjs";
 import { validateProviders } from "../src/provider-store.mjs";
 
@@ -66,4 +66,21 @@ test("cache labels retain the original fallback behavior", () => {
     displayed: "API equivalent · partial",
     accessible: "API equivalent",
   });
+});
+
+test("session statistics preserve measured values and reject invalid counters", () => {
+  const stats = normalizeSessionStats({ turns: 40, modelSteps: 969, llmTimeMs: 36642000,
+    toolTimeMs: 2195000, avgTtftMs: 31200, tokensPerSecond: 80, totalTokens: 142000000, cacheHitRate: .97 });
+  assert.equal(stats.turns, 40);
+  assert.equal(stats.modelSteps, 969);
+  assert.equal(sessionDuration(stats.llmTimeMs), "610m42s");
+  assert.equal(sessionDuration(stats.toolTimeMs), "36m35s");
+  assert.equal(sessionRate(stats.tokensPerSecond), "80 tok/s");
+  assert.equal(normalizeSnapshot({ sessionStats: stats }).sessionStats.cacheHitRate, .97);
+  assert.equal(normalizeSessionStats(null), null);
+  assert.equal(normalizeSessionStats({ turns: -1 }).turns, null);
+  assert.equal(normalizeSessionStats({ tokensPerSecond: Infinity }).tokensPerSecond, null);
+  assert.equal(sessionDuration(null), "…");
+  assert.equal(sessionDuration(0), "0s");
+  assert.equal(sessionRate(null), "…");
 });

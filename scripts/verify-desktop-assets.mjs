@@ -9,6 +9,7 @@ export const DESKTOP_ASSETS = Object.freeze([
   "assets/native-notification-routing.cjs", "src/notification-routing-patch.mjs",
   "assets/model-pricing.mjs", "assets/codexzero.ico", "assets/codexzero.png",
   "assets/native-sidebar-appearance-main.cjs", "assets/native-sidebar-identity.mjs",
+  "assets/native-sidebar-threads.cjs", "src/thread-visibility-patch.mjs",
   "assets/sidebar-performance.mjs", "assets/transcript-retention.mjs",
   "bin/provider-core.mjs", "bin/local-provider-app.mjs",
   "scripts/build-codexzero-launcher.ps1", "scripts/build-provider-local.ps1",

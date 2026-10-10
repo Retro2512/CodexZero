@@ -1,4 +1,4 @@
-import { providerReasoning, providerEffort } from "./provider-reasoning.mjs";
+import { providerReasoning, providerEffort, isGlmProvider } from "./provider-reasoning.mjs";
 
 export const PROVIDER_ID = "codexzero_custom";
 export const MODEL_PREFIX = "custom/";
@@ -33,8 +33,9 @@ export function findProvider(providers, model) {
 export function customThreadParams(params, provider, baseUrl, token) {
   const contextWindow = provider.contextWindow ?? 32000;
   // Codex reserves 5% internally. Leave additional room for the configured output.
-  const compactLimit = provider.contextWindow === undefined ? 24000 : Math.max(1,
+  const safeCompactLimit = provider.contextWindow === undefined ? 24000 : Math.max(1,
     Math.min(Math.floor(contextWindow * .9), Math.floor(contextWindow * .95) - (provider.maxOutputTokens ?? 4096)));
+  const compactLimit = isGlmProvider(provider) ? Math.min(320000, safeCompactLimit) : safeCompactLimit;
   return {
     ...params,
     model: `${MODEL_PREFIX}${provider.id}`,

@@ -33,6 +33,10 @@ if (!$DesktopBinary) {
 }
 $DesktopBinary = (Resolve-Path -LiteralPath $DesktopBinary).Path
 if (!$CoreBinary) {
+    $packagedCore = Join-Path $source 'dist\windows-x64\codex-zero-core.exe'
+    if (Test-Path -LiteralPath $packagedCore -PathType Leaf) { $CoreBinary = $packagedCore }
+}
+if (!$CoreBinary) {
     $coreStaging = Join-Path ([IO.Path]::GetTempPath()) ('codexzero-core-' + [guid]::NewGuid().ToString('N'))
     $resolvedCore = & (Join-Path $PSScriptRoot 'resolve-desktop.ps1') -StagingRoot $coreStaging -CoreOnly `
         -Manifest (Join-Path $PSScriptRoot 'core-upstream.json') -CacheRoot (Join-Path $env:LOCALAPPDATA 'CodexZero\cache\core')
@@ -55,7 +59,7 @@ Copy-Item -LiteralPath (Join-Path $source 'scripts') -Destination $destination -
 New-Item -ItemType Directory -Path (Join-Path $destination 'assets'), (Join-Path $destination 'runtime') | Out-Null
 Copy-Item -LiteralPath (Join-Path $source 'assets\provider-settings.html') -Destination (Join-Path $destination 'assets')
 Copy-Item -LiteralPath (Join-Path $source 'assets\native-notification-routing.cjs') -Destination (Join-Path $destination 'assets')
-foreach ($asset in @('native-provider-settings.mjs', 'native-cache-ui.mjs', 'model-pricing.mjs', 'native-provider-main.cjs', 'native-provider-preload.cjs', 'native-provider-identity.cjs', 'native-provider-environment.cjs', 'native-provider-updater.cjs', 'native-provider-update-release.cjs', 'native-sidebar-appearance-main.cjs', 'native-sidebar-identity.mjs', 'sidebar-performance.mjs', 'transcript-retention.mjs', 'codexzero.png', 'codexzero.ico')) {
+foreach ($asset in @('native-provider-settings.mjs', 'native-cache-ui.mjs', 'model-pricing.mjs', 'native-provider-main.cjs', 'native-provider-preload.cjs', 'native-provider-identity.cjs', 'native-provider-environment.cjs', 'native-provider-updater.cjs', 'native-provider-update-release.cjs', 'native-sidebar-appearance-main.cjs', 'native-sidebar-identity.mjs', 'native-sidebar-threads.cjs', 'sidebar-performance.mjs', 'transcript-retention.mjs', 'codexzero.png', 'codexzero.ico')) {
     Copy-Item -LiteralPath (Join-Path $source "assets\$asset") -Destination (Join-Path $destination 'assets')
 }
 Copy-Item -LiteralPath (Join-Path $source 'package.json') -Destination $destination
@@ -68,7 +72,7 @@ import { pathToFileURL } from 'node:url';
 const [root, desktopBinary, sourceCore] = process.argv.slice(2);
 const { prepareProviderLauncher } = await import(pathToFileURL(path.join(root, 'src/provider-launcher.mjs')));
 const { buildNativeProviderApp } = await import(pathToFileURL(path.join(root, 'src/native-provider-build.mjs')));
-// Bundle the installed Desktop runtime, not an inherited development override.
+// Bundle the selected package runtime, not an inherited development override.
 delete process.env.CODEX_ZERO_PROVIDER_CORE;
 const { core, launcher } = await prepareProviderLauncher(desktopBinary, { home: root, sourceCore });
 const nativeDesktop = await buildNativeProviderApp(desktopBinary, root);

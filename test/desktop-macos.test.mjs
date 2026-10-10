@@ -6,7 +6,7 @@ import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import test from "node:test";
-import { asarHeaderHash, plistCommands, providerLauncherScript, readMacPin } from "../src/desktop-macos.mjs";
+import { asarHeaderHash, plistCommands, providerLauncherScript, readMacPin, installPackagedMacCore } from "../src/desktop-macos.mjs";
 
 const run = promisify(execFile);
 const repository = path.resolve(import.meta.dirname, "..");
@@ -84,6 +84,25 @@ test("provider launcher runs the bundled runtime from any location", { skip: !po
   await fs.writeFile(launcher, providerLauncherScript(), { mode: 0o755 });
   const { stdout } = await run(launcher, ["app-server", "argument with spaces"]);
   assert.deepEqual(JSON.parse(stdout), ["app-server", "argument with spaces"]);
+});
+
+test("Mac desktop installs the packaged patched core and preserves official companions", async t => {
+  const root = await temporary(t, "cz-mac-core-");
+  const packageRoot = path.join(root, "package"), resources = path.join(root, "App/Contents/Resources");
+  const dist = path.join(packageRoot, "dist/macos-arm64");
+  await fs.mkdir(dist, { recursive: true });
+  await fs.mkdir(resources, { recursive: true });
+  await fs.writeFile(path.join(dist, "codex-zero-core"), "patched core");
+  await fs.writeFile(path.join(dist, "codex-code-mode-host"), "new packaged helper");
+  await fs.writeFile(path.join(resources, "codex"), "official core");
+  await fs.writeFile(path.join(resources, "codex-code-mode-host"), "official helper");
+  await fs.writeFile(path.join(resources, "rg"), "official search");
+  const core = await installPackagedMacCore({ packageRoot, resources, arch: "arm64" });
+  assert.equal(await fs.readFile(core, "utf8"), "patched core");
+  assert.equal(await fs.readFile(path.join(path.dirname(core), "codex-code-mode-host"), "utf8"), "new packaged helper");
+  assert.equal(await fs.readFile(path.join(path.dirname(core), "rg"), "utf8"), "official search");
+  assert.equal(await fs.readFile(path.join(resources, "codex"), "utf8"), "official core");
+  await assert.rejects(installPackagedMacCore({ packageRoot, resources, arch: "x64" }), /ENOENT/);
 });
 
 async function handoffFixture(t) {

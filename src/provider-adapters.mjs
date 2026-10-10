@@ -1,5 +1,8 @@
 import { randomUUID } from "node:crypto";
-import { applyProviderReasoning } from "./provider-reasoning.mjs";
+import { applyProviderReasoning, isGlmProvider } from "./provider-reasoning.mjs";
+import { readChatStream } from "./provider-chat-stream.mjs";
+import { rtkGuidance } from "./provider-rtk.mjs";
+import { glmToolDiscovery } from "./provider-tool-discovery.mjs";
 
 // Shared with the HTTP bridge; base64 image history can exceed 10 MiB.
 export const PROVIDER_BODY_LIMIT = 32 * 1024 * 1024;
@@ -15,6 +18,13 @@ class RequestError extends Error {
 }
 
 class ProviderUnavailableError extends Error {}
+
+class ProviderOutputError extends Error {
+  constructor(message, code) {
+    super(message);
+    this.code = code;
+  }
+}
 
 function id(prefix) {
   return `${prefix}_${randomUUID().replaceAll("-", "")}`;
@@ -125,16 +135,27 @@ function parseInput(body) {
       if (typeof item.call_id !== "string") throw new RequestError("Custom tool output requires a call ID");
       return item;
     }
+    if (type === "tool_search_call") {
+      if (item.execution !== "client" || typeof item.call_id !== "string" || !item.arguments || typeof item.arguments !== "object" || Array.isArray(item.arguments)) {
+        throw new RequestError("Tool search calls require client execution, a call ID and arguments");
+      }
+      return item;
+    }
+    if (type === "tool_search_output") {
+      if (item.execution !== "client" || typeof item.call_id !== "string" || !Array.isArray(item.tools)) {
+        throw new RequestError("Tool search outputs require client execution, a call ID and tools");
+      }
+      return item;
+    }
     throw new RequestError(`Unsupported input type: ${String(type || "unknown")}`);
   });
 }
 
-function parseTools(tools) {
-  if (tools === undefined) return [];
+function parseTools(tools = [], items = []) {
   if (!Array.isArray(tools)) throw new RequestError("Tools must be an array");
   const parsed = [];
   const usedNames = new Set();
-  const add = (tool, namespace) => {
+  const add = (tool, namespace, loaded = false) => {
     if (!tool || typeof tool !== "object") throw new RequestError("Tool definitions must be objects");
     if (tool.type === "function") {
       if (typeof tool.name !== "string") throw new RequestError("Function tools require a name");
@@ -147,6 +168,7 @@ function parseTools(tools) {
           ? tool.parameters
           : { type: "object", properties: {} },
         strict: tool.strict,
+        deferred: !loaded && tool.defer_loading === true,
       });
       return;
     }
@@ -166,6 +188,7 @@ function parseTools(tools) {
           required: ["input"],
           additionalProperties: false,
         },
+        deferred: !loaded && tool.defer_loading === true,
       });
       return;
     }
@@ -174,14 +197,31 @@ function parseTools(tools) {
       if (typeof tool.name !== "string" || !Array.isArray(tool.tools)) {
         throw new RequestError("Tool namespaces require a name and tools");
       }
-      for (const child of tool.tools) add(child, tool.name);
+      for (const child of tool.tools) add(child, tool.name, loaded);
+      return;
+    }
+    if (tool.type === "tool_search") {
+      if (namespace || tool.execution !== "client") throw new RequestError("Only client executed tool search is supported");
+      parsed.push({ kind: "search", name: "tool_search", description: tool.description,
+        parameters: tool.parameters ?? { type: "object", properties: { query: { type: "string" }, limit: { type: "number" } }, required: ["query"] } });
       return;
     }
     throw new RequestError(`Unsupported tool type: ${String(tool.type || "unknown")}`);
   };
   for (const tool of tools) add(tool, undefined);
-
+  for (const item of items) {
+    if (item.type === "tool_search_output") for (const tool of item.tools) add(tool, undefined, true);
+  }
+  // A discovered schema may also be in the current tools array. Preserve one
+  // stable provider name and expose it once it has been loaded by core.
+  const unique = [];
   for (const tool of parsed) {
+    const previous = unique.find(value => value.name === tool.name && value.namespace === tool.namespace && value.kind === tool.kind);
+    if (previous) previous.deferred = Boolean(previous.deferred && tool.deferred);
+    else unique.push(tool);
+  }
+
+  for (const tool of unique) {
     const base = `${tool.namespace ? `${tool.namespace}__` : ""}${tool.name}`
       .replace(/[^a-zA-Z0-9_-]/g, "_")
       .slice(0, 60) || "tool";
@@ -194,7 +234,7 @@ function parseTools(tools) {
     tool.providerName = candidate;
     usedNames.add(candidate);
   }
-  return parsed;
+  return unique;
 }
 
 function declaredTool(tools, name, namespace) {
@@ -235,7 +275,7 @@ function pushChatAssistant(messages, piece) {
   messages.push({ role: "assistant", content: piece.content ?? null, ...(piece.tool_calls ? { tool_calls: piece.tool_calls } : {}) });
 }
 
-function toChatRequest(body, provider, items, tools) {
+function toChatRequest(body, provider, items, tools, rtkRuntime) {
   const messages = [];
   const toolImages = [];
   const flushToolImages = () => {
@@ -243,11 +283,13 @@ function toChatRequest(body, provider, items, tools) {
   };
   const instructions = instructionText(body.instructions);
   if (instructions) messages.push({ role: "developer", content: instructions });
+  const guidance = isGlmProvider(provider) ? rtkGuidance(rtkRuntime) : "";
+  if (guidance) messages.push({ role: "developer", content: guidance });
 
   for (const item of items) {
     // Chat tool messages only accept text. Defer image parts until all tool
     // results are delivered, so parallel calls retain their required ordering.
-    if (!["function_call_output", "custom_tool_call_output"].includes(item.type)) flushToolImages();
+    if (!["function_call_output", "custom_tool_call_output", "tool_search_output"].includes(item.type)) flushToolImages();
     if (item.type === "message") {
       if (item.role === "system" || item.role === "developer") {
         messages.push({ role: "developer", content: chatContent(item.content, item.role) });
@@ -256,10 +298,15 @@ function toChatRequest(body, provider, items, tools) {
       } else {
         messages.push({ role: "user", content: chatContent(item.content, item.role) });
       }
-    } else if (item.type === "function_call" || item.type === "custom_tool_call") {
-      const args = item.type === "custom_tool_call" ? JSON.stringify({ input: item.input }) : item.arguments;
-      const mapped = declaredTool(tools, item.name, item.namespace);
+    } else if (item.type === "function_call" || item.type === "custom_tool_call" || item.type === "tool_search_call") {
+      const args = item.type === "custom_tool_call" ? JSON.stringify({ input: item.input })
+        : item.type === "tool_search_call" ? JSON.stringify(item.arguments) : item.arguments;
+      const mapped = declaredTool(tools, item.type === "tool_search_call" ? "tool_search" : item.name, item.namespace);
       pushChatAssistant(messages, { tool_calls: [{ id: item.call_id, type: "function", function: { name: mapped?.providerName || item.name, arguments: args } }] });
+    } else if (item.type === "tool_search_output") {
+      const loaded = parseTools(item.tools).map(tool => `${tool.namespace ? `${tool.namespace}.` : ""}${tool.name}`);
+      messages.push({ role: "tool", tool_call_id: item.call_id,
+        content: loaded.length ? `Loaded tools: ${loaded.join(", ")}. Their schemas are available in the tool definitions.` : "No matching tools." });
     } else {
       if (Array.isArray(item.output) && item.output.some(part => part?.type === "input_image")) {
         const parts = inputParts(item.output);
@@ -277,12 +324,14 @@ function toChatRequest(body, provider, items, tools) {
   const request = {
     model: provider.model,
     messages,
-    stream: false,
+    stream: isGlmProvider(provider),
   };
+  if (request.stream) request.stream_options = { include_usage: true };
   const maxTokens = provider.maxOutputTokens ?? body.max_output_tokens;
   if (maxTokens !== undefined) request.max_completion_tokens = maxTokens;
-  if (tools.length) {
-    request.tools = tools.map((tool) => ({
+  const availableTools = tools.filter(tool => !tool.deferred);
+  if (availableTools.length) {
+    request.tools = availableTools.map((tool) => ({
       type: "function",
       function: {
         name: tool.providerName,
@@ -291,7 +340,7 @@ function toChatRequest(body, provider, items, tools) {
         ...(tool.strict !== undefined ? { strict: tool.strict } : {}),
       },
     }));
-    request.tool_choice = toChatToolChoice(body.tool_choice, tools);
+    request.tool_choice = toChatToolChoice(body.tool_choice, availableTools);
   } else if (body.tool_choice && !["auto", "none"].includes(body.tool_choice)) {
     throw new RequestError("Tool choice requires tools");
   }
@@ -418,7 +467,7 @@ function usage({
   cacheWriteTokens = tokenCount(cacheWriteTokens);
   outputTokens = tokenCount(outputTokens);
   reasoningTokens = tokenCount(reasoningTokens);
-  if (cachedTokens > inputTokens || cacheWriteTokens > inputTokens || reasoningTokens > outputTokens) {
+  if (tokenSum(cachedTokens, cacheWriteTokens) > inputTokens || reasoningTokens > outputTokens) {
     throw new Error("Invalid provider usage");
   }
   return {
@@ -454,15 +503,56 @@ function anthropicUsage(providerUsage) {
   });
 }
 
+function addUsage(left, right) {
+  return usage({
+    inputTokens: tokenSum(left.input_tokens, right.input_tokens),
+    cachedTokens: tokenSum(left.input_tokens_details.cached_tokens, right.input_tokens_details.cached_tokens),
+    cacheWriteTokens: tokenSum(left.input_tokens_details.cache_write_tokens, right.input_tokens_details.cache_write_tokens),
+    outputTokens: tokenSum(left.output_tokens, right.output_tokens),
+    reasoningTokens: tokenSum(left.output_tokens_details.reasoning_tokens, right.output_tokens_details.reasoning_tokens),
+  });
+}
+
+function knownUsage(value, apiType) {
+  const input = apiType === "chat" ? value?.prompt_tokens : value?.input_tokens;
+  const output = apiType === "chat" ? value?.completion_tokens : value?.output_tokens;
+  return Number.isSafeInteger(input) && input >= 0 && Number.isSafeInteger(output) && output >= 0;
+}
+
+function requestMetrics(request) {
+  if (!Array.isArray(request.messages)) return null;
+  const messageBytes = { developer: 0, user: 0, assistant: 0, tool: 0 };
+  for (const message of request.messages) {
+    if (Object.hasOwn(messageBytes, message.role)) messageBytes[message.role] += Buffer.byteLength(JSON.stringify(message), "utf8");
+  }
+  return { messageCount: request.messages.length, toolCount: request.tools?.length ?? 0,
+    toolSchemaBytes: Buffer.byteLength(JSON.stringify(request.tools ?? []), "utf8"), messageBytes };
+}
+
 function fromChat(response, tools) {
+  const finishReason = response?.choices?.[0]?.finish_reason;
+  if (finishReason === "length" || finishReason === "content_filter") {
+    throw new ProviderOutputError(
+      finishReason === "length" ? "Provider output limit reached" : "Provider returned a filtered response",
+      finishReason === "length" ? "provider_output_limit" : "provider_content_filter",
+    );
+  }
+  if (finishReason != null && !["stop", "tool_calls", "function_call"].includes(finishReason)) {
+    throw new ProviderOutputError("Provider returned an unfinished response", "provider_incomplete_response");
+  }
   const message = response?.choices?.[0]?.message;
   if (!message || typeof message !== "object") throw new Error("Invalid provider response");
   const outputs = [];
-  if (typeof message.content === "string" && message.content) outputs.push({ kind: "text", text: message.content });
+  if (typeof message.content === "string" && message.content.trim()) outputs.push({ kind: "text", text: message.content });
   for (const call of message.tool_calls || []) {
     if (call?.type === "function" && typeof call.function?.name === "string") {
       const tool = declaredTool(tools, call.function.name);
-      if (tool?.kind === "custom") {
+      if (tool?.kind === "search" || tool?.kind === "bridge_search") {
+        let argumentsValue;
+        try { argumentsValue = JSON.parse(call.function.arguments || "{}"); } catch { throw new Error("Invalid provider tool search arguments"); }
+        if (!argumentsValue || typeof argumentsValue !== "object" || Array.isArray(argumentsValue)) throw new Error("Invalid provider tool search arguments");
+        outputs.push({ kind: tool.kind, callId: call.id || id("call"), name: tool.providerName, arguments: argumentsValue });
+      } else if (tool?.kind === "custom") {
         let parsed;
         try { parsed = JSON.parse(call.function.arguments || "{}"); } catch { parsed = {}; }
         outputs.push({ kind: "custom", callId: call.id || id("call"), name: tool.name, namespace: tool.namespace, input: textValue(parsed.input ?? "") });
@@ -545,34 +635,56 @@ function sendEvent(res, event) {
   res.write(`event: ${event.type}\ndata: ${JSON.stringify(event)}\n\n`);
 }
 
-function synthesizeSse(res, body, provider, normalized) {
-  beginSse(res);
-  const responseId = normalized.providerId || id("resp");
+function responseStream(res, body, provider) {
+  let responseId = id("resp"), started = false, textItem = null, text = "";
   let sequence = 0;
   const completed = [];
   const event = (value) => sendEvent(res, { ...value, sequence_number: sequence++ });
-  event({ type: "response.created", response: responseShell(body, provider, responseId) });
-
-  for (let outputIndex = 0; outputIndex < normalized.outputs.length; outputIndex += 1) {
-    const output = normalized.outputs[outputIndex];
-    if (output.kind === "text") {
+  const begin = providerId => {
+    if (started) return;
+    responseId = providerId || responseId;
+    beginSse(res);
+    started = true;
+    event({ type: "response.created", response: responseShell(body, provider, responseId) });
+  };
+  const delta = value => {
+    begin();
+    const outputIndex = completed.length;
+    if (!textItem) {
       const itemId = id("msg");
       const started = { id: itemId, type: "message", status: "in_progress", role: "assistant", content: [] };
+      textItem = started;
       event({ type: "response.output_item.added", output_index: outputIndex, item: started });
       event({
         type: "response.content_part.added", item_id: itemId, output_index: outputIndex, content_index: 0,
         part: { type: "output_text", text: "", annotations: [], logprobs: [] },
       });
-      if (output.text) event({
-        type: "response.output_text.delta", item_id: itemId, output_index: outputIndex, content_index: 0,
-        delta: output.text, logprobs: [],
-      });
-      const part = { type: "output_text", text: output.text, annotations: [], logprobs: [] };
-      event({ type: "response.output_text.done", item_id: itemId, output_index: outputIndex, content_index: 0, text: output.text, logprobs: [] });
-      event({ type: "response.content_part.done", item_id: itemId, output_index: outputIndex, content_index: 0, part });
-      const done = { ...started, status: "completed", content: [part] };
-      completed.push(done);
-      event({ type: "response.output_item.done", output_index: outputIndex, item: done });
+    }
+    text += value;
+    if (value) event({ type: "response.output_text.delta", item_id: textItem.id,
+      output_index: outputIndex, content_index: 0, delta: value, logprobs: [] });
+  };
+  const finishText = (status = "completed") => {
+    if (!textItem) return;
+    const outputIndex = completed.length, itemId = textItem.id;
+    const part = { type: "output_text", text, annotations: [], logprobs: [] };
+    event({ type: "response.output_text.done", item_id: itemId, output_index: outputIndex, content_index: 0, text, logprobs: [] });
+    event({ type: "response.content_part.done", item_id: itemId, output_index: outputIndex, content_index: 0, part });
+    const done = { ...textItem, status, content: [part] };
+    completed.push(done);
+    event({ type: "response.output_item.done", output_index: outputIndex, item: done });
+    textItem = null; text = "";
+  };
+  const outputItem = output => {
+    const outputIndex = completed.length;
+    if (output.kind === "text") {
+      delta(output.text); finishText();
+    } else if (output.kind === "search") {
+      const item = { id: id("ts"), type: "tool_search_call", status: "completed", execution: "client",
+        call_id: output.callId, arguments: output.arguments };
+      completed.push(item);
+      event({ type: "response.output_item.added", output_index: outputIndex, item: { ...item, status: "in_progress" } });
+      event({ type: "response.output_item.done", output_index: outputIndex, item });
     } else if (output.kind === "function") {
       const itemId = id("fc");
       const started = {
@@ -598,10 +710,30 @@ function synthesizeSse(res, body, provider, normalized) {
       completed.push(done);
       event({ type: "response.output_item.done", output_index: outputIndex, item: done });
     }
-  }
-
-  event({ type: "response.completed", response: responseShell(body, provider, responseId, completed, "completed", normalized.usage) });
-  res.end();
+  };
+  return {
+    delta,
+    complete(normalized) {
+      begin(normalized.providerId);
+      const alreadyStreamed = Boolean(textItem) && normalized.textWasStreamed === true;
+      finishText();
+      for (const output of normalized.outputs) {
+        if (alreadyStreamed && output.kind === "text") continue;
+        outputItem(output);
+      }
+      event({ type: "response.completed", response: responseShell(body, provider, responseId, completed, "completed", normalized.usage) });
+      res.end();
+    },
+    fail(message, code, tokenUsage) {
+      if (!started) return false;
+      finishText("incomplete");
+      const response = responseShell(body, provider, responseId, completed, "failed", tokenUsage);
+      response.error = { message, code, type: "provider_error" };
+      event({ type: "response.failed", response });
+      res.end();
+      return true;
+    },
+  };
 }
 
 function jsonError(res, statusCode, message, code) {
@@ -654,9 +786,13 @@ async function passNativeResponse(res, upstream) {
  * Serves an OpenAI Responses request using a native Responses, Chat Completions,
  * or Anthropic Messages provider.
  */
-export async function serveProviderResponse(req, res, { provider, apiKey, fetchImpl = fetch }) {
+export async function serveProviderResponse(req, res, { provider, apiKey, fetchImpl = fetch,
+  rtkRuntime, recordAttempt, threadId, discoveryState }) {
   let timeout;
   let disconnected = false;
+  let stream;
+  let totalUsage = usage();
+  const requestId = randomUUID();
   const controller = new AbortController();
   const abort = () => { disconnected = true; controller.abort(); };
   req.once?.("aborted", abort);
@@ -675,6 +811,7 @@ export async function serveProviderResponse(req, res, { provider, apiKey, fetchI
     if (typeof fetchImpl !== "function") throw new RequestError("Provider fetch is unavailable", 500, "provider_configuration_error");
 
     const body = await readJson(req);
+    stream = responseStream(res, body, provider);
     timeout = setTimeout(() => controller.abort(), PROVIDER_TIMEOUT_MS);
     timeout.unref?.();
 
@@ -699,29 +836,114 @@ export async function serveProviderResponse(req, res, { provider, apiKey, fetchI
     }
 
     const items = parseInput(body);
-    const tools = parseTools(body.tools);
+    const declaredTools = parseTools(body.tools, items);
+    const discovery = isGlmProvider(provider) && (body.tool_choice == null || typeof body.tool_choice === "string")
+      ? glmToolDiscovery(declaredTools, items, discoveryState) : null;
+    let tools = discovery?.tools() ?? declaredTools;
     const upstreamBody = provider.apiType === "chat"
-      ? toChatRequest(body, provider, items, tools)
+      ? toChatRequest(body, provider, items, tools, rtkRuntime)
       : toAnthropicRequest(body, provider, items, tools);
     applyProviderReasoning(upstreamBody, body, provider);
     const path = provider.apiType === "chat" ? "chat/completions" : "messages";
-    const upstream = await providerFetch(fetchImpl, endpoint(provider.baseUrl, path), provider, apiKey, upstreamBody, controller.signal);
-    requireUpstreamOk(upstream);
-    let providerResponse;
-    try { providerResponse = await upstream.json(); }
-    catch { throw new Error("Provider returned invalid JSON"); }
-    const normalized = provider.apiType === "chat"
-      ? fromChat(providerResponse, tools)
-      : fromAnthropic(providerResponse, tools);
-    synthesizeSse(res, body, provider, normalized);
+    // Some chat providers return only hidden reasoning after a tool result.
+    // Never convert that into a successful, empty Responses completion. Retry
+    // the same request, without replaying tools or changing the conversation.
+    let emptyReplies = 0, discoveryRounds = 0;
+    for (let attempt = 0; attempt < 7; attempt += 1) {
+      if (controller.signal.aborted) throw new Error("Provider request aborted");
+      const startedAt = Date.now();
+      const metrics = requestMetrics(upstreamBody);
+      let providerResponse, attemptUsage = null, status = "error", accounted = false;
+      let completedResponse;
+      let textWasStreamed = false;
+      const captureUsage = response => {
+        if (accounted || !response?.usage) return;
+        const value = provider.apiType === "chat" ? chatUsage(response.usage) : anthropicUsage(response.usage);
+        totalUsage = addUsage(totalUsage, value);
+        if (knownUsage(response.usage, provider.apiType)) attemptUsage = value;
+        accounted = true;
+      };
+      try {
+        const upstream = await providerFetch(fetchImpl, endpoint(provider.baseUrl, path), provider, apiKey, upstreamBody, controller.signal);
+        if (!upstream.ok) status = "http_error";
+        requireUpstreamOk(upstream);
+        status = "invalid_response";
+        if (provider.apiType === "chat" && upstream.headers?.get("content-type")?.includes("text/event-stream")) {
+          let pendingText = "", emitting = false;
+          providerResponse = await readChatStream(upstream.body, { onText: delta => {
+            if (controller.signal.aborted) throw new Error("Provider request aborted");
+            if (!emitting) {
+              pendingText += delta;
+              if (!pendingText.trim()) return;
+              emitting = true; textWasStreamed = true; stream.delta(pendingText); pendingText = "";
+            } else stream.delta(delta);
+          } });
+        } else {
+          try { providerResponse = await upstream.json(); }
+          catch { throw new Error("Provider returned invalid JSON"); }
+        }
+        captureUsage(providerResponse);
+        if (controller.signal.aborted) throw new Error("Provider request aborted");
+        const normalized = provider.apiType === "chat"
+          ? fromChat(providerResponse, tools)
+          : fromAnthropic(providerResponse, tools);
+        if (normalized.outputs.length || provider.apiType !== "chat") {
+          status = "completed";
+          const searches = normalized.outputs.filter(output => output.kind === "bridge_search");
+          if (searches.length) {
+            const results = searches.map(output => ({ output, result: discovery.search(output.arguments) }));
+            tools = discovery.tools();
+            const forwarded = normalized.outputs.filter(output => output.kind !== "bridge_search");
+            if (forwarded.some(output => output.kind !== "text")) {
+              completedResponse = { ...normalized, outputs: forwarded, textWasStreamed };
+            } else {
+              if (++discoveryRounds > 4) throw new ProviderOutputError("Provider tool discovery did not settle", "provider_tool_search_limit");
+              upstreamBody.messages.push({ role: "assistant", content: providerResponse.choices[0].message.content ?? null,
+                tool_calls: searches.map(output => ({ id: output.callId, type: "function",
+                  function: { name: output.name, arguments: JSON.stringify(output.arguments) } })) });
+              for (const { output, result } of results) upstreamBody.messages.push({ role: "tool", tool_call_id: output.callId, content: JSON.stringify(result) });
+              const loadedRequest = toChatRequest(body, provider, items, tools, rtkRuntime);
+              upstreamBody.tools = loadedRequest.tools;
+              upstreamBody.tool_choice = loadedRequest.tool_choice;
+            }
+          } else completedResponse = { ...normalized, textWasStreamed };
+        } else {
+          status = "empty";
+        }
+      } catch (error) {
+        // Usage is billable even if normalization fails or a stream is cut short.
+        try { captureUsage(providerResponse ?? error.providerResponse); } catch { attemptUsage = null; }
+        if (controller.signal.aborted) status = disconnected ? "cancelled" : "timeout";
+        else if (error.code === "provider_output_limit") status = "output_limit";
+        else if (error.code === "provider_content_filter") status = "content_filter";
+        throw error;
+      } finally {
+        if (recordAttempt) await recordAttempt({ requestId, attempt: attempt + 1, providerId: provider.id,
+          apiType: provider.apiType, threadId, status, latencyMs: Math.max(0, Date.now() - startedAt),
+          usageKnown: attemptUsage !== null, usage: attemptUsage, pricing: provider.pricing,
+          // Summed attempts would inflate core's current-context measurement.
+          // Extra billable calls are included by the ledger cost reader instead.
+          includedInCoreUsage: Boolean(completedResponse), requestMetrics: metrics });
+      }
+      if (completedResponse) { stream.complete(completedResponse); return; }
+      if (status === "empty" && ++emptyReplies >= 3) {
+        throw new ProviderOutputError("Provider returned no answer or tool call after retrying", "provider_empty_response");
+      }
+    }
+    throw new ProviderOutputError("Provider tool discovery did not settle", "provider_tool_search_limit");
   } catch (error) {
     if (disconnected) return;
+    if (res.headersSent && stream?.fail(
+      error instanceof ProviderOutputError ? error.message : controller.signal.aborted ? "Provider request timed out" : "Provider request failed",
+      error.code ?? (controller.signal.aborted ? "provider_timeout" : "provider_error"), totalUsage)) return;
     if (error instanceof RequestError) {
       jsonError(res, error.statusCode, error.message, error.code);
     } else if (error instanceof ProviderUnavailableError) {
       jsonError(res, 503, "Provider unavailable", "provider_unavailable");
     } else if (controller.signal.aborted) {
       jsonError(res, 504, "Provider request timed out", "provider_timeout");
+    } else if (error instanceof ProviderOutputError) {
+      jsonError(res, 502, error.message, error.code);
     } else {
       jsonError(res, 502, "Provider request failed", "provider_error");
     }

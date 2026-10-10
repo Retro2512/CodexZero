@@ -8,10 +8,20 @@ import { readProviders } from "./provider-store.mjs";
 import { startProviderBridge } from "./provider-bridge.mjs";
 import { PROVIDER_ID, providerModel, findProvider, selectedModel, customThreadParams, customTurnParams } from "./provider-router.mjs";
 import { CacheMonitor } from "./cache-monitor.mjs";
+import { discovery, rtkEnvironment } from "./provider-rtk.mjs";
+import { isPackagedPatchedCore } from "./core-updates.mjs";
+
+export function providerCoreEnvironment(core, { home, environment = process.env } = {}) {
+  if (!isPackagedPatchedCore(core)) return environment;
+  return { ...environment, CODEX_SQLITE_HOME: path.join(home ?? codexZeroHome(environment), "desktop-sqlite") };
+}
 
 /** A transparent JSON RPC shim. Ordinary models never pass through the HTTP bridge. */
 export async function runProviderAppServer({ core, args, home, input = process.stdin, output = process.stdout, error = process.stderr, environment = process.env }) {
   const bridge = await startProviderBridge({ home, environment });
+  environment = providerCoreEnvironment(core, { home, environment });
+  if (isPackagedPatchedCore(core)) await fs.mkdir(environment.CODEX_SQLITE_HOME, { recursive: true });
+  environment = rtkEnvironment(environment, discovery({ environment }));
   const providerConfig = customThreadParams({}, { id: "unused" }, bridge.baseUrl, bridge.token).config[`model_providers.${PROVIDER_ID}`];
   const toml = `{ ${Object.entries(providerConfig).map(([k, v]) => `${k} = ${JSON.stringify(v)}`).join(", ")} }`;
   const appearanceServer = path.resolve(import.meta.dirname, "..", "bin", "sidebar-appearance-mcp.mjs");
@@ -84,7 +94,7 @@ export async function runProviderAppServer({ core, args, home, input = process.s
     const previous = threads.get(threadId);
     if (!previous) throw new Error("Reopen this task before changing its provider");
     const desired = provider ? PROVIDER_ID : "openai";
-    if (previous.modelProvider === desired) return;
+    if (previous.modelProvider === desired && (!provider || previous.model === model)) return;
     if (active.has(threadId)) throw new Error("Wait for the current response before changing providers");
     switching.add(threadId);
     let timer;

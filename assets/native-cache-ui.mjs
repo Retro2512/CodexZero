@@ -2,6 +2,18 @@ const DEFAULT_SETTINGS = Object.freeze({ enabled: false, minutes: 30 });
 const WARMTH_STATES = new Set(["warm", "cooling", "cold", "unknown"]);
 
 const INDICATOR_STYLES = `
+.czci-footer { display: inline-flex; align-items: center; justify-content: flex-end; gap: 12px; min-width: 0; max-width: 100%; flex-wrap: wrap; color: inherit; font: inherit; }
+.czss { display: inline-flex; align-items: center; gap: 12px; font-size: 11px; min-width: 0; flex-wrap: wrap; }
+.czss-button { display: inline-flex; align-items: center; gap: 5px; border: 0; border-radius: 12px; padding: 4px 6px; background: transparent; color: inherit; font: inherit; cursor: pointer; white-space: nowrap; -webkit-app-region: no-drag; }
+.czss-button:hover, .czss-button[aria-expanded="true"] { background: color-mix(in srgb, currentColor 8%, transparent); }
+.czss-button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.czss-icon { width: 15px; height: 15px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.czci-popover.czss-panel { width: max-content; min-width: min(290px, var(--czci-available-width)); max-width: min(380px, var(--czci-available-width)); padding: 16px 18px; border: 0; border-radius: 16px; background: var(--color-background-elevated, color-mix(in srgb, var(--color-background-primary, Canvas) 92%, currentColor 8%)); }
+.czss-heading { display: flex; align-items: center; gap: 8px; margin: 0; padding-bottom: 12px; font-size: 13px; font-weight: 600; }
+.czss-values { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px 20px; border-top: 1px solid color-mix(in srgb, currentColor 10%, transparent); padding-top: 12px; margin: 0; font-size: 12px; }
+.czss-values dt { opacity: .65; }
+.czss-values dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+@media (max-width: 480px) { .czci-footer, .czss { gap: 5px; } }
 .czci, .czci * { box-sizing: border-box; }
 .czci { position: relative; display: inline-flex; align-items: center; gap: 6px; min-width: 0; color: inherit; font: inherit; -webkit-app-region: no-drag; }
 .czci-button { display: grid; place-items: center; width: 28px; height: 28px; margin: 0; border: 0; border-radius: 50%; padding: 2px; color: inherit; background: transparent; cursor: pointer; }
@@ -117,7 +129,94 @@ export function normalizeSnapshot(value) {
       label: typeof cost.label === "string" ? cost.label.trim().slice(0, 80) : "",
     },
     keepWarmSupported: value.keepWarmSupported !== false,
+    sessionStats: normalizeSessionStats(value.sessionStats),
     error: typeof value.error === "string" && value.error ? "Cache status unavailable" : null,
+  };
+}
+
+export function normalizeSessionStats(value) {
+  if (!value || typeof value !== "object") return null;
+  const result = {};
+  for (const key of ["turns", "modelSteps", "llmTimeMs", "toolTimeMs", "avgTtftMs", "tokensPerSecond", "totalTokens", "inputTokens", "outputTokens", "cachedInputTokens", "cacheHitRate"]) {
+    result[key] = typeof value[key] === "number" && Number.isFinite(value[key]) && value[key] >= 0 ? value[key] : null;
+  }
+  if (result.cacheHitRate != null) result.cacheHitRate = Math.min(1, result.cacheHitRate);
+  return result;
+}
+
+export function sessionDuration(value) {
+  if (value == null) return "…";
+  const seconds = Math.round(value / 1000);
+  return seconds >= 60 ? `${Math.floor(seconds / 60)}m${String(seconds % 60).padStart(2, "0")}s` : `${seconds}s`;
+}
+
+export function sessionRate(value) {
+  return value == null ? "…" : `${Math.round(value)} tok/s`;
+}
+
+function sessionIcon(h) {
+  return h("svg", { className: "czss-icon", viewBox: "0 0 24 24", "aria-hidden": true },
+    h("path", { d: "M4 19a10 10 0 1 1 16 0M12 14l5-6" }));
+}
+
+export function createSessionIndicator(React) {
+  const h = React.createElement;
+  const { useId, useLayoutEffect, useEffect, useRef, useState } = React;
+  return function SessionIndicator({ stats, threadId }) {
+    const id = useId(), button = useRef(null), panel = useRef(null), timer = useRef(null);
+    const [hover, setHover] = useState(false), [pinned, setPinned] = useState(false);
+    const [position, setPosition] = useState(null);
+    const open = hover || pinned;
+    const enter = () => { clearTimeout(timer.current); setHover(true); };
+    const leave = () => { clearTimeout(timer.current); timer.current = setTimeout(() => setHover(false), 140); };
+    const close = () => { clearTimeout(timer.current); setPinned(false); setHover(false); };
+    useEffect(() => { close(); return () => clearTimeout(timer.current); }, [threadId]);
+    useLayoutEffect(() => {
+      if (!open || !panel.current || !button.current) return;
+      panel.current.showPopover?.();
+      const place = () => {
+        const p = panel.current, b = button.current.getBoundingClientRect();
+        const w = globalThis.window.innerWidth, height = globalThis.window.innerHeight;
+        const zoom = p.currentCSSZoom || 1;
+        p.style.setProperty("--czci-available-width", `${Math.max(0, w - 20) / zoom}px`);
+        p.style.setProperty("--czci-available-height", `${Math.max(0, height - 20) / zoom}px`);
+        const rect = p.getBoundingClientRect();
+        setPosition({ left: Math.max(10, Math.min(b.left, w - rect.width - 10)) / zoom,
+          top: Math.max(10, Math.min(b.top - rect.height - 6 >= 10 ? b.top - rect.height - 6 : b.bottom + 6, height - rect.height - 10)) / zoom });
+      };
+      place();
+      globalThis.window.addEventListener("resize", place);
+      globalThis.window.addEventListener("scroll", place, true);
+      const observer = typeof ResizeObserver === "function" ? new ResizeObserver(place) : null;
+      observer?.observe(panel.current);
+      observer?.observe(button.current);
+      return () => { globalThis.window.removeEventListener("resize", place); globalThis.window.removeEventListener("scroll", place, true); observer?.disconnect(); };
+    }, [open]);
+    useEffect(() => {
+      if (!open) return;
+      const dismiss = e => { if (!panel.current?.contains(e.target) && !button.current?.contains(e.target)) close(); };
+      const escape = e => { if (e.key === "Escape") { e.preventDefault(); close(); } };
+      globalThis.document.addEventListener("pointerdown", dismiss, true);
+      globalThis.document.addEventListener("keydown", escape, true);
+      return () => { globalThis.document.removeEventListener("pointerdown", dismiss, true); globalThis.document.removeEventListener("keydown", escape, true); };
+    }, [open]);
+    if (!stats) return null;
+    const summary = `${stats.turns ?? 0} turns · ${stats.modelSteps ?? 0} steps`;
+    return h("div", { className: "czss" },
+      h("button", { type: "button", ref: button, className: "czss-button", "aria-label": `Session statistics, ${summary}`, "aria-expanded": open, "aria-controls": id, "aria-haspopup": "dialog",
+        onMouseEnter: enter, onMouseLeave: leave, onFocus: enter, onBlur: leave,
+        onClick: () => { if (pinned) close(); else { setPinned(true); setHover(false); } } }, sessionIcon(h), summary),
+      open ? h("div", { id, ref: panel, className: "czci-popover czss-panel", role: "dialog", "aria-label": "Session statistics", popover: "manual", onMouseEnter: enter, onMouseLeave: leave,
+        style: position ? { left: `${position.left}px`, top: `${position.top}px` } : { visibility: "hidden", left: "10px", top: "10px" } },
+        h("p", { className: "czss-heading" }, sessionIcon(h), "Session statistics"),
+        h("dl", { className: "czss-values" },
+          ...[["LLM time", sessionDuration(stats.llmTimeMs)], ["Tool time", sessionDuration(stats.toolTimeMs)],
+            ["Avg time to first token (TTFT)", stats.avgTtftMs == null ? "…" : `${(stats.avgTtftMs / 1000).toFixed(1)}s`],
+            ["Tokens per second (TPS)", sessionRate(stats.tokensPerSecond)],
+            ["Total tokens", stats.totalTokens == null ? "…" : compactNumber(stats.totalTokens)],
+            ["Cache hit", stats.cacheHitRate == null ? "…" : `${Math.round(stats.cacheHitRate * 100)}%`]]
+            .filter(([, value]) => value !== "…")
+            .flatMap(([label, value]) => [h("dt", { key: label }, label), h("dd", { key: `${label}:value` }, value)]))) : null);
   };
 }
 
@@ -172,6 +271,7 @@ function cacheTime(remainingMs) {
 
 export function createCacheIndicator(React) {
   const h = React.createElement;
+  const SessionIndicator = createSessionIndicator(React);
   const { useEffect, useId, useLayoutEffect, useRef, useState } = React;
 
   return function CacheIndicator({ threadId, contextUsage, hostId }) {
@@ -446,7 +546,9 @@ export function createCacheIndicator(React) {
       leaveTimer.current = setTimeout(() => setHovered(false), 160);
     }
 
-    return h("div", {
+    return h("div", { className: "czci-footer" },
+    h(SessionIndicator, { stats: local ? snapshot.sessionStats : null, threadId }),
+    h("div", {
       className: "czci",
       "data-warmth": displayedWarmth,
       "data-alert": String(cacheAlert),
@@ -512,7 +614,7 @@ export function createCacheIndicator(React) {
         ),
         snapshot.error ? h("p", { className: "czci-error", role: "status" }, snapshot.error) : null,
       ) : null,
-    );
+    ));
   };
 }
 

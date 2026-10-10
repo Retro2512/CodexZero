@@ -3,16 +3,18 @@
 // environment as on Windows. Configure it before the application reads it.
 const os = require("node:os");
 const path = require("node:path");
+const fs = require("node:fs");
 
 if (process.platform === "darwin" && process.env.CODEX_ZERO_DESKTOP !== "1") {
   const root = path.join(process.resourcesPath, "codexzero");
   const home = os.homedir();
   const codexHome = process.env.CODEX_HOME?.trim() || path.join(home, ".codex");
+  const patchedCore = path.join(root, "provider-runtime", "codex-zero-core");
   Object.assign(process.env, {
     CODEX_ZERO_DESKTOP: "1",
     CODEX_CLI_PATH: path.join(root, "provider-runtime", "codex-custom-models"),
     CODEX_APP_SERVER_FORCE_CLI: "1",
-    CODEX_ZERO_PROVIDER_CORE: path.join(process.resourcesPath, "codex"),
+    CODEX_ZERO_PROVIDER_CORE: fs.existsSync(patchedCore) ? patchedCore : path.join(process.resourcesPath, "codex"),
     CODEX_ZERO_LAUNCH_ROOT: path.resolve(process.resourcesPath, "..", ".."),
     // Reuse the existing Codex home. Chromium keeps its own separate profile.
     CODEX_HOME: codexHome

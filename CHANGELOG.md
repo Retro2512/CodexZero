@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.0
+
+* Added session statistics beside the context controls, with turns, steps, timing, token totals and cache hits.
+* Updated the compiled core to Codex 0.162.1.
+* Improved custom model streaming, tool discovery and usage accounting.
+* Fixed missing tasks, sidebar ordering and project assignments.
+* Improved custom model switching and compaction.
+
 ## 0.9.3
 
 * Added GPT 6.1 Sol support on Windows.
