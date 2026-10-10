@@ -10,6 +10,7 @@ import { sanitizedChildEnvironment } from "../src/core-compatibility.mjs";
 import { saveProviders } from "../src/provider-store.mjs";
 import { discovery, rtkGuidance } from "../src/provider-rtk.mjs";
 import { readCacheSnapshot } from "../src/cache-service.mjs";
+import { isPackagedPatchedCore } from "../src/core-updates.mjs";
 
 const delay = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
 const compactPrompt = "OFFLINE_COMPACTION_SENTINEL Summarize the fixture task and preserve its result.";
@@ -243,6 +244,32 @@ test("GLM core discovers MCP tools, streams live, records attempts and compacts 
   const costSnapshot = await readCacheSnapshot(threadId, providerHome);
   assert.ok(Math.abs(costSnapshot.cost.usd - .03302322) < 1e-12,
     `Displayed cost must match all ledger attempts without inflating current context: ${JSON.stringify(costSnapshot.cost)}`);
+  if (isPackagedPatchedCore(process.env.CODEX_ZERO_TEST_CORE)) {
+    const resumed = await rpcClient.rpc("thread/read", { threadId, includeTurns: true });
+    const rolloutPath = resumed.thread.path;
+    assert.equal(typeof rolloutPath, "string", "Read thread exposes its persisted rollout path");
+    let profiles = [];
+    for (let attempt = 0; attempt < 100; attempt++) {
+      profiles = (await fs.readFile(rolloutPath, "utf8")).trim().split("\n").map(JSON.parse)
+        .filter(row => row.type === "event_msg" && row.payload.turn_profile);
+      if (profiles.length >= 3) break;
+      await delay(25);
+    }
+    assert.ok(profiles.length >= 3, "Every completed fixture turn must persist its timing profile");
+    assert.ok(profiles.every(row => Number.isSafeInteger(row.payload.turn_profile.sampling_ms)
+      && Number.isSafeInteger(row.payload.turn_profile.tool_blocking_ms)
+      && Number.isSafeInteger(row.payload.turn_profile.sampling_request_count)));
+    const stats = (await readCacheSnapshot(threadId, providerHome)).sessionStats;
+    assert.equal(stats.turns, 3);
+    assert.ok(stats.modelSteps >= 4, JSON.stringify(stats));
+    assert.ok(stats.llmTimeMs >= 600, JSON.stringify(stats));
+    assert.ok(stats.toolTimeMs >= 0, JSON.stringify(stats));
+    assert.ok(stats.avgTtftMs >= 0, JSON.stringify(stats));
+    assert.ok(stats.tokensPerSecond > 0, JSON.stringify(stats));
+    assert.ok(stats.totalTokens > 330000, JSON.stringify(stats));
+    assert.ok(stats.cacheHitRate > 0 && stats.cacheHitRate <= 1, JSON.stringify(stats));
+    t.diagnostic(`Persisted session metrics: ${JSON.stringify(stats)}`);
+  }
   if (performRtkProbe) {
     await rpcClient.turn({ threadId, input: input("Run the read only RTK version probe") }).catch(error => { throw mockFailure ?? error; });
     assert.equal(requests.length, 8, "RTK command execution requires exactly one tool call and one final reply");
