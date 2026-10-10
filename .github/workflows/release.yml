@@ -119,11 +119,34 @@ jobs:
           CARGO_BUILD_JOBS: 2
           CARGO_PROFILE_RELEASE_DEBUG: 0
         run: |
-          packages=(-p codex-cli -p codex-code-mode-host)
+          packages=(-p codex-cli)
           if [ "${{ runner.os }}" = "Windows" ]; then
             packages+=(-p codex-windows-sandbox -p codex-windows-sandbox-service)
           fi
           cargo build --locked --manifest-path upstream/codex-rs/Cargo.toml "${packages[@]}" --release
+      - name: Verify matching official code mode host
+        if: inputs.reuse_core_release == ''
+        shell: bash
+        run: |
+          case '${{ matrix.asset }}' in
+            windows-x64) target=x86_64-pc-windows-msvc; suffix=.exe; expected=9fd8dbfd188fae23774081dc42297e85c87740697684ccae41c0e522b1d00382 ;;
+            macos-x64) target=x86_64-apple-darwin; suffix=; expected=cd52af8a6884b18239aaf36d0c99bc990e7dcf75b0917155474ffde88a111d37 ;;
+            macos-arm64) target=aarch64-apple-darwin; suffix=; expected=1f464a2894adbc916e431b6bf19bef2cb485cf7e13e636d42578c581962b3727 ;;
+            linux-x64) target=x86_64-unknown-linux-musl; suffix=; expected=458239ea45c1fc508d89695f180ab352f2834709a8a46929a4466f4f04399ada ;;
+            *) exit 1 ;;
+          esac
+          archive="codex-code-mode-host-$target$suffix.tar.gz"
+          mkdir official-host
+          curl -fL --retry 3 "https://github.com/openai/codex/releases/download/rust-v0.162.1/$archive" -o "official-host/$archive"
+          if command -v sha256sum >/dev/null 2>&1; then
+            actual="$(sha256sum "official-host/$archive" | awk '{print $1}')"
+          else
+            actual="$(shasum -a 256 "official-host/$archive" | awk '{print $1}')"
+          fi
+          test "$actual" = "$expected"
+          tar -xzf "official-host/$archive" -C official-host
+          test -f "official-host/codex-code-mode-host-$target$suffix"
+          mv "official-host/codex-code-mode-host-$target$suffix" "official-host/codex-code-mode-host$suffix"
       - name: Assemble package
         shell: bash
         run: |
@@ -144,11 +167,12 @@ jobs:
             cp "upstream/codex-rs/target/release/${{ matrix.binary }}" \
               "package/dist/${{ matrix.asset }}/$CORE_NAME"
             if [ "${{ runner.os }}" = "Windows" ]; then
-              for companion in codex-code-mode-host codex-command-runner codex-windows-sandbox-setup codex-windows-sandbox-service; do
+              cp official-host/codex-code-mode-host.exe "package/dist/${{ matrix.asset }}/codex-code-mode-host.exe"
+              for companion in codex-command-runner codex-windows-sandbox-setup codex-windows-sandbox-service; do
                 cp "upstream/codex-rs/target/release/$companion.exe" "package/dist/${{ matrix.asset }}/$companion.exe"
               done
             else
-              cp upstream/codex-rs/target/release/codex-code-mode-host "package/dist/${{ matrix.asset }}/codex-code-mode-host"
+              cp official-host/codex-code-mode-host "package/dist/${{ matrix.asset }}/codex-code-mode-host"
             fi
             mkdir -p package/runtime
             cp "$NODE_SOURCE" "package/runtime/$NODE_NAME"
