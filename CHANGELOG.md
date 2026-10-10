@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.1
+
+* Fixed browser control startup.
+
 ## 0.10.0
 
 * Added session statistics beside the context controls, with turns, steps, timing, token totals and cache hits.

@@ -1,9 +1,10 @@
 import { spawn } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import { runProviderAppServer } from "../src/provider-app-server.mjs";
 import { selectUpdatedCore, launchCoreUpdateWorker, isPackagedPatchedCore } from "../src/core-updates.mjs";
+import { resolveProviderCore } from "../src/provider-core-binding.mjs";
 
-const core = process.env.CODEX_ZERO_PROVIDER_CORE;
-if (!core) throw new Error("Launch custom models through CodexZero");
+const core = await resolveProviderCore({ installationRoot: fileURLToPath(new URL("../", import.meta.url)) });
 const args = process.argv.slice(2);
 const packaged = isPackagedPatchedCore(core);
 const index = args.indexOf("app-server");

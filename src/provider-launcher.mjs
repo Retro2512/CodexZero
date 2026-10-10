@@ -5,6 +5,7 @@ import { promisify } from "node:util";
 import { codexZeroHome } from "./paths.mjs";
 import { prepareProviderContextCore } from "./provider-core-context.mjs";
 import { desktopProfileEnvironment } from "./desktop-profile.mjs";
+import { CORE_BINDING_NAME, writeProviderCoreBinding } from "./provider-core-binding.mjs";
 
 const execFileAsync = promisify(execFile);
 
@@ -38,10 +39,11 @@ export async function prepareProviderLauncher(desktopBinary, { home = codexZeroH
   const root = path.join(home, "provider-runtime");
   await fs.mkdir(root, { recursive: true });
   const entry = path.resolve(import.meta.dirname, "..", "bin", "provider-core.mjs");
-  let core = process.env.CODEX_ZERO_PROVIDER_CORE;
+  let core = sourceCore ? null : process.env.CODEX_ZERO_PROVIDER_CORE;
   if (!core) {
     core = await copyProviderRuntime(desktopBinary, { root, sourceCore });
   }
+  await writeProviderCoreBinding(root, core);
   let launcher;
   if (process.platform === "win32") {
     launcher = path.join(root, "codex-custom-models.exe");
@@ -79,6 +81,7 @@ static int Main(string[] args) {
   var p = new ProcessStartInfo(); p.FileName = ${nodeExpression}; p.Arguments = Q(${entryExpression});
   foreach (var a in args) p.Arguments += " " + Q(a);
   p.UseShellExecute = false; p.CreateNoWindow = true;
+  p.EnvironmentVariables["CODEX_ZERO_CORE_BINDING"] = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "${CORE_BINDING_NAME}");
   p.RedirectStandardInput = true; p.RedirectStandardOutput = true; p.RedirectStandardError = true;
   using (var child = Process.Start(p)) {
     Pump(Console.OpenStandardInput(), child.StandardInput.BaseStream, true);
@@ -93,7 +96,7 @@ static int Main(string[] args) {
   } else {
     launcher = path.join(root, "codex-custom-models");
     const quote = value => `'${value.replaceAll("'", "'\\''")}'`;
-    await fs.writeFile(launcher, `#!/bin/sh\nexec ${quote(process.execPath)} ${quote(entry)} "$@"\n`, { mode: 0o700 });
+    await fs.writeFile(launcher, `#!/bin/sh\nbinding_dir="$(cd "$(dirname "$0")" && pwd)"\nCODEX_ZERO_CORE_BINDING="$binding_dir/${CORE_BINDING_NAME}" exec ${quote(process.execPath)} ${quote(entry)} "$@"\n`, { mode: 0o700 });
   }
   return { launcher, core };
 }

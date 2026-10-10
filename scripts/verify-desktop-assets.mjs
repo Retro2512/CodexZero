@@ -18,7 +18,7 @@ export const DESKTOP_ASSETS = Object.freeze([
   "scripts/install-desktop.ps1", "scripts/uninstall-desktop.ps1",
   "scripts/resolve-desktop.ps1", "scripts/desktop-upstream.json", "scripts/build-desktop-setup.ps1",
   "scripts/windows-desktop.iss", "scripts/verify-complete-desktop.mjs",
-  "src/desktop-profile.mjs",
+  "src/desktop-profile.mjs", "src/provider-core-binding.mjs", "scripts/verify-provider-helper.mjs",
   "src/model-refresh-patch.mjs", "src/core-updates.mjs", "src/core-compatibility.mjs",
   "bin/core-update-worker.mjs", "scripts/core-upstream.json",
   "src/sidebar-identity-patch.mjs", "src/sidebar-identity-schema.mjs",

@@ -6,7 +6,7 @@ on:
       version:
         description: CodexZero release version
         required: true
-        default: 0.10.0
+        default: 0.10.1
       reuse_core_release:
         description: Reuse cores only when patches and runtime config match this release; leave blank to rebuild
         required: false
@@ -388,6 +388,7 @@ jobs:
           name: CodexZero ${{ inputs.version }}
           target_commitish: ${{ github.sha }}
           body: |
+            * Fixed browser control startup.
             * Added session statistics with turns, steps, timing, token totals and cache hits.
             * Updated the compiled core to Codex 0.162.1.
             * Improved custom model streaming, tool discovery and usage accounting.
