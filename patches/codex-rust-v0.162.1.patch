@@ -4403,7 +4403,7 @@ index e0acae2..c81170e 100644
      super::user_messaging::capture_delivery(&result, call_state);
      if result.result.contains_external_context()
 diff --git a/codex-rs/core/src/tools/registry_tests.rs b/codex-rs/core/src/tools/registry_tests.rs
-index 895d8d4..7f5476f 100644
+index 895d8d4..99defdc 100644
 --- a/codex-rs/core/src/tools/registry_tests.rs
 +++ b/codex-rs/core/src/tools/registry_tests.rs
 @@ -593,7 +593,8 @@ async fn write_stdin_does_not_expose_default_pre_tool_use_payload() {
@@ -4496,7 +4496,7 @@ index 895d8d4..7f5476f 100644
 +    .await;
 +    let first_history_item = first.item;
 +    session
-+        .record_conversation_items(&turn, &[first_history_item])
++        .record_conversation_items(&turn, turn.model_info(), &[first_history_item])
 +        .await;
 +
 +    let second = AnyToolResult {
@@ -4711,6 +4711,27 @@ index 6a46eb3..8b13e46 100644
          post_tool_use_payload: Some(PostToolUsePayload {
              tool_name: HookToolName::new(name),
              tool_use_id: "message-call".to_owned(),
+diff --git a/codex-rs/core/src/unified_exec/async_watcher_tests.rs b/codex-rs/core/src/unified_exec/async_watcher_tests.rs
+index 8443994..ddd325e 100644
+--- a/codex-rs/core/src/unified_exec/async_watcher_tests.rs
++++ b/codex-rs/core/src/unified_exec/async_watcher_tests.rs
+@@ -12,6 +12,7 @@ use crate::unified_exec::UnifiedExecProcessManager;
+ use crate::unified_exec::process::NoopSpawnLifecycle;
+ use crate::unified_exec::process::OutputBuffers;
+ use crate::unified_exec::process::UnifiedExecProcess;
++use crate::unified_exec::process_manager::OutputCollectionMode;
+ use codex_protocol::items::CommandExecutionStatus;
+ use codex_protocol::items::TurnItem;
+ use codex_protocol::protocol::Event;
+@@ -95,7 +96,7 @@ async fn completed_output_preserves_bytes_before_subscription(
+     let model_output = UnifiedExecProcessManager::collect_output_until_deadline(
+         process.output_handles(),
+         /*pause_state*/ None,
+-        Instant::now(),
++        OutputCollectionMode::UntilDeadline(Instant::now()),
+     )
+     .await;
+     assert_eq!(model_output.to_bytes(), b"early\n");
 diff --git a/codex-rs/core/src/unified_exec/mod.rs b/codex-rs/core/src/unified_exec/mod.rs
 index 28af9b0..fec4a16 100644
 --- a/codex-rs/core/src/unified_exec/mod.rs
@@ -4923,7 +4944,7 @@ index 2940235..31bfec7 100644
                  StopReason::Deadline => "deadline",
                  StopReason::PostExitDeadline => "post_exit_deadline",
 diff --git a/codex-rs/core/src/unified_exec/process_manager_tests.rs b/codex-rs/core/src/unified_exec/process_manager_tests.rs
-index ce56681..d33dbdf 100644
+index ce56681..1a39c30 100644
 --- a/codex-rs/core/src/unified_exec/process_manager_tests.rs
 +++ b/codex-rs/core/src/unified_exec/process_manager_tests.rs
 @@ -360,7 +360,7 @@ async fn output_collection_stays_bounded_across_repeated_drains() {
@@ -4935,13 +4956,13 @@ index ce56681..d33dbdf 100644
      );
      let produce = async {
          for chunk in chunks {
-@@ -393,6 +393,40 @@ async fn output_collection_stays_bounded_across_repeated_drains() {
+@@ -393,6 +393,41 @@ async fn output_collection_stays_bounded_across_repeated_drains() {
      assert_eq!(output_buffer.lock().await.transcript, expected);
  }
  
 +#[tokio::test]
 +async fn output_collection_can_return_on_first_output() {
-+    let output_buffer = Arc::new(tokio::sync::Mutex::new(HeadTailBuffer::<1024>::default()));
++    let output_buffer = Arc::new(tokio::sync::Mutex::new(OutputBuffers::<1024>::default()));
 +    let output_notify = Arc::new(Notify::new());
 +    let output_closed = Arc::new(AtomicBool::new(false));
 +    let output_closed_notify = Arc::new(Notify::new());
@@ -4970,13 +4991,14 @@ index ce56681..d33dbdf 100644
 +
 +    let (collected, ()) = tokio::join!(collect, produce);
 +    assert_eq!(collected.to_bytes(), b"ready");
-+    assert_eq!(output_buffer.lock().await.to_bytes(), b"later");
++    assert_eq!(output_buffer.lock().await.pending.to_bytes(), b"later");
++    assert_eq!(output_buffer.lock().await.transcript.to_bytes(), b"readylater");
 +}
 +
  #[tokio::test]
  async fn output_collection_preserves_omissions_from_drained_buffer() {
      let mut buffered_output = OutputBuffers::<10>::default();
-@@ -418,7 +452,7 @@ async fn output_collection_preserves_omissions_from_drained_buffer() {
+@@ -418,7 +453,7 @@ async fn output_collection_preserves_omissions_from_drained_buffer() {
      let collected = UnifiedExecProcessManager::collect_output_until_deadline(
          &output,
          /*pause_state*/ None,
@@ -5025,7 +5047,7 @@ index 0d4866d..c43c016 100644
                  turn_id,
                  last_agent_message: None,
 diff --git a/codex-rs/core/tests/suite/unified_exec.rs b/codex-rs/core/tests/suite/unified_exec.rs
-index a6e5161..ba7ba10 100644
+index a6e5161..b4fb409 100644
 --- a/codex-rs/core/tests/suite/unified_exec.rs
 +++ b/codex-rs/core/tests/suite/unified_exec.rs
 @@ -1862,6 +1862,100 @@ async fn unified_exec_emits_one_begin_and_one_end_event() -> Result<()> {
@@ -5218,7 +5240,7 @@ index a6e5161..ba7ba10 100644
 +                text_elements: Vec::new(),
 +            }])
 +            .with_thread_settings(ThreadSettingsOverrides {
-+                environments: Some(local_selections(test.config.cwd.clone())),
++                environments: Some(local_requests(test.config.cwd.clone())),
 +                approval_policy: Some(AskForApproval::Never),
 +                sandbox_policy: Some(sandbox_policy),
 +                permission_profile,
