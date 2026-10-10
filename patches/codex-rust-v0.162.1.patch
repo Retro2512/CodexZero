@@ -4727,7 +4727,7 @@ index 28af9b0..fec4a16 100644
  
  pub(crate) struct WriteStdinInteractionEvent<'a> {
 diff --git a/codex-rs/core/src/unified_exec/mod_tests.rs b/codex-rs/core/src/unified_exec/mod_tests.rs
-index 1b8af5b..256e9e4 100644
+index 1b8af5b..45cd784 100644
 --- a/codex-rs/core/src/unified_exec/mod_tests.rs
 +++ b/codex-rs/core/src/unified_exec/mod_tests.rs
 @@ -9,6 +9,8 @@ use crate::session::tests::make_session_and_context;
@@ -4778,6 +4778,17 @@ index 1b8af5b..256e9e4 100644
      )
      .await
      .to_bytes_with_omission_marker();
+@@ -1098,6 +1107,10 @@ async fn stdin_approval_observes_strict_review_enabled_while_queued() -> anyhow:
+             max_output_tokens: None,
+             truncation_policy: TruncationPolicy::Tokens(10_000),
+             interaction_event: None,
++            compact_model_payload: false,
++            lossless_terminal_codec: false,
++            command_aware_projection: false,
++            event_driven_wait: false,
+         },
+     ));
+     let mut task_context = std::task::Context::from_waker(futures::task::noop_waker_ref());
 diff --git a/codex-rs/core/src/unified_exec/process_manager.rs b/codex-rs/core/src/unified_exec/process_manager.rs
 index 2940235..31bfec7 100644
 --- a/codex-rs/core/src/unified_exec/process_manager.rs
