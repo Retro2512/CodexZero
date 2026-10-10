@@ -117,6 +117,7 @@ jobs:
         shell: bash
         env:
           CARGO_BUILD_JOBS: 2
+          CARGO_PROFILE_RELEASE_DEBUG: 0
         run: |
           packages=(-p codex-cli -p codex-code-mode-host)
           if [ "${{ runner.os }}" = "Windows" ]; then
