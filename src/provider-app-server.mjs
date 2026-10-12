@@ -10,6 +10,7 @@ import { PROVIDER_ID, providerModel, findProvider, selectedModel, customThreadPa
 import { CacheMonitor } from "./cache-monitor.mjs";
 import { discovery, rtkEnvironment } from "./provider-rtk.mjs";
 import { isPackagedPatchedCore } from "./core-updates.mjs";
+import { prepareDesktopState } from "./desktop-state-migration.mjs";
 
 export function providerCoreEnvironment(core, { home, environment = process.env } = {}) {
   if (!isPackagedPatchedCore(core)) return environment;
@@ -20,7 +21,10 @@ export function providerCoreEnvironment(core, { home, environment = process.env 
 export async function runProviderAppServer({ core, args, home, input = process.stdin, output = process.stdout, error = process.stderr, environment = process.env }) {
   const bridge = await startProviderBridge({ home, environment });
   environment = providerCoreEnvironment(core, { home, environment });
-  if (isPackagedPatchedCore(core)) await fs.mkdir(environment.CODEX_SQLITE_HOME, { recursive: true });
+  if (isPackagedPatchedCore(core)) {
+    await fs.mkdir(environment.CODEX_SQLITE_HOME, { recursive: true });
+    await prepareDesktopState(core, environment);
+  }
   environment = rtkEnvironment(environment, discovery({ environment }));
   const providerConfig = customThreadParams({}, { id: "unused" }, bridge.baseUrl, bridge.token).config[`model_providers.${PROVIDER_ID}`];
   const toml = `{ ${Object.entries(providerConfig).map(([k, v]) => `${k} = ${JSON.stringify(v)}`).join(", ")} }`;

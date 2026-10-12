@@ -13,6 +13,24 @@ const INDICATOR_STYLES = `
 .czss-values { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px 20px; border-top: 1px solid color-mix(in srgb, currentColor 10%, transparent); padding-top: 12px; margin: 0; font-size: 12px; }
 .czss-values dt { opacity: .65; }
 .czss-values dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+.czss-context { margin-top: 14px; padding-top: 12px; border-top: 1px solid color-mix(in srgb, currentColor 10%, transparent); font-size: 12px; }
+.czss-context summary { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; min-height: 28px; cursor: pointer; list-style: none; }
+.czss-context summary::-webkit-details-marker { display: none; }
+.czss-context summary:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 3px; }
+.czss-context-title { flex: 1; }
+.czss-context-count { font-variant-numeric: tabular-nums; white-space: nowrap; opacity: .7; }
+.czss-chevron { width: 12px; height: 12px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; transition: transform 140ms ease; }
+details[open] > summary > .czss-chevron { transform: rotate(90deg); }
+.czss-context-bar { display: flex; flex-basis: 100%; height: 8px; border-radius: 3px; overflow: hidden; background: color-mix(in srgb, currentColor 8%, transparent); }
+.czss-context-segment { height: 100%; flex: none; }
+.czss-context-rows { display: grid; gap: 9px; padding-top: 12px; }
+.czss-context-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.czss-context-row-label { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.czss-context-row-value { font-variant-numeric: tabular-nums; opacity: .7; white-space: nowrap; }
+.czss-context-dot { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+.czss-context-group summary { min-height: 18px; }
+.czss-context-children { display: grid; gap: 8px; padding: 9px 0 0 16px; }
+@media (prefers-reduced-motion: reduce) { .czss-chevron { transition: none; } }
 @media (max-width: 480px) { .czci-footer, .czss { gap: 5px; } }
 .czci, .czci * { box-sizing: border-box; }
 .czci { position: relative; display: inline-flex; align-items: center; gap: 6px; min-width: 0; color: inherit; font: inherit; -webkit-app-region: no-drag; }
@@ -162,7 +180,7 @@ function sessionIcon(h) {
 export function createSessionIndicator(React) {
   const h = React.createElement;
   const { useId, useLayoutEffect, useEffect, useRef, useState } = React;
-  return function SessionIndicator({ stats, threadId }) {
+  return function SessionIndicator({ stats, threadId, contextUsage }) {
     const id = useId(), button = useRef(null), panel = useRef(null), timer = useRef(null);
     const [hover, setHover] = useState(false), [pinned, setPinned] = useState(false);
     const [position, setPosition] = useState(null);
@@ -200,31 +218,34 @@ export function createSessionIndicator(React) {
       globalThis.document.addEventListener("keydown", escape, true);
       return () => { globalThis.document.removeEventListener("pointerdown", dismiss, true); globalThis.document.removeEventListener("keydown", escape, true); };
     }, [open]);
-    if (!stats) return null;
-    const summary = `${stats.turns ?? 0} turns · ${stats.modelSteps ?? 0} steps`;
+    const contextModel = contextWindowModel(contextUsage);
+    if (!stats && !contextModel) return null;
+    const summary = stats ? `${stats.turns ?? 0} turns · ${stats.modelSteps ?? 0} steps` : `Context ${Math.round(contextModel.percent)}%`;
     return h("div", { className: "czss" },
       h("button", { type: "button", ref: button, className: "czss-button", "aria-label": `Session statistics, ${summary}`, "aria-expanded": open, "aria-controls": id, "aria-haspopup": "dialog",
         onMouseEnter: enter, onMouseLeave: leave, onFocus: enter, onBlur: leave,
         onClick: () => { if (pinned) close(); else { setPinned(true); setHover(false); } } }, sessionIcon(h), summary),
       open ? h("div", { id, ref: panel, className: "czci-popover czss-panel", role: "dialog", "aria-label": "Session statistics", popover: "manual", onMouseEnter: enter, onMouseLeave: leave,
+        onFocus: enter, onBlur: e => { if (!e.currentTarget.contains(e.relatedTarget)) leave(); },
         style: position ? { left: `${position.left}px`, top: `${position.top}px` } : { visibility: "hidden", left: "10px", top: "10px" } },
         h("p", { className: "czss-heading" }, sessionIcon(h), "Session statistics"),
-        h("dl", { className: "czss-values" },
+        stats ? h("dl", { className: "czss-values" },
           ...[["LLM time", sessionDuration(stats.llmTimeMs)], ["Tool time", sessionDuration(stats.toolTimeMs)],
             ["Avg time to first token (TTFT)", stats.avgTtftMs == null ? "…" : `${(stats.avgTtftMs / 1000).toFixed(1)}s`],
             ["Tokens per second (TPS)", sessionRate(stats.tokensPerSecond)],
             ["Total tokens", stats.totalTokens == null ? "…" : compactNumber(stats.totalTokens)],
             ["Cache hit", stats.cacheHitRate == null ? "…" : `${Math.round(stats.cacheHitRate * 100)}%`]]
             .filter(([, value]) => value !== "…")
-            .flatMap(([label, value]) => [h("dt", { key: label }, label), h("dd", { key: `${label}:value` }, value)]))) : null);
+            .flatMap(([label, value]) => [h("dt", { key: label }, label), h("dd", { key: `${label}:value` }, value)])) : null,
+        renderContextWindow(h, contextUsage, threadId)) : null);
   };
 }
 
-function normalizeContext(value) {
+export function normalizeContext(value) {
   const source = value && typeof value === "object" ? value : {};
-  const suppliedPercent = Number(source.percent);
-  const usedTokens = Number(source.usedTokens);
-  const contextWindow = Number(source.contextWindow);
+  const suppliedPercent = source.percent == null ? NaN : Number(source.percent);
+  const usedTokens = source.usedTokens == null ? NaN : Number(source.usedTokens);
+  const contextWindow = source.contextWindow == null ? NaN : Number(source.contextWindow);
   const inferredPercent = Number.isFinite(usedTokens) && Number.isFinite(contextWindow) && contextWindow > 0
     ? usedTokens / contextWindow * 100
     : 0;
@@ -233,6 +254,74 @@ function normalizeContext(value) {
     usedTokens: Number.isFinite(usedTokens) && usedTokens >= 0 ? usedTokens : null,
     contextWindow: Number.isFinite(contextWindow) && contextWindow > 0 ? contextWindow : null,
   };
+}
+
+const CONTEXT_CATEGORIES = [
+  ["messages", "Messages", "#e49d77"], ["systemTools", "System tools", "#a99adc"],
+  ["mcpTools", "MCP tools", "#edc170"], ["skills", "Skills", "#d48bb6"],
+  ["systemPrompt", "System prompt", "#83a8db"], ["mcpServerInstructions", "MCP server instructions", "#87bdbe"],
+  ["memoryFiles", "Memory files", "#91b388"], ["deferredTools", "Deferred tools", "#b5b680"],
+  ["autocompactBuffer", "Autocompact buffer", "#a3a3a3"],
+];
+const contextCount = value => Number.isSafeInteger(value) && value >= 0 ? value : null;
+
+export function contextTokenCount(value) {
+  if (value == null) return "…";
+  if (value >= 1000000) return `${(value / 1000000).toFixed(1).replace(/\.0$/, "")}M`;
+  if (value >= 1000) return `${(value / 1000).toFixed(1).replace(/\.0$/, "")}k`;
+  return Math.round(value).toLocaleString();
+}
+
+/** Accept numeric component accounting only. Missing components are not zero. */
+export function contextWindowModel(value) {
+  const context = normalizeContext(value);
+  if (context.usedTokens == null || context.contextWindow == null) return null;
+  const source = value?.breakdown;
+  const rows = CONTEXT_CATEGORIES.flatMap(([key, label, color]) => {
+    const component = source?.[key];
+    const tokens = contextCount(typeof component === "number" ? component : component?.tokens);
+    if (tokens == null) return [];
+    const children = ["mcpTools", "memoryFiles"].includes(key) && Array.isArray(component?.children)
+      ? component.children.flatMap(child => {
+        const childTokens = contextCount(child?.tokens);
+        const name = typeof child?.name === "string" ? child.name.trim().slice(0, 160) : "";
+        return childTokens != null && name ? [{ label: name, tokens: childTokens }] : [];
+      }) : [];
+    // A breakdown that exceeds its parent is not a usable accounting record.
+    return [{ key, label, color, tokens, children: children.reduce((sum, child) => sum + child.tokens, 0) <= tokens ? children : [] }];
+  });
+  const sum = rows.reduce((total, row) => total + row.tokens, 0);
+  // Autocompact reserve is outside current context use, but inside capacity.
+  const reserve = rows.find(row => row.key === "autocompactBuffer")?.tokens ?? 0;
+  const allocated = sum - reserve;
+  const valid = allocated <= context.usedTokens && context.usedTokens + reserve <= context.contextWindow;
+  const components = valid ? rows : [];
+  const unaccounted = context.usedTokens - (valid ? allocated : 0);
+  if (unaccounted > 0 || !components.length) components.push({ key: "used", label: "Context used", color: "#e49d77", tokens: unaccounted, children: [] });
+  components.push({ key: "free", label: "Free space", color: "color-mix(in srgb, currentColor 12%, transparent)",
+    tokens: Math.max(0, context.contextWindow - context.usedTokens - (valid ? reserve : 0)), children: [] });
+  return { ...context, rows: components };
+}
+
+function renderContextWindow(h, value, threadId) {
+  const model = contextWindowModel(value);
+  if (!model) return null;
+  const chevron = () => h("svg", { className: "czss-chevron", viewBox: "0 0 12 12", "aria-hidden": true }, h("path", { d: "m4 2 4 4-4 4" }));
+  const amount = row => h("span", { className: "czss-context-row-value" }, contextTokenCount(row.tokens));
+  const rowContent = row => [h("span", { className: "czss-context-dot", style: { background: row.color }, "aria-hidden": true }),
+    h("span", { className: "czss-context-row-label" }, row.label), amount(row)];
+  const bar = h("div", { className: "czss-context-bar", role: "img", "aria-label": `Context window ${Math.round(model.percent)}% used` },
+    ...model.rows.filter(row => row.tokens > 0).map(row => h("span", { key: row.key, className: "czss-context-segment", title: `${row.label} ${contextTokenCount(row.tokens)}`,
+      style: { width: `${Math.min(100, row.tokens / model.contextWindow * 100)}%`, background: row.color } })));
+  return h("section", { className: "czss-context", key: threadId },
+    h("details", null,
+      h("summary", null, h("span", { className: "czss-context-title" }, "Context window"),
+        h("span", { className: "czss-context-count" }, `${contextTokenCount(model.usedTokens)} / ${contextTokenCount(model.contextWindow)} (${Math.round(model.percent)}%)`), chevron(), bar),
+      h("div", { className: "czss-context-rows" }, ...model.rows.map(row => row.children.length
+        ? h("details", { className: "czss-context-group", key: row.key }, h("summary", null, ...rowContent(row), chevron()),
+          h("div", { className: "czss-context-children" }, ...row.children.map((child, index) => h("div", { className: "czss-context-row", key: index },
+            h("span", { className: "czss-context-row-label" }, child.label), amount(child)))))
+        : h("div", { className: "czss-context-row", key: row.key }, ...rowContent(row))))));
 }
 
 function compactNumber(value) {
@@ -547,7 +636,7 @@ export function createCacheIndicator(React) {
     }
 
     return h("div", { className: "czci-footer" },
-    h(SessionIndicator, { stats: local ? snapshot.sessionStats : null, threadId }),
+    h(SessionIndicator, { stats: local ? snapshot.sessionStats : null, threadId, contextUsage }),
     h("div", {
       className: "czci",
       "data-warmth": displayedWarmth,

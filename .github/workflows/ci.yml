@@ -5,7 +5,82 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: read
+  actions: read
+
 jobs:
+  core-evidence:
+    runs-on: ubuntu-latest
+    outputs:
+      rebuild: ${{ steps.evidence.outputs.rebuild }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Reuse passing core checks only for identical inputs
+        id: evidence
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { execFileSync } = require('node:child_process');
+            const git = (...args) => execFileSync('git', args, { encoding: 'utf8' });
+            // Only scheduling fields differ between the old and new patch job.
+            function patchContract(source) {
+              const normalized = source.replace(/\r/g, '');
+              const header = normalized.split(/^jobs:\n/m)[0]
+                .replace(/^permissions:\n  contents: read\n  actions: read\n\n/m, '');
+              const job = normalized.match(/^  patch:\n([\s\S]*?)(?=^  [\w-]+:|$(?![\s\S]))/m)?.[1];
+              if (!job) throw new Error('Missing patch job');
+              return header + job.replace(/^    (?:needs|if):.*\n/gm, '').trimEnd();
+            }
+            function releaseContract(source) {
+              const job = source.replace(/\r/g, '').match(/^  core:\n([\s\S]*?)(?=^  [\w-]+:|$(?![\s\S]))/m)?.[1];
+              if (!job) throw new Error('Missing release core job');
+              return job.trimEnd();
+            }
+            function coreInput(file) {
+              return /^(?:patches|config|fixtures|\.cargo)\//.test(file)
+                || /(?:^|\/)(?:Cargo\.(?:toml|lock)|rust-toolchain(?:\.toml)?)$/.test(file)
+                || /\.rs$/.test(file)
+                || /^scripts\/(?:core-upstream\.json|build-provider-local\.ps1)$/.test(file)
+                || /^test\/.*(?:patch|core|upstream-pin).*\.test\.mjs$/.test(file)
+                || (file.startsWith('.github/workflows/') && !['.github/workflows/ci.yml', '.github/workflows/release.yml'].includes(file));
+            }
+            core.setOutput('rebuild', 'true');
+            try {
+              const head = git('rev-parse', 'HEAD').trim();
+              const currentPatch = patchContract(git('show', `${head}:.github/workflows/ci.yml`));
+              const currentRelease = releaseContract(git('show', `${head}:.github/workflows/release.yml`));
+              const { data } = await github.rest.actions.listWorkflowRuns({
+                ...context.repo, workflow_id: 'ci.yml', event: 'push', status: 'success', per_page: 100
+              });
+              for (const run of data.workflow_runs) {
+                const base = run.head_sha;
+                if (!/^[a-f0-9]{40}$/.test(base) || base === head) continue;
+                try {
+                  git('merge-base', '--is-ancestor', base, head);
+                  if (patchContract(git('show', `${base}:.github/workflows/ci.yml`)) !== currentPatch) continue;
+                  if (releaseContract(git('show', `${base}:.github/workflows/release.yml`)) !== currentRelease) continue;
+                  const changed = git('diff', '--name-only', '-z', base, head).split('\0').filter(Boolean);
+                  if (changed.some(coreInput)) continue;
+                  const jobs = await github.paginate(github.rest.actions.listJobsForWorkflowRun, {
+                    ...context.repo, run_id: run.id, filter: 'latest', per_page: 100
+                  });
+                  const verified = ['patch (windows-latest)', 'patch (ubuntu-latest)'].every(name =>
+                    jobs.some(job => job.name === name && job.conclusion === 'success'));
+                  if (!verified) continue;
+                  core.setOutput('rebuild', 'false');
+                  core.info(`Identical core inputs verified by ${run.html_url}`);
+                  break;
+                } catch {
+                  // Missing history or evidence cannot authorize reuse.
+                }
+              }
+            } catch (error) {
+              core.info(`Core evidence unavailable; running full checks: ${error.message}`);
+            }
+
   wrapper:
     strategy:
       matrix:
@@ -38,6 +113,8 @@ jobs:
           & kit\scripts\build-desktop-setup.ps1 -PackageRoot kit -OutputDirectory setup-output
 
   patch:
+    needs: core-evidence
+    if: needs.core-evidence.outputs.rebuild != 'false'
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest]
