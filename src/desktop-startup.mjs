@@ -47,7 +47,8 @@ function waitForClose(child, timeoutMs) {
 
 export async function verifyAppServer(binary, env, {
   timeoutMs = PROBE_TIMEOUT_MS,
-  spawnProcess = spawn
+  spawnProcess = spawn,
+  request = null
 } = {}) {
   const child = spawnProcess(binary, ["app-server", "--stdio"], {
     env,
@@ -90,12 +91,15 @@ export async function verifyAppServer(binary, env, {
             done(failure("Core startup failed", "invalid app-server response", stderr()));
             return;
           }
-          if (message.id !== 1) continue;
+          if (message.id !== 1 && !(request && message.id === 2)) continue;
           if (message.error || !message.result) {
             done(failure("Core startup failed", message.error?.message || "initialize was rejected", stderr()));
             return;
           }
-          child.stdin.write(`${JSON.stringify({ method: "initialized" })}\n`);
+          if (message.id === 1) {
+            child.stdin.write(`${JSON.stringify({ method: "initialized" })}\n`);
+            if (request) { child.stdin.write(`${JSON.stringify({ ...request, id: 2 })}\n`); continue; }
+          }
           done();
           return;
         }
@@ -104,7 +108,7 @@ export async function verifyAppServer(binary, env, {
         child.stdin.write(`${JSON.stringify({
           id: 1,
           method: "initialize",
-          params: { clientInfo: { name: "codex-zero-startup", version: "1" } }
+          params: { clientInfo: { name: "codex-zero-startup", version: "1" }, ...(request ? { capabilities: { experimentalApi: true } } : {}) }
         })}\n`);
       });
     });

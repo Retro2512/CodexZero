@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.10.2
+
+* Restored projects and chat memberships after upgrading.
+* Preserved existing chat history during the repair.
+* Added expandable context usage to session statistics.
+
 ## 0.10.1
 
 * Fixed browser control startup.
