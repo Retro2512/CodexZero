@@ -502,7 +502,12 @@
       "date": "2026-10-30",
       "downloads": 681,
       "kind": "observed"
+    },
+    {
+      "date": "2026-10-31",
+      "downloads": 686,
+      "kind": "observed"
     }
   ],
-  "updated_at": "2026-10-30T13:04:47Z"
+  "updated_at": "2026-10-31T12:42:21Z"
 }
