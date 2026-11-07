@@ -82,7 +82,7 @@ test("stageRelease streams a verified archive into place", async t => {
     throw new Error("unexpected URL");
   };
 
-  const staged = await stageRelease(selected, directory, { fetchImpl });
+  const staged = await stageRelease(selected, directory, { fetchImpl, verifyAttestation: async () => {} });
   assert.equal(staged, path.join(directory, archiveName));
   assert.deepEqual(await fs.readFile(staged), archive);
   assert.deepEqual(requested.map(request => request.url), [selected.checksumUrl, selected.assetUrl]);
@@ -167,7 +167,7 @@ test("each platform updates from its own release package", async t => {
   const payload = Buffer.from("mac package");
   const digest = crypto.createHash("sha256").update(payload).digest("hex");
   const fetchImpl = async url => url.endsWith(".sha256") ? new Response(`${digest}  ./${mac}\n`) : new Response(payload);
-  assert.equal(await stageRelease(selected, directory, { fetchImpl }), path.join(directory, mac));
+  assert.equal(await stageRelease(selected, directory, { fetchImpl, verifyAttestation: async () => {} }), path.join(directory, mac));
   // A checksum for another platform's package is never accepted.
   await assert.rejects(stageRelease(selected, directory, {
     fetchImpl: async url => url.endsWith(".sha256") ? new Response(`${digest}  codex-zero-windows-x64.zip\n`) : new Response(payload),
