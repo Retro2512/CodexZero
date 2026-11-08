@@ -107,7 +107,7 @@ __FONT__  <defs>
 
 CARDS = """<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" role="img" aria-labelledby="t d">
   <title id="t">Fewer tokens, same quality, more perks</title>
-  <desc id="d">Fewer tokens: up to 20 percent fewer per run. Same quality: the same benchmark score, checked on Terminal-Bench and DeepSWE. More perks: any model in one dropdown, live cost per chat, a self-warming cache.</desc>
+  <desc id="d">Fewer tokens: up to 20 percent fewer per run. Same quality: the same benchmark score, checked on Terminal-Bench and DeepSWE. More perks: better performance, live cost per chat, a self-warming cache.</desc>
 __FONT__  <defs>
     <clipPath id="round"><rect width="1200" height="300" rx="16"/></clipPath>
     <linearGradient id="wash" x1="0" y1="0" x2="1" y2="1">
@@ -145,7 +145,7 @@ __FONT__  <defs>
     <path d="M850 57 L850 71 M843 64 L857 64" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round"/>
     <text x="878" y="70" fill="#1e2050" font-size="15" font-weight="800" letter-spacing="1.3">MORE PERKS</text>
     <line x1="836" y1="100" x2="1148" y2="100" stroke="#eceefd"/>
-    <text x="836" y="140" fill="#1e2050" font-size="21" font-weight="700" letter-spacing="-.3">Any model, one dropdown</text>
+    <text x="836" y="140" fill="#1e2050" font-size="21" font-weight="700" letter-spacing="-.3">Better performance</text>
     <line x1="836" y1="164" x2="1148" y2="164" stroke="#f3f4fe"/>
     <text x="836" y="196" fill="#1e2050" font-size="21" font-weight="700" letter-spacing="-.3">Live cost per chat</text>
     <line x1="836" y1="220" x2="1148" y2="220" stroke="#f3f4fe"/>

@@ -20,7 +20,7 @@ Same model, same answers.
 
 <br>
 
-<img src="assets/readme/three-things.svg" alt="Fewer tokens: up to 20% fewer per run. Same quality: the same benchmark score, checked on Terminal-Bench and DeepSWE. More perks: any model in one dropdown, live cost per chat, a self-warming cache." width="900">
+<img src="assets/readme/three-things.svg" alt="Fewer tokens: up to 20% fewer per run. Same quality: the same benchmark score, checked on Terminal-Bench and DeepSWE. More perks: better performance, live cost per chat, a self-warming cache." width="900">
 
 <br>
 
