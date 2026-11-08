@@ -314,6 +314,92 @@ __FONT__  <defs>
 """
 
 
+# --------------------------------------------------------------------------
+# a lighter, faster app: best case gains over the full Codex app
+# --------------------------------------------------------------------------
+
+# label, percent better, pill text, pill colour
+PERF_ROWS = [
+    ("Back to a recent chat",   64, "64% faster",    "#c9ff36"),
+    ("Memory, biggest process", 42, "42% less",      "#b1adff"),
+    ("Window restyle work",     34, "34% less",      "#ff7759"),
+    ("Open a new chat",         26, "26% faster",    "#c9ff36"),
+    ("Tokens used",             17, "17% fewer",     "#c9ff36"),
+    ("CPU use",                 16, "16% less",      "#ff7759"),
+]
+
+# label, value, fill, label colour, value colour
+PERF_TILES = [
+    ("Chats kept loaded",    "2.4x more",  "#3a47ff", "#dfe3fd", "#ffffff"),
+    ("Chats kept ready",     "2.7x more",  "#c9ff36", "#3b4a10", "#171713"),
+    ("Kept ready for",       "20x longer", "#ff7759", "#5a2216", "#171713"),
+    ("Background reporting", "Off",        "#2a2a26", "#c3c2b7", "#c9ff36"),
+]
+
+MARK = (
+    '<path d="M19.76 6.58A16.21 16.21 0 0 1 44.24 6.58A16.21 16.21 0 0 1 59.5 25.72A16.21 16.21 0 0 1 54.06 49.59'
+    'A16.21 16.21 0 0 1 32 60.21A16.21 16.21 0 0 1 9.94 49.59A16.21 16.21 0 0 1 4.5 25.72A16.21 16.21 0 0 1 19.76 6.58Z" fill="url(#cloud)"/>'
+    '<ellipse cx="32" cy="32" rx="6.84" ry="10.8" fill="none" stroke="#fff" stroke-width="3.6"/>'
+    '<path d="M15.44 21.92 L21.2 32 L15.44 42.08" fill="none" stroke="#fff" stroke-width="3.96" stroke-linecap="round" stroke-linejoin="round"/>'
+    '<path d="M48.56 21.92 L42.8 32 L48.56 42.08" fill="none" stroke="#fff" stroke-width="3.96" stroke-linecap="round" stroke-linejoin="round"/>'
+)
+
+
+def performance():
+    rows_top, row_h = 196, 58
+    tiles_top = rows_top + row_h * len(PERF_ROWS) + 22
+    h = tiles_top + 104 + 44
+    track_x, track_w, scale = 340, 590, 70.0
+    out = []
+    out.append('<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="%d" '
+               'viewBox="0 0 1200 %d" role="img" aria-labelledby="t d">' % (h, h))
+    out.append('  <title id="t">CodexZero 0.11.0 against the full Codex app</title>')
+    desc = "; ".join("%s %s" % (r[0], r[2]) for r in PERF_ROWS)
+    tiles = "; ".join("%s %s" % (t[0], t[1].lower()) for t in PERF_TILES)
+    out.append('  <desc id="d">Best case gains over the full Codex app. Back to a recent chat is 2.8 times faster. %s. %s.</desc>'
+               % (desc, tiles))
+    out.append("__FONT__  <defs>")
+    out.append('    <clipPath id="round"><rect width="1200" height="%d" rx="16"/></clipPath>' % h)
+    out.append('    <linearGradient id="cloud" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b1adff"/><stop offset="1" stop-color="#3a47ff"/></linearGradient>')
+    out.append('    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3a47ff"/><stop offset="1" stop-color="#b1adff"/></linearGradient>')
+    out.append('    <radialGradient id="glow" cx="1" cy="0" r="1"><stop offset="0" stop-color="#3a47ff" stop-opacity=".45"/><stop offset="1" stop-color="#3a47ff" stop-opacity="0"/></radialGradient>')
+    out.append('  </defs>')
+    out.append('  <g clip-path="url(#round)">')
+    out.append('    <rect width="1200" height="%d" fill="#171713"/>' % h)
+    out.append('    <rect x="560" y="-120" width="760" height="420" fill="url(#glow)"/>')
+    out.append('  </g>')
+
+    out.append('  <g transform="translate(48 44)" aria-hidden="true">%s</g>' % MARK)
+    out.append('  <text x="128" y="76" fill="#f4f2e9" font-size="28" font-weight="800" letter-spacing="-.4">CodexZero 0.11.0</text>')
+    out.append('  <text x="128" y="104" fill="#b1adff" font-size="18" font-weight="600">Lighter. Faster. Leaner.</text>')
+    out.append('  <text x="1152" y="106" fill="#c9ff36" font-size="88" font-weight="800" letter-spacing="-3" text-anchor="end">2.8x</text>')
+    out.append('  <text x="1152" y="136" fill="#f4f2e9" font-size="17" font-weight="600" text-anchor="end">faster back to a recent chat</text>')
+    out.append('  <line x1="48" y1="162" x2="1152" y2="162" stroke="#2c2c2a"/>')
+    out.append('  <text x="48" y="186" fill="#898781" font-size="11" font-weight="800" letter-spacing="1.4">BETTER THAN THE FULL CODEX APP</text>')
+
+    for i, (label, pct, pill, colour) in enumerate(PERF_ROWS):
+        mid = rows_top + i * row_h + row_h / 2.0 + 6
+        out.append('  <text x="48" y="%.1f" fill="#f4f2e9" font-size="18" font-weight="600">%s</text>' % (mid + 6, label))
+        out.append('  <rect x="%d" y="%.1f" width="%d" height="22" rx="11" fill="#24241f"/>' % (track_x, mid - 11, track_w))
+        out.append('  <rect x="%d" y="%.1f" width="%.1f" height="22" rx="11" fill="url(#bar)"/>'
+                   % (track_x, mid - 11, track_w * pct / scale))
+        out.append('  <rect x="962" y="%.1f" width="190" height="36" rx="18" fill="#24241f" stroke="%s" stroke-opacity=".45"/>'
+                   % (mid - 18, colour))
+        out.append('  <text x="1057" y="%.1f" fill="%s" font-size="18" font-weight="800" text-anchor="middle">%s</text>'
+                   % (mid + 6.5, colour, pill))
+
+    gap = 16
+    w = (1104 - gap * 3) / 4.0
+    for i, (label, value, fill, lc, vc) in enumerate(PERF_TILES):
+        x = 48 + i * (w + gap)
+        out.append('  <rect x="%.1f" y="%d" width="%.1f" height="104" rx="14" fill="%s"/>' % (x, tiles_top, w, fill))
+        out.append('  <text x="%.1f" y="%d" fill="%s" font-size="15" font-weight="600">%s</text>' % (x + 22, tiles_top + 36, lc, label))
+        out.append('  <text x="%.1f" y="%d" fill="%s" font-size="32" font-weight="800" letter-spacing="-.6">%s</text>'
+                   % (x + 22, tiles_top + 80, vc, value))
+    out.append('</svg>')
+    return chr(10).join(out) + chr(10)
+
+
 def retrofit(name):
     """Add the embedded face to an existing hand-authored SVG."""
     path = os.path.join(OUT, name)
@@ -332,6 +418,7 @@ def main():
     write("three-things.svg", CARDS.replace("__FONT__", style))
     write("bench-repeated.svg", chart().replace("__FONT__", style))
     write("extras.svg", EXTRAS.replace("__FONT__", style))
+    write("performance.svg", performance().replace("__FONT__", style))
     for name in ("how-it-works.svg",):
         write(name, retrofit(name).replace("__FONT__", style))
 

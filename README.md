@@ -117,26 +117,11 @@ These live in the CodexZero app.
 
 ## A lighter, faster app
 
-The official Codex app is the full ChatGPT app with Codex inside it. CodexZero keeps the Codex part and takes the rest out.
+**Everything that isn't coding is gone.** ChatGPT chats, Work mode, slides, docs, pets, screen history, extra plugins, analytics and promos are out. Codex, remote access, pairing and voice stay.
 
-**Taken out**
+<img src="assets/readme/performance.svg" alt="CodexZero 0.11.0 against the full Codex app. 2.8x faster back to a recent chat. Back to a recent chat 64% faster, biggest process memory 42% less, window restyle work 34% less, opening a new chat 26% faster, tokens 17% fewer, CPU use 16% less. Chats kept loaded 2.4x more, chats kept ready 2.7x more, kept ready 20x longer, background reporting off." width="900">
 
-- ChatGPT chats and their history, Work mode, and the Codex / ChatGPT switch
-- Slides, docs, sheets and canvas
-- Quick Chat, pets, screen capture and screen history, Sites, and demo tools
-- The Deep Research, writing, Visualize and LaTeX plugins
-- Error reporting, log forwarding and usage analytics
-- Upgrade prompts, announcements and promo pop-ups
-
-**Kept:** everything Codex does, plus remote access, pairing, voice and dictation.
-
-**What that gets you**
-
-- **Faster thread switching.** Going back to a chat you just had open takes about 0.7 seconds instead of about 1.8.
-- **Chats load before you click.** Point at a chat and it starts loading.
-- **Recent chats stay ready.** The last eight stay ready for ten minutes, long ones included.
-- **A lighter sidebar.** Projects you've scrolled past don't slow the window down.
-- **Less running in the background.** The parts that were taken out never load, and error reports and usage analytics are switched off.
+These are our best results on one Windows PC. Slower computers and bigger sidebars have more to gain.
 
 The lighter app is on Windows for now.
 
