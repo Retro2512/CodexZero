@@ -31,18 +31,22 @@ const CSS = `
 .czsi-upload input { position: absolute; width: 1px; height: 1px; opacity: 0; }
 .czsi-check { display: flex; align-items: center; gap: 8px; font-size: 12px; }
 .czsi-error { color: var(--color-text-danger, #b54242); font-size: 12px; }
-.czsi-activity { display: inline-flex; align-items: center; gap: 5px; flex: none; margin-left: 6px; padding: 1px 7px 1px 6px; border-radius: 999px; font-size: 11px; font-weight: 600; line-height: 16px; font-variant-numeric: tabular-nums; white-space: nowrap; vertical-align: middle; }
-.czsi-activity-dot { width: 7px; height: 7px; border-radius: 50%; flex: none; background: currentColor; }
-.czsi-activity[data-state="running"] { color: var(--czsi-hue, currentColor); background: color-mix(in srgb, var(--czsi-hue, currentColor) 14%, transparent); }
-.czsi-activity[data-state="running"] .czsi-activity-dot { animation: czsi-pulse 1.4s ease-in-out infinite; }
-.czsi-activity[data-state="waiting"] { color: #B26A00; background: color-mix(in srgb, #F5A524 20%, transparent); }
+.czsi-activity { display: inline-flex; align-items: baseline; gap: 5px; flex: none; margin-left: 8px; font-family: ui-monospace, "Cascadia Mono", "Cascadia Code", Consolas, monospace; font-size: 11px; font-weight: 500; line-height: 16px; font-variant-numeric: tabular-nums; letter-spacing: -.01em; white-space: nowrap; vertical-align: baseline; }
+.czsi-activity[data-state="running"] { color: var(--czsi-hue, currentColor); }
+.czsi-activity[data-state="waiting"] { color: #B26A00; }
 .dark .czsi-activity[data-state="waiting"], [data-theme="dark"] .czsi-activity[data-state="waiting"] { color: #FFC35A; }
-.czsi-activity[data-state="error"] { color: var(--color-text-danger, #D14343); background: color-mix(in srgb, #E5484D 16%, transparent); }
-[data-czsi-status="running"] [data-app-action-sidebar-thread-row] { background: color-mix(in srgb, var(--czsi-hue) 8%, transparent); }
-[data-czsi-status="waiting"] [data-app-action-sidebar-thread-row] { background: color-mix(in srgb, #F5A524 10%, transparent); box-shadow: inset 2px 0 0 #F5A524; }
+.czsi-activity[data-state="error"] { color: var(--color-text-danger, #D14343); }
+.czsi-glyph { font-weight: 600; }
+.czsi-spin::before { content: "⠋"; display: inline-block; width: 1ch; animation: czsi-spin .8s steps(1) infinite; }
+.czsi-caret { animation: czsi-blink 1.06s steps(1) infinite; }
+.czsi-clock { opacity: .8; }
+[data-czsi-status="running"] [data-app-action-sidebar-thread-row] { background-image: linear-gradient(90deg, transparent, color-mix(in srgb, var(--czsi-hue) 70%, transparent), transparent), linear-gradient(color-mix(in srgb, var(--czsi-hue) 7%, transparent), color-mix(in srgb, var(--czsi-hue) 7%, transparent)); background-size: 35% 1px, 100% 100%; background-repeat: no-repeat; background-position: -60% 100%, 0 0; animation: czsi-scan 2.2s linear infinite; }
+[data-czsi-status="waiting"] [data-app-action-sidebar-thread-row] { background-image: linear-gradient(color-mix(in srgb, #F5A524 10%, transparent), color-mix(in srgb, #F5A524 10%, transparent)); box-shadow: inset 2px 0 0 #F5A524; }
 [data-czsi-status="error"] [data-app-action-sidebar-thread-row] { box-shadow: inset 2px 0 0 #E5484D; }
-@keyframes czsi-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.8); } }
-@media (prefers-reduced-motion: reduce) { .czsi-activity-dot { animation: none !important; } }
+@keyframes czsi-spin { 0% { content: "⠋"; } 10% { content: "⠙"; } 20% { content: "⠹"; } 30% { content: "⠸"; } 40% { content: "⠼"; } 50% { content: "⠴"; } 60% { content: "⠦"; } 70% { content: "⠧"; } 80% { content: "⠇"; } 90% { content: "⠏"; } }
+@keyframes czsi-blink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
+@keyframes czsi-scan { from { background-position: -60% 100%, 0 0; } to { background-position: 160% 100%, 0 0; } }
+@media (prefers-reduced-motion: reduce) { .czsi-spin::before, .czsi-caret, [data-czsi-status] [data-app-action-sidebar-thread-row] { animation: none !important; } }
 /* Off-screen projects skip style and layout work; most of the sidebar is out of view. */
 [data-czsi-project] { content-visibility: auto; contain-intrinsic-size: auto 32px; }
 `;
@@ -274,8 +278,8 @@ export function threadActivity(summary, pendingChildApproval = false) {
   const status = summary?.threadRuntimeStatus;
   const flags = status?.activeFlags ?? status?.active_flags ?? [];
   if (status?.type === "systemError") return { state: "error", label: "Error" };
-  if (flags.includes("waitingOnApproval") || pendingChildApproval) return { state: "waiting", label: "Needs approval" };
-  if (flags.includes("waitingOnUserInput")) return { state: "waiting", label: "Needs answer" };
+  if (flags.includes("waitingOnApproval") || pendingChildApproval) return { state: "waiting", kind: "approval", label: "Needs approval" };
+  if (flags.includes("waitingOnUserInput")) return { state: "waiting", kind: "answer", label: "Needs answer" };
   if (status?.type === "active") return { state: "running", label: "Running" };
   return { state: "idle", label: "" };
 }
@@ -285,6 +289,12 @@ export function elapsedLabel(ms) {
   const minutes = Math.floor(seconds / 60);
   if (minutes < 60) return `${minutes}m ${String(seconds % 60).padStart(2, "0")}s`;
   return `${Math.floor(minutes / 60)}h ${String(minutes % 60).padStart(2, "0")}m`;
+}
+// Terminal-style clock: 0:41, 2:14, 1:02:05.
+export function clockLabel(ms) {
+  const seconds = Math.max(0, Math.floor(ms / 1000));
+  const h = Math.floor(seconds / 3600), m = Math.floor(seconds / 60) % 60, sec = String(seconds % 60).padStart(2, "0");
+  return h ? `${h}:${String(m).padStart(2, "0")}:${sec}` : `${m}:${sec}`;
 }
 const activityStarts = new Map();
 // Starts survive rows scrolling out of view and reset only when the state changes.
@@ -307,18 +317,25 @@ function subscribeTick(callback) {
   };
 }
 const noTick = () => () => {};
+// Reads like a terminal: a spinner while working, a shell prompt while it
+// waits on you, err when it failed. Text only; the row carries the color.
+function activityGlyph(React, activity) {
+  const h = React.createElement;
+  if (activity.state === "running") return h("span", { className: "czsi-glyph czsi-spin" });
+  if (activity.kind === "answer") return h("span", { className: "czsi-glyph" }, ">", h("span", { className: "czsi-caret" }, "_"));
+  if (activity.state === "waiting") return h("span", { className: "czsi-glyph" }, "[y/n]");
+  return h("span", { className: "czsi-glyph" }, "err");
+}
 function ActivityBadge({ React, id, activity }) {
   const live = activity.state === "running" || activity.state === "waiting";
   const now = React.useSyncExternalStore(live ? subscribeTick : noTick, () => tickNow, () => tickNow);
   const started = activityStart(id, activity.state);
-
-
   if (activity.state === "idle") return null;
-  const elapsed = live && started != null ? elapsedLabel(Math.max(now, started) - started) : "";
-  const text = activity.state === "running" ? elapsed : live ? `${activity.label} · ${elapsed}` : activity.label;
-  return React.createElement("span", { className: "czsi-activity", "data-state": activity.state, role: "status",
-    "aria-label": live ? `${activity.label} for ${elapsed}` : activity.label, title: live ? `${activity.label} for ${elapsed}` : activity.label },
-    React.createElement("span", { className: "czsi-activity-dot", "aria-hidden": "true" }), text);
+  const span = live && started != null ? Math.max(now, started) - started : 0;
+  const spoken = live ? `${activity.label} for ${elapsedLabel(span)}` : activity.label;
+  return React.createElement("span", { className: "czsi-activity", "data-state": activity.state, role: "status", "aria-label": spoken, title: spoken },
+    React.createElement("span", { "aria-hidden": "true", style: { display: "contents" } }, activityGlyph(React, activity),
+      live ? React.createElement("span", { className: "czsi-clock" }, clockLabel(span)) : null));
 }
 
 // Resting the pointer on a thread starts loading it so the click lands on a

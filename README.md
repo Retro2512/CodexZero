@@ -6,7 +6,7 @@
 [![Release](https://img.shields.io/github/v/release/Retro2512/CodexZero?display_name=tag&color=00a240&labelColor=3a3d6b)](https://github.com/Retro2512/CodexZero/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-6f739c?labelColor=3a3d6b)](LICENSE)
 
-**[Install](#install) &nbsp;·&nbsp; [The numbers](#the-numbers) &nbsp;·&nbsp; [What it adds](#what-it-adds) &nbsp;·&nbsp; [How it works](#how-it-works)**
+**[Install](#install) &nbsp;·&nbsp; [The numbers](#the-numbers) &nbsp;·&nbsp; [What it adds](#what-it-adds) &nbsp;·&nbsp; [A lighter app](#a-lighter-faster-app) &nbsp;·&nbsp; [How it works](#how-it-works)**
 
 </div>
 
@@ -107,9 +107,38 @@ Every tool we could get running, on the same workload, against stock Codex. Rows
 **See what a chat costs while you're in it.** The ring shows live cost and how warm your cache is. Turn on *Keep warm* and it tops the cache up while you're idle.
 <br><sub>Settings → Agent → Context cache · [cache behaviour and pricing](docs/cache-research.md)</sub>
 
-**Give projects and chats their own colors and icons.** Edit them from the sidebar.
+**Every project gets its own color, and every chat an icon for what it's about.** They show up instantly, without using your model. Change any of them from the sidebar.
+
+**See what every chat is doing at a glance.** A running chat shows a spinner and how long it has been going. One waiting on you shows `[y/n]` for an approval or `>_` for a question, with how long it has waited. A failed one shows `err`.
 
 These live in the CodexZero app.
+
+<br>
+
+## A lighter, faster app
+
+The official Codex app is the full ChatGPT app with Codex inside it. CodexZero keeps the Codex part and takes the rest out.
+
+**Taken out**
+
+- ChatGPT chats and their history, Work mode, and the Codex / ChatGPT switch
+- Slides, docs, sheets and canvas
+- Quick Chat, pets, screen capture and screen history, Sites, and demo tools
+- The Deep Research, writing, Visualize and LaTeX plugins
+- Error reporting, log forwarding and usage analytics
+- Upgrade prompts, announcements and promo pop-ups
+
+**Kept:** everything Codex does, plus remote access, pairing, voice and dictation.
+
+**What that gets you**
+
+- **Faster thread switching.** Going back to a chat you just had open takes about 0.7 seconds instead of about 1.8.
+- **Chats load before you click.** Point at a chat and it starts loading.
+- **Recent chats stay ready.** The last eight stay ready for ten minutes, long ones included.
+- **A lighter sidebar.** Projects you've scrolled past don't slow the window down.
+- **Less running in the background.** The parts that were taken out never load, and error reports and usage analytics are switched off.
+
+The lighter app is on Windows for now.
 
 <br>
 

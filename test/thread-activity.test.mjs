@@ -21,8 +21,8 @@ test("thread activity distinguishes running, waiting, failed and idle threads", 
   const { threadActivity } = await loadIdentity(t);
   const status = threadRuntimeStatus => ({ threadRuntimeStatus });
   assert.equal(threadActivity(status({ type: "active", activeFlags: [] })).state, "running");
-  assert.deepEqual(threadActivity(status({ type: "active", activeFlags: ["waitingOnApproval"] })), { state: "waiting", label: "Needs approval" });
-  assert.deepEqual(threadActivity(status({ type: "active", activeFlags: ["waitingOnUserInput"] })), { state: "waiting", label: "Needs answer" });
+  assert.deepEqual(threadActivity(status({ type: "active", activeFlags: ["waitingOnApproval"] })), { state: "waiting", kind: "approval", label: "Needs approval" });
+  assert.deepEqual(threadActivity(status({ type: "active", activeFlags: ["waitingOnUserInput"] })), { state: "waiting", kind: "answer", label: "Needs answer" });
   assert.equal(threadActivity(status({ type: "idle" }), true).label, "Needs approval");
   assert.equal(threadActivity(status({ type: "systemError" })).state, "error");
   for (const value of [{ type: "idle" }, { type: "notLoaded" }, undefined]) assert.equal(threadActivity(status(value)).state, "idle");
@@ -35,6 +35,14 @@ test("elapsed time reads naturally at every scale", async t => {
   assert.equal(elapsedLabel(42_900), "42s");
   assert.equal(elapsedLabel(134_000), "2m 14s");
   assert.equal(elapsedLabel(3_725_000), "1h 02m");
+});
+
+test("the row clock reads like a terminal timer", async t => {
+  const { clockLabel } = await loadIdentity(t);
+  assert.equal(clockLabel(-5), "0:00");
+  assert.equal(clockLabel(41_900), "0:41");
+  assert.equal(clockLabel(134_000), "2:14");
+  assert.equal(clockLabel(3_725_000), "1:02:05");
 });
 
 test("activity start survives rerenders and resets when the state changes", async t => {

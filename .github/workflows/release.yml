@@ -6,7 +6,7 @@ on:
       version:
         description: CodexZero release version
         required: true
-        default: 0.10.2
+        default: 0.11.0
       reuse_core_release:
         description: Reuse cores only when patches and runtime config match this release; leave blank to rebuild
         required: false
@@ -388,9 +388,13 @@ jobs:
           name: CodexZero ${{ inputs.version }}
           target_commitish: ${{ github.sha }}
           body: |
-            * Restored projects and chat memberships after upgrading.
-            * Preserved existing chat history during the repair.
-            * Added expandable context usage to session statistics.
+            * The Windows app is now Codex only. ChatGPT chats, Work mode, slides, docs, sheets, Quick Chat, pets, screen history and promotions are gone. Remote, pairing and voice stay.
+            * Error reports and usage analytics are switched off.
+            * Switching threads is much faster. Going back to a recent thread takes about 0.7 seconds instead of about 1.8.
+            * Threads start loading when you point at them, and recent ones stay ready for ten minutes.
+            * Chats in the sidebar show what they're doing: a spinner and timer while running, `[y/n]` or `>_` while waiting on you, `err` if it failed.
+            * Session statistics and the cache are now one control.
+            * Every project gets its own color, and chats get icons for what they're about. No model calls.
 
             Windows, macOS and Linux x64 packages are below. [Install instructions](https://github.com/Retro2512/CodexZero#install).
           files: artifacts/*
