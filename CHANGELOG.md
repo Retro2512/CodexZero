@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.11.0
+
+* Made the desktop app coding only. Removed ChatGPT chats and history, Work mode, slides, docs and sheets, Quick Chat, pets, Appshots, screen history, Sites, toys and demo tools.
+* Removed the Deep Research, user writing, Visualize and LaTeX plugins.
+* Turned off error reporting, log forwarding and product analytics.
+* Removed upgrade prompts, home announcements and promotional modals.
+* Merged session statistics and context cache into one control.
+* Gave every project its own color, and threads clearer icons based on what they do.
+* Sidebar icons and colors now appear instantly and no longer use your model.
+* Threads in the sidebar now show when they are running and for how long, and when they need your approval or answer.
+* Switching threads is much faster. Going back to a recent thread now takes about half a second instead of nearly two.
+* Threads start loading when you point at them, so they open sooner.
+* Recent threads stay ready for longer, including long ones.
+
 ## 0.10.2
 
 * Restored projects and chat memberships after upgrading.

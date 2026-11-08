@@ -1,14 +1,14 @@
 export const PALETTES = Object.freeze([
-  { id: "slate", light: "#66768C", dark: "#A9BAD0" },
-  { id: "blue", light: "#3879BE", dark: "#83BAF1" },
-  { id: "cyan", light: "#18859A", dark: "#78CBDC" },
-  { id: "teal", light: "#188779", dark: "#78D0BD" },
-  { id: "green", light: "#4A8A48", dark: "#A4D699" },
-  { id: "lime", light: "#768B35", dark: "#C2D780" },
-  { id: "amber", light: "#A77928", dark: "#E6C57D" },
-  { id: "orange", light: "#B66A39", dark: "#EEAB7E" },
-  { id: "rose", light: "#AE5971", dark: "#E6A2B5" },
-  { id: "violet", light: "#8068AD", dark: "#C3AAE8" },
+  { id: "slate", light: "#5B6B82", dark: "#A7B4C8" },
+  { id: "blue", light: "#2563C9", dark: "#7AAEFF" },
+  { id: "cyan", light: "#0A7F99", dark: "#5ACDE8" },
+  { id: "teal", light: "#0F7F70", dark: "#4FD1B8" },
+  { id: "green", light: "#2E8540", dark: "#7ED68C" },
+  { id: "lime", light: "#5F7F0F", dark: "#B8DB5C" },
+  { id: "amber", light: "#A86A00", dark: "#F5C04E" },
+  { id: "orange", light: "#C2541A", dark: "#FF9C5E" },
+  { id: "rose", light: "#BE3A64", dark: "#FF8DB0" },
+  { id: "violet", light: "#6E4FD0", dark: "#B39DFF" },
 ].map(Object.freeze));
 
 export const CATEGORIES = Object.freeze(["fix", "feature", "question", "chat", "research", "design", "refactor", "test"]);
@@ -246,24 +246,34 @@ function hash(value) {
   return h >>> 0;
 }
 
+// Automatic colors skip the neutral slate so neighbouring projects separate.
+export const AUTOMATIC_PALETTES = Object.freeze(PALETTES.filter(p => p.id !== "slate").map(p => p.id));
+
+export function automaticPalette(seed) {
+  return AUTOMATIC_PALETTES[hash(seed) % AUTOMATIC_PALETTES.length];
+}
+
+const CATEGORY_RULES = [
+  ["fix", /\b(fix(es|ed|ing)?|bugs?|crash(es|ing)?|errors?|broken|repair|issues?|fail(s|ing|ure)?|regressions?|debug|not working|doesn'?t work)\b/],
+  ["test", /\b(tests?|testing|specs?|coverage|verify|e2e|ci)\b/],
+  ["refactor", /\b(refactor(ing)?|clean ?up|restructure|simplify|rename|migrate|upgrade|optimi[sz]e)\b/],
+  ["design", /\b(design|ui|ux|layout|visual|styles?|styling|css|theme|icons?|colou?rs?|animation)\b/],
+  ["research", /\b(research|investigate|explore|analy[sz]e|audit|review|explain|understand|compare|assess|check)\b/],
+  ["question", /\?|^(how|why|what|which|can|should|is|are|does|do)\b/],
+  ["feature", /\b(feature|add|build|implement|create|support|enable|integrate|set ?up|make|write|generate)\b/],
+];
+
+export function categoryFor(title) {
+  const source = typeof title === "string" ? title.toLowerCase().trim() : "";
+  return CATEGORY_RULES.find(([, pattern]) => pattern.test(source))?.[0] ?? "chat";
+}
+
 export function deterministicIdentity(key, { parent, title } = {}) {
   if (typeof key !== "string" || !key || key.length > 1024) throw new TypeError("Identity key is invalid");
-  const source = typeof title === "string" ? title.toLowerCase() : "";
-  const rules = [
-    ["fix", /\b(fix|bug|crash|error|broken|repair)\b/],
-    ["test", /\b(test|spec|coverage|verify)\b/],
-    ["refactor", /\b(refactor|cleanup|restructure)\b/],
-    ["design", /\b(design|ui|ux|layout|visual)\b/],
-    ["research", /\b(research|investigate|explore|analyze|audit)\b/],
-    ["question", /\?|\b(question|how|why|what)\b/],
-    ["feature", /\b(feature|add|build|implement|create)\b/],
-  ];
-  const category = rules.find(([, pattern]) => pattern.test(source))?.[0] ?? "chat";
+  const category = categoryFor(title);
   const seed = typeof parent === "string" ? parent : key;
-  let isProject = false;
-  try { const parsed = JSON.parse(key); isProject = Array.isArray(parsed) && parsed.length >= 3 && parsed[1] === 'project'; } catch { /* Other identity keys are opaque. */ }
   const palette = parent && typeof parent === "object" && PALETTE_IDS.has(parent.palette)
-    ? parent.palette : isProject ? 'slate' : PALETTES[hash(seed) % PALETTES.length].id;
+    ? parent.palette : automaticPalette(seed);
   const tone = parent && typeof parent === "object" && Number.isInteger(parent.tone) && parent.tone >= 0 && parent.tone <= 3
     ? parent.tone : hash(`${seed}:tone`) % 4;
   return { palette, tone, category, iconMode: "preset", drawing: null };

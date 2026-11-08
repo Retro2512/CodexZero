@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { contextTokenCount, contextWindowModel, createSessionIndicator, normalizeContext } from "../assets/native-cache-ui.mjs";
+import { contextTokenCount, contextWindowModel, normalizeContext, sessionPanelContent, sessionSummary } from "../assets/native-cache-ui.mjs";
 
 test("context totals retain native accounting without inventing component counts", () => {
   const model = contextWindowModel({ usedTokens: 804300, contextWindow: 1000000, percent: 80.43 });
@@ -42,13 +42,8 @@ test("missing and invalid context categories are not fabricated as zero", () => 
   assert.deepEqual(invalidChildren.rows[0].children, []);
 });
 
-const React = {
-  createElement: (type, props, ...children) => ({ type, props: props ?? {}, children }),
-  useId: () => "session",
-  useRef: () => ({ current: null }),
-  useState: value => [typeof value === "boolean" ? true : value, () => {}],
-  useEffect: () => {}, useLayoutEffect: () => {},
-};
+const h = (type, props, ...children) => ({ type, props: props ?? {}, children });
+const panel = props => ({ type: "panel", props: {}, children: sessionPanelContent(h, props).filter(Boolean) });
 function nodes(tree) {
   if (!tree || typeof tree !== "object") return [];
   return [tree, ...(tree.children ?? []).flatMap(nodes)];
@@ -59,9 +54,8 @@ function texts(tree) {
   return (tree.children ?? []).map(texts).join(" ");
 }
 
-test("Session statistics contains collapsed accessible context disclosure and usage bar", () => {
-  const render = createSessionIndicator(React);
-  const tree = render({ stats: { turns: 4, modelSteps: 20, totalTokens: 9000 }, threadId: "thread",
+test("the session panel holds a collapsed accessible context disclosure and usage bar", () => {
+  const tree = panel({ stats: { turns: 4, modelSteps: 20, totalTokens: 9000 }, threadId: "thread",
     contextUsage: { usedTokens: 804300, contextWindow: 1000000 } });
   const all = nodes(tree);
   const disclosure = all.find(node => node.type === "details");
@@ -75,12 +69,12 @@ test("Session statistics contains collapsed accessible context disclosure and us
   assert.equal(bar.props["aria-label"], "Context window 80% used");
   assert.equal(bar.children.length, 2);
   assert.equal(bar.children[0].props.style.width, "80.43%");
-  assert.equal(disclosure.children[0].type, "summary");
   assert.ok(nodes(disclosure.children[0]).includes(bar));
+  assert.match(texts(tree), /Session 4 turns · 20 steps/);
 });
 
 test("nested context disclosures appear only for supplied MCP and memory breakdowns", () => {
-  const tree = createSessionIndicator(React)({ stats: { turns: 1, modelSteps: 1 }, threadId: "thread",
+  const tree = panel({ stats: { turns: 1, modelSteps: 1 }, threadId: "thread",
     contextUsage: { usedTokens: 700, contextWindow: 1000,
       breakdown: { mcpTools: { tokens: 30, children: [{ name: "Search", tokens: 30 }] },
         memoryFiles: { tokens: 50, children: [{ name: "AGENTS.md", tokens: 50 }] } } } });
@@ -90,11 +84,23 @@ test("nested context disclosures appear only for supplied MCP and memory breakdo
   assert.match(texts(groups[1]), /Memory files 50\s+AGENTS\.md 50/);
 });
 
-test("context remains accessible before session statistics are available", () => {
-  const render = createSessionIndicator(React);
-  const tree = render({ stats: null, threadId: "new", contextUsage: { usedTokens: 250, contextWindow: 1000 } });
-  assert.match(texts(tree), /Context 25%/);
+test("context, statistics and cache share one panel without duplicate context figures", () => {
+  const tree = panel({ stats: { turns: 1, modelSteps: 6, cacheHitRate: .5 }, threadId: "t",
+    contextUsage: { usedTokens: 250, contextWindow: 1000 },
+    cache: { status: "Cache · Warm", costLabel: "API estimate", costText: "~$0.01", uncachedText: "~$0.02", toggle: null, note: "Cache status unavailable" } });
+  const text = texts(tree);
+  assert.match(text, /1 turn · 6 steps/);
+  assert.equal(text.match(/250 \/ 1k/g).length, 1);
+  assert.match(text, /Cache hit 50%/);
+  assert.match(text, /Cache · Warm/);
+  assert.match(text, /Without cache ~\$0\.02/);
+  const note = nodes(tree).find(node => node.props.className === "czss-note");
+  assert.equal(note.props.role, "status");
+});
+
+test("context remains available before session statistics exist", () => {
+  const tree = panel({ stats: null, threadId: "new", contextUsage: { usedTokens: 250, contextWindow: 1000 } });
   assert.match(texts(tree), /Context window 250 \/ 1k \(25%\)/);
   assert.equal(nodes(tree).filter(node => node.props.className === "czss-values").length, 0);
-  assert.equal(render({ stats: null, contextUsage: null }), null);
+  assert.equal(sessionSummary(null), "");
 });

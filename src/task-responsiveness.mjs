@@ -3,6 +3,15 @@ import { replaceOnce } from "./sidebar-performance.mjs";
 import { openAsar } from "./asar-patch.mjs";
 import { patchSelectionScroll } from "./scroll-scope-performance.mjs";
 
+// The app keeps threads you recently left loaded so returning skips the slow
+// reload. Raise how many stay loaded (the three hour expiry is unchanged).
+const warmThreadLimit = /([\w$]+)=108e5,([\w$]+)=15e3,([\w$]+)=10,/g;
+export function patchWarmThreadLimit(source, limit = 24) {
+  const hits = source.match(warmThreadLimit) ?? [];
+  if (hits.length !== 1) throw new Error("This Codex version needs an updated warm thread patch");
+  return source.replace(warmThreadLimit, (_, ttl, retry, max) => `${ttl}=108e5,${retry}=15e3,${max}=${limit},`);
+}
+
 export function patchTranscriptRetention(source) {
   let result = replaceOnce(source,
     'let r=t(oli,e),i=r.scope,a={materializedTurns:new Map};r.current=a;let o=new Map,s=new Set,c=!0,l=!1,u;',

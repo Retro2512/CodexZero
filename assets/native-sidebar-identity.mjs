@@ -2,21 +2,22 @@ import { PALETTES, CATEGORIES, validateDrawing, validateImage, deterministicIden
 
 const STYLE_ID = "codexzero-sidebar-identity-style";
 const CSS = `
-[data-czsi-project] { --czsi-hue: var(--czsi-light); background: color-mix(in srgb, var(--czsi-hue) 5%, transparent); border-radius: 8px; margin-bottom: 8px; }
+[data-czsi-project] { --czsi-hue: var(--czsi-light); background: color-mix(in srgb, var(--czsi-hue) 7%, transparent); border-radius: 8px; margin-bottom: 8px; }
 [data-czsi-project] [data-czsi-project-title], [data-czsi-project] [data-app-action-sidebar-project-row] span.select-none { font-family: Bahnschrift, "Segoe UI Variable Display", "Segoe UI", sans-serif; font-size: 14px; font-weight: 650; letter-spacing: .1px; }
 [data-czsi-project] [data-czsi-thread] [data-app-action-sidebar-thread-row] { margin-left: 20px; width: calc(100% - 20px); }
-[data-czsi-thread] { --czsi-title: var(--czsi-title-light); }
+[data-czsi-thread] { --czsi-title: var(--czsi-title-light); --czsi-hue: var(--czsi-light); }
 [data-czsi-thread] [data-thread-title] { color: var(--czsi-title); }
 [data-czsi-thread] [data-app-action-sidebar-thread-active="true"] [data-thread-title], [data-czsi-thread] [data-app-action-sidebar-thread-selected="true"] [data-thread-title] { font-weight: 600; }
 [data-czsi-thread] [data-app-action-sidebar-thread-active="true"], [data-czsi-thread] [data-app-action-sidebar-thread-selected="true"] { position: relative; background: color-mix(in srgb, currentColor 11%, transparent); }
 [data-czsi-thread] [data-app-action-sidebar-thread-active="true"]::before, [data-czsi-thread] [data-app-action-sidebar-thread-selected="true"]::before { content: ""; position: absolute; left: 0; top: calc(50% - 8px); width: 2px; height: 16px; border-radius: 2px; background: currentColor; }
 .dark [data-czsi-project], [data-theme="dark"] [data-czsi-project] { --czsi-hue: var(--czsi-dark); }
-.dark [data-czsi-thread], [data-theme="dark"] [data-czsi-thread] { --czsi-title: var(--czsi-title-dark); }
+.dark [data-czsi-thread], [data-theme="dark"] [data-czsi-thread] { --czsi-title: var(--czsi-title-dark); --czsi-hue: var(--czsi-dark); }
+[data-czsi-project-icon] .czsi-icon svg path { fill: color-mix(in srgb, currentColor 24%, transparent); }
 .dark [data-czsi-project-icon], [data-theme="dark"] [data-czsi-project-icon] { --czsi-hue: var(--czsi-dark); }
 .czsi-icon { display: inline-flex; width: 20px; height: 20px; flex: none; align-items: center; justify-content: center; color: var(--czsi-hue, currentColor); }
 .czsi-icon svg { width: 100%; height: 100%; display: block; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .czsi-icon img { width: 100%; height: 100%; display: block; object-fit: contain; }
-.czsi-thread-icon { width: 17px; height: 17px; color: var(--czsi-title, currentColor); }
+.czsi-thread-icon { width: 17px; height: 17px; color: var(--czsi-hue, currentColor); }
 .czsi-editor { display: grid; gap: 12px; margin: 14px 0 4px; color: inherit; font: inherit; }
 .czsi-editor fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
 .czsi-editor legend { padding: 0; margin-bottom: 6px; font-size: 12px; font-weight: 600; }
@@ -30,6 +31,20 @@ const CSS = `
 .czsi-upload input { position: absolute; width: 1px; height: 1px; opacity: 0; }
 .czsi-check { display: flex; align-items: center; gap: 8px; font-size: 12px; }
 .czsi-error { color: var(--color-text-danger, #b54242); font-size: 12px; }
+.czsi-activity { display: inline-flex; align-items: center; gap: 5px; flex: none; margin-left: 6px; padding: 1px 7px 1px 6px; border-radius: 999px; font-size: 11px; font-weight: 600; line-height: 16px; font-variant-numeric: tabular-nums; white-space: nowrap; vertical-align: middle; }
+.czsi-activity-dot { width: 7px; height: 7px; border-radius: 50%; flex: none; background: currentColor; }
+.czsi-activity[data-state="running"] { color: var(--czsi-hue, currentColor); background: color-mix(in srgb, var(--czsi-hue, currentColor) 14%, transparent); }
+.czsi-activity[data-state="running"] .czsi-activity-dot { animation: czsi-pulse 1.4s ease-in-out infinite; }
+.czsi-activity[data-state="waiting"] { color: #B26A00; background: color-mix(in srgb, #F5A524 20%, transparent); }
+.dark .czsi-activity[data-state="waiting"], [data-theme="dark"] .czsi-activity[data-state="waiting"] { color: #FFC35A; }
+.czsi-activity[data-state="error"] { color: var(--color-text-danger, #D14343); background: color-mix(in srgb, #E5484D 16%, transparent); }
+[data-czsi-status="running"] [data-app-action-sidebar-thread-row] { background: color-mix(in srgb, var(--czsi-hue) 8%, transparent); }
+[data-czsi-status="waiting"] [data-app-action-sidebar-thread-row] { background: color-mix(in srgb, #F5A524 10%, transparent); box-shadow: inset 2px 0 0 #F5A524; }
+[data-czsi-status="error"] [data-app-action-sidebar-thread-row] { box-shadow: inset 2px 0 0 #E5484D; }
+@keyframes czsi-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.8); } }
+@media (prefers-reduced-motion: reduce) { .czsi-activity-dot { animation: none !important; } }
+/* Off-screen projects skip style and layout work; most of the sidebar is out of view. */
+[data-czsi-project] { content-visibility: auto; contain-intrinsic-size: auto 32px; }
 `;
 
 let reactContext;
@@ -165,14 +180,19 @@ function familyColors(ident) {
 export function resolveColors(ident, parent) {
   const family = familyColors(parent || ident);
   const tone = Number.isInteger(ident?.tone) && ident.tone >= 0 && ident.tone <= 3 ? ident.tone : 0;
-  const strengths = [.4, .48, .56, .64];
+  const strengths = [.22, .3, .38, .46];
   const light = readable(mix("#20232A", family.light, strengths[tone]), ["#FAF9F7", "#E3E3E7", mix(family.light, "#FAF9F7", .95)], 4.5, "#20232A");
   const dark = readable(mix("#F4F3F5", family.dark, strengths[tone]), ["#191A1C", "#393A40", mix(family.dark, "#191A1C", .95)], 4.5, "#F4F3F5");
   return { light, dark, familyLight: family.light, familyDark: family.dark };
 }
 function identity(kind, id, hostId, title, record, parent) {
   const fallback = deterministicIdentity(key(kind, id, hostId), { title, parent });
-  return { ...fallback, ...record };
+  const merged = { ...fallback, ...record };
+  const manualArt = record?.origins?.drawing === "manual" || record?.origins?.iconMode === "manual";
+  if (merged.iconMode === "custom" && !manualArt) Object.assign(merged, { iconMode: "preset", drawing: null });
+  if (kind === "project" && record?.palette === "slate" && !record.color && record.origins?.palette !== "manual") merged.palette = fallback.palette;
+  if (record?.origins?.category !== "manual") merged.category = fallback.category;
+  return merged;
 }
 function colors(ident, parent) {
   const p = resolveColors(ident, parent);
@@ -248,6 +268,80 @@ export function threadElement(React, NativeComponent, props) {
   installStyle();
   return React.createElement(memoized(React, ThreadComponent, memoThreadComponents), { React, NativeComponent, props, key: props.conversationId });
 }
+// Thread activity at a glance: running with elapsed time, waiting on the user,
+// or failed. One shared ticker runs only while some thread is active.
+export function threadActivity(summary, pendingChildApproval = false) {
+  const status = summary?.threadRuntimeStatus;
+  const flags = status?.activeFlags ?? status?.active_flags ?? [];
+  if (status?.type === "systemError") return { state: "error", label: "Error" };
+  if (flags.includes("waitingOnApproval") || pendingChildApproval) return { state: "waiting", label: "Needs approval" };
+  if (flags.includes("waitingOnUserInput")) return { state: "waiting", label: "Needs answer" };
+  if (status?.type === "active") return { state: "running", label: "Running" };
+  return { state: "idle", label: "" };
+}
+export function elapsedLabel(ms) {
+  const seconds = Math.max(0, Math.floor(ms / 1000));
+  if (seconds < 60) return `${seconds}s`;
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ${String(seconds % 60).padStart(2, "0")}s`;
+  return `${Math.floor(minutes / 60)}h ${String(minutes % 60).padStart(2, "0")}m`;
+}
+const activityStarts = new Map();
+// Starts survive rows scrolling out of view and reset only when the state changes.
+export function activityStart(id, state, now = Date.now()) {
+  if (state !== "running" && state !== "waiting") { activityStarts.delete(id); return null; }
+  const previous = activityStarts.get(id);
+  if (previous?.state === state) return previous.start;
+  activityStarts.set(id, { state, start: now });
+  return now;
+}
+const tickListeners = new Set();
+let tickTimer;
+let tickNow = Date.now();
+function subscribeTick(callback) {
+  tickListeners.add(callback);
+  if (!tickTimer) tickTimer = setInterval(() => { tickNow = Date.now(); for (const listener of tickListeners) listener(); }, 1000);
+  return () => {
+    tickListeners.delete(callback);
+    if (!tickListeners.size && tickTimer) { clearInterval(tickTimer); tickTimer = undefined; }
+  };
+}
+const noTick = () => () => {};
+function ActivityBadge({ React, id, activity }) {
+  const live = activity.state === "running" || activity.state === "waiting";
+  const now = React.useSyncExternalStore(live ? subscribeTick : noTick, () => tickNow, () => tickNow);
+  const started = activityStart(id, activity.state);
+
+
+  if (activity.state === "idle") return null;
+  const elapsed = live && started != null ? elapsedLabel(Math.max(now, started) - started) : "";
+  const text = activity.state === "running" ? elapsed : live ? `${activity.label} · ${elapsed}` : activity.label;
+  return React.createElement("span", { className: "czsi-activity", "data-state": activity.state, role: "status",
+    "aria-label": live ? `${activity.label} for ${elapsed}` : activity.label, title: live ? `${activity.label} for ${elapsed}` : activity.label },
+    React.createElement("span", { className: "czsi-activity-dot", "aria-hidden": "true" }), text);
+}
+
+// Resting the pointer on a thread starts loading it so the click lands on a
+// ready thread. Pressing starts it at once. The app limits how many load.
+const PRELOAD_DWELL_MS = 90;
+function preloadThread(id, hostId) {
+  if (!id || (hostId && hostId !== "local")) return;
+  try { globalThis.codexZeroPreloadThread?.(id, hostId || "local")?.catch?.(() => {}); } catch {}
+}
+function usePreload(React, id, hostId) {
+  const timer = React.useRef(null);
+  React.useEffect(() => () => clearTimeout(timer.current), []);
+  return React.useMemo(() => ({
+    onPointerEnter: event => {
+      if (event.pointerType === "touch") return;
+      clearTimeout(timer.current);
+      timer.current = setTimeout(() => preloadThread(id, hostId), PRELOAD_DWELL_MS);
+    },
+    onPointerLeave: () => clearTimeout(timer.current),
+    onPointerDown: event => { if (event.button === 0) { clearTimeout(timer.current); preloadThread(id, hostId); } },
+  }), [id, hostId]);
+}
+
 function ThreadComponent({ React, NativeComponent, props }) {
   const [ProjectContext] = contexts(React);
   const parent = React.useContext(ProjectContext);
@@ -263,8 +357,13 @@ function ThreadComponent({ React, NativeComponent, props }) {
   const useCustom = !effectiveParent || effectiveParent.customThreadIcons || record?.origins?.drawing === "manual" || record?.origins?.iconMode === "manual";
   const icon = React.useMemo(() => iconFor(React, useCustom ? current : { ...current, iconMode: "preset" }, current.category, id, "czsi-thread-icon"), [React, current, useCustom, id]);
   const styles = React.useMemo(() => colors(current, record?.origins?.color === "manual" ? null : effectiveParent), [current, record?.origins?.color, effectiveParent]);
-  return React.createElement("div", { "data-czsi-thread": id, style: { display: "contents", ...styles } },
-    React.createElement(NativeComponent, { ...props, icon }));
+  const preload = usePreload(React, id, props.hostId);
+  const activity = threadActivity(summary, props.hasPendingChildApproval === true);
+  if (activity.state === "idle" || activity.state === "error") activityStart(id, activity.state);
+  const badge = activity.state === "idle" ? null : React.createElement(ActivityBadge, { React, id, activity });
+  const titleSuffix = badge ? (props.titleSuffix ? React.createElement(React.Fragment, null, props.titleSuffix, badge) : badge) : props.titleSuffix;
+  return React.createElement("div", { "data-czsi-thread": id, "data-czsi-status": activity.state, ...preload, style: { display: "contents", ...styles } },
+    React.createElement(NativeComponent, { ...props, icon, titleSuffix }));
 }
 
 export function parseSvgDrawing(source) {

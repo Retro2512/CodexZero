@@ -1,18 +1,25 @@
 // Dormant data only. Callers must unsubscribe before parking and validate a
 // fresh authoritative reset before exposing retained data to the UI.
-export function estimateRetainedBytes(roots, limit = 8 * 1024 * 1024,
-  { clock = () => performance.now(), maxTimeMs = 3 } = {}) {
-  if (maxTimeMs <= 0) return Infinity;
-  const deadline = clock() + maxTimeMs;
+// Walks protocol data and charges an approximate byte cost. The walk can be
+// resumed, so large transcripts can be measured in small idle slices.
+function createSizeWalker(roots, limit, maxVisited) {
   const seen = new WeakSet();
-  let bytes = 0, visited = 0, scanned = 0;
+  const iterator = roots[Symbol.iterator]();
   const stack = [];
-  for (const root of roots) {
-    stack.push(root);
-    while (stack.length) {
+  let bytes = 0, visited = 0, scanned = 0, rootsDone = false;
+  // Returns a byte count when finished, Infinity when rejected, or null when
+  // the deadline passed first.
+  return function run(clock, deadline) {
+    for (;;) {
+      if (!stack.length) {
+        if (rootsDone) return bytes;
+        const next = iterator.next();
+        if (next.done) { rootsDone = true; continue; }
+        stack.push(next.value);
+      }
       const value = stack.pop();
-      if (++visited > 10000) return Infinity;
-      if ((visited & 7) === 0 && clock() > deadline) return Infinity;
+      if (++visited > maxVisited) return Infinity;
+      if ((visited & 7) === 0 && clock() > deadline) { stack.push(value); visited--; return null; }
       if (typeof value === "string") bytes += 32 + value.length * 2;
       else if (value && typeof value === "object") {
         if (seen.has(value)) continue;
@@ -22,27 +29,52 @@ export function estimateRetainedBytes(roots, limit = 8 * 1024 * 1024,
         const prototype = Object.getPrototypeOf(value);
         if (!Array.isArray(value) && prototype !== Object.prototype && prototype !== null) return Infinity;
         bytes += 256;
-        // Enumerate incrementally so a wide object can stop at the deadline.
         for (const key in value) {
-          if ((++scanned & 7) === 0 && clock() > deadline) return Infinity;
+          ++scanned;
           if (!Object.hasOwn(value, key)) continue;
           const descriptor = Object.getOwnPropertyDescriptor(value, key);
           if (!descriptor || !("value" in descriptor)) return Infinity;
           bytes += 64 + key.length * 2;
           stack.push(descriptor.value);
-          if (stack.length + visited > 10000) return Infinity;
+          if (stack.length + visited > maxVisited) return Infinity;
         }
       } else if (typeof value === "function" || typeof value === "symbol") return Infinity;
       else bytes += 16;
       if (bytes > limit) return Infinity;
     }
-  }
-  return clock() > deadline ? Infinity : bytes;
+  };
+}
+
+// Dormant data only. Callers must unsubscribe before parking and validate a
+// fresh authoritative reset before exposing retained data to the UI.
+export function estimateRetainedBytes(roots, limit = 8 * 1024 * 1024,
+  { clock = () => performance.now(), maxTimeMs = 3, maxVisited = 10000 } = {}) {
+  if (maxTimeMs <= 0) return Infinity;
+  const deadline = clock() + maxTimeMs;
+  const result = createSizeWalker(roots, limit, maxVisited)(clock, deadline);
+  return result == null || clock() > deadline ? Infinity : result;
+}
+
+// Measures in short slices so leaving a long thread never blocks the switch.
+export function estimateRetainedBytesLater(roots, limit, done,
+  { clock = () => performance.now(), sliceMs = 4, maxVisited = 3_000_000,
+    schedule = setTimeout, cancel = clearTimeout } = {}) {
+  const run = createSizeWalker(roots, limit, maxVisited);
+  let timer = null, stopped = false;
+  const step = () => {
+    timer = null;
+    if (stopped) return;
+    const result = run(clock, clock() + sliceMs);
+    if (result == null) timer = schedule(step, 0);
+    else { stopped = true; done(result); }
+  };
+  timer = schedule(step, 0);
+  return () => { stopped = true; if (timer != null) cancel(timer); timer = null; };
 }
 
 export function createTranscriptRetention({ maxEntries = 3, maxBytes = 8 * 1024 * 1024,
-  ttl = 30000, now = () => Date.now(), estimateClock = () => performance.now(),
-  maxEstimateMs = 3, schedule = setTimeout, cancel = clearTimeout } = {}) {
+  maxEntryBytes = maxBytes, ttl = 30000, now = () => Date.now(), estimateClock = () => performance.now(),
+  maxEstimateMs = 3, deferEstimate = false, maxRoots = 200000, schedule = setTimeout, cancel = clearTimeout } = {}) {
   const scopes = new WeakMap();
   const keyFor = key => JSON.stringify([key.hostId, key.threadId]);
   function bucket(scope) {
@@ -56,8 +88,23 @@ export function createTranscriptRetention({ maxEntries = 3, maxBytes = 8 * 1024 
     b.entries.delete(key);
     b.bytes -= entry.bytes;
     cancel(entry.timer);
+    entry.stopEstimate?.();
     if (dispose) entry.dispose();
     return dispose ? undefined : entry.value;
+  }
+  function evictOldest(b) { remove(b, b.entries.keys().next().value, true); }
+  function insert(b, k, value, bytes, dispose) {
+    const entry = { value, bytes, dispose, expires: now() + ttl, timer: null, stopEstimate: null };
+    b.entries.set(k, entry);
+    b.bytes += bytes;
+    try {
+      entry.timer = schedule(() => { if (b.entries.get(k) === entry) remove(b, k, true); }, ttl);
+    } catch (error) {
+      remove(b, k, false);
+      throw error;
+    }
+    entry.timer?.unref?.();
+    return entry;
   }
   return {
     take(scope, key) {
@@ -69,21 +116,28 @@ export function createTranscriptRetention({ maxEntries = 3, maxBytes = 8 * 1024 
       const b = bucket(scope), k = keyFor(key);
       // Same-key replacement must not let an old disposer clear new atoms.
       if (b.entries.has(k)) throw new Error("Transcript already parked");
-       const bytes = estimateRetainedBytes(roots, maxBytes, { clock: estimateClock, maxTimeMs: maxEstimateMs });
-      if (!Number.isFinite(bytes) || bytes > maxBytes || maxEntries < 1 || ttl <= 0) return false;
-      while (b.entries.size >= maxEntries || b.bytes + bytes > maxBytes) {
-        remove(b, b.entries.keys().next().value, true);
+      if (maxEntries < 1 || ttl <= 0) return false;
+      if (!deferEstimate) {
+        const bytes = estimateRetainedBytes(roots, maxEntryBytes, { clock: estimateClock, maxTimeMs: maxEstimateMs });
+        if (!Number.isFinite(bytes) || bytes > maxBytes) return false;
+        while (b.entries.size >= maxEntries || b.bytes + bytes > maxBytes) evictOldest(b);
+        insert(b, k, value, bytes, dispose);
+        return true;
       }
-      const entry = { value, bytes, dispose, expires: now() + ttl, timer: null };
-      b.entries.set(k, entry);
-      b.bytes += bytes;
-      try {
-        entry.timer = schedule(() => { if (b.entries.get(k) === entry) remove(b, k, true); }, ttl);
-      } catch (error) {
-        remove(b, k, false);
-        throw error;
-      }
-      entry.timer?.unref?.();
+      // Collect the roots now, while the projection's atoms are still
+      // readable, then measure them later in idle slices.
+      const list = [];
+      for (const root of roots) if (list.push(root) > maxRoots) return false;
+      while (b.entries.size >= maxEntries) evictOldest(b);
+      const entry = insert(b, k, value, 0, dispose);
+      entry.stopEstimate = estimateRetainedBytesLater(list, maxEntryBytes, bytes => {
+        entry.stopEstimate = null;
+        if (b.entries.get(k) !== entry) return;
+        if (!Number.isFinite(bytes) || bytes > maxEntryBytes) { remove(b, k, true); return; }
+        entry.bytes = bytes;
+        b.bytes += bytes;
+        while (b.bytes > maxBytes && b.entries.size) evictOldest(b);
+      }, { clock: estimateClock, schedule, cancel });
       return true;
     },
     stats(scope) {
@@ -93,7 +147,12 @@ export function createTranscriptRetention({ maxEntries = 3, maxBytes = 8 * 1024 
   };
 }
 
-export const transcriptRetention = createTranscriptRetention();
+// Keep the last eight threads you left ready for ten minutes. Long threads are
+// measured in idle time, so they stay warm too.
+export const transcriptRetention = createTranscriptRetention({
+  maxEntries: 8, maxBytes: 128 * 1024 * 1024, maxEntryBytes: 48 * 1024 * 1024,
+  ttl: 10 * 60 * 1000, deferEstimate: true,
+});
 
 // A full reset must not invalidate every materialized turn if its underlying
 // immutable protocol values are unchanged. Changed/removed turns still rebuild.

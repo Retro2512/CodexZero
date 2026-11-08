@@ -3,7 +3,7 @@ import path from "node:path";
 import http from "node:http";
 import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
 import { IdentityStore } from "./sidebar-identity-store.mjs";
-import { validateIdentityPatch, deterministicIdentity, PALETTES, CATEGORIES } from "./sidebar-identity-schema.mjs";
+import { validateIdentityPatch, deterministicIdentity, automaticPalette, AUTOMATIC_PALETTES, PALETTES, CATEGORIES } from "./sidebar-identity-schema.mjs";
 import { createBrandHintsClient } from "./sidebar-brand-client.mjs";
 import { codexZeroHome } from "./paths.mjs";
 
@@ -17,6 +17,27 @@ function identityComplete(item,record,parent=item.parent){
 function publicIdentity(record){const {image,...rest}=record;return {...rest,...(image?{hasImage:true}:{})};}
 function modelParent(record){const {palette,color,tone,customThreadIcons,iconMode}=record;return {palette,color,tone,customThreadIcons,iconMode};}
 function compactBrand(brand){if(!brand)return null;return {name:brand.name,colors:brand.colors??[],sources:brand.sources??[],hasImage:!!brand.image,...(!brand.image&&brand.icon?.svg?{icon:{source:brand.icon.source,svg:brand.icon.svg.slice(0,1200)}}:{})};}
+// Brand colors must read as a color in the sidebar: not near gray, white or black.
+export function usableBrandColor(value){
+  if(!/^#[0-9a-fA-F]{6}$/.test(value||""))return false;
+  const [r,g,b]=[1,3,5].map(i=>parseInt(value.slice(i,i+2),16)/255),max=Math.max(r,g,b),min=Math.min(r,g,b),light=(max+min)/2;
+  const saturation=max===min?0:(max-min)/(1-Math.abs(2*light-1));
+  return saturation>=.28&&light>=.18&&light<=.86;
+}
+// New projects take their stable automatic color unless another project already
+// uses it. Then the least used color wins, so neighbours stay distinguishable.
+export function choosePalette(key,records){
+  const used=new Map(AUTOMATIC_PALETTES.map(id=>[id,0]));
+  for(const [other,record] of Object.entries(records||{})){
+    if(other===key||!record||record.color)continue;
+    try{if(JSON.parse(other)[1]!=="project")continue;}catch{continue;}
+    if(used.has(record.palette))used.set(record.palette,used.get(record.palette)+1);
+  }
+  const preferred=automaticPalette(key);
+  if(!used.get(preferred))return preferred;
+  const start=AUTOMATIC_PALETTES.indexOf(preferred);
+  return AUTOMATIC_PALETTES.map((_,i)=>AUTOMATIC_PALETTES[(start+i)%AUTOMATIC_PALETTES.length]).reduce((best,id)=>used.get(id)<used.get(best)?id:best,preferred);
+}
 const samePath=(a,b)=>!!a&&!!b&&path.resolve(a).replaceAll("\\","/").toLowerCase()===path.resolve(b).replaceAll("\\","/").toLowerCase();
 function entity(value) {
   if (!value || !["project", "thread"].includes(value.kind) || !safeString(value.id) || !safeString(value.hostId ?? "local")) throw new TypeError("Invalid appearance target");
@@ -70,7 +91,7 @@ export class AppearanceService {
     const key=identityKey(item),before=await scope.store.get(key),patch={};
     const manualIcon=["image","drawing","iconMode","category"].some(field=>before?.origins?.[field]==="manual");
     if(hints.image&&!manualIcon&&(replace||!before?.image))Object.assign(patch,{image:hints.image,iconMode:"asset",drawing:null});
-    if(hints.colors?.length&&before?.origins?.color!=="manual"&&before?.origins?.palette!=="manual"&&(replace||!before?.color))patch.color=hints.colors[0];
+    const brandColor=hints.colors?.find(usableBrandColor);if(brandColor&&before?.origins?.color!=="manual"&&before?.origins?.palette!=="manual"&&(replace||!before?.color))patch.color=brandColor;if(!patch.color&&!before?.color&&!before?.palette&&before?.origins?.palette!=="manual")patch.palette=choosePalette(key,(await scope.store.snapshot()).records);
     if(!Object.keys(patch).length)return {updated:0,reused:!!before?.image};
     const validated=validateIdentityPatch(patch);
     if(this.scope()!==scope||this.closed)return {updated:0,reused:false};
@@ -170,7 +191,7 @@ export class AppearanceService {
     try{const batch=[...this.pending.entries()].slice(0,8);for(const [key,job] of batch){this.pending.delete(key);if(this.scope().id!==job.scopeId)continue;try{const context=await this.titleContext(job.client,job.threadId);if(!context)continue;
       // Preset project tasks need no second model request when the title producer
       // does not support the combined result. Custom artwork still uses the model.
-      if(context.items.length===1&&context.items[0].parent&&!context.items[0].parent.customThreadIcons){const item=context.items[0];await this.accept(context,{items:[{key:item.key,patch:deterministicIdentity(item.key,{parent:item.parent,title:job.title})}]});continue;}
+      await this.accept(context,{items:context.items.map(item=>({key:item.key,patch:deterministicIdentity(item.key,{parent:item.parent,title:job.title})}))});continue;
       const runtime=this.clients.get(job.client.options?.hostId??"local");if(!runtime?.generate)continue;await this.generateContext(context,runtime);}catch{}}}finally{this.draining=false;if(this.pending.size&&!this.timer){this.timer=setTimeout(()=>{this.timer=null;void this.flushAutomatic();},1500);this.timer.unref?.();}}
   }
   async generateContext(context,runtime,model,onRequest=()=>{}){

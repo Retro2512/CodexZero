@@ -157,6 +157,8 @@ test('asset identity persists image and neutral project fallback', async t => {
   const store = new IdentityStore(file);
   await store.update('project', { iconMode: 'asset', image });
   assert.equal((await new IdentityStore(file).get('project')).image, image);
-  assert.equal(deterministicIdentity(JSON.stringify(['host', 'project', 'id'])).palette, 'slate');
+  const automatic = deterministicIdentity(JSON.stringify(['host', 'project', 'id'])).palette;
+  assert.notEqual(automatic, 'slate');
+  assert.equal(deterministicIdentity(JSON.stringify(['host', 'project', 'id'])).palette, automatic);
 });
 

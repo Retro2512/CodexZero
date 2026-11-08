@@ -179,8 +179,9 @@ test("one project reuses its actual image locally without enumerating tasks or t
 });
 test("local only does not call the model and project paths and IDs resolve exactly",async t=>{
  let calls=0;const {service}=await setup(t,{brandHints:async()=>({colors:[],sources:[]}),generate:async()=>{calls++;return {items:[]};}});await service.observe([project]);
- for(const selector of [project.id,project.cwd]){const result=await done(service,await service.backfill({scope:"projects",project:selector,localOnly:true}));assert.equal(result.modelRequests,0);assert.equal(result.skipped,1);}
- assert.equal(calls,0);assert.equal((await service.snapshot()).revision,0);
+ for(const selector of [project.id,project.cwd]){const result=await done(service,await service.backfill({scope:"projects",project:selector,localOnly:true}));assert.equal(result.modelRequests,0);}
+ assert.equal(calls,0);
+ const records=Object.values((await service.snapshot()).records);assert.equal(records.length,1);assert.notEqual(records[0].palette,"slate");assert.equal(records[0].drawing,undefined);
 });
 test("ambiguous project names fail before writes or model requests",async t=>{
  const {service}=await setup(t);await service.observe([project,{...project,id:"other",cwd:"C:/elsewhere"}]);

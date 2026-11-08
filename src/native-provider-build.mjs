@@ -8,12 +8,16 @@ import { openAsar, rewriteAsar } from "./asar-patch.mjs";
 import { codexZeroHome } from "./paths.mjs";
 import { sidebarIdentityReplacements } from "./sidebar-identity-patch.mjs";
 import { patchSidebarRenderer } from "./sidebar-performance.mjs";
-import { patchTranscriptRetention } from "./task-responsiveness.mjs";
+import { patchTranscriptRetention, patchWarmThreadLimit } from "./task-responsiveness.mjs";
+import { patchThreadPreload } from "./thread-preload-patch.mjs";
+import { patchThreadSwitch } from "./thread-switch-patch.mjs";
 import { patchSelectionScroll } from "./scroll-scope-performance.mjs";
 import { patchCopiedBrowserService } from "./browser-discovery-patch.mjs";
+import { patchCopiedBrowserContinuation } from "./browser-continuation-patch.mjs";
 import { patchNotificationBootstrap, patchNotificationMain } from "./notification-routing-patch.mjs";
 import { patchModelRefresh } from "./model-refresh-patch.mjs";
 import { patchThreadVisibilityMain, patchThreadVisibilityRenderer } from "./thread-visibility-patch.mjs";
+import { leanChunkReplacements, patchLeanBootstrap, patchLeanMain, patchLeanRenderer, pruneCopiedDesktop } from "./lean-desktop-patch.mjs";
 
 export async function prepareNativeProviderDesktop(installedDesktop, { home = codexZeroHome() } = {}) {
   if (process.platform !== "win32") throw new Error("Native custom model settings currently require the Windows local build");
@@ -65,6 +69,9 @@ export async function buildNativeProviderApp(installedDesktop, outputRoot) {
     filter: source => source !== archivePath
   });
   await patchCopiedBrowserService(appRoot);
+  await patchCopiedBrowserContinuation(appRoot);
+  // The lean desktop is verified against the pinned Windows package.
+  if (process.platform === "win32") await pruneCopiedDesktop(appRoot);
   const patchedArchive = path.join(appRoot, "resources", "app.asar");
   await rewriteAsar(archivePath, patchedArchive, replacements);
   await verifyAppArchive(patchedArchive, replacements);
@@ -74,6 +81,7 @@ export async function buildNativeProviderApp(installedDesktop, outputRoot) {
 // The CodexZero changes to the official app archive. Every anchor must match
 // exactly once, so a different app version fails instead of half patching.
 export async function nativeAppReplacements(archivePath, { platform = process.platform } = {}) {
+  const lean = platform === "win32";
   const archive = await openAsar(archivePath);
   const assets = path.resolve(import.meta.dirname, "..", "assets");
   const replacements = new Map();
@@ -118,7 +126,8 @@ export async function nativeAppReplacements(archivePath, { platform = process.pl
       main = patchNotificationMain(main);
       replacements.set(".vite/build/native-notification-routing.cjs", await fs.readFile(path.join(assets, "native-notification-routing.cjs")));
     }
-    replacements.set(mainPath, Buffer.from(main));
+    const warmMain = patchWarmThreadLimit(main);
+    replacements.set(mainPath, Buffer.from(lean ? patchLeanMain(warmMain) : warmMain));
     for (const name of ["native-provider-updater.cjs", "native-provider-update-release.cjs"]) {
       replacements.set(`.vite/build/${name}`, await fs.readFile(path.join(assets, name)));
     }
@@ -131,14 +140,16 @@ export async function nativeAppReplacements(archivePath, { platform = process.pl
       if (bootstrap.split(before).length !== 2) throw new Error("This Codex version needs an updated desktop identity patch");
       bootstrap = bootstrap.replace(before, after);
     }
-    replacements.set(`.vite/build/${bootstrapName}`, Buffer.from(bootstrap));
+    replacements.set(`.vite/build/${bootstrapName}`, Buffer.from(lean ? patchLeanBootstrap(bootstrap) : bootstrap));
+    if (lean) for (const [name, value] of await leanChunkReplacements(archive)) replacements.set(name, value);
     replacements.set(".vite/build/preload.js", Buffer.concat([await archive.read(".vite/build/preload.js"), Buffer.from("\n"), await fs.readFile(path.join(assets, "native-provider-preload.cjs"))]));
   } finally { await archive.close(); }
   await sidebarIdentityReplacements(archivePath, replacements);
   const initialPath = [...replacements.keys()].find(name => /^webview\/assets\/app-initial-[\w-]+\.js$/.test(name));
   if (!initialPath) throw new Error("This Codex version needs an updated sidebar patch");
   const initial = replacements.get(initialPath).toString("utf8");
-  replacements.set(initialPath, Buffer.from(patchThreadVisibilityRenderer(patchModelRefresh(patchTranscriptRetention(patchSidebarRenderer(initial))))));
+  const sharedInitial = patchThreadSwitch(patchThreadPreload(patchWarmThreadLimit(patchThreadVisibilityRenderer(patchModelRefresh(patchTranscriptRetention(patchSidebarRenderer(initial)))))));
+  replacements.set(initialPath, Buffer.from(lean ? patchLeanRenderer(sharedInitial) : sharedInitial));
   replacements.set("webview/assets/codexzero-sidebar-performance.js", await fs.readFile(path.join(assets, "sidebar-performance.mjs")));
   replacements.set("webview/assets/codexzero-transcript-retention.js", await fs.readFile(path.join(assets, "transcript-retention.mjs")));
   const primaryPath = [...replacements.keys()].find(name => /^webview\/assets\/app-primary-[\w-]+\.js$/.test(name));

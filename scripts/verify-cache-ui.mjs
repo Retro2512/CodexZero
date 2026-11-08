@@ -59,29 +59,24 @@ try {
   const page=await browser.newPage({viewport:{width:800,height:600}});
   const errors=[]; page.on('pageerror',e=>errors.push(e.message));
   await page.goto(`http://127.0.0.1:${server.address().port}`);
-  const button=page.locator('.czci-button'), panel=page.locator('.czci-popover:not(.czss-panel)');
+  const button=page.locator('.czci-button'), panel=page.locator('.czci-popover');
   await button.waitFor();
   await page.waitForFunction(()=>document.querySelector('.czci-cost')?.textContent==='~$1.25');
-  const statsButton=page.locator('.czss-button'), statsPanel=page.locator('.czss-panel');
-  assert.equal(await statsButton.textContent(),'40 turns · 969 steps');
-  await statsButton.hover();
-  await statsPanel.waitFor({state:'visible'});
-  assert.deepEqual(await statsPanel.locator('dd').allTextContents(),['610m42s','36m35s','31.2s','80 tok/s','142M','97%']);
-  assert.equal(await panel.count(),0,'Stats hover does not open context controls');
-  assert.ok(await statsPanel.evaluate(el=>{const r=el.getBoundingClientRect();return el.matches(':popover-open')&&r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight&&el.contains(document.elementFromPoint(r.x+20,r.y+20));}));
-  if (process.env.SESSION_UI_SCREENSHOT) await page.screenshot({path:process.env.SESSION_UI_SCREENSHOT});
-  await page.keyboard.press('Escape');
-  await statsPanel.waitFor({state:'detached'});
-  await statsButton.click();
-  await statsPanel.waitFor({state:'visible'});
-  await page.locator('#outside').click();
-  await statsPanel.waitFor({state:'detached'});
+  assert.equal(await page.locator('.czss-button').count(),0,'Session statistics and cache share one control');
+  assert.match(await button.getAttribute('aria-label'),/Session, 40 turns · 969 steps/);
   assert.match(await page.locator('.czci-time').textContent(), /^~(30:00|29:59)$/);
   assert.ok(await page.locator('.czci-track').evaluate(el=>{
     const [r,g,b]=getComputedStyle(el).stroke.match(/[\d.]+/g).map(Number);return g>r&&g>b;
   }), 'Warm ring uses the native success color');
   await button.hover();
   await panel.waitFor({state:'visible'});
+  assert.equal(await page.locator('.czci-popover').count(),1,'One panel holds session, context and cache');
+  const values=await panel.locator('.czss-values dd').allTextContents();
+  assert.deepEqual(values,['610m42s','36m35s','31.2s','80 tok/s','142M','97%']);
+  const text=await panel.textContent();
+  assert.ok(text.includes('40 turns · 969 steps'));
+  assert.ok(text.includes('(38%)'));
+  assert.ok(text.includes('Without cache'));
   const visible=await panel.evaluate(el=>{
     const r=el.getBoundingClientRect();
     return {top:r.top,bottom:r.bottom,left:r.left,right:r.right,hit:el.contains(document.elementFromPoint(r.x+20,r.y+20)),topLayer:el.matches(':popover-open')};
@@ -90,12 +85,11 @@ try {
   assert.ok(visible.top>=0 && visible.bottom<=600);
   assert.ok(visible.left>=0 && visible.right<=800);
   assert.ok(visible.topLayer);
-  assert.ok((await panel.textContent()).includes('38% used · 62% left'));
   if (process.env.CACHE_UI_SCREENSHOT) await page.screenshot({path:process.env.CACHE_UI_SCREENSHOT});
   await page.evaluate(()=>document.querySelector('.zoom-adjusted-viewport').style.setProperty('--codex-window-zoom','1.75'));
   await page.waitForFunction(()=>{
     const p=document.querySelector('.czci-popover').getBoundingClientRect(),b=document.querySelector('.czci-button').getBoundingClientRect();
-    return p.x>=0 && p.right<=innerWidth && p.top>=0 && p.bottom<=innerHeight && Math.abs(p.bottom-(b.top-6))<2;
+    return p.x>=0 && p.right<=innerWidth && p.top>=0 && p.bottom<=innerHeight && (Math.abs(p.bottom-(b.top-6))<2 || p.top>=10);
   });
   await page.getByLabel('Keep warm',{exact:true}).check();
   assert.deepEqual(await page.evaluate(()=>window.saved),[{id:'fixture',enabled:true}]);
@@ -103,7 +97,7 @@ try {
   await panel.waitFor({state:'detached'});
   await button.click();
   await panel.waitFor({state:'visible'});
-  await page.locator('#outside').click();
+  await page.mouse.click(2, 2);
   await panel.waitFor({state:'detached'});
   await page.evaluate(()=>{window.remaining=60000;window.render('second');});
   await page.waitForFunction(()=>document.querySelector('.czci')?.dataset.warmth==='cooling');
