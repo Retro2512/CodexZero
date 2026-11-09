@@ -388,13 +388,13 @@ jobs:
           name: CodexZero ${{ inputs.version }}
           target_commitish: ${{ github.sha }}
           body: |
-            * The Windows app is now Codex only. ChatGPT chats, Work mode, slides, docs, sheets, Quick Chat, pets, screen history and promotions are gone. Remote, pairing and voice stay.
-            * Error reports and usage analytics are switched off.
-            * Switching threads is much faster. Going back to a recent thread takes about 0.7 seconds instead of about 1.8.
-            * Threads start loading when you point at them, and recent ones stay ready for ten minutes.
-            * Chats in the sidebar show what they're doing: a spinner and timer while running, `[y/n]` or `>_` while waiting on you, `err` if it failed.
-            * Session statistics and the cache are now one control.
-            * Every project gets its own color, and chats get icons for what they're about. No model calls.
+            * Updated to the newest Codex app, 26.1103, and Codex core 0.167.0.
+            * Still coding only. The new Codex app includes many more ChatGPT features, and CodexZero keeps them off.
+            * New switches in Settings → Configuration → Optional features: Work mode, ChatGPT chats and Dots. All off by default.
+            * The pricing page, visualization sandbox and ChatGPT reply renderer that the official app opens in the background don't load.
+            * Sites and the ChatGPT file library are gone from the navigation rail.
+            * Analytics are off in the core too, not just the app.
+            * Fixed empty duplicate projects that could appear when two copies of the app ran at the same time.
 
             Windows, macOS and Linux x64 packages are below. [Install instructions](https://github.com/Retro2512/CodexZero#install).
           files: artifacts/*
