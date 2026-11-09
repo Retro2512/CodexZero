@@ -22,7 +22,7 @@ for (const key of ["CFBundleURLTypes", "CFBundleDocumentTypes", "UTExportedTypeD
   check(await absent(key), `The app still claims ${key}`);
 }
 await run("/usr/bin/codesign", ["--verify", "--deep", "--strict", app]);
-for (const file of ["codexzero.icns", "codex", "codexzero/runtime/node", "codexzero/bin/provider-core.mjs", "codexzero/provider-runtime/codex-custom-models", "codexzero/provider-runtime/codex-zero-core", "codexzero/provider-runtime/codex-code-mode-host"]) {
+for (const file of ["codexzero.icns", "codex-cli","codexzero/runtime/node", "codexzero/bin/provider-core.mjs", "codexzero/provider-runtime/codex-custom-models", "codexzero/provider-runtime/codex-zero-core", "codexzero/provider-runtime/codex-code-mode-host"]) {
   await fs.access(path.join(resources, file));
 }
 const { stdout: version } = await run(path.join(resources, "codexzero", "provider-runtime", "codex-custom-models"), ["--version"], {

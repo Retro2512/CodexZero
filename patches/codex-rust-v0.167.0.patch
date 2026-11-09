@@ -2849,6 +2849,85 @@ index da4d0e1..a3fe898 100644
              root_turn_id: None,
              turn_id: turn_id.to_string(),
              started_at: None,
+diff --git a/codex-rs/app-server/src/config_manager.rs b/codex-rs/app-server/src/config_manager.rs
+index 461920b..b6e2425 100644
+--- a/codex-rs/app-server/src/config_manager.rs
++++ b/codex-rs/app-server/src/config_manager.rs
+@@ -439,7 +439,9 @@ impl ConfigManager {
+         let configured = self
+             .load_latest_config(Some(current.cwd.to_path_buf()))
+             .await?;
+-        if current.model_provider_id != configured.model_provider_id {
++        if current.model_provider_id != configured.model_provider_id
++            && !codexzero_provider_switch(&current.model_provider_id, &configured.model_provider_id)
++        {
+             return Err(std::io::Error::new(
+                 std::io::ErrorKind::InvalidInput,
+                 ModelProviderError::ModelProviderMismatch {
+@@ -598,7 +600,9 @@ impl ConfigManager {
+                     saved_provider.unwrap_or(requested_provider),
+                     requested_provider,
+                 ] {
+-                    if provider != current_provider {
++                    if provider != current_provider
++                        && !codexzero_provider_switch(provider, &current_provider)
++                    {
+                         return Err(std::io::Error::new(
+                             std::io::ErrorKind::InvalidInput,
+                             ModelProviderError::ModelProviderMismatch {
+@@ -875,3 +879,10 @@ pub(crate) fn apply_runtime_feature_enablement(
+         }
+     }
+ }
++
++/// CodexZero routes custom models through its own provider per chat, so a chat may
++/// move between that provider and the selected one between turns.
++fn codexzero_provider_switch(thread_provider: &str, current_provider: &str) -> bool {
++    const CODEXZERO_PROVIDER_ID: &str = "codexzero_custom";
++    thread_provider == CODEXZERO_PROVIDER_ID || current_provider == CODEXZERO_PROVIDER_ID
++}
+diff --git a/codex-rs/app-server/src/config_manager_provider_tests.rs b/codex-rs/app-server/src/config_manager_provider_tests.rs
+index 1f2129d..020083a 100644
+--- a/codex-rs/app-server/src/config_manager_provider_tests.rs
++++ b/codex-rs/app-server/src/config_manager_provider_tests.rs
+@@ -320,3 +320,37 @@ name = "Gateway"
+     );
+     Ok(())
+ }
++
++/// CodexZero custom-model chats may continue while another provider is selected, and back.
++#[tokio::test]
++async fn codexzero_custom_provider_chats_are_admitted_beside_the_selection() -> Result<()> {
++    let home = tempdir()?;
++    std::fs::write(
++        home.path().join("config.toml"),
++        r#"
++model_provider = "openai"
++[model_providers.codexzero_custom]
++name = "CodexZero"
++[model_providers.gateway]
++name = "Gateway"
++"#,
++    )?;
++    let manager = ConfigManager::without_managed_config_for_tests(home.path().to_path_buf());
++    let mut current = manager
++        .load_latest_config(Some(home.path().to_path_buf()))
++        .await?;
++    current.model_provider_id = "codexzero_custom".into();
++    manager
++        .check_thread_model_provider_for_input(&current)
++        .await?;
++    current.model_provider_id = "gateway".into();
++    assert!(
++        manager
++            .check_thread_model_provider_for_input(&current)
++            .await
++            .is_err()
++    );
++    assert!(codexzero_provider_switch("openai", "codexzero_custom"));
++    assert!(!codexzero_provider_switch("gateway", "openai"));
++    Ok(())
++}
 diff --git a/codex-rs/app-server/tests/suite/v2/thread_fork.rs b/codex-rs/app-server/tests/suite/v2/thread_fork.rs
 index 6c902ce..8b8c5a6 100644
 --- a/codex-rs/app-server/tests/suite/v2/thread_fork.rs
