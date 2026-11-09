@@ -5,16 +5,17 @@ import os from "node:os";
 import path from "node:path";
 import { patchBrowserDiscovery, patchCopiedBrowserService } from "../src/browser-discovery-patch.mjs";
 
-const original = "GB=async(t,e,r=[],n)=>{l=await Promise.all(s.map(w=>OZ(t,w,a.get(w),e,n))),u=new Set(s);}";
-const serial = "GB=async(t,e,r=[],n)=>{l=[];for(let w of s)l.push(await OZ(t,w,a.get(w),e,n));let u=new Set(s);}";
+const original = "async function Yce(e,t,r,n){let l=await Promise.all(s.map(b=>Qce(e,b,a.get(b),t,n))),u=new Set(s);return{candidatePipeCount:l.length}}";
+const serial = "async function Yce(e,t,r,n){let l=[];for(let b of s)l.push(await Qce(e,b,a.get(b),t,n));let u=new Set(s);return{candidatePipeCount:l.length}}";
 
 test("browser discovery probes backends in order rather than all at once", () => {
   assert.equal(patchBrowserDiscovery(original), serial);
   assert.equal(patchBrowserDiscovery(serial), serial);
+  new Function(serial);
 });
 
 test("browser discovery rejects an unrecognized upstream bundle", () => {
-  assert.throws(() => patchBrowserDiscovery("GB=async(t,e,r=[],n)=>{}"), /updated Browser Use discovery patch/);
+  assert.throws(() => patchBrowserDiscovery("async function Yce(e,t,r,n){return{candidatePipeCount:0}}"), /updated Browser Use discovery patch/);
   assert.throws(() => patchBrowserDiscovery(original + original), /updated Browser Use discovery patch/);
 });
 

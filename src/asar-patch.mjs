@@ -26,6 +26,60 @@ export async function openAsar(file) {
   };
 }
 
+// The desktop is built from thousands of content-hashed chunks, so patches
+// name the code they change by a literal that occurs in exactly one script.
+export async function locateTargets(archive, markers, roots = [".vite/build", "webview/assets"]) {
+  const wanted = [...new Set(markers)];
+  const found = new Map(wanted.map(marker => [marker, []]));
+  const scripts = [];
+  for (const root of roots) {
+    const node = archive.entry(root);
+    if (!node) throw new Error(`Missing app folder: ${root}`);
+    (function walk(entry, prefix) {
+      for (const [key, value] of Object.entries(entry.files ?? {})) {
+        const name = `${prefix}/${key}`;
+        if (value.files) walk(value, name);
+        else if (!value.unpacked && !value.link && /\.(c?js|mjs)$/.test(key)) scripts.push(name);
+      }
+    })(node, root);
+  }
+  for (const name of scripts) {
+    const text = (await archive.read(name)).toString("latin1");
+    for (const marker of wanted) if (text.includes(marker)) found.get(marker).push(name);
+  }
+  const result = new Map();
+  for (const [marker, names] of found) {
+    if (names.length !== 1) throw new Error(`This Codex version needs an updated patch target (${names.length} files contain ${JSON.stringify(marker.slice(0, 60))})`);
+    result.set(marker, names[0]);
+  }
+  return result;
+}
+
+export async function asarHeaderHash(file) {
+  const handle = await fs.open(file, "r");
+  try {
+    const prefix = Buffer.alloc(16);
+    await handle.read(prefix, 0, 16, 0);
+    const header = Buffer.alloc(prefix.readUInt32LE(12));
+    await handle.read(header, 0, header.length, 16);
+    return createHash("sha256").update(header).digest("hex");
+  } finally { await handle.close(); }
+}
+
+// Windows builds embed the archive header hash in the executable and refuse to
+// start when it differs. The copied executable gets the patched archive's hash.
+export async function updateEmbeddedAsarIntegrity(executable, originalArchive, patchedArchive) {
+  const [before, after] = [await asarHeaderHash(originalArchive), await asarHeaderHash(patchedArchive)];
+  const bytes = await fs.readFile(executable);
+  const marker = Buffer.from(`"value":"${before}"`);
+  const first = bytes.indexOf(marker);
+  if (first < 0) return false;
+  if (bytes.indexOf(marker, first + 1) >= 0) throw new Error("The desktop executable has more than one archive integrity record");
+  Buffer.from(`"value":"${after}"`).copy(bytes, first);
+  await fs.writeFile(executable, bytes);
+  return true;
+}
+
 function integrity(bytes) {
   const blockSize = 4 * 1024 * 1024;
   const hash = value => createHash("sha256").update(value).digest("hex");

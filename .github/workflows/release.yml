@@ -6,7 +6,7 @@ on:
       version:
         description: CodexZero release version
         required: true
-        default: 0.11.0
+        default: 0.12.0
       reuse_core_release:
         description: Reuse cores only when patches and runtime config match this release; leave blank to rebuild
         required: false
@@ -109,9 +109,9 @@ jobs:
         if: inputs.reuse_core_release == ''
         shell: bash
         run: |
-          git -c core.autocrlf=false clone --depth 1 --branch rust-v0.162.1 \
+          git -c core.autocrlf=false clone --depth 1 --branch rust-v0.167.0 \
             https://github.com/openai/codex.git upstream
-          git -C upstream apply ../codex-zero/patches/codex-rust-v0.162.1.patch
+          git -C upstream apply ../codex-zero/patches/codex-rust-v0.167.0.patch
       - name: Build patched core
         if: inputs.reuse_core_release == ''
         shell: bash
@@ -129,15 +129,15 @@ jobs:
         shell: bash
         run: |
           case '${{ matrix.asset }}' in
-            windows-x64) target=x86_64-pc-windows-msvc; suffix=.exe; expected=9fd8dbfd188fae23774081dc42297e85c87740697684ccae41c0e522b1d00382 ;;
-            macos-x64) target=x86_64-apple-darwin; suffix=; expected=cd52af8a6884b18239aaf36d0c99bc990e7dcf75b0917155474ffde88a111d37 ;;
-            macos-arm64) target=aarch64-apple-darwin; suffix=; expected=1f464a2894adbc916e431b6bf19bef2cb485cf7e13e636d42578c581962b3727 ;;
-            linux-x64) target=x86_64-unknown-linux-musl; suffix=; expected=458239ea45c1fc508d89695f180ab352f2834709a8a46929a4466f4f04399ada ;;
+            windows-x64) target=x86_64-pc-windows-msvc; suffix=.exe; expected=b513449bfab1d179b00ccf8eb523f50a1b6770071b6aa25cdcf06f752a7931a6 ;;
+            macos-x64) target=x86_64-apple-darwin; suffix=; expected=612d0dc2c7316fbf05ee922796f4d740a285b76a55d4c78e1b946ba621bdcc91 ;;
+            macos-arm64) target=aarch64-apple-darwin; suffix=; expected=876a3e263348ef0edaeae5cf5bc52a5c121141cefd15157ab0eeca305f3eb563 ;;
+            linux-x64) target=x86_64-unknown-linux-musl; suffix=; expected=b5074d5dd64643b2c073927e494a588eff31c1f5a27f12c1e2c45f9a6cf07dd4 ;;
             *) exit 1 ;;
           esac
           archive="codex-code-mode-host-$target$suffix.tar.gz"
           mkdir official-host
-          curl -fL --retry 3 "https://github.com/openai/codex/releases/download/rust-v0.162.1/$archive" -o "official-host/$archive"
+          curl -fL --retry 3 "https://github.com/openai/codex/releases/download/rust-v0.167.0/$archive" -o "official-host/$archive"
           if command -v sha256sum >/dev/null 2>&1; then
             actual="$(sha256sum "official-host/$archive" | awk '{print $1}')"
           else

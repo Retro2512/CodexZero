@@ -4,20 +4,20 @@ import { createHash } from "node:crypto";
 import { pathToFileURL } from "node:url";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import { openAsar, rewriteAsar } from "./asar-patch.mjs";
+import { openAsar, rewriteAsar, locateTargets, updateEmbeddedAsarIntegrity } from "./asar-patch.mjs";
 import { codexZeroHome } from "./paths.mjs";
 import { sidebarIdentityReplacements } from "./sidebar-identity-patch.mjs";
-import { patchSidebarRenderer } from "./sidebar-performance.mjs";
-import { patchTranscriptRetention, patchWarmThreadLimit } from "./task-responsiveness.mjs";
-import { patchThreadPreload } from "./thread-preload-patch.mjs";
-import { patchThreadSwitch } from "./thread-switch-patch.mjs";
-import { patchSelectionScroll } from "./scroll-scope-performance.mjs";
+import { SIDEBAR_ITEM_INDEX_TARGET, SIDEBAR_RENDERER_TARGET, patchSidebarItemIndex, patchSidebarRenderer } from "./sidebar-performance.mjs";
+import { WARM_THREAD_LIMIT_MAIN_TARGET, WARM_THREAD_LIMIT_RENDERER_TARGET, patchWarmThreadLimitMain, patchWarmThreadLimitRenderer } from "./task-responsiveness.mjs";
+import { THREAD_PRELOAD_TARGET, patchThreadPreload } from "./thread-preload-patch.mjs";
+import { SELECTION_SCROLL_TARGET, patchSelectionScroll } from "./scroll-scope-performance.mjs";
 import { patchCopiedBrowserService } from "./browser-discovery-patch.mjs";
 import { patchCopiedBrowserContinuation } from "./browser-continuation-patch.mjs";
-import { patchNotificationBootstrap, patchNotificationMain } from "./notification-routing-patch.mjs";
-import { patchModelRefresh } from "./model-refresh-patch.mjs";
-import { patchThreadVisibilityMain, patchThreadVisibilityRenderer } from "./thread-visibility-patch.mjs";
-import { leanChunkReplacements, patchLeanBootstrap, patchLeanMain, patchLeanRenderer, pruneCopiedDesktop } from "./lean-desktop-patch.mjs";
+import { NOTIFICATION_BOOTSTRAP_TARGET, NOTIFICATION_MAIN_TARGET, patchNotificationBootstrap, patchNotificationMain } from "./notification-routing-patch.mjs";
+import { MODEL_REFRESH_TARGET, patchModelRefresh } from "./model-refresh-patch.mjs";
+import { THREAD_VISIBILITY_MAIN_TARGET, THREAD_VISIBILITY_RENDERER_TARGET, patchThreadVisibilityMain, patchThreadVisibilityRenderer } from "./thread-visibility-patch.mjs";
+import { CACHE_INDICATOR_TARGET, SETTINGS_PAGE_TARGET, patchCacheIndicator, patchSettingsPage } from "./settings-ui-patch.mjs";
+import { LEAN_FILE_PATCHES, leanChunkReplacements, pruneCopiedDesktop } from "./lean-desktop-patch.mjs";
 
 export async function prepareNativeProviderDesktop(installedDesktop, { home = codexZeroHome() } = {}) {
   if (process.platform !== "win32") throw new Error("Native custom model settings currently require the Windows local build");
@@ -75,86 +75,63 @@ export async function buildNativeProviderApp(installedDesktop, outputRoot) {
   const patchedArchive = path.join(appRoot, "resources", "app.asar");
   await rewriteAsar(archivePath, patchedArchive, replacements);
   await verifyAppArchive(patchedArchive, replacements);
-  return path.join(appRoot, path.basename(installedDesktop));
+  const executable = path.join(appRoot, path.basename(installedDesktop));
+  await updateEmbeddedAsarIntegrity(executable, archivePath, patchedArchive);
+  return executable;
 }
 
-// The CodexZero changes to the official app archive. Every anchor must match
-// exactly once, so a different app version fails instead of half patching.
+// The CodexZero changes to the official app archive. Every patch names the one
+// script it changes by a literal found in exactly one file, and every anchor
+// inside must match exactly once, so a different app version fails instead of
+// half patching.
 export async function nativeAppReplacements(archivePath, { platform = process.platform } = {}) {
   const lean = platform === "win32";
   const archive = await openAsar(archivePath);
   const assets = path.resolve(import.meta.dirname, "..", "assets");
-  const replacements = new Map();
+  const replacements = lean ? await leanChunkReplacements(archive) : new Map();
+  const read = async name => (replacements.get(name) ?? await archive.read(name)).toString("utf8");
   try {
-    const agentFiles = Object.keys(archive.header.files.webview.files.assets.files).filter(name => /^agent-settings-[\w]+\.js$/.test(name));
-    if (agentFiles.length !== 1) throw new Error("This Codex version needs an updated Settings patch");
-    const agentPath = `webview/assets/${agentFiles[0]}`;
-    let agent = (await archive.read(agentPath)).toString("utf8");
-    const anchor = "children:[d,f,h,_]";
-    if (agent.split(anchor).length !== 2 || !agent.includes("Kr();export{br as AgentSettings}") || !agent.includes("zr.useState")) {
-      throw new Error("This Codex version needs an updated Settings patch");
+    const patches = [
+      [SETTINGS_PAGE_TARGET, patchSettingsPage],
+      [CACHE_INDICATOR_TARGET, patchCacheIndicator],
+      [SELECTION_SCROLL_TARGET, patchSelectionScroll],
+      [UPDATER_TARGET, patchNativeUpdater],
+      [IDENTITY_TARGET, patchDesktopIdentity],
+      [THREAD_VISIBILITY_MAIN_TARGET, patchThreadVisibilityMain],
+      [THREAD_VISIBILITY_RENDERER_TARGET, patchThreadVisibilityRenderer],
+      [WARM_THREAD_LIMIT_MAIN_TARGET, patchWarmThreadLimitMain],
+      [WARM_THREAD_LIMIT_RENDERER_TARGET, patchWarmThreadLimitRenderer],
+      [MODEL_REFRESH_TARGET, patchModelRefresh],
+      [SIDEBAR_RENDERER_TARGET, patchSidebarRenderer],
+      [SIDEBAR_ITEM_INDEX_TARGET, patchSidebarItemIndex],
+      [THREAD_PRELOAD_TARGET, patchThreadPreload],
+      ...(platform === "win32" ? [[NOTIFICATION_BOOTSTRAP_TARGET, patchNotificationBootstrap], [NOTIFICATION_MAIN_TARGET, patchNotificationMain]] : []),
+      ...(lean ? LEAN_FILE_PATCHES : []),
+    ];
+    const located = await locateTargets(archive, patches.map(([target]) => target));
+    for (const [target, patch] of patches) {
+      const name = located.get(target);
+      replacements.set(name, Buffer.from(patch(await read(name))));
     }
-    agent = 'import{createCacheSettings as czCreateCacheSettings}from"./codexzero-cache-ui.js";import{createProviderSettings as czCreateProviderSettings}from"./codexzero-provider-settings.js";' + agent;
-    agent = agent.replace(anchor, "children:[(0,$.jsx)(CodexZeroProviders,{hostId:t}),(0,$.jsx)(CodexZeroCacheSettings,{hostId:t}),d,f,h,_]");
-    agent = agent.replace("Kr();export{br as AgentSettings}", "Kr();const CodexZeroProviders=czCreateProviderSettings(zr,$,q),CodexZeroCacheSettings=czCreateCacheSettings(zr,q);export{br as AgentSettings}");
-    replacements.set(agentPath, Buffer.from(agent));
-    replacements.set("webview/assets/codexzero-provider-settings.js", await fs.readFile(path.join(assets, "native-provider-settings.mjs")));
-    replacements.set("webview/assets/codexzero-cache-ui.js", await fs.readFile(path.join(assets, "native-cache-ui.mjs")));
-    const primaryName = Object.keys(archive.header.files.webview.files.assets.files).find(name => /^app-primary-[\w]+\.js$/.test(name));
-    if (!primaryName) throw new Error("This Codex version needs an updated context indicator patch");
-    const primaryPath = `webview/assets/${primaryName}`;
-    let primary = (await archive.read(primaryPath)).toString("utf8");
-    primary = patchCacheIndicator(primary);
-    replacements.set(primaryPath, Buffer.from(primary));
-    const early = await archive.read(".vite/build/early-bootstrap.js");
-    const environment = platform === "darwin" ? 'require("./codexzero-environment.cjs");' : "";
-    replacements.set(".vite/build/early-bootstrap.js", Buffer.concat([Buffer.from(environment + 'require("./codexzero-provider-main.cjs");require("./codexzero-identity.cjs");\n'), early]));
-    if (environment) replacements.set(".vite/build/codexzero-environment.cjs", await fs.readFile(path.join(assets, "native-provider-environment.cjs")));
-    replacements.set(".vite/build/codexzero-provider-main.cjs", await fs.readFile(path.join(assets, "native-provider-main.cjs")));
-    replacements.set(".vite/build/codexzero-identity.cjs", await fs.readFile(path.join(assets, "native-provider-identity.cjs")));
-    const bootstrapName = Object.keys(archive.header.files[".vite"].files.build.files).find(name => /^bootstrap-[\w-]+\.js$/.test(name));
-    if (!bootstrapName) throw new Error("This Codex version needs an updated desktop identity patch");
-    let bootstrap = (await archive.read(`.vite/build/${bootstrapName}`)).toString("utf8");
-    bootstrap = patchNativeUpdater(bootstrap);
-    const mainNames = Object.keys(archive.header.files[".vite"].files.build.files).filter(name => /^main-[\w-]+\.js$/.test(name));
-    if (mainNames.length !== 1) throw new Error("This Codex version needs an updated thread visibility patch");
-    const mainPath = `.vite/build/${mainNames[0]}`;
-    let main = patchThreadVisibilityMain((await archive.read(mainPath)).toString("utf8"));
-    replacements.set(".vite/build/native-sidebar-threads.cjs", await fs.readFile(path.join(assets, "native-sidebar-threads.cjs")));
-    if (platform === "win32") {
-      bootstrap = patchNotificationBootstrap(bootstrap);
-      main = patchNotificationMain(main);
-      replacements.set(".vite/build/native-notification-routing.cjs", await fs.readFile(path.join(assets, "native-notification-routing.cjs")));
-    }
-    const warmMain = patchWarmThreadLimit(main);
-    replacements.set(mainPath, Buffer.from(lean ? patchLeanMain(warmMain) : warmMain));
-    for (const name of ["native-provider-updater.cjs", "native-provider-update-release.cjs"]) {
-      replacements.set(`.vite/build/${name}`, await fs.readFile(path.join(assets, name)));
-    }
+    for (const [name, file] of [
+      ["webview/assets/codexzero-provider-settings.js", "native-provider-settings.mjs"],
+      ["webview/assets/codexzero-cache-ui.js", "native-cache-ui.mjs"],
+      ["webview/assets/codexzero-sidebar-performance.js", "sidebar-performance.mjs"],
+      [".vite/build/codexzero-provider-main.cjs", "native-provider-main.cjs"],
+      [".vite/build/codexzero-identity.cjs", "native-provider-identity.cjs"],
+      [".vite/build/native-sidebar-threads.cjs", "native-sidebar-threads.cjs"],
+      [".vite/build/native-provider-updater.cjs", "native-provider-updater.cjs"],
+      [".vite/build/native-provider-update-release.cjs", "native-provider-update-release.cjs"],
+      ...(platform === "win32" ? [[".vite/build/native-notification-routing.cjs", "native-notification-routing.cjs"]] : []),
+      ...(platform === "darwin" ? [[".vite/build/codexzero-environment.cjs", "native-provider-environment.cjs"]] : []),
+    ]) replacements.set(name, await fs.readFile(path.join(assets, file)));
     const { version } = JSON.parse(await fs.readFile(path.join(assets, "..", "package.json"), "utf8"));
     replacements.set(".vite/build/codexzero-update-version.json", Buffer.from(JSON.stringify({ version })));
-    for (const [before, after] of [
-      ["o.app.setAppUserModelId(Ut(_j))", 'o.app.setAppUserModelId("CodexZero.Desktop")'],
-      ["o.app.setName(n.Eo(_j))", 'o.app.setName("CodexZero")']
-    ]) {
-      if (bootstrap.split(before).length !== 2) throw new Error("This Codex version needs an updated desktop identity patch");
-      bootstrap = bootstrap.replace(before, after);
-    }
-    replacements.set(`.vite/build/${bootstrapName}`, Buffer.from(lean ? patchLeanBootstrap(bootstrap) : bootstrap));
-    if (lean) for (const [name, value] of await leanChunkReplacements(archive)) replacements.set(name, value);
+    const environment = platform === "darwin" ? 'require("./codexzero-environment.cjs");' : "";
+    replacements.set(".vite/build/early-bootstrap.js", Buffer.concat([Buffer.from(environment + 'require("./codexzero-provider-main.cjs");require("./codexzero-identity.cjs");\n'), await archive.read(".vite/build/early-bootstrap.js")]));
     replacements.set(".vite/build/preload.js", Buffer.concat([await archive.read(".vite/build/preload.js"), Buffer.from("\n"), await fs.readFile(path.join(assets, "native-provider-preload.cjs"))]));
   } finally { await archive.close(); }
   await sidebarIdentityReplacements(archivePath, replacements);
-  const initialPath = [...replacements.keys()].find(name => /^webview\/assets\/app-initial-[\w-]+\.js$/.test(name));
-  if (!initialPath) throw new Error("This Codex version needs an updated sidebar patch");
-  const initial = replacements.get(initialPath).toString("utf8");
-  const sharedInitial = patchThreadSwitch(patchThreadPreload(patchWarmThreadLimit(patchThreadVisibilityRenderer(patchModelRefresh(patchTranscriptRetention(patchSidebarRenderer(initial)))))));
-  replacements.set(initialPath, Buffer.from(lean ? patchLeanRenderer(sharedInitial) : sharedInitial));
-  replacements.set("webview/assets/codexzero-sidebar-performance.js", await fs.readFile(path.join(assets, "sidebar-performance.mjs")));
-  replacements.set("webview/assets/codexzero-transcript-retention.js", await fs.readFile(path.join(assets, "transcript-retention.mjs")));
-  const primaryPath = [...replacements.keys()].find(name => /^webview\/assets\/app-primary-[\w-]+\.js$/.test(name));
-  if (!primaryPath) throw new Error("This Codex version needs an updated selection patch");
-  replacements.set(primaryPath, Buffer.from(patchSelectionScroll(replacements.get(primaryPath).toString("utf8"))));
   return replacements;
 }
 
@@ -167,19 +144,21 @@ export async function verifyAppArchive(archivePath, replacements) {
   } finally { await verify.close(); }
 }
 
-export function patchNativeUpdater(source) {
-  const anchor = "sparkleManager:new KT({";
-  if (source.split(anchor).length !== 2) throw new Error("This Codex version needs an updated updater patch");
-  return source.replace(anchor, 'sparkleManager:new(require("./native-provider-updater.cjs").CodexZeroUpdater)({');
+// The app registers with Windows and macOS as CodexZero, next to the official app.
+export const IDENTITY_TARGET = "r.app.setName((0,g.V)(W))";
+export function patchDesktopIdentity(source) {
+  for (const [before, after] of [
+    ["r.app.setAppUserModelId((0,h.m)(W))", 'r.app.setAppUserModelId("CodexZero.Desktop")'],
+    [IDENTITY_TARGET, 'r.app.setName("CodexZero")'],
+  ]) {
+    if (source.split(before).length !== 2) throw new Error("This Codex version needs an updated desktop identity patch");
+    source = source.replace(before, () => after);
+  }
+  return source;
 }
 
-export function patchCacheIndicator(source) {
-  const start = source.indexOf("function VYe(e){");
-  const end = source.indexOf("function HYe(e){", start);
-  const footer = "let W;t[22]!==v||t[23]!==H?(W=H?(0,M3.jsx)(`span`,{ref:E,className:`text-sm leading-[18px]`,children:(0,M3.jsx)(VYe,{contextUsage:v})}):null,t[22]=v,t[23]=H,t[24]=W):W=t[24];";
-  if (start < 0 || end < start || source.split(footer).length !== 2 || !source.includes("j3=X()")) throw new Error("This Codex version needs an updated context indicator patch");
-  let result = source.slice(0, start) + "function VYe(e){czCacheIndicator??=czCreateCacheIndicator(X());return(0,Z4.jsx)(czCacheIndicator,e)}" + source.slice(end);
-  // Avoid reusing a memoized indicator from a different task with equal context usage.
-  result = result.replace(footer, "let W=H?(0,M3.jsx)(`span`,{ref:E,className:`text-sm leading-[18px]`,children:(0,M3.jsx)(VYe,{contextUsage:v,threadId:m,hostId:o})}):null;");
-  return 'import{createCacheIndicator as czCreateCacheIndicator}from"./codexzero-cache-ui.js";let czCacheIndicator;' + result;
+export const UPDATER_TARGET = "j=new H({enableUpdater:";
+export function patchNativeUpdater(source) {
+  if (source.split(UPDATER_TARGET).length !== 2) throw new Error("This Codex version needs an updated updater patch");
+  return source.replace(UPDATER_TARGET, 'j=new(require("./native-provider-updater.cjs").CodexZeroUpdater)({enableUpdater:');
 }

@@ -144,3 +144,29 @@ test("mobile project discovery mirrors only new unmapped projects and coalesces 
   assert.equal(stores.length, 1); assert.equal(writes.length, 1); assert.deepEqual(writes[0].rootPaths, ["C:/repo"]);
   assert.equal(writes[0].createdAt, 1000);
 });
+
+test("projects mapped by another app instance are never mirrored as empty duplicates", () => {
+  const mapped = { "local:home": { "legacy-project": "server-project" }, "remote:other": { "remote-legacy": "remote-server" } };
+  const writes = [];
+  let published = 0;
+  const backend = { migrationIdentity: "local:home", globalState: { get: key => key === "app-server-project-id-by-legacy-project-id-by-host" ? mapped : undefined },
+    cache: { getProjects: () => ({}), writeProject: (_, project) => writes.push(project) }, pendingDeletions: { get: () => null }, publishProjects: () => { published++; } };
+  mirrorProject(backend, { id: "server-project", name: "Shared", roots: [{ path: "C:/shared" }] }, "server-project");
+  assert.equal(writes.length, 0);
+  mapped["local:home"]["late-legacy"] = "late-server";
+  mirrorProject(backend, { id: "late-server", name: "Late", roots: [{ path: "C:/late" }] }, "late-server");
+  assert.equal(writes.length, 0, "the persisted map must be read fresh");
+  mirrorProject(backend, { id: "remote-server", name: "Other host", roots: [{ path: "C:/other" }] }, "remote-server");
+  assert.deepEqual(writes.map(project => project.id), ["remote-server"]);
+  assert.equal(published, 1);
+});
+
+test("bundle shapes capture minified names, require repeated names to agree and match exactly once", async () => {
+  const { matchShape, replaceShape } = await import("../src/thread-visibility-patch.mjs");
+  const shape = "function «name»({updatedAt:«value»}){return «value»}";
+  assert.equal(replaceShape("x;function wQ({updatedAt:r}){return r}", shape, "function «name»(){return 1}"), "x;function wQ(){return 1}");
+  assert.equal(matchShape("function SM({updatedAt:n}){return n}", shape).groups.name, "SM");
+  assert.throws(() => matchShape("function SM({updatedAt:n}){return r}", shape), /0 matches/);
+  assert.throws(() => matchShape("function a({updatedAt:n}){return n};function b({updatedAt:n}){return n}", shape), /2 matches/);
+  assert.equal(matchShape("keys:[es.Q2Y.LOCAL_PROJECTS]", "keys:[«keys».LOCAL_PROJECTS]").groups.keys, "es.Q2Y");
+});

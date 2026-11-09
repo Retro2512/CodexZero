@@ -2,8 +2,11 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 // Clarify continuation without replacing authentication or confirmation rules.
-// The pinned Windows desktop embeds four environment-specific safety documents.
-const bundleAnchor = '"browser-safety":`# Browser Safety\n';
+// The pinned Windows desktop embeds four environment-specific safety documents
+// whose lines end in an escaped carriage return.
+export const BROWSER_CONTINUATION_TARGET = '"browser-safety":`';
+const bundleLineEnd = "\\r\n";
+const bundleAnchor = '"browser-safety":`# Browser Safety' + bundleLineEnd;
 const documentAnchor = "# Browser Safety\n";
 const expectedDocuments = 4;
 
@@ -20,8 +23,8 @@ After a completed secure authentication request, verify the resulting page when 
 Do not add confirmation for cookie consent or Terms of Service acceptance where the existing policy explicitly permits it. A separate account creation or permission grant still follows its own confirmation rule.
 `;
 
-function insertGuidance(source, anchor, count) {
-  const replacement = anchor + BROWSER_CONTINUATION_GUIDANCE + "\n";
+function insertGuidance(source, anchor, count, lineEnd = "\n") {
+  const replacement = anchor + (BROWSER_CONTINUATION_GUIDANCE + "\n").replaceAll("\n", lineEnd);
   const patchedCount = source.split(replacement).length - 1;
   const anchorCount = source.split(anchor).length - 1;
   if (anchorCount !== count || (patchedCount !== 0 && patchedCount !== count) ||
@@ -33,7 +36,7 @@ function insertGuidance(source, anchor, count) {
 }
 
 export function patchBrowserContinuation(source) {
-  return insertGuidance(source, bundleAnchor, expectedDocuments);
+  return insertGuidance(source, bundleAnchor, expectedDocuments, bundleLineEnd);
 }
 
 export function patchBrowserContinuationDocument(source) {

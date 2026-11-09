@@ -3,6 +3,7 @@
 const indexed = new WeakSet();
 const FULL_SCAN_INTERVAL = 5 * 60 * 1000;
 const POLL_INTERVAL = 30_500;
+const LEGACY_PROJECT_MAP = "app-server-project-id-by-legacy-project-id-by-host";
 
 // Keep the original cwd in every returned record. Only lookup keys are folded.
 function pathKey(value) {
@@ -153,14 +154,23 @@ function createListing(listThreads, hostId, sourceKinds) {
   };
 }
 
+// Another app instance sharing the same home may have mapped this server
+// project to a local project that this instance has not loaded yet.
+function mappedElsewhere(backend, projectId) {
+  if (backend.migrationIdentity == null) return false;
+  const mapped = backend.globalState?.get(LEGACY_PROJECT_MAP)?.[backend.migrationIdentity] ?? {};
+  return Object.entries(mapped).some(([legacyId, serverId]) => serverId === projectId && legacyId !== projectId);
+}
+
 function mirrorProject(backend, project, localKey) {
   if (localKey !== project.id || backend.cache.getProjects()[localKey] != null ||
-      (backend.migrationIdentity != null && backend.pendingDeletions.get(backend.migrationIdentity, localKey) != null)) return;
+      (backend.migrationIdentity != null && backend.pendingDeletions.get(backend.migrationIdentity, localKey) != null) ||
+      mappedElsewhere(backend, project.id)) return;
   const roots = project.roots?.map(root => root.path).filter(path => typeof path === "string" && path.length);
   if (!roots?.length || typeof project.name !== "string") return;
   backend.cache.writeProject("project/create", { id: localKey, name: project.name, rootPaths: roots,
     createdAt: project.createdAt * 1000 || Date.now(), updatedAt: project.updatedAt * 1000 || Date.now() });
-  backend.czProjectChanged?.();
+  backend.publishProjects?.();
 }
 
 async function refreshUnknownProject(backend, projectId, signal) {

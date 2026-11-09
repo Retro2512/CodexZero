@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.12.0
+
+* Updated to the newest Codex app, 26.1103, and Codex core 0.167.0.
+* The new Codex app includes many more ChatGPT features. CodexZero keeps them off, so it stays coding only.
+* Added switches for Work mode, ChatGPT chats and Dots in Settings → Configuration → Optional features. All are off by default. A Restart button applies a change.
+* Background pages the official app opens at startup no longer load. These are the pricing page, the visualization sandbox and the ChatGPT reply renderer.
+* Sites and the ChatGPT file library are gone from the navigation rail.
+* Analytics are off in the core too, not just the app.
+* Fixed empty duplicate projects that could appear when two copies of the app ran at the same time.
+
 ## 0.11.0
 
 * Made the desktop app coding only. Removed ChatGPT chats and history, Work mode, slides, docs and sheets, Quick Chat, pets, Appshots, screen history, Sites, toys and demo tools.

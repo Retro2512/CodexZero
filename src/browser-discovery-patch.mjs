@@ -1,12 +1,14 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-const originalDiscovery = "l=await Promise.all(s.map(w=>OZ(t,w,a.get(w),e,n))),u=new Set(s);";
-const serialDiscovery = "l=[];for(let w of s)l.push(await OZ(t,w,a.get(w),e,n));let u=new Set(s);";
+// Applies to scripts/browser-service.mjs in the Browser Use package.
+export const BROWSER_DISCOVERY_TARGET = "candidatePipeCount";
+const originalDiscovery = "l=await Promise.all(s.map(b=>Qce(e,b,a.get(b),t,n))),u=new Set(s);";
+const serialDiscovery = "l=[];for(let b of s)l.push(await Qce(e,b,a.get(b),t,n));let u=new Set(s);";
 
 export function patchBrowserDiscovery(source) {
   if (source.includes(serialDiscovery) && !source.includes(originalDiscovery)) return source;
-  if (source.split(originalDiscovery).length !== 2 || !source.includes("GB=async(t,e,r=[],n)=>{")) {
+  if (source.split(originalDiscovery).length !== 2 || !source.includes(BROWSER_DISCOVERY_TARGET)) {
     throw new Error("This Codex version needs an updated Browser Use discovery patch");
   }
   return source.replace(originalDiscovery, serialDiscovery);

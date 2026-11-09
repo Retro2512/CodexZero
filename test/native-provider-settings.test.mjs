@@ -135,9 +135,13 @@ test("deleting a provider clears its saved DPAPI key without exposing plaintext"
 test("native provider IPC rejects foreign origins and subframes", async () => {
   const handlers = new Map();
   const electron = {
-    app: { setPath() {} },
-    ipcMain: { handle(channel, handler) { handlers.set(channel, handler); } },
+    app: { setPath() {}, relaunch() { relaunched++; }, quit() {} },
+    ipcMain: { handle(channel, handler) { handlers.set(channel, handler); }, on(channel, handler) { handlers.set(channel, handler); } },
   };
+  let relaunched = 0;
+  const writes = [];
+  const fakeFs = { readFileSync() { return '{"workMode":true,"chats":"yes"}'; },
+    promises: { mkdir: async () => {}, writeFile: async (file, text) => writes.push(text), rename: async () => {} } };
   const source = await fs.readFile(new URL("../assets/native-provider-main.cjs", import.meta.url), "utf8");
   const sandbox = {
     URL,
@@ -145,10 +149,13 @@ test("native provider IPC rejects foreign origins and subframes", async () => {
     require(specifier) {
       if (specifier === "electron") return electron;
       if (specifier === "node:path") return path;
+      if (specifier === "node:fs") return fakeFs;
+      if (specifier === "node:os") return { homedir: () => "C:/Users/test" };
       if (specifier === "node:url") return { pathToFileURL: (awaitImportPath) => new URL(`file:///${String(awaitImportPath).replaceAll("\\", "/")}`) };
       throw new Error(`Unexpected require: ${specifier}`);
     },
   };
+  sandbox.globalThis = sandbox;
   vm.runInNewContext(source, sandbox, { filename: "native-provider-main.cjs" });
   const read = handlers.get("codexzero:providers:read");
   const save = handlers.get("codexzero:providers:save");
@@ -171,6 +178,20 @@ test("native provider IPC rejects foreign origins and subframes", async () => {
     await assert.rejects(handler({ senderFrame: childFrame, sender: { mainFrame } }, "task"), /unavailable here/);
     await assert.rejects(handler({ senderFrame: mainFrame, sender: { mainFrame } }, "task", true, "arbitrary directory"), /Invalid cache settings/);
   }
+
+  const current = event => { handlers.get("codexzero:features:current")(event); return event.returnValue; };
+  assert.equal(current({ senderFrame: foreignFrame, sender: { mainFrame: foreignFrame } }), null);
+  assert.equal(current({ senderFrame: childFrame, sender: { mainFrame } }), null);
+  assert.deepEqual({ ...current({ senderFrame: mainFrame, sender: { mainFrame } }) }, { workMode: true, chats: false, dots: false, available: false });
+  const saveFeatures = handlers.get("codexzero:features:save");
+  await assert.rejects(saveFeatures({ senderFrame: childFrame, sender: { mainFrame } }, { workMode: true }), /unavailable here/);
+  assert.deepEqual({ ...await saveFeatures({ senderFrame: mainFrame, sender: { mainFrame } }, { workMode: 1, chats: true, dots: true, extra: "x" }) }, { workMode: false, chats: true, dots: true });
+  assert.deepEqual(JSON.parse(writes.at(-1)), { workMode: false, chats: true, dots: true });
+  const restart = handlers.get("codexzero:app:restart");
+  await assert.rejects(Promise.resolve().then(() => restart({ senderFrame: foreignFrame, sender: { mainFrame: foreignFrame } })), /unavailable here/);
+  assert.equal(relaunched, 0);
+  await restart({ senderFrame: mainFrame, sender: { mainFrame } });
+  assert.equal(relaunched, 1);
 });
 
 test("native provider preload exposes the bridge only to the app origin", async () => {
@@ -181,7 +202,7 @@ test("native provider preload exposes the bridge only to the app origin", async 
     const invocations = [];
     const electron = {
       contextBridge: { exposeInMainWorld(name, value) { exposed.push({ name, value }); } },
-      ipcRenderer: { invoke(...args) { invocations.push(args); return Promise.resolve({}); } },
+      ipcRenderer: { invoke(...args) { invocations.push(args); return Promise.resolve({}); }, sendSync(channel) { invocations.push([channel]); return { workMode: false, chats: false, available: true }; } },
     };
     vm.runInNewContext(source, {
       location,
@@ -196,16 +217,20 @@ test("native provider preload exposes the bridge only to the app origin", async 
   assert.equal(execute({ protocol: "https:", hostname: "attacker.example" }).exposed.length, 0);
   assert.equal(execute({ protocol: "app:", hostname: "other" }).exposed.length, 0);
   const trusted = execute({ protocol: "app:", hostname: "-" });
-  assert.equal(trusted.exposed.length, 2);
+  assert.equal(trusted.exposed.length, 3);
   assert.equal(trusted.exposed[0].name, "codexZeroProviders");
   await trusted.exposed[0].value.read();
   await trusted.exposed[0].value.save({ providers: [] });
+  assert.equal(trusted.exposed[1].name, "codexZeroFeatures");
+  assert.deepEqual(trusted.exposed[1].value.current, { workMode: false, chats: false, available: true });
+  trusted.exposed.splice(1, 1);
   assert.equal(trusted.exposed[1].name, "codexZeroCache");
   await trusted.exposed[1].value.read("task");
   await trusted.exposed[1].value.saveSettings({ enabled: true, minutes: 30 });
   await trusted.exposed[1].value.setEnabled("task", false);
   await trusted.exposed[1].value.activity("task");
   assert.deepEqual(trusted.invocations.map((entry) => entry[0]), [
+    "codexzero:features:current",
     "codexzero:providers:read",
     "codexzero:providers:save",
     "codexzero:cache:read",

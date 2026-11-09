@@ -117,7 +117,9 @@ These live in the CodexZero app.
 
 ## A lighter, faster app
 
-**Everything that isn't coding is gone.** ChatGPT chats, Work mode, slides, docs, pets, screen history, extra plugins, analytics and promos are out. Codex, remote access, pairing and voice stay.
+**Everything that isn't coding is off.** Slides, docs, pets, screen history, Sites, extra plugins, analytics and promos are out. Codex, remote access, pairing and voice stay.
+
+**Want something back?** Work mode, ChatGPT chats and Dots each have a switch in Settings → Configuration → Optional features. They're off until you turn them on.
 
 <img src="assets/readme/performance.svg" alt="CodexZero 0.11.0 against the full Codex app. 2.8x faster back to a recent chat. Back to a recent chat 64% faster, biggest process memory 42% less, window restyle work 34% less, opening a new chat 26% faster, tokens 17% fewer, CPU use 16% less. Chats kept loaded 2.4x more, chats kept ready 2.7x more, kept ready 20x longer, background reporting off." width="900">
 

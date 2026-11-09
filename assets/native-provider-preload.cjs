@@ -5,6 +5,13 @@
     read: () => ipcRenderer.invoke("codexzero:providers:read"),
     save: document => ipcRenderer.invoke("codexzero:providers:save", document)
   });
+  let features = null;
+  try { features = ipcRenderer.sendSync("codexzero:features:current"); } catch {}
+  contextBridge.exposeInMainWorld("codexZeroFeatures", {
+    current: features,
+    save: value => ipcRenderer.invoke("codexzero:features:save", value),
+    restart: () => ipcRenderer.invoke("codexzero:app:restart")
+  });
   contextBridge.exposeInMainWorld("codexZeroCache", {
     read: threadId => ipcRenderer.invoke("codexzero:cache:read", threadId),
     saveSettings: settings => ipcRenderer.invoke("codexzero:cache:settings", settings),

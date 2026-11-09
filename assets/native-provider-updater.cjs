@@ -64,6 +64,13 @@ class CodexZeroUpdater {
   relaunchStaleMacExecutableIfNeeded() { return false; }
   showRelaunchNoticeForDebug() {}
   startUpdaterAfterStartupFailure() { return this.checkForUpdates(); }
+  async checkForUpdateInformation() {
+    if (!this.hasUpdater()) return { status: "unavailable", reason: this.getUnavailableReason() };
+    if (this.handingOff) return { status: "restart_required" };
+    if (this.busy) return { status: "busy" };
+    await this.checkForUpdates();
+    return this.release ? { status: "available", availableVersion: this.release.version ?? null, availableBuildVersion: null } : { status: "up_to_date" };
+  }
   setState(state) {
     this.state = state;
     this.options.onUpdateReadyChanged?.(this.getIsUpdateReady());

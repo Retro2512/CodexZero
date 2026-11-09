@@ -5,7 +5,9 @@ import { selectUpdatedCore, launchCoreUpdateWorker, isPackagedPatchedCore } from
 import { resolveProviderCore } from "../src/provider-core-binding.mjs";
 
 const core = await resolveProviderCore({ installationRoot: fileURLToPath(new URL("../", import.meta.url)) });
-const args = process.argv.slice(2);
+// The desktop asks the app server to report analytics unless configured
+// otherwise. CodexZero keeps the core's default of not reporting.
+const args = process.argv.slice(2).filter(arg => arg !== "--analytics-default-enabled");
 const packaged = isPackagedPatchedCore(core);
 const index = args.indexOf("app-server");
 // Help, schema generation and non server invocations keep the real CLI behavior.

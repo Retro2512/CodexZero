@@ -1,42 +1,37 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { patchThreadPreload, preloadRuntime } from "../src/thread-preload-patch.mjs";
-import { patchWarmThreadLimit } from "../src/task-responsiveness.mjs";
+import { THREAD_PRELOAD_TARGET, patchThreadPreload, preloadRuntime } from "../src/thread-preload-patch.mjs";
+import { patchWarmThreadLimitMain, patchWarmThreadLimitRenderer } from "../src/task-responsiveness.mjs";
 
-function harness({ threads = {}, roots = ["E:/repo"], gate = true } = {}) {
+function harness({ modes = {}, roots = ["E:/repo"], gate = true } = {}) {
   const calls = [], pending = [];
-  const atoms = { KE: "KE", QE: "QE", t5n: "t5n", XE: "XE" };
   const scope = {
     get(atom, id) {
-      const thread = threads[id];
-      if (atom === "KE") return thread != null;
-      if (atom === "QE") return thread?.resumeState;
-      if (atom === "t5n") return thread?.role ?? null;
-      if (atom === "XE") return thread?.mode;
+      if (atom === "collaborationMode") return modes[id];
       throw new Error("unexpected atom");
     },
   };
-  const deps = {
-    ...atoms,
-    Imn: async () => roots,
-    P_: () => gate,
-    Mb: (_scope, host) => ({ readInputsFor: host }),
-    ep: (_scope, host) => ({ resumeConversation(params, options) {
+  const modules = {
+    MLeN: { A: async (_scope, _id, options) => (assert.deepEqual(options, { allowProjectSourceRoots: true }), roots) },
+    OMIV: { ie: (_scope, gateId) => gateId === "4226282475" && gate },
+    tl5a: { aG: "collaborationMode" },
+    shRG: { jQ: (_scope, host) => ({ readInputsFor: host }) },
+    Dgwo: { V: (_scope, host) => ({ resumeConversation(params, options) {
       calls.push({ host, params, options });
       return new Promise(resolve => pending.push(() => resolve({ status: "ready" })));
-    } }),
+    } }) },
   };
   const globals = {};
-  const run = new Function(...Object.keys(deps), "globalThis", preloadRuntime + "return{czRememberPreloadScope,czPreloadThread}");
-  const api = run(...Object.values(deps), globals);
+  const api = new Function("globalThis", preloadRuntime + "return{czRememberPreloadScope,czPreloadThread,load:r=>{czPreloadRequire=r}}")(globals);
   api.czRememberPreloadScope(scope);
+  api.load(id => modules[id]);
   return { ...api, calls, pending, globals, settle: () => { while (pending.length) pending.shift()(); } };
 }
 
 const flush = () => new Promise(resolve => setImmediate(resolve));
 
 test("a cold local thread loads with its workspace and saved mode", async () => {
-  const h = harness({ threads: { a: { resumeState: "needs_resume", mode: { mode: "code" } } } });
+  const h = harness({ modes: { a: { mode: "code" } } });
   const done = h.czPreloadThread("a", "local");
   await flush();
   assert.equal(h.calls.length, 1);
@@ -48,14 +43,12 @@ test("a cold local thread loads with its workspace and saved mode", async () => 
   assert.equal(typeof h.globals.codexZeroPreloadThread, "function");
 });
 
-test("threads that are already loaded, loading, or remote are left alone", async () => {
-  const h = harness({ threads: {
-    ready: { resumeState: "resumed", role: { role: "owner" } },
-    busy: { resumeState: "resuming" },
-  } });
-  assert.equal(await h.czPreloadThread("ready", "local"), false);
-  assert.equal(await h.czPreloadThread("busy", "local"), false);
+test("remote threads and a sidebar that has not rendered yet are left alone", async () => {
+  const h = harness();
   assert.equal(await h.czPreloadThread("cloud", "remote-host"), false);
+  assert.equal(await h.czPreloadThread(""), false);
+  const idle = new Function("globalThis", preloadRuntime + "return czPreloadThread")({});
+  assert.equal(await idle("a"), false);
   assert.equal(h.calls.length, 0);
 });
 
@@ -79,27 +72,25 @@ test("a thread whose project is still unknown is not loaded with a guess", async
   assert.equal(h.calls.length, 0);
 });
 
-test("the patch needs every internal it uses", () => {
-  const anchors = [
-    "async function Imn(e,t,{allowProjectSourceRoots:n=!1}={})",
-    "function ep(e,t){let n=e.get(tp);",
-    "function Mb(e,t){return async(",
-    "function P_(e,t){let n=e.get(F_);return n!=null&&n.checkGate(t)}",
-    ",KE=uf($,(e,{get:t})=>t(t(d5n,e))!=null)",
-    ",QE=zE(({resumeState:e})=>e)",
-    ",t5n=uf($,(e,{get:t})=>{if(e==null)return null;",
-    ",XE=zE(({latestCollaborationMode:e})=>e,",
-  ];
-  const row = "T=xf($),E=vf(bK)===`work`,D=bf(Kwi,n)";
-  const source = anchors.join(";") + ";" + row;
+test("the sidebar row module hands over the app scope and module loader", () => {
+  const header = ",oprL(e,t,a){a.d(t,{E:()=>e_,T:()=>eR});var n=a(\"ABep\")";
+  const row = "tp=(0,i.gh)(F.u),{previewNavigationState:tf}=(0,d.useContext)(Z.I),tF=(0,ew.Zj)(\"2337831332\")";
+  const source = header + ";" + row;
   const patched = patchThreadPreload(source);
-  assert.ok(patched.includes("T=czRememberPreloadScope(xf($))"));
-  for (const anchor of anchors) assert.throws(() => patchThreadPreload(source.replace(anchor, "")));
-  assert.throws(() => patchThreadPreload(source.replace(row, "")));
+  assert.ok(patched.startsWith(preloadRuntime));
+  assert.ok(patched.includes("a.d(t,{E:()=>e_,T:()=>eR});czPreloadRequire=a;var n="));
+  assert.ok(patched.includes("tp=czRememberPreloadScope((0,i.gh)(F.u)),{previewNavigationState:tf}"));
+  assert.ok(source.includes(THREAD_PRELOAD_TARGET));
+  assert.throws(() => patchThreadPreload(row));
+  assert.throws(() => patchThreadPreload(header));
+  assert.throws(() => patchThreadPreload(patched));
 });
 
 test("more recently left threads stay loaded", () => {
-  assert.equal(patchWarmThreadLimit("var a,NUt=108e5,PUt=15e3,FUt=10,x;"), "var a,NUt=108e5,PUt=15e3,FUt=24,x;");
-  assert.throws(() => patchWarmThreadLimit("NUt=108e5,PUt=15e3,FUt=12,"));
-  assert.throws(() => patchWarmThreadLimit("a=108e5,b=15e3,c=10,;d=108e5,e=15e3,f=10,"));
+  const source = 'let r=t.filter(e=>!e.isEphemeralSideConversation),n=Math.max(0,r.length-10),i=new Set(r.slice(0,n));log({maxInactiveOwnerThreads:10,overage:n})';
+  for (const patch of [patchWarmThreadLimitMain, patchWarmThreadLimitRenderer]) {
+    assert.equal(patch(source), source.replace("length-10)", "length-24)").replace("Threads:10,", "Threads:24,"));
+    assert.throws(() => patch(source.replace("length-10)", "length-12)")));
+    assert.throws(() => patch(source + source));
+  }
 });

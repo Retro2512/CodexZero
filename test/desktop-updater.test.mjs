@@ -31,7 +31,7 @@ function fixture(overrides = {}) {
   return { updater, events };
 }
 test("native updater patch replaces only the updater instance and fails on drift", () => {
-  const source = "before,sparkleManager:new KT({enableUpdater:yes}),after";
+  const source = "before,j=new H({enableUpdater:yes}),after";
   const patched = patchNativeUpdater(source);
   assert.match(patched, /CodexZeroUpdater/);
   assert.ok(patched.endsWith("({enableUpdater:yes}),after"));
@@ -70,6 +70,13 @@ test("offline checks retain an available update and do not interrupt work", asyn
   await updater.checkForUpdates();
   assert.equal(updater.getIsUpdateReady(), true);
   assert.ok(!events.includes("error"));
+});
+test("quiet update checks report the release the app can install", async () => {
+  assert.deepEqual(await fixture().updater.checkForUpdateInformation(), { status: "available", availableVersion: "0.8.0", availableBuildVersion: null });
+  assert.deepEqual(await fixture({ version: "0.9.0" }).updater.checkForUpdateInformation(), { status: "up_to_date" });
+  const unsupported = fixture();
+  unsupported.updater.hasUpdater = () => false;
+  assert.equal((await unsupported.updater.checkForUpdateInformation()).status, "unavailable");
 });
 test("same or older releases leave the native indicator hidden", async () => {
   const { updater } = fixture({ version: "0.9.0" });

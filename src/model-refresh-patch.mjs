@@ -1,9 +1,13 @@
-const modelQueryAnchor = "refetchOnWindowFocus:!0,staleTime:kv.FIVE_MINUTES,queryFn:()=>(a&&u.removeQueries({exact:!0,queryKey:Q2n(r,t,o)}),ep(d,r).sendRequest(`model/list`,{includeHidden:!0,cursor:null,limit:o}))";
-const refreshedModelQuery = "refetchOnWindowFocus:!0,refetchInterval:kv.FIVE_MINUTES,refetchIntervalInBackground:!1,staleTime:kv.FIVE_MINUTES,queryFn:()=>(a&&u.removeQueries({exact:!0,queryKey:Q2n(r,t,o)}),ep(d,r).sendRequest(`model/list`,{includeHidden:!0,cursor:null,limit:o}))";
+// The model list query is defined in many chunks, so the refresh interval is
+// set once as a default for every ["models","list"] query on the app's client.
+export const MODEL_REFRESH_TARGET = '"core_providers.render"';
+
+const queryClientAnchor = "function eX(){let e=new eE.E(eH.LR);";
+const refreshedQueryClient = 'function eX(){let e=new eE.E(eH.LR);e.setQueryDefaults(["models","list"],{refetchInterval:3e5,refetchIntervalInBackground:!1});';
 
 export function patchModelRefresh(source) {
-  if (source.split(modelQueryAnchor).length !== 2) {
+  if (source.split(queryClientAnchor).length !== 2) {
     throw new Error("This Codex version needs an updated model refresh patch");
   }
-  return source.replace(modelQueryAnchor, refreshedModelQuery);
+  return source.replace(queryClientAnchor, () => refreshedQueryClient);
 }

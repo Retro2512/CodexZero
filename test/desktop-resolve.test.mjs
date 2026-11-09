@@ -82,9 +82,11 @@ test('independent core extraction keeps only the matching runtime companions', {
   await assert.rejects(fs.access(path.join(f.staging, 'app/ChatGPT.exe')));
 });
 
-test('Windows runtime pin advances independently of the interface pin', async () => {
+test('Windows runtime pin is pinned separately and never older than the interface pin', async () => {
   const core = JSON.parse(await fs.readFile(path.join(repository, 'scripts/core-upstream.json'), 'utf8'));
-  assert.notEqual(core.version, pinned.version);
+  const parts = version => version.split('.').map(Number);
+  const [a, b] = [parts(core.version), parts(pinned.version)];
+  assert.ok(a.findIndex((n, i) => n !== b[i]) < 0 || a[a.findIndex((n, i) => n !== b[i])] > b[a.findIndex((n, i) => n !== b[i])], 'the runtime pin is not older than the interface');
   assert.match(core.sha256, /^[0-9a-f]{64}$/);
   assert.ok(core.url.includes(`/releases/${core.version}/ChatGPT-x64.msix`));
   const builder = await fs.readFile(path.join(repository, 'scripts/build-provider-local.ps1'), 'utf8');

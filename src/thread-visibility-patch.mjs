@@ -3,89 +3,107 @@ import { replaceOnce } from "./sidebar-performance.mjs";
 
 const { pathKey, pathSql, findPathGroup, applyObservation, observedActivity } = createRequire(import.meta.url)("../assets/native-sidebar-threads.cjs");
 
+export const THREAD_VISIBILITY_MAIN_TARGET = "Unknown thread catalog host: ";
+export const THREAD_VISIBILITY_RENDERER_TARGET = "No original clone cwd found for pending worktree task";
+
+// «name» captures one minified name or member path, so a shape fits every
+// platform build; a repeated «name» must repeat the same text.
+export function matchShape(source, shape) {
+  const names = new Set();
+  const pattern = shape.split(/«(\w+)»/).map((part, index) => index % 2 === 0 ? part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+    : names.has(part) ? `\\k<${part}>` : (names.add(part), `(?<${part}>[\\w$]+(?:\\.[\\w$]+)*)`)).join("");
+  const guard = /^[\w$«]/.test(shape) ? "(?<![\\w$.])" : "";
+  const matches = [...source.matchAll(new RegExp(guard + pattern, "g"))];
+  if (matches.length !== 1) throw new Error(`Unsupported bundle anchor (${matches.length} matches): ${shape.slice(0, 90)}`);
+  return matches[0];
+}
+export function replaceShape(source, shape, after) {
+  const match = matchShape(source, shape);
+  return source.slice(0, match.index) + after.replace(/«(\w+)»/g, (_, name) => match.groups[name]) + source.slice(match.index + match[0].length);
+}
+
 export function patchThreadVisibilityMain(source) {
-  source = patchRecencyFallback(source, "Ay");
+  source = patchRecencyFallback(source);
   // The catalog refreshes metadata for tasks that may already have a live
   // conversation. Updating only their titles leaves live sort atoms stale.
-  source = replaceOnce(source, "Object.assign(e,jy(s,e,`stored`)),c!=null&&(e.title=c)",
-    "Object.assign(e,jy(s,e,`stored`)),czThreadVisibility.applyObservation(e,s),c!=null&&(e.title=c)");
-  source = replaceOnce(source, "o.originator==null&&r.originator!=null&&(o={...o,originator:r.originator});let s=this.applyPendingThreadTitle",
-    "o=czThreadVisibility.observedActivity(o,r);o.originator==null&&r.originator!=null&&(o={...o,originator:r.originator});let s=this.applyPendingThreadTitle");
-  let result = replaceOnce(source, "function M5(e,t,r){return{id:e,hostKind:t,listPage:async({cursor:t,limit:i},a)=>{let o=await r.listThreads({archived:!1,cursor:t,limit:i,modelProviders:[],parentThreadId:null,sortKey:`updated_at`,sortDirection:`desc`,sourceKinds:n.na,useStateDbOnly:!0},{...a,source:`thread_catalog`});",
-    "function M5(e,t,r){let czList=czThreadVisibility.createListing((e,t)=>r.listThreads(e,t),e,n.na);return{id:e,hostKind:t,listPage:async({cursor:t,limit:i},a)=>{let o=await czList({cursor:t,limit:i},{...a,source:`thread_catalog`});");
-  result = replaceOnce(result, "isFullReconciliationDue(e){return!e.isComplete||e.lastFullReconciliationAt==null}",
+  source = replaceShape(source, 'Object.assign(e,«metadata»(t,e,"stored")),null!=l&&(e.title=l)',
+    'Object.assign(e,«metadata»(t,e,"stored")),czThreadVisibility.applyObservation(e,t),null!=l&&(e.title=l)');
+  source = replaceOnce(source, "return null==a.originator&&null!=e.originator&&(a={...a,originator:e.originator}),{thread:a,clearCachedTitles:s}}",
+    "return a=czThreadVisibility.observedActivity(a,e),null==a.originator&&null!=e.originator&&(a={...a,originator:e.originator}),{thread:a,clearCachedTitles:s}}");
+  let result = replaceShape(source, 'function «source»(e,t,r){return{id:e,hostKind:t,listPage:async({cursor:t,limit:n},i)=>{let s=await r.listThreads({archived:!1,cursor:t,limit:n,modelProviders:[],parentThreadId:null,sortKey:"updated_at",sortDirection:"desc",sourceKinds:«kinds»,useStateDbOnly:!0},{...i,source:"thread_catalog"});',
+    'function «source»(e,t,r){let czList=czThreadVisibility.createListing((e,t)=>r.listThreads(e,t),e,«kinds»);return{id:e,hostKind:t,listPage:async({cursor:t,limit:n},i)=>{let s=await czList({cursor:t,limit:n},{...i,source:"thread_catalog"});');
+  result = replaceOnce(result, "isFullReconciliationDue(e){return!e.isComplete||null==e.lastFullReconciliationAt}",
     "isFullReconciliationDue(e){return czThreadVisibility.needsFullScan(e,this.store.hostKind,this.now())}");
   result = replaceOnce(result, "this.fullReconciliationDue=this.isFullReconciliationDue(this.store.readSyncState()),this.requestRun(",
-    "this.fullReconciliationDue=this.store.hostKind!==`chatgpt`||this.isFullReconciliationDue(this.store.readSyncState()),this.requestRun(");
-  result = replaceOnce(result, "let a=e??(this.store.readSyncState().isComplete?`incremental`:`full`);",
-    "let a=e??(this.isFullReconciliationDue(this.store.readSyncState())?`full`:`incremental`);a===`full`&&(this.fullReconciliationDue=!0);");
-  result = replaceOnce(result, "if(!t&&this.lastSuccessAt!=null&&r-this.lastSuccessAt<(this.options.successFreshnessMs??Mtt))",
-    "if(!t&&!this.isFullReconciliationDue(this.store.readSyncState())&&this.lastSuccessAt!=null&&r-this.lastSuccessAt<(this.options.successFreshnessMs??Mtt))");
-  result = replaceOnce(result, "if(this.syncEnabled=e,e){this.handleImportedThreads(",
-    "if(this.syncEnabled=e,czThreadVisibility.setPolling(this,e),e){this.handleImportedThreads(");
-  result = replaceOnce(result, "this.disposed=!0,this.historyPruneTimer!=null&&clearInterval(this.historyPruneTimer)",
-    "this.disposed=!0,czThreadVisibility.setPolling(this,!1),this.historyPruneTimer!=null&&clearInterval(this.historyPruneTimer)");
-  result = replaceOnce(result, "if(this.syncEnabled||e.method===`externalAgentConfig/import/completed`)switch(e.method)",
-    "if(this.syncEnabled||e.method===`thread/started`||e.method===`externalAgentConfig/import/completed`)switch(e.method)");
-  result = replaceOnce(result, "case`turn/completed`:this.invalidateSource();return;default:return}}removeThreadFromCatalog",
-    "case`turn/started`:case`turn/completed`:czThreadVisibility.refreshActivity(this,t);this.invalidateSource();return;case`thread/status/changed`:czThreadVisibility.refreshActivity(this,t);return;default:return}}removeThreadFromCatalog");
+    'this.fullReconciliationDue="chatgpt"!==this.store.hostKind||this.isFullReconciliationDue(this.store.readSyncState()),this.requestRun(');
+  result = replaceOnce(result, 'let s=e??(this.store.readSyncState().isComplete?"incremental":"full");',
+    'let s=e??(this.isFullReconciliationDue(this.store.readSyncState())?"full":"incremental");"full"===s&&(this.fullReconciliationDue=!0);');
+  result = replaceOnce(result, "if(!t&&null!=this.lastSuccessAt&&n-this.lastSuccessAt<(this.options.successFreshnessMs??3e4))",
+    "if(!t&&!this.isFullReconciliationDue(this.store.readSyncState())&&null!=this.lastSuccessAt&&n-this.lastSuccessAt<(this.options.successFreshnessMs??3e4))");
+  result = replaceOnce(result, "if(this.syncEnabled=e,e)return void this.handleImportedThreads(",
+    "if(this.syncEnabled=e,czThreadVisibility.setPolling(this,e),e)return void this.handleImportedThreads(");
+  result = replaceOnce(result, "this.disposed||(this.disposed=!0,null!=this.historyPruneTimer&&clearInterval(this.historyPruneTimer)",
+    "this.disposed||(this.disposed=!0,czThreadVisibility.setPolling(this,!1),null!=this.historyPruneTimer&&clearInterval(this.historyPruneTimer)");
+  result = replaceOnce(result, 'if(this.syncEnabled||"externalAgentConfig/import/completed"===e.method)switch(e.method)',
+    'if(this.syncEnabled||"thread/started"===e.method||"externalAgentConfig/import/completed"===e.method)switch(e.method)');
+  result = replaceOnce(result, 'case"thread/name/updated":case"thread/unarchived":case"turn/completed":{',
+    'case"thread/status/changed":czThreadVisibility.refreshActivity(this,t);return;case"turn/started":case"thread/name/updated":case"thread/unarchived":case"turn/completed":{');
 
   // Canonicalize comparisons and index expressions, never the stored cwd.
-  const start = result.indexOf("readPage({limit:e,cursor:t,filter:n,manualOrder:r,sortKey:i}){");
+  const start = result.indexOf("readPage({limit:e,cursor:t,filter:r,manualOrder:n,sortKey:i}){");
   const end = result.indexOf("readScanCheckpoint(){", start);
   if (start < 0 || end < start) throw new Error("Unsupported thread catalog path query");
-  const before = result.slice(start, end);
-  let queries = before.replace(/\b(catalog\.)?cwd\b/g, (_, alias = "") => pathSql(alias + "cwd"));
-  queries = replaceOnce(queries, "readPage({limit:e,cursor:t,filter:n,manualOrder:r,sortKey:i}){", "readPage({limit:e,cursor:t,filter:n,manualOrder:r,sortKey:i}){czThreadVisibility.ensurePathIndexes(this.db);");
-  queries = replaceOnce(queries, "readManualPage(e,t,n){", "readManualPage(e,t,n){czThreadVisibility.ensurePathIndexes(this.db);");
-  queries = queries.replaceAll("local_thread_catalog_cwd_created_idx", "cz_thread_catalog_path_created_idx")
-    .replaceAll("local_thread_catalog_cwd_updated_idx", "cz_thread_catalog_path_recent_idx")
-    .replaceAll("JSON.stringify(n.cwdValues)", "JSON.stringify(czThreadVisibility.pathValues(n.cwdValues))")
-    .replaceAll("JSON.stringify(t.cwdValues)", "JSON.stringify(czThreadVisibility.pathValues(t.cwdValues))")
-    .replaceAll("JSON.stringify(Hh(n.cwdPrefixes))", "JSON.stringify(czThreadVisibility.pathPrefixes(n.cwdPrefixes))")
-    .replaceAll("JSON.stringify(Hh(t.cwdPrefixes))", "JSON.stringify(czThreadVisibility.pathPrefixes(t.cwdPrefixes))");
+  let queries = result.slice(start, end).replace(/\b(catalog\.)?cwd\b/g, (_, alias = "") => pathSql(alias + "cwd"));
+  queries = replaceOnce(queries, "readPage({limit:e,cursor:t,filter:r,manualOrder:n,sortKey:i}){", "readPage({limit:e,cursor:t,filter:r,manualOrder:n,sortKey:i}){czThreadVisibility.ensurePathIndexes(this.db);");
+  queries = replaceOnce(queries, "readManualPage(e,t,r){", "readManualPage(e,t,r){czThreadVisibility.ensurePathIndexes(this.db);");
+  for (const [before, after] of [
+    ["local_thread_catalog_cwd_created_idx", "cz_thread_catalog_path_created_idx"],
+    ["local_thread_catalog_cwd_updated_idx", "cz_thread_catalog_path_recent_idx"],
+    ["JSON.stringify(r.cwdValues)", "JSON.stringify(czThreadVisibility.pathValues(r.cwdValues))"],
+    ["JSON.stringify(t.cwdValues)", "JSON.stringify(czThreadVisibility.pathValues(t.cwdValues))"],
+  ]) queries = replaceOnce(queries, before, after);
+  for (const filter of ["r", "t"]) queries = replaceShape(queries, `JSON.stringify(«prefixes»(${filter}.cwdPrefixes))`, `JSON.stringify(czThreadVisibility.pathPrefixes(${filter}.cwdPrefixes))`);
   result = result.slice(0, start) + queries + result.slice(end);
 
   // Native membership support is negotiated by the backend. The account gate
   // must not disable ingestion of projects or memberships created by mobile.
-  result = replaceOnce(result, "constructor(e,t,n,r=()=>{}){this.globalState=e,this.connection=t,this.cache=n,",
-    "constructor(e,t,n,r=()=>{},czProjectChanged=()=>{}){this.czProjectChanged=czProjectChanged,this.globalState=e,this.connection=t,this.cache=n,");
-  result = replaceOnce(result, "new P6e(this.scopedState,r,new m2(this.scopedState),t=>e.windowManager.sendMessageToAllWindows({type:`thread-project-memberships-updated`,memberships:t}))",
-    "new P6e(this.scopedState,r,new m2(this.scopedState),t=>e.windowManager.sendMessageToAllWindows({type:`thread-project-memberships-updated`,memberships:t}),()=>{e.windowManager.sendMessageToAllWindows({type:`global-state-updated`,keys:[n.Hl.LOCAL_PROJECTS]});e.windowManager.sendMessageToAllWindows({type:`workspace-root-options-updated`})})");
-  result = replaceOnce(result, "c.setThreadAssignmentsEnabled(Cr().localProjectTaskMembership)", "c.setThreadAssignmentsEnabled(!0)");
+  result = replaceShape(result, '()=>e.windowManager.sendMessageToAllWindows({type:"global-state-updated",keys:[«keys».LOCAL_PROJECTS]})),Z=()=>{«backend».setThreadAssignmentsEnabled(«features»().localProjectTaskMembership)}',
+    '()=>{e.windowManager.sendMessageToAllWindows({type:"global-state-updated",keys:[«keys».LOCAL_PROJECTS]}),e.windowManager.sendMessageToAllWindows({type:"workspace-root-options-updated"})}),Z=()=>{«backend».setThreadAssignmentsEnabled(!0)}');
   // Initial import can seed old, unassigned rollouts, but must not overwrite a
   // project selected on mobile. Explicit queued desktop edits still replay.
-  result = replaceOnce(result, "&&await this.syncAssignment(e.id,e.projectId,t),await this.observe(e.id,e.projectId,t)",
-    "&&(e.projectId==null||i?.pendingThreadAssignmentIds?.includes(e.id))&&await this.syncAssignment(e.id,e.projectId,t),await this.observe(e.id,e.projectId,t)");
-  result = replaceOnce(result, "await e,t.throwIfAborted();let o=this.globalState.get(n.Hl.APP_SERVER_PROJECTS_MIGRATION_BY_HOST)",
-    "await e,t.throwIfAborted();await czThreadVisibility.refreshUnknownProject(this,i,t);let o=this.globalState.get(n.Hl.APP_SERVER_PROJECTS_MIGRATION_BY_HOST)");
-  result = replaceOnce(result, "this.legacyProjectIdsByServerId.set(e.id,r),this.serverProjectsByLegacyId.set(r,e)}projectMetadata",
-    "this.legacyProjectIdsByServerId.set(e.id,r),this.serverProjectsByLegacyId.set(r,e),czThreadVisibility.mirrorProject(this,e,r)}projectMetadata");
+  result = replaceOnce(result, "n.pendingThreadAssignmentIds?.includes(e.id))&&await this.syncAssignment(e.id,e.projectId,t),await this.observe(e.id,e.projectId,t)",
+    "n.pendingThreadAssignmentIds?.includes(e.id))&&(e.projectId==null||n?.pendingThreadAssignmentIds?.includes(e.id))&&await this.syncAssignment(e.id,e.projectId,t),await this.observe(e.id,e.projectId,t)");
+  result = replaceShape(result, "await e,t.throwIfAborted();let s=this.globalState.get(«keys».APP_SERVER_PROJECTS_MIGRATION_BY_HOST)",
+    "await e,t.throwIfAborted();await czThreadVisibility.refreshUnknownProject(this,n,t);let s=this.globalState.get(«keys».APP_SERVER_PROJECTS_MIGRATION_BY_HOST)");
+  result = replaceOnce(result, "this.legacyProjectIdsByServerId.set(e.id,r),this.serverProjectsByLegacyId.set(r,e);",
+    "this.legacyProjectIdsByServerId.set(e.id,r),this.serverProjectsByLegacyId.set(r,e);czThreadVisibility.mirrorProject(this,e,r);");
   return 'const czThreadVisibility=require("./native-sidebar-threads.cjs");\n' + result;
 }
 
 export function patchThreadVisibilityRenderer(source) {
-  let result = patchRecencyFallback(source, "ch");
-  result = replaceOnce(result, "function fni(e){let t=e.filter(e=>e.projectKind===`local`),n=new Set(t.flatMap(e=>bF(e).map(on))),r=new Map;for(let e of t){let t=[...bF(e).map(e=>({alias:e,path:e})),...gni(e).filter(({alias:e})=>!n.has(on(e)))];for(let{alias:n,path:i}of t){let t=on(n),",
-    "function fni(e){let t=e.filter(e=>e.projectKind===`local`),n=new Set(t.flatMap(e=>bF(e).map(czPathKey))),r=new Map;for(let e of t){let t=[...bF(e).map(e=>({alias:e,path:e})),...gni(e).filter(({alias:e})=>!n.has(czPathKey(e)))];for(let{alias:n,path:i}of t){let t=czPathKey(n),");
-  result = replaceOnce(result, "function Sni(e,t){return e.get(on(t))??null}function Cni(e,t){return e.has(on(t))}",
-    "function Sni(e,t){return czFindPathGroup(e,czPathKey(t))}function Cni(e,t){return e.has(czPathKey(t))}");
-  result = replaceOnce(result, ".filter(t=>n.get(on(t))?.projectId===e.projectId)",
-    ".filter(t=>n.get(czPathKey(t))?.projectId===e.projectId)");
-  result = replaceOnce(result, "let u=Hti(r),d=new Set(u.map(on)),f=new Set,p=new Set(i??[]);for(let[e,t]of Object.entries(o??{}))d.has(on(t))&&f.add(e);",
-    "let u=Hti(r),d=new Set(u.map(czPathKey)),f=new Set,p=new Set(i??[]);for(let[e,t]of Object.entries(o??{}))d.has(czPathKey(t))&&f.add(e);");
-  result = replaceOnce(result, "if(l?.projectKind===`local`&&l.projectOrigin===`chatgpt`)return;let d=e.cwd;", "if(l!=null)return;let d=e.cwd;");
+  let result = patchRecencyFallback(source);
+  result = replaceOnce(result, 'function C(e){let t=e.filter(e=>"local"===e.projectKind),n=new Set(t.flatMap(e=>(0,c.l_)(e).map(g.JH))),r=new Map;',
+    'function C(e){let t=e.filter(e=>"local"===e.projectKind),n=new Set(t.flatMap(e=>(0,c.l_)(e).map(czPathKey))),r=new Map;');
+  result = replaceOnce(result, ".filter(({alias:e})=>!n.has((0,g.JH)(e)))]){let n=(0,g.JH)(t),i=e.path===o",
+    ".filter(({alias:e})=>!n.has(czPathKey(e)))]){let n=czPathKey(t),i=e.path===o");
+  result = replaceOnce(result, "function S(e,t){return e.get((0,g.JH)(t))??null}", "function S(e,t){return czFindPathGroup(e,czPathKey(t))}");
+  result = replaceOnce(result, "if(r.has((0,g.JH)(e)))return null;", "if(r.has(czPathKey(e)))return null;");
+  result = replaceOnce(result, ".filter(e=>a.get((0,C.JH)(e))?.projectId===n.projectId)", ".filter(e=>a.get(czPathKey(e))?.projectId===n.projectId)");
+  result = replaceOnce(result, "f=new Set(h.map(i.JH)),m=new Set,_=new Set(s??[]),g=u??{};for(let e of Object.keys(g))f.has((0,i.JH)(g[e]))&&m.add(e);",
+    "f=new Set(h.map(czPathKey)),m=new Set,_=new Set(s??[]),g=u??{};for(let e of Object.keys(g))f.has(czPathKey(g[e]))&&m.add(e);");
+  result = replaceOnce(result, 'if(f?.projectKind==="local"&&"chatgpt"===f.projectOrigin)return;let _=e.cwd;', "if(null!=f)return;let _=e.cwd;");
   // Missing project metadata is not evidence that a task was deleted. Retain
   // unresolved assignments in Recents and Pinned without guessing a project.
-  result = replaceOnce(result, "if(e(Osi,t))return!1;let n=e(JF,t);", "let n=e(JF,t);");
-  result = replaceOnce(result, "Object.assign(e,lh(o,e,`stored`)),s!=null&&(e.title=s)",
-    "Object.assign(e,lh(o,e,`stored`)),czObserveThread(e,o),s!=null&&(e.title=s)");
-  result = replaceOnce(result, "a.originator==null&&n.originator!=null&&(a={...a,originator:n.originator});let o=this.applyPendingThreadTitle",
-    "a=czObservedActivity(a,n);a.originator==null&&n.originator!=null&&(a={...a,originator:n.originator});let o=this.applyPendingThreadTitle");
+  result = replaceOnce(result, 'if(function(e,t){if(!e(l.Mo,s.Q2Y.LOCAL_PROJECTS).isSuccess)return!1;let n=b(e,t);if(null==n)return!1;let r=n.reference.threadId,i=null==r?n.pendingProjectAssignment:(0,l.F6)(e,s.Q2Y.THREAD_PROJECT_ASSIGNMENTS)?.[r];return i?.projectKind==="local"&&"chatgpt"!==i.projectOrigin&&(0,l.F6)(e,s.Q2Y.LOCAL_PROJECTS)?.[i.projectId]==null&&e(g.T8,t)?.projectKind!=="local"}(e,t))return!1;let c=b(e,t)?.identity;',
+    "let c=b(e,t)?.identity;");
+  result = replaceShape(result, 'Object.assign(e,«metadata»(t,e,"stored")),null!=l&&(e.title=l)',
+    'Object.assign(e,«metadata»(t,e,"stored")),czObserveThread(e,t),null!=l&&(e.title=l)');
+  result = replaceOnce(result, "return null==s.originator&&null!=e.originator&&(s={...s,originator:e.originator}),{thread:s,clearCachedTitles:a}}",
+    "return s=czObservedActivity(s,e),null==s.originator&&null!=e.originator&&(s={...s,originator:e.originator}),{thread:s,clearCachedTitles:a}}");
   return `const czObserveThread=${applyObservation.toString()},czObservedActivity=${observedActivity.toString()},czPathKey=${pathKey.toString()},czFindPathGroup=${findPathGroup.toString()};\n` + result;
 }
 
-function patchRecencyFallback(source, name) {
-  return replaceOnce(source, `function ${name}({currentRecencyAt:e,threadRecencyAt:t,updatedAt:n}){return t==null?e??n:Math.max(e??t,t)}`,
-    `function ${name}({currentRecencyAt:e,threadRecencyAt:t,updatedAt:n}){let r=Number.isFinite(t)?t:n;return Number.isFinite(e)?Number.isFinite(r)?Math.max(e,r):e:r}`);
+function patchRecencyFallback(source) {
+  return replaceShape(source, "function «name»({currentRecencyAt:e,threadRecencyAt:t,updatedAt:«updated»}){return null==t?e??«updated»:Math.max(e??t,t)}",
+    "function «name»({currentRecencyAt:e,threadRecencyAt:t,updatedAt:«updated»}){let czRecency=Number.isFinite(t)?t:«updated»;return Number.isFinite(e)?Number.isFinite(czRecency)?Math.max(e,czRecency):e:czRecency}");
 }

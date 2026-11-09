@@ -1,8 +1,8 @@
 diff --git a/codex-rs/Cargo.lock b/codex-rs/Cargo.lock
-index 1cee117..276dba3 100644
+index 2eae72d..3ed3d5c 100644
 --- a/codex-rs/Cargo.lock
 +++ b/codex-rs/Cargo.lock
-@@ -254,7 +254,7 @@ version = "1.1.5"
+@@ -265,7 +265,7 @@ version = "1.1.5"
  source = "registry+https://github.com/rust-lang/crates.io-index"
  checksum = "40c48f72fd53cd289104fc64099abca73db4166ad86ea0b4341abe65af83dadc"
  dependencies = [
@@ -11,7 +11,7 @@ index 1cee117..276dba3 100644
  ]
  
  [[package]]
-@@ -265,7 +265,7 @@ checksum = "291e6a250ff86cd4a820112fb8898808a366d8f9f58ce16d1f538353ad55747d"
+@@ -276,7 +276,7 @@ checksum = "291e6a250ff86cd4a820112fb8898808a366d8f9f58ce16d1f538353ad55747d"
  dependencies = [
   "anstyle",
   "once_cell_polyfill",
@@ -20,16 +20,16 @@ index 1cee117..276dba3 100644
  ]
  
  [[package]]
-@@ -276,7 +276,7 @@ checksum = "2a4385e2e34eb35d6b3efe798b9eb88096925d87726c0798709bf56d9ed84af3"
+@@ -287,7 +287,7 @@ checksum = "2a4385e2e34eb35d6b3efe798b9eb88096925d87726c0798709bf56d9ed84af3"
  
  [[package]]
  name = "app_test_support"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "base64 0.22.1",
-@@ -1441,13 +1441,13 @@ dependencies = [
+@@ -1423,13 +1423,13 @@ dependencies = [
  
  [[package]]
  name = "bstr"
@@ -46,395 +46,395 @@ index 1cee117..276dba3 100644
  ]
  
  [[package]]
-@@ -1895,7 +1895,7 @@ dependencies = [
+@@ -1888,7 +1888,7 @@ dependencies = [
  
  [[package]]
  name = "codex-agent-extension"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "codex-core",
-@@ -1907,7 +1907,7 @@ dependencies = [
+@@ -1900,7 +1900,7 @@ dependencies = [
  
  [[package]]
  name = "codex-agent-graph-store"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-protocol",
   "codex-state",
-@@ -1922,7 +1922,7 @@ dependencies = [
+@@ -1915,7 +1915,7 @@ dependencies = [
  
  [[package]]
  name = "codex-agent-identity"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "base64 0.22.1",
-@@ -1942,7 +1942,7 @@ dependencies = [
+@@ -1935,7 +1935,7 @@ dependencies = [
  
  [[package]]
  name = "codex-agent-message-board-client"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -1965,7 +1965,7 @@ dependencies = [
+@@ -1958,7 +1958,7 @@ dependencies = [
  
  [[package]]
  name = "codex-agent-message-board-extension"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
-  "base64 0.22.1",
-  "caseless",
-@@ -1988,7 +1988,7 @@ dependencies = [
+  "codex-extension-api",
+  "codex-message-board",
+@@ -1972,7 +1972,7 @@ dependencies = [
  
  [[package]]
  name = "codex-agent-roles"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-config",
   "codex-file-system",
-@@ -2001,7 +2001,7 @@ dependencies = [
+@@ -1985,7 +1985,7 @@ dependencies = [
  
  [[package]]
  name = "codex-analytics"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-app-server-protocol",
   "codex-git-utils",
-@@ -2024,7 +2024,7 @@ dependencies = [
+@@ -2008,7 +2008,7 @@ dependencies = [
  
  [[package]]
  name = "codex-ansi-escape"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "ansi-to-tui",
   "pretty_assertions",
-@@ -2035,7 +2035,7 @@ dependencies = [
+@@ -2019,7 +2019,7 @@ dependencies = [
  
  [[package]]
  name = "codex-api"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "assert_matches",
-@@ -2073,7 +2073,7 @@ dependencies = [
+@@ -2057,7 +2057,7 @@ dependencies = [
  
  [[package]]
  name = "codex-app-server"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "app_test_support",
-@@ -2187,7 +2187,7 @@ dependencies = [
+@@ -2174,7 +2174,7 @@ dependencies = [
  
  [[package]]
  name = "codex-app-server-client"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-app-server",
   "codex-app-server-protocol",
-@@ -2214,7 +2214,7 @@ dependencies = [
+@@ -2202,7 +2202,7 @@ dependencies = [
  
  [[package]]
  name = "codex-app-server-daemon"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "blake3",
-@@ -2240,7 +2240,7 @@ dependencies = [
+@@ -2232,7 +2232,7 @@ dependencies = [
  
  [[package]]
  name = "codex-app-server-protocol"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "codex-app-server-protocol-noop-macros",
-@@ -2274,11 +2274,11 @@ dependencies = [
+@@ -2266,11 +2266,11 @@ dependencies = [
  
  [[package]]
  name = "codex-app-server-protocol-noop-macros"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  
  [[package]]
  name = "codex-app-server-test-client"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "clap",
-@@ -2300,7 +2300,7 @@ dependencies = [
+@@ -2292,7 +2292,7 @@ dependencies = [
  
  [[package]]
  name = "codex-app-server-transport"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "axum",
   "base64 0.22.1",
-@@ -2342,7 +2342,7 @@ dependencies = [
+@@ -2335,7 +2335,7 @@ dependencies = [
  
  [[package]]
  name = "codex-apply-patch"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "assert_cmd",
-@@ -2362,7 +2362,7 @@ dependencies = [
+@@ -2355,7 +2355,7 @@ dependencies = [
  
  [[package]]
  name = "codex-arg0"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "codex-apply-patch",
-@@ -2386,7 +2386,7 @@ dependencies = [
+@@ -2378,7 +2378,7 @@ dependencies = [
  
  [[package]]
  name = "codex-async-utils"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "pretty_assertions",
   "rand 0.9.3",
-@@ -2396,7 +2396,7 @@ dependencies = [
+@@ -2388,7 +2388,7 @@ dependencies = [
  
  [[package]]
  name = "codex-attachment-store"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "pretty_assertions",
   "serde",
-@@ -2406,7 +2406,7 @@ dependencies = [
+@@ -2398,7 +2398,7 @@ dependencies = [
  
  [[package]]
  name = "codex-aws-auth"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "aws-config",
   "aws-credential-types",
-@@ -2432,7 +2432,7 @@ dependencies = [
+@@ -2424,7 +2424,7 @@ dependencies = [
  
  [[package]]
  name = "codex-backend-client"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "codex-api",
-@@ -2452,7 +2452,7 @@ dependencies = [
+@@ -2444,7 +2444,7 @@ dependencies = [
  
  [[package]]
  name = "codex-backend-openapi-models"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "serde",
   "serde_json",
-@@ -2461,7 +2461,7 @@ dependencies = [
+@@ -2453,7 +2453,7 @@ dependencies = [
  
  [[package]]
  name = "codex-build-info"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-install-context",
   "pretty_assertions",
-@@ -2474,7 +2474,7 @@ dependencies = [
+@@ -2466,7 +2466,7 @@ dependencies = [
  
  [[package]]
  name = "codex-bwrap"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "cc",
   "libc",
-@@ -2483,7 +2483,7 @@ dependencies = [
+@@ -2475,7 +2475,7 @@ dependencies = [
  
  [[package]]
  name = "codex-chatgpt"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "clap",
-@@ -2505,7 +2505,7 @@ dependencies = [
+@@ -2497,7 +2497,7 @@ dependencies = [
  
  [[package]]
  name = "codex-cli"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "app_test_support",
-@@ -2607,7 +2607,7 @@ dependencies = [
+@@ -2601,7 +2601,7 @@ dependencies = [
  
  [[package]]
  name = "codex-client"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-http-client",
   "eventsource-stream",
-@@ -2621,7 +2621,7 @@ dependencies = [
+@@ -2615,7 +2615,7 @@ dependencies = [
  
  [[package]]
  name = "codex-cloud-client"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "async-stream",
-@@ -2645,7 +2645,7 @@ dependencies = [
+@@ -2639,7 +2639,7 @@ dependencies = [
  
  [[package]]
  name = "codex-cloud-config"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "base64 0.22.1",
   "chrono",
-@@ -2671,7 +2671,7 @@ dependencies = [
+@@ -2667,7 +2667,7 @@ dependencies = [
  
  [[package]]
  name = "codex-cloud-tasks"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -2704,7 +2704,7 @@ dependencies = [
+@@ -2700,7 +2700,7 @@ dependencies = [
  
  [[package]]
  name = "codex-cloud-tasks-client"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -2719,7 +2719,7 @@ dependencies = [
+@@ -2715,7 +2715,7 @@ dependencies = [
  
  [[package]]
  name = "codex-cloud-tasks-mock-client"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "chrono",
   "codex-cloud-tasks-client",
-@@ -2728,7 +2728,7 @@ dependencies = [
+@@ -2724,7 +2724,7 @@ dependencies = [
  
  [[package]]
  name = "codex-code-mode"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-code-mode-protocol",
   "codex-http-client",
-@@ -2751,7 +2751,7 @@ dependencies = [
+@@ -2748,7 +2748,7 @@ dependencies = [
  
  [[package]]
  name = "codex-code-mode-host"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "axum",
-@@ -2780,7 +2780,7 @@ dependencies = [
+@@ -2779,7 +2779,7 @@ dependencies = [
  
  [[package]]
  name = "codex-code-mode-protocol"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-protocol",
   "glob",
-@@ -2798,7 +2798,7 @@ dependencies = [
+@@ -2797,7 +2797,7 @@ dependencies = [
  
  [[package]]
  name = "codex-code-mode-runtime"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "base64 0.22.1",
   "codex-code-mode-protocol",
-@@ -2816,11 +2816,11 @@ dependencies = [
+@@ -2819,11 +2819,11 @@ dependencies = [
  
  [[package]]
  name = "codex-collaboration-mode-templates"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  
  [[package]]
  name = "codex-config"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "base64 0.22.1",
-@@ -2870,7 +2870,7 @@ dependencies = [
+@@ -2877,7 +2877,7 @@ dependencies = [
  
  [[package]]
  name = "codex-config-schema"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "clap",
-@@ -2879,7 +2879,7 @@ dependencies = [
+@@ -2886,7 +2886,7 @@ dependencies = [
  
  [[package]]
  name = "codex-connectors"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "arc-swap",
-@@ -2901,7 +2901,7 @@ dependencies = [
+@@ -2908,7 +2908,7 @@ dependencies = [
  
  [[package]]
  name = "codex-connectors-extension"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-connectors",
   "codex-core-plugins",
-@@ -2915,7 +2915,7 @@ dependencies = [
+@@ -2922,7 +2922,7 @@ dependencies = [
  
  [[package]]
  name = "codex-context-fragments"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-protocol",
-  "codex-utils-string",
-@@ -2925,7 +2925,7 @@ dependencies = [
+  "codex-protocol-test-support",
+@@ -2933,7 +2933,7 @@ dependencies = [
  
  [[package]]
  name = "codex-core"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "arc-swap",
-@@ -3014,6 +3014,7 @@ dependencies = [
+@@ -3027,6 +3027,7 @@ dependencies = [
   "codex-web-search-extension",
   "codex-windows-sandbox",
   "codex-windows-sandbox-test-support",
@@ -442,723 +442,794 @@ index 1cee117..276dba3 100644
   "core_test_support",
   "ctor 0.6.3",
   "dirs",
-@@ -3067,7 +3068,7 @@ dependencies = [
+@@ -3083,7 +3084,7 @@ dependencies = [
  
  [[package]]
  name = "codex-core-api"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-analytics",
   "codex-app-server-protocol",
-@@ -3090,7 +3091,7 @@ dependencies = [
+@@ -3106,7 +3107,7 @@ dependencies = [
  
  [[package]]
  name = "codex-core-plugin-common"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-utils-absolute-path",
   "semver",
-@@ -3101,7 +3102,7 @@ dependencies = [
+@@ -3117,7 +3118,7 @@ dependencies = [
  
  [[package]]
  name = "codex-core-plugins"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -3158,7 +3159,7 @@ dependencies = [
+@@ -3174,7 +3175,7 @@ dependencies = [
  
  [[package]]
  name = "codex-diagnostics"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "libc",
   "pretty_assertions",
-@@ -3166,7 +3167,7 @@ dependencies = [
+@@ -3182,7 +3183,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-direct-tool-timing"
+-version = "0.0.0"
++version = "0.167.0"
+ dependencies = [
+  "codex-utils-critical-path",
+  "pretty_assertions",
+@@ -3193,7 +3194,7 @@ dependencies = [
  
  [[package]]
  name = "codex-exec"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "assert_cmd",
-@@ -3218,7 +3219,7 @@ dependencies = [
+@@ -3246,7 +3247,7 @@ dependencies = [
  
  [[package]]
  name = "codex-exec-server"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "arc-swap",
-@@ -3287,7 +3288,7 @@ dependencies = [
+@@ -3319,7 +3320,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-exec-server-cli"
+-version = "0.0.0"
++version = "0.167.0"
+ dependencies = [
+  "anyhow",
+  "assert_matches",
+@@ -3363,7 +3364,7 @@ dependencies = [
  
  [[package]]
  name = "codex-exec-server-protocol"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "base64 0.22.1",
   "codex-file-system",
-@@ -3304,7 +3305,7 @@ dependencies = [
+@@ -3381,7 +3382,7 @@ dependencies = [
  
  [[package]]
  name = "codex-exec-server-test-support"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "codex-exec-server",
-@@ -3319,7 +3320,7 @@ dependencies = [
+@@ -3396,7 +3397,7 @@ dependencies = [
  
  [[package]]
  name = "codex-execpolicy"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
-  "clap",
-@@ -3337,7 +3338,7 @@ dependencies = [
+  "caseless",
+@@ -3416,7 +3417,7 @@ dependencies = [
  
  [[package]]
  name = "codex-experimental-api-macros"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "proc-macro2",
   "quote",
-@@ -3346,7 +3347,7 @@ dependencies = [
+@@ -3425,7 +3426,7 @@ dependencies = [
  
  [[package]]
  name = "codex-extension-api"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-api",
   "codex-config",
-@@ -3368,7 +3369,7 @@ dependencies = [
+@@ -3448,7 +3449,7 @@ dependencies = [
  
  [[package]]
  name = "codex-extension-items"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-utils-absolute-path",
   "pretty_assertions",
-@@ -3380,7 +3381,7 @@ dependencies = [
+@@ -3460,7 +3461,7 @@ dependencies = [
  
  [[package]]
  name = "codex-external-agent-migration"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "chrono",
   "codex-analytics",
-@@ -3410,7 +3411,7 @@ dependencies = [
+@@ -3491,7 +3492,7 @@ dependencies = [
  
  [[package]]
  name = "codex-features"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-network-proxy",
   "codex-protocol",
-@@ -3424,7 +3425,7 @@ dependencies = [
+@@ -3505,7 +3506,7 @@ dependencies = [
  
  [[package]]
  name = "codex-feedback"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "bytes",
-@@ -3451,7 +3452,7 @@ dependencies = [
+@@ -3533,7 +3534,7 @@ dependencies = [
  
  [[package]]
  name = "codex-file-search"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "clap",
-@@ -3467,7 +3468,7 @@ dependencies = [
+@@ -3549,7 +3550,7 @@ dependencies = [
  
  [[package]]
  name = "codex-file-system"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "bytes",
   "codex-protocol",
-@@ -3479,7 +3480,7 @@ dependencies = [
+@@ -3563,7 +3564,7 @@ dependencies = [
  
  [[package]]
  name = "codex-file-watcher"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "notify",
   "pretty_assertions",
-@@ -3490,7 +3491,7 @@ dependencies = [
+@@ -3574,7 +3575,7 @@ dependencies = [
  
  [[package]]
  name = "codex-git-attribution"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-backend-client",
   "codex-extension-api",
-@@ -3503,7 +3504,7 @@ dependencies = [
+@@ -3587,7 +3588,7 @@ dependencies = [
  
  [[package]]
  name = "codex-git-utils"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -3531,7 +3532,7 @@ dependencies = [
+@@ -3615,7 +3616,7 @@ dependencies = [
  
  [[package]]
  name = "codex-goal-extension"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -3556,7 +3557,7 @@ dependencies = [
+@@ -3640,7 +3641,7 @@ dependencies = [
  
  [[package]]
  name = "codex-guardian-context"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-context-fragments",
   "codex-history",
-@@ -3568,7 +3569,7 @@ dependencies = [
+@@ -3654,7 +3655,7 @@ dependencies = [
  
  [[package]]
  name = "codex-guardian-reviewer"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "codex-analytics",
-@@ -3593,7 +3594,7 @@ dependencies = [
+@@ -3690,7 +3691,7 @@ dependencies = [
  
  [[package]]
  name = "codex-guardian-v2"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "codex-analytics",
-@@ -3630,7 +3631,7 @@ dependencies = [
+@@ -3729,7 +3730,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-guardian-v3"
+-version = "0.0.0"
++version = "0.167.0"
+ dependencies = [
+  "codex-message-board",
+  "codex-protocol",
+@@ -3738,7 +3739,7 @@ dependencies = [
  
  [[package]]
  name = "codex-history"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "codex-protocol",
-@@ -3642,7 +3643,7 @@ dependencies = [
+@@ -3750,7 +3751,7 @@ dependencies = [
  
  [[package]]
  name = "codex-history-notes-extension"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-analytics",
   "codex-client",
-@@ -3667,7 +3668,7 @@ dependencies = [
+@@ -3776,7 +3777,7 @@ dependencies = [
  
  [[package]]
  name = "codex-home"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-extension-api",
   "codex-utils-absolute-path",
-@@ -3679,7 +3680,7 @@ dependencies = [
+@@ -3788,7 +3789,7 @@ dependencies = [
  
  [[package]]
  name = "codex-hooks"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "async-channel",
-@@ -3707,7 +3708,7 @@ dependencies = [
+@@ -3817,7 +3818,7 @@ dependencies = [
  
  [[package]]
  name = "codex-http-client"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "bytes",
   "codex-utils-cargo-bin",
-@@ -3743,7 +3744,7 @@ dependencies = [
+@@ -3857,7 +3858,7 @@ dependencies = [
  
  [[package]]
  name = "codex-image-generation-extension"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "base64 0.22.1",
   "codex-api",
-@@ -3771,7 +3772,7 @@ dependencies = [
+@@ -3889,7 +3890,7 @@ dependencies = [
  
  [[package]]
  name = "codex-install-context"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-utils-absolute-path",
   "codex-utils-home-dir",
-@@ -3784,7 +3785,7 @@ dependencies = [
+@@ -3902,7 +3903,7 @@ dependencies = [
  
  [[package]]
  name = "codex-keyring-store"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "keyring",
   "pretty_assertions",
-@@ -3795,7 +3796,7 @@ dependencies = [
+@@ -3913,7 +3914,7 @@ dependencies = [
  
  [[package]]
  name = "codex-linux-sandbox"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "clap",
   "codex-core",
-@@ -3824,7 +3825,7 @@ dependencies = [
+@@ -3942,7 +3943,7 @@ dependencies = [
  
  [[package]]
  name = "codex-lmstudio"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-core",
   "codex-http-client",
-@@ -3838,7 +3839,7 @@ dependencies = [
+@@ -3956,7 +3957,7 @@ dependencies = [
  
  [[package]]
  name = "codex-login"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "base64 0.22.1",
-@@ -3884,7 +3885,7 @@ dependencies = [
+@@ -4004,7 +4005,7 @@ dependencies = [
  
  [[package]]
  name = "codex-mcp"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "arc-swap",
-@@ -3924,7 +3925,7 @@ dependencies = [
+@@ -4049,7 +4050,7 @@ dependencies = [
  
  [[package]]
  name = "codex-mcp-extension"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "axum",
-@@ -3957,7 +3958,7 @@ dependencies = [
+@@ -4082,7 +4083,7 @@ dependencies = [
  
  [[package]]
  name = "codex-memories-extension"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-core",
   "codex-extension-api",
-@@ -3979,7 +3980,7 @@ dependencies = [
+@@ -4104,7 +4105,7 @@ dependencies = [
  
  [[package]]
  name = "codex-memories-read"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-protocol",
   "codex-shell-command",
-@@ -3989,7 +3990,7 @@ dependencies = [
+@@ -4114,7 +4115,7 @@ dependencies = [
  
  [[package]]
  name = "codex-memories-write"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -4026,7 +4027,7 @@ dependencies = [
+@@ -4151,7 +4152,7 @@ dependencies = [
  
  [[package]]
  name = "codex-mermaid"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "insta",
   "pretty_assertions",
-@@ -4035,7 +4036,7 @@ dependencies = [
+@@ -4160,7 +4161,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-message-board"
+-version = "0.0.0"
++version = "0.167.0"
+ dependencies = [
+  "base64 0.22.1",
+  "caseless",
+@@ -4185,7 +4186,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-message-board-mcp"
+-version = "0.0.0"
++version = "0.167.0"
+ dependencies = [
+  "codex-attachment-store",
+  "codex-message-board",
+@@ -4199,7 +4200,7 @@ dependencies = [
  
  [[package]]
  name = "codex-message-history"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-config",
   "memchr",
-@@ -4049,7 +4050,7 @@ dependencies = [
+@@ -4213,7 +4214,7 @@ dependencies = [
  
  [[package]]
  name = "codex-model-provider"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "base64 0.22.1",
   "chrono",
-@@ -4083,7 +4084,7 @@ dependencies = [
+@@ -4252,7 +4253,7 @@ dependencies = [
  
  [[package]]
  name = "codex-model-provider-info"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-client",
-  "codex-protocol",
-@@ -4101,7 +4102,7 @@ dependencies = [
+  "codex-http-client",
+@@ -4270,7 +4271,7 @@ dependencies = [
  
  [[package]]
  name = "codex-models-manager"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "chrono",
   "codex-http-client",
-@@ -4120,7 +4121,7 @@ dependencies = [
+@@ -4289,7 +4290,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-multi-env-copy-file"
+-version = "0.0.0"
++version = "0.167.0"
+ dependencies = [
+  "anyhow",
+  "codex-config",
+@@ -4315,7 +4316,7 @@ dependencies = [
  
  [[package]]
  name = "codex-mxc-sandbox"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
-  "appcontainer_common",
-@@ -4142,7 +4143,7 @@ dependencies = [
+  "codex-network-proxy",
+@@ -4336,7 +4337,7 @@ dependencies = [
  
  [[package]]
  name = "codex-network-proxy"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
-  "base64 0.22.1",
-@@ -4191,7 +4192,7 @@ dependencies = [
+  "aws-credential-types",
+@@ -4387,7 +4388,7 @@ dependencies = [
  
  [[package]]
  name = "codex-ollama"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "assert_matches",
   "async-stream",
-@@ -4211,7 +4212,7 @@ dependencies = [
+@@ -4407,7 +4408,7 @@ dependencies = [
  
  [[package]]
  name = "codex-otel"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "bytes",
   "chrono",
-@@ -4248,7 +4249,7 @@ dependencies = [
+@@ -4446,7 +4447,7 @@ dependencies = [
  
  [[package]]
  name = "codex-otel-trace-websocket"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "axum",
-@@ -4259,7 +4260,7 @@ dependencies = [
+@@ -4457,7 +4458,7 @@ dependencies = [
  
  [[package]]
  name = "codex-plugin"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-config",
   "codex-core-plugin-common",
-@@ -4274,7 +4275,7 @@ dependencies = [
+@@ -4472,7 +4473,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-plugin-host"
+-version = "0.0.0"
++version = "0.167.0"
+ dependencies = [
+  "codex-utils-cargo-bin",
+  "codex-utils-process",
+@@ -4489,7 +4490,7 @@ dependencies = [
  
  [[package]]
  name = "codex-process-hardening"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "libc",
   "pretty_assertions",
-@@ -4282,7 +4283,7 @@ dependencies = [
+@@ -4497,7 +4498,7 @@ dependencies = [
  
  [[package]]
  name = "codex-prompts"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "codex-collaboration-mode-templates",
-@@ -4299,7 +4300,7 @@ dependencies = [
+@@ -4515,7 +4516,7 @@ dependencies = [
  
  [[package]]
  name = "codex-protocol"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "chardetng",
-@@ -4344,7 +4345,7 @@ dependencies = [
+@@ -4561,14 +4562,14 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-protocol-test-support"
+-version = "0.0.0"
++version = "0.167.0"
+ dependencies = [
+  "codex-protocol",
+ ]
  
  [[package]]
  name = "codex-queue-extension"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "codex-core",
-@@ -4365,7 +4366,7 @@ dependencies = [
+@@ -4589,7 +4590,7 @@ dependencies = [
  
  [[package]]
  name = "codex-realtime-webrtc"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "codex-build-info",
-@@ -4384,7 +4385,7 @@ dependencies = [
+@@ -4608,7 +4609,7 @@ dependencies = [
  
  [[package]]
  name = "codex-response-debug-context"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "base64 0.22.1",
   "codex-api",
-@@ -4395,7 +4396,7 @@ dependencies = [
+@@ -4619,7 +4620,7 @@ dependencies = [
  
  [[package]]
  name = "codex-responses-api-proxy"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
-  "clap",
-@@ -4412,7 +4413,7 @@ dependencies = [
+  "bytes",
+@@ -4643,7 +4644,7 @@ dependencies = [
  
  [[package]]
  name = "codex-rmcp-client"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "axum",
-@@ -4463,7 +4464,7 @@ dependencies = [
+@@ -4694,7 +4695,7 @@ dependencies = [
  
  [[package]]
  name = "codex-rollout"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -4494,7 +4495,7 @@ dependencies = [
+@@ -4727,7 +4728,7 @@ dependencies = [
  
  [[package]]
  name = "codex-rollout-trace"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "codex-code-mode",
-@@ -4510,7 +4511,7 @@ dependencies = [
+@@ -4744,7 +4745,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-runtime-agent-instance"
+-version = "0.0.0"
++version = "0.167.0"
+ dependencies = [
+  "base64 0.22.1",
+  "codex-agent-identity",
+@@ -4770,7 +4771,7 @@ dependencies = [
  
  [[package]]
  name = "codex-sandboxing"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "codex-mxc-sandbox",
-@@ -4538,7 +4539,7 @@ dependencies = [
+@@ -4798,7 +4799,7 @@ dependencies = [
  
  [[package]]
  name = "codex-secrets"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "age",
   "anyhow",
-@@ -4559,7 +4560,7 @@ dependencies = [
+@@ -4819,7 +4820,7 @@ dependencies = [
  
  [[package]]
  name = "codex-shell-command"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "base64 0.22.1",
-@@ -4582,7 +4583,7 @@ dependencies = [
- 
- [[package]]
- name = "codex-shell-escalation"
--version = "0.0.0"
-+version = "0.162.1"
- dependencies = [
-  "anyhow",
-  "clap",
-@@ -4602,7 +4603,7 @@ dependencies = [
+@@ -4842,7 +4843,7 @@ dependencies = [
  
  [[package]]
  name = "codex-skills"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-protocol",
   "codex-shell-command",
-@@ -4619,7 +4620,7 @@ dependencies = [
+@@ -4859,7 +4860,7 @@ dependencies = [
  
  [[package]]
  name = "codex-skills-extension"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "assert_matches",
   "blake3",
-@@ -4657,7 +4658,7 @@ dependencies = [
+@@ -4899,7 +4900,7 @@ dependencies = [
  
  [[package]]
  name = "codex-state"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -4684,7 +4685,7 @@ dependencies = [
+@@ -4928,7 +4929,7 @@ dependencies = [
  
  [[package]]
  name = "codex-stdio-to-uds"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "codex-uds",
-@@ -4696,7 +4697,7 @@ dependencies = [
+@@ -4940,7 +4941,7 @@ dependencies = [
  
  [[package]]
  name = "codex-tcp-tunnel"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "bytes",
-@@ -4717,7 +4718,7 @@ dependencies = [
+@@ -4961,7 +4962,7 @@ dependencies = [
  
  [[package]]
  name = "codex-terminal-detection"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "pretty_assertions",
   "tracing",
-@@ -4725,7 +4726,7 @@ dependencies = [
+@@ -4969,7 +4970,7 @@ dependencies = [
  
  [[package]]
  name = "codex-test-binary-support"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-arg0",
   "tempfile",
-@@ -4733,7 +4734,7 @@ dependencies = [
+@@ -4977,7 +4978,7 @@ dependencies = [
  
  [[package]]
  name = "codex-thread-manager-sample"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "clap",
-@@ -4744,7 +4745,7 @@ dependencies = [
+@@ -4988,7 +4989,7 @@ dependencies = [
  
  [[package]]
  name = "codex-thread-store"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "chrono",
   "codex-app-server-protocol",
-@@ -4775,7 +4776,7 @@ dependencies = [
+@@ -5019,7 +5020,7 @@ dependencies = [
  
  [[package]]
  name = "codex-tools"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "bitflags 2.13.1",
-  "codex-code-mode",
-@@ -4801,7 +4802,7 @@ dependencies = [
+  "codex-attachment-store",
+@@ -5045,7 +5046,7 @@ dependencies = [
  
  [[package]]
  name = "codex-tui"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "app_test_support",
-@@ -4927,7 +4928,7 @@ dependencies = [
+@@ -5173,7 +5174,7 @@ dependencies = [
  
  [[package]]
  name = "codex-uds"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "async-io",
   "libc",
-@@ -4941,7 +4942,7 @@ dependencies = [
+@@ -5187,7 +5188,7 @@ dependencies = [
  
  [[package]]
  name = "codex-user-verification"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "base64 0.22.1",
-  "core-foundation 0.10.1",
-@@ -4961,7 +4962,7 @@ dependencies = [
+  "block2",
+@@ -5208,7 +5209,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-absolute-path"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "dirs",
   "dunce",
-@@ -4975,14 +4976,14 @@ dependencies = [
+@@ -5222,14 +5223,14 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-approval-presets"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-protocol",
  ]
@@ -1166,170 +1237,186 @@ index 1cee117..276dba3 100644
  [[package]]
  name = "codex-utils-audio"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "base64 0.22.1",
   "codex-protocol",
-@@ -4996,7 +4997,7 @@ dependencies = [
+@@ -5243,7 +5244,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-cache"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "lru",
   "sha1 0.10.6",
-@@ -5005,7 +5006,7 @@ dependencies = [
+@@ -5252,7 +5253,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-cargo-bin"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "assert_cmd",
   "runfiles",
-@@ -5014,7 +5015,7 @@ dependencies = [
+@@ -5261,7 +5262,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-cli"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "clap",
   "codex-protocol",
-@@ -5026,15 +5027,15 @@ dependencies = [
+@@ -5273,22 +5274,22 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-critical-path"
+-version = "0.0.0"
++version = "0.167.0"
+ dependencies = [
+  "pretty_assertions",
+ ]
  
  [[package]]
  name = "codex-utils-elapsed"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  
  [[package]]
  name = "codex-utils-fuzzy-match"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  
  [[package]]
  name = "codex-utils-git-discovery"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-git-utils",
   "codex-utils-absolute-path",
-@@ -5047,7 +5048,7 @@ dependencies = [
+@@ -5301,14 +5302,14 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-head-tail-buffer"
+-version = "0.0.0"
++version = "0.167.0"
+ dependencies = [
+  "pretty_assertions",
+ ]
  
  [[package]]
  name = "codex-utils-home-dir"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-utils-absolute-path",
   "dirs",
-@@ -5057,7 +5058,7 @@ dependencies = [
+@@ -5318,7 +5319,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-image"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "base64 0.22.1",
   "codex-utils-cache",
-@@ -5071,7 +5072,7 @@ dependencies = [
+@@ -5332,7 +5333,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-json-to-toml"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "pretty_assertions",
   "serde_json",
-@@ -5080,7 +5081,7 @@ dependencies = [
+@@ -5341,7 +5342,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-oss"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-core",
   "codex-lmstudio",
-@@ -5090,7 +5091,7 @@ dependencies = [
+@@ -5351,7 +5352,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-output-truncation"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-protocol",
   "codex-utils-string",
-@@ -5100,7 +5101,7 @@ dependencies = [
+@@ -5361,7 +5362,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-path"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-utils-absolute-path",
   "dunce",
-@@ -5111,7 +5112,7 @@ dependencies = [
+@@ -5372,7 +5373,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-path-uri"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "base64 0.22.1",
   "codex-utils-absolute-path",
-@@ -5127,7 +5128,7 @@ dependencies = [
+@@ -5388,7 +5389,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-plugins"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-exec-server",
   "codex-exec-server-protocol",
-@@ -5141,7 +5142,7 @@ dependencies = [
+@@ -5402,7 +5403,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-process"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "pretty_assertions",
   "tokio",
-@@ -5149,7 +5150,7 @@ dependencies = [
+@@ -5410,7 +5411,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-pty"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "codex-utils-cargo-bin",
-@@ -5168,7 +5169,7 @@ dependencies = [
+@@ -5429,7 +5430,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-readiness"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "assert_matches",
   "thiserror 2.0.18",
-@@ -5178,7 +5179,7 @@ dependencies = [
+@@ -5439,7 +5440,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-redacted-string"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "schemars 0.8.22",
   "serde",
-@@ -5186,14 +5187,14 @@ dependencies = [
+@@ -5447,14 +5448,14 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-rustls-provider"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "rustls",
  ]
@@ -1337,25 +1424,25 @@ index 1cee117..276dba3 100644
  [[package]]
  name = "codex-utils-sandbox-summary"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-protocol",
   "codex-utils-absolute-path",
-@@ -5203,7 +5204,7 @@ dependencies = [
+@@ -5464,7 +5465,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-sleep-inhibitor"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "core-foundation 0.9.4",
   "libc",
-@@ -5213,14 +5214,14 @@ dependencies = [
+@@ -5474,14 +5475,14 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-stream-parser"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "pretty_assertions",
  ]
@@ -1363,16 +1450,16 @@ index 1cee117..276dba3 100644
  [[package]]
  name = "codex-utils-string"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "pretty_assertions",
   "regex-lite",
-@@ -5230,14 +5231,14 @@ dependencies = [
+@@ -5491,14 +5492,14 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-template"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "pretty_assertions",
  ]
@@ -1380,70 +1467,70 @@ index 1cee117..276dba3 100644
  [[package]]
  name = "codex-v8-poc"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "pretty_assertions",
   "v8",
-@@ -5245,7 +5246,7 @@ dependencies = [
+@@ -5506,7 +5507,7 @@ dependencies = [
  
  [[package]]
  name = "codex-voice-host"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "codex-install-context",
-@@ -5272,7 +5273,7 @@ dependencies = [
+@@ -5533,7 +5534,7 @@ dependencies = [
  
  [[package]]
  name = "codex-web-search-extension"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-api",
   "codex-core",
-@@ -5294,7 +5295,7 @@ dependencies = [
+@@ -5557,7 +5558,7 @@ dependencies = [
  
  [[package]]
  name = "codex-websocket-auth"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "base64 0.22.1",
-@@ -5313,7 +5314,7 @@ dependencies = [
+@@ -5576,7 +5577,7 @@ dependencies = [
  
  [[package]]
  name = "codex-websocket-client"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-http-client",
   "codex-utils-rustls-provider",
-@@ -5329,7 +5330,7 @@ dependencies = [
+@@ -5592,7 +5593,7 @@ dependencies = [
  
  [[package]]
  name = "codex-windows-sandbox"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "base64 0.22.1",
-@@ -5359,7 +5360,7 @@ dependencies = [
+@@ -5622,7 +5623,7 @@ dependencies = [
  
  [[package]]
  name = "codex-windows-sandbox-service"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "codex-cloud-config",
-@@ -5376,14 +5377,14 @@ dependencies = [
+@@ -5640,14 +5641,14 @@ dependencies = [
  
  [[package]]
  name = "codex-windows-sandbox-test-support"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "dirs",
  ]
@@ -1451,26 +1538,26 @@ index 1cee117..276dba3 100644
  [[package]]
  name = "codex-workload-identity"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "codex-http-client",
   "pretty_assertions",
-@@ -5398,7 +5399,7 @@ dependencies = [
+@@ -5662,7 +5663,7 @@ dependencies = [
  
  [[package]]
  name = "codex-worktree"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "codex-git-utils",
-@@ -5412,6 +5413,19 @@ dependencies = [
+@@ -5676,6 +5677,19 @@ dependencies = [
   "uuid",
  ]
  
 +[[package]]
 +name = "codex-zero-codec"
-+version = "0.162.1"
++version = "0.167.0"
 +dependencies = [
 + "anyhow",
 + "pretty_assertions",
@@ -1484,25 +1571,25 @@ index 1cee117..276dba3 100644
  [[package]]
  name = "color-eyre"
  version = "0.6.5"
-@@ -5639,7 +5653,7 @@ dependencies = [
+@@ -5915,7 +5929,7 @@ dependencies = [
  
  [[package]]
  name = "core_test_support"
 -version = "0.0.0"
-+version = "0.162.1"
++version = "0.167.0"
  dependencies = [
   "anyhow",
   "assert_cmd",
-@@ -6500,7 +6514,7 @@ dependencies = [
+@@ -6844,7 +6858,7 @@ dependencies = [
   "libc",
   "option-ext",
   "redox_users 0.5.2",
-- "windows-sys 0.59.0",
+- "windows-sys 0.60.2",
 + "windows-sys 0.61.2",
  ]
  
  [[package]]
-@@ -6857,7 +6871,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
+@@ -7201,7 +7215,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
  checksum = "39cab71617ae0d63f51a36d69f866391735b51691dbda63cf6f96d042b63efeb"
  dependencies = [
   "libc",
@@ -1511,7 +1598,7 @@ index 1cee117..276dba3 100644
  ]
  
  [[package]]
-@@ -6954,6 +6968,17 @@ dependencies = [
+@@ -7298,6 +7312,17 @@ dependencies = [
   "regex-syntax",
  ]
  
@@ -1529,7 +1616,16 @@ index 1cee117..276dba3 100644
  [[package]]
  name = "fast-srgb8"
  version = "1.0.0"
-@@ -7507,7 +7532,7 @@ dependencies = [
+@@ -7353,7 +7378,7 @@ checksum = "0ce92ff622d6dadf7349484f42c93271a0d49b7cc4d466a936405bacbe10aa78"
+ dependencies = [
+  "cfg-if",
+  "rustix 1.1.4",
+- "windows-sys 0.52.0",
++ "windows-sys 0.59.0",
+ ]
+ 
+ [[package]]
+@@ -7853,7 +7878,7 @@ dependencies = [
   "gobject-sys",
   "libc",
   "system-deps",
@@ -1538,7 +1634,16 @@ index 1cee117..276dba3 100644
  ]
  
  [[package]]
-@@ -9620,7 +9645,7 @@ checksum = "3640c1c38b8e4e43584d8df18be5fc6b0aa314ce6ebf51b53313d4306cca8e46"
+@@ -9277,7 +9302,7 @@ dependencies = [
+  "js-sys",
+  "log",
+  "wasm-bindgen",
+- "windows-core 0.58.0",
++ "windows-core 0.62.2",
+ ]
+ 
+ [[package]]
+@@ -9730,7 +9755,7 @@ checksum = "3640c1c38b8e4e43584d8df18be5fc6b0aa314ce6ebf51b53313d4306cca8e46"
  dependencies = [
   "hermit-abi",
   "libc",
@@ -1547,25 +1652,16 @@ index 1cee117..276dba3 100644
  ]
  
  [[package]]
-@@ -9686,7 +9711,7 @@ dependencies = [
-  "portable-atomic",
-  "portable-atomic-util",
-  "serde_core",
-- "windows-sys 0.52.0",
-+ "windows-sys 0.61.2",
- ]
- 
- [[package]]
-@@ -10595,7 +10620,7 @@ version = "0.50.3"
+@@ -10711,7 +10736,7 @@ version = "0.50.3"
  source = "registry+https://github.com/rust-lang/crates.io-index"
  checksum = "7957b9740744892f114936ab4a57b3f487491bbeafaf8083688b16841a4240e5"
  dependencies = [
-- "windows-sys 0.59.0",
+- "windows-sys 0.60.2",
 + "windows-sys 0.61.2",
  ]
  
  [[package]]
-@@ -11312,7 +11337,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
+@@ -11441,7 +11466,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
  checksum = "7d8fae84b431384b68627d0f9b3b1245fcf9f46f6c0e3dc902e9dce64edd1967"
  dependencies = [
   "libc",
@@ -1574,7 +1670,7 @@ index 1cee117..276dba3 100644
  ]
  
  [[package]]
-@@ -12245,7 +12270,7 @@ dependencies = [
+@@ -12377,7 +12402,7 @@ dependencies = [
   "libc",
   "log",
   "socket2 0.6.3",
@@ -1583,7 +1679,7 @@ index 1cee117..276dba3 100644
  ]
  
  [[package]]
-@@ -12912,9 +12937,9 @@ dependencies = [
+@@ -13053,9 +13078,9 @@ dependencies = [
  
  [[package]]
  name = "regex"
@@ -1595,7 +1691,7 @@ index 1cee117..276dba3 100644
  dependencies = [
   "aho-corasick",
   "memchr",
-@@ -12924,9 +12949,9 @@ dependencies = [
+@@ -13065,9 +13090,9 @@ dependencies = [
  
  [[package]]
  name = "regex-automata"
@@ -1607,7 +1703,7 @@ index 1cee117..276dba3 100644
  dependencies = [
   "aho-corasick",
   "memchr",
-@@ -12941,9 +12966,9 @@ checksum = "8d942b98df5e658f56f20d592c7f868833fe38115e65c33003d8cd224b0155da"
+@@ -13082,9 +13107,9 @@ checksum = "8d942b98df5e658f56f20d592c7f868833fe38115e65c33003d8cd224b0155da"
  
  [[package]]
  name = "regex-syntax"
@@ -1619,7 +1715,16 @@ index 1cee117..276dba3 100644
  
  [[package]]
  name = "rend"
-@@ -13548,7 +13573,7 @@ dependencies = [
+@@ -13677,7 +13702,7 @@ dependencies = [
+  "errno",
+  "libc",
+  "linux-raw-sys 0.4.15",
+- "windows-sys 0.52.0",
++ "windows-sys 0.59.0",
+ ]
+ 
+ [[package]]
+@@ -13690,7 +13715,7 @@ dependencies = [
   "errno",
   "libc",
   "linux-raw-sys 0.12.1",
@@ -1628,7 +1733,7 @@ index 1cee117..276dba3 100644
  ]
  
  [[package]]
-@@ -13607,7 +13632,7 @@ dependencies = [
+@@ -13749,7 +13774,7 @@ dependencies = [
   "security-framework 3.5.1",
   "security-framework-sys",
   "webpki-root-certs",
@@ -1637,7 +1742,7 @@ index 1cee117..276dba3 100644
  ]
  
  [[package]]
-@@ -14431,7 +14456,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
+@@ -14561,7 +14586,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
  checksum = "3a766e1110788c36f4fa1c2b71b387a7815aa65f88ce0229841826633d93723e"
  dependencies = [
   "libc",
@@ -1646,7 +1751,7 @@ index 1cee117..276dba3 100644
  ]
  
  [[package]]
-@@ -15261,7 +15286,7 @@ dependencies = [
+@@ -15391,7 +15416,7 @@ dependencies = [
   "getrandom 0.4.2",
   "once_cell",
   "rustix 1.1.4",
@@ -1655,7 +1760,7 @@ index 1cee117..276dba3 100644
  ]
  
  [[package]]
-@@ -15317,7 +15342,7 @@ dependencies = [
+@@ -15447,7 +15472,7 @@ dependencies = [
   "parking_lot",
   "rustix 1.1.4",
   "signal-hook",
@@ -1664,7 +1769,7 @@ index 1cee117..276dba3 100644
  ]
  
  [[package]]
-@@ -15567,6 +15592,20 @@ dependencies = [
+@@ -15697,6 +15722,20 @@ dependencies = [
   "zune-jpeg 0.4.21",
  ]
  
@@ -1685,7 +1790,7 @@ index 1cee117..276dba3 100644
  [[package]]
  name = "tikv-jemalloc-sys"
  version = "0.7.1+5.3.1-0-g81034ce1f1373e37dc865038e1bc8eeecf559ce8"
-@@ -17068,7 +17107,7 @@ version = "0.1.11"
+@@ -17205,7 +17244,7 @@ version = "0.1.11"
  source = "registry+https://github.com/rust-lang/crates.io-index"
  checksum = "c2a7b1c03c876122aa43f3020e6c3c3ee5c05081c9a00739faf7503aeba10d22"
  dependencies = [
@@ -1695,26 +1800,26 @@ index 1cee117..276dba3 100644
  
  [[package]]
 diff --git a/codex-rs/Cargo.toml b/codex-rs/Cargo.toml
-index 0482340..5dfb51d 100644
+index 0107584..c1869b9 100644
 --- a/codex-rs/Cargo.toml
 +++ b/codex-rs/Cargo.toml
-@@ -30,6 +30,7 @@ members = [
-     "code-mode-host",
+@@ -31,6 +31,7 @@ members = [
      "code-mode-protocol",
      "code-mode-runtime",
+     "plugin-host",
 +    "codex-zero-codec",
      "codex-home",
      "cloud-config",
      "cloud-tasks",
-@@ -201,6 +202,7 @@ codex-cloud-tasks-mock-client = { path = "cloud-tasks-mock-client" }
- codex-code-mode = { path = "code-mode" }
+@@ -212,6 +213,7 @@ codex-code-mode = { path = "code-mode" }
  codex-code-mode-protocol = { path = "code-mode-protocol" }
  codex-code-mode-runtime = { path = "code-mode-runtime" }
+ codex-plugin-host = { path = "plugin-host" }
 +codex-zero-codec = { path = "codex-zero-codec" }
  codex-home = { path = "codex-home" }
  codex-http-client = { path = "http-client" }
  codex-websocket-auth = { path = "websocket-auth" }
-@@ -472,6 +474,7 @@ serial_test = "3.2.0"
+@@ -490,6 +492,7 @@ serial_test = "3.2.0"
  sha1 = "0.10.6"
  scopeguard = "1.2.0"
  sha2 = "0.10"
@@ -1722,11 +1827,757 @@ index 0482340..5dfb51d 100644
  shlex = "1.3.0"
  signal-hook = "0.3.18"
  similar = "2.7.0"
+diff --git a/codex-rs/app-server-protocol/schema/precomputed/app-server-exports-stable.json.zst b/codex-rs/app-server-protocol/schema/precomputed/app-server-exports-stable.json.zst
+index 62328ddc4598b85a6f8abe2d94afad4760acc172..eb8fa87cb81daf8e85aed89b368446044ff73909 100644
+GIT binary patch
+delta 19221
+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
+
+delta 19124
+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
+DwUxlV
+
 diff --git a/codex-rs/app-server-protocol/src/protocol/thread_history.rs b/codex-rs/app-server-protocol/src/protocol/thread_history.rs
-index 18b87d9..37bbd09 100644
+index 6d2b1d8..afbc4a1 100644
 --- a/codex-rs/app-server-protocol/src/protocol/thread_history.rs
 +++ b/codex-rs/app-server-protocol/src/protocol/thread_history.rs
-@@ -1993,6 +1993,7 @@ mod tests {
+@@ -2287,6 +2287,7 @@ mod tests {
                  review_output: None,
              }),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1734,7 +2585,7 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: "turn-1".into(),
                  started_at: None,
-@@ -2056,6 +2057,7 @@ mod tests {
+@@ -2350,6 +2351,7 @@ mod tests {
                  completed_at_ms: 0,
              }),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1742,7 +2593,7 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: "turn-1".into(),
                  started_at: None,
-@@ -2220,6 +2222,7 @@ mod tests {
+@@ -2544,6 +2546,7 @@ mod tests {
                  started_at_ms: 0,
              }),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1750,7 +2601,7 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: turn_id.to_string(),
                  started_at: None,
-@@ -2277,6 +2280,7 @@ mod tests {
+@@ -2601,6 +2604,7 @@ mod tests {
                  completed_at_ms: 1_000,
              }),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1758,7 +2609,7 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: turn_id.to_string(),
                  started_at: None,
-@@ -2360,6 +2364,7 @@ mod tests {
+@@ -2701,6 +2705,7 @@ mod tests {
                  completed_at_ms: 1_000,
              }),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1766,7 +2617,7 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: turn_id.to_string(),
                  started_at: None,
-@@ -2473,6 +2478,7 @@ mod tests {
+@@ -2821,6 +2826,7 @@ mod tests {
                  status: CoreExecCommandStatus::Completed,
              }),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1774,7 +2625,7 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: turn_id.to_string(),
                  started_at: None,
-@@ -2578,6 +2584,7 @@ mod tests {
+@@ -2928,6 +2934,7 @@ mod tests {
                  ..Default::default()
              }),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1782,15 +2633,15 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: turn_id.to_string(),
                  started_at: None,
-@@ -2682,6 +2689,7 @@ mod tests {
-                 saved_path: Some(test_path_buf("/tmp/ig_123.png").abs()),
+@@ -3039,6 +3046,7 @@ mod tests {
+                 generation_id: None,
              })),
              RolloutItem::EventMsg(EventMsg::TurnComplete(TurnCompleteEvent {
 +                turn_profile: None,
                  root_turn_id: None,
                  turn_id: "turn-image".into(),
                  started_at: None,
-@@ -3075,6 +3083,7 @@ mod tests {
+@@ -3438,6 +3446,7 @@ mod tests {
                  ..Default::default()
              }),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1798,7 +2649,7 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: "turn-a".into(),
                  started_at: None,
-@@ -3748,6 +3757,7 @@ mod tests {
+@@ -4116,6 +4125,7 @@ mod tests {
                  ..Default::default()
              }),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1806,7 +2657,7 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: "turn-a".into(),
                  started_at: None,
-@@ -3816,6 +3826,7 @@ mod tests {
+@@ -4186,6 +4196,7 @@ mod tests {
                  ..Default::default()
              }),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1814,7 +2665,7 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: "turn-a".into(),
                  started_at: None,
-@@ -3862,6 +3873,7 @@ mod tests {
+@@ -4232,6 +4243,7 @@ mod tests {
                  status: CoreExecCommandStatus::Completed,
              }),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1822,7 +2673,7 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: "turn-b".into(),
                  started_at: None,
-@@ -3927,6 +3939,7 @@ mod tests {
+@@ -4297,6 +4309,7 @@ mod tests {
                  ..Default::default()
              }),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1830,7 +2681,7 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: "turn-a".into(),
                  started_at: None,
-@@ -3973,6 +3986,7 @@ mod tests {
+@@ -4343,6 +4356,7 @@ mod tests {
                  status: CoreExecCommandStatus::Completed,
              }),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1838,7 +2689,7 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: "turn-b".into(),
                  started_at: None,
-@@ -4059,6 +4073,7 @@ mod tests {
+@@ -4466,6 +4480,7 @@ mod tests {
              Some(expected.clone())
          );
          builder.handle_event(&EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1846,7 +2697,7 @@ index 18b87d9..37bbd09 100644
              root_turn_id: None,
              turn_id: "turn-1".into(),
              started_at: Some(100),
-@@ -4118,6 +4133,7 @@ mod tests {
+@@ -4525,6 +4540,7 @@ mod tests {
          );
  
          builder.handle_event(&EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1854,7 +2705,7 @@ index 18b87d9..37bbd09 100644
              root_turn_id: None,
              turn_id: "turn-1".into(),
              started_at: Some(100),
-@@ -4305,6 +4321,7 @@ mod tests {
+@@ -4713,6 +4729,7 @@ mod tests {
                  ..Default::default()
              }),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1862,7 +2713,7 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: "turn-a".into(),
                  started_at: None,
-@@ -4332,6 +4349,7 @@ mod tests {
+@@ -4740,6 +4757,7 @@ mod tests {
                  ..Default::default()
              }),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1870,7 +2721,7 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: "turn-a".into(),
                  started_at: None,
-@@ -4349,6 +4367,7 @@ mod tests {
+@@ -4757,6 +4775,7 @@ mod tests {
                  questions: None,
              }),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1878,7 +2729,7 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: "turn-b".into(),
                  started_at: None,
-@@ -4409,6 +4428,7 @@ mod tests {
+@@ -4817,6 +4836,7 @@ mod tests {
                  ..Default::default()
              }),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1886,7 +2737,7 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: "turn-a".into(),
                  started_at: Some(10),
-@@ -4501,6 +4521,7 @@ mod tests {
+@@ -4909,6 +4929,7 @@ mod tests {
                  ..Default::default()
              }),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1894,15 +2745,15 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: "turn-a".into(),
                  started_at: None,
-@@ -4584,6 +4605,7 @@ mod tests {
+@@ -4992,6 +5013,7 @@ mod tests {
                  resume_metadata: None,
-             }),
+             })),
              RolloutItem::EventMsg(EventMsg::TurnComplete(TurnCompleteEvent {
 +                turn_profile: None,
                  root_turn_id: None,
                  turn_id: "turn-compact".into(),
                  started_at: None,
-@@ -4855,6 +4877,7 @@ mod tests {
+@@ -5268,6 +5290,7 @@ mod tests {
                  ..Default::default()
              }),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1910,7 +2761,7 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: "turn-a".into(),
                  started_at: None,
-@@ -4928,6 +4951,7 @@ mod tests {
+@@ -5341,6 +5364,7 @@ mod tests {
                  }),
              }),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1918,7 +2769,7 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: "turn-a".into(),
                  started_at: None,
-@@ -4983,6 +5007,7 @@ mod tests {
+@@ -5396,6 +5420,7 @@ mod tests {
                  ..Default::default()
              }),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1926,7 +2777,7 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: "turn-a".into(),
                  started_at: Some(10),
-@@ -5058,6 +5083,7 @@ mod tests {
+@@ -5471,6 +5496,7 @@ mod tests {
              })),
              RolloutItem::ResponseItem(hook_prompt.into()),
              RolloutItem::EventMsg(EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1934,7 +2785,7 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: "turn-a".into(),
                  started_at: None,
-@@ -5174,6 +5200,7 @@ mod tests {
+@@ -5591,6 +5617,7 @@ mod tests {
                  })),
                  RolloutItem::EventMsg(spawn),
                  RolloutItem::EventMsg(EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1942,7 +2793,7 @@ index 18b87d9..37bbd09 100644
                      root_turn_id: None,
                      turn_id: "turn-a".into(),
                      started_at: None,
-@@ -5244,6 +5271,7 @@ mod tests {
+@@ -5663,6 +5690,7 @@ mod tests {
                  .into(),
              ),
              RolloutItem::EventMsg(EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1950,7 +2801,7 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: "turn-a".into(),
                  started_at: None,
-@@ -5424,6 +5452,7 @@ mod tests {
+@@ -5837,6 +5865,7 @@ mod tests {
          )));
          let complete_changes = builder.handle_rollout_item_with_changes(&RolloutItem::EventMsg(
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1958,7 +2809,7 @@ index 18b87d9..37bbd09 100644
                  root_turn_id: None,
                  turn_id: "turn-a".into(),
                  started_at: None,
-@@ -5515,6 +5544,7 @@ mod tests {
+@@ -5926,6 +5955,7 @@ mod tests {
                  collaboration_mode_kind: Default::default(),
              })),
              RolloutItem::EventMsg(EventMsg::TurnComplete(TurnCompleteEvent {
@@ -1967,7 +2818,7 @@ index 18b87d9..37bbd09 100644
                  turn_id: "turn-a".into(),
                  started_at: None,
 diff --git a/codex-rs/app-server-protocol/src/protocol/thread_history_projection_tests.rs b/codex-rs/app-server-protocol/src/protocol/thread_history_projection_tests.rs
-index 6afb441..f354ff2 100644
+index 9517d45..b0427f7 100644
 --- a/codex-rs/app-server-protocol/src/protocol/thread_history_projection_tests.rs
 +++ b/codex-rs/app-server-protocol/src/protocol/thread_history_projection_tests.rs
 @@ -37,6 +37,7 @@ fn projects_turn_lifecycle_without_prior_builder_state() {
@@ -1987,10 +2838,10 @@ index 6afb441..f354ff2 100644
              turn_id: "turn-1".to_string(),
              last_agent_message: None,
 diff --git a/codex-rs/app-server/src/bespoke_event_handling.rs b/codex-rs/app-server/src/bespoke_event_handling.rs
-index f632857..76e1bc7 100644
+index da4d0e1..a3fe898 100644
 --- a/codex-rs/app-server/src/bespoke_event_handling.rs
 +++ b/codex-rs/app-server/src/bespoke_event_handling.rs
-@@ -2184,6 +2184,7 @@ mod tests {
+@@ -2281,6 +2281,7 @@ mod tests {
  
      fn turn_complete_event(turn_id: &str) -> TurnCompleteEvent {
          TurnCompleteEvent {
@@ -1999,10 +2850,10 @@ index f632857..76e1bc7 100644
              turn_id: turn_id.to_string(),
              started_at: None,
 diff --git a/codex-rs/app-server/tests/suite/v2/thread_fork.rs b/codex-rs/app-server/tests/suite/v2/thread_fork.rs
-index 9ce85c9..810cb23 100644
+index 6c902ce..8b8c5a6 100644
 --- a/codex-rs/app-server/tests/suite/v2/thread_fork.rs
 +++ b/codex-rs/app-server/tests/suite/v2/thread_fork.rs
-@@ -1534,6 +1534,7 @@ async fn thread_fork_creates_reference_backed_paginated_thread() -> Result<()> {
+@@ -1571,6 +1571,7 @@ async fn thread_fork_creates_reference_backed_paginated_thread() -> Result<()> {
              collaboration_mode_kind: Default::default(),
          })),
          RolloutItem::EventMsg(EventMsg::TurnComplete(TurnCompleteEvent {
@@ -2010,7 +2861,7 @@ index 9ce85c9..810cb23 100644
              root_turn_id: None,
              turn_id: "turn-1".to_string(),
              last_agent_message: None,
-@@ -1968,6 +1969,7 @@ async fn assert_thread_fork_freezes_active_paginated_turn_as_interrupted(
+@@ -2038,6 +2039,7 @@ async fn thread_fork_freezes_active_paginated_turn_as_interrupted(
      append_rollout_item_to_path(
          source_path.as_path(),
          &RolloutItem::EventMsg(EventMsg::TurnComplete(TurnCompleteEvent {
@@ -2019,10 +2870,10 @@ index 9ce85c9..810cb23 100644
              turn_id: "active-turn".to_string(),
              last_agent_message: None,
 diff --git a/codex-rs/app-server/tests/suite/v2/thread_read.rs b/codex-rs/app-server/tests/suite/v2/thread_read.rs
-index 6b7d924..194cae4 100644
+index 4e35be4..b43a256 100644
 --- a/codex-rs/app-server/tests/suite/v2/thread_read.rs
 +++ b/codex-rs/app-server/tests/suite/v2/thread_read.rs
-@@ -2473,6 +2473,7 @@ fn paginated_turn_started(turn_id: &str) -> RolloutItem {
+@@ -2642,6 +2642,7 @@ fn paginated_turn_started(turn_id: &str) -> RolloutItem {
  
  fn paginated_turn_completed(turn_id: &str) -> RolloutItem {
      RolloutItem::EventMsg(EventMsg::TurnComplete(TurnCompleteEvent {
@@ -2031,10 +2882,10 @@ index 6b7d924..194cae4 100644
          turn_id: turn_id.to_string(),
          last_agent_message: None,
 diff --git a/codex-rs/app-server/tests/suite/v2/thread_timeline.rs b/codex-rs/app-server/tests/suite/v2/thread_timeline.rs
-index 4dd2a6f..cbf21bc 100644
+index 732f546..b2b0fec 100644
 --- a/codex-rs/app-server/tests/suite/v2/thread_timeline.rs
 +++ b/codex-rs/app-server/tests/suite/v2/thread_timeline.rs
-@@ -129,6 +129,7 @@ async fn timeline_pages_mix_items_and_resolve_the_opening_realtime_session() ->
+@@ -130,6 +130,7 @@ async fn timeline_pages_mix_items_and_resolve_the_opening_realtime_session() ->
                      },
                  }),
                  RolloutItem::EventMsg(EventMsg::TurnComplete(TurnCompleteEvent {
@@ -2043,10 +2894,10 @@ index 4dd2a6f..cbf21bc 100644
                      turn_id: "turn-1".to_string(),
                      last_agent_message: None,
 diff --git a/codex-rs/cli/src/main.rs b/codex-rs/cli/src/main.rs
-index 8d062a2..11a2a86 100644
+index 1c3fe17..56aa73d 100644
 --- a/codex-rs/cli/src/main.rs
 +++ b/codex-rs/cli/src/main.rs
-@@ -1058,6 +1058,15 @@ async fn cli_main(
+@@ -1067,6 +1067,15 @@ async fn dispatch_cli(
          .clone()
          .and_then(|path| AbsolutePathBuf::from_absolute_path(path).ok());
      reject_unsupported_worktree_for_subcommand(interactive.shared.worktree, &subcommand)?;
@@ -2062,7 +2913,7 @@ index 8d062a2..11a2a86 100644
      // Fold --enable/--disable into config overrides so they flow to all subcommands.
      let toggle_overrides = feature_toggles.to_overrides()?;
      root_config_overrides.raw_overrides.extend(toggle_overrides);
-@@ -1281,7 +1290,13 @@ async fn cli_main(
+@@ -1306,7 +1315,13 @@ async fn dispatch_cli(
                      let exit = codex_app_server::run_main_with_transport_options(
                          arg0_paths.clone(),
                          root_config_overrides,
@@ -2077,8 +2928,8 @@ index 8d062a2..11a2a86 100644
                          strict_config,
                          analytics_default_enabled,
                          transport,
-@@ -1883,6 +1898,46 @@ async fn cli_main(
-     Ok(())
+@@ -1953,6 +1968,46 @@ async fn dispatch_cli(
+     Ok(None)
  }
  
 +fn codex_zero_runtime_overrides(
@@ -2124,7 +2975,7 @@ index 8d062a2..11a2a86 100644
  fn profile_v2_for_subcommand<'a>(
      interactive: &'a TuiCli,
      subcommand: &Subcommand,
-@@ -4949,6 +5004,71 @@ mod tests {
+@@ -4999,6 +5054,71 @@ enabled = true
          );
      }
  
@@ -2886,10 +3737,10 @@ index 0000000..7068219
 +    assert_eq!(fs::read(file).unwrap(), b"untouched");
 +}
 diff --git a/codex-rs/core/Cargo.toml b/codex-rs/core/Cargo.toml
-index cfd7236..fd603db 100644
+index 542abf9..caaa87f 100644
 --- a/codex-rs/core/Cargo.toml
 +++ b/codex-rs/core/Cargo.toml
-@@ -38,6 +38,7 @@ codex-exec-server = { workspace = true }
+@@ -39,6 +39,7 @@ codex-exec-server = { workspace = true }
  codex-extension-api = { workspace = true }
  codex-extension-items = { workspace = true }
  codex-features = { workspace = true }
@@ -2898,10 +3749,10 @@ index cfd7236..fd603db 100644
  codex-file-system = { workspace = true }
  codex-login = { workspace = true }
 diff --git a/codex-rs/core/config.schema.json b/codex-rs/core/config.schema.json
-index 5864a5d..fcceadd 100644
+index f5149c6..9cbd37f 100644
 --- a/codex-rs/core/config.schema.json
 +++ b/codex-rs/core/config.schema.json
-@@ -827,6 +827,24 @@
+@@ -957,6 +957,24 @@
              "codex_hooks": {
                "type": "boolean"
              },
@@ -2926,7 +3777,7 @@ index 5864a5d..fcceadd 100644
              "collab": {
                "type": "boolean"
              },
-@@ -7043,6 +7061,24 @@
+@@ -7668,6 +7686,24 @@
          "codex_hooks": {
            "type": "boolean"
          },
@@ -2952,10 +3803,10 @@ index 5864a5d..fcceadd 100644
            "type": "boolean"
          },
 diff --git a/codex-rs/core/src/agent/control/residency_tests.rs b/codex-rs/core/src/agent/control/residency_tests.rs
-index 5b524c8..e487e9b 100644
+index 5bf450e..cc26870 100644
 --- a/codex-rs/core/src/agent/control/residency_tests.rs
 +++ b/codex-rs/core/src/agent/control/residency_tests.rs
-@@ -194,6 +194,7 @@ async fn mark_thread_completed(thread: &CodexThread) {
+@@ -192,6 +192,7 @@ async fn mark_thread_completed(thread: &CodexThread) {
          .send_event(
              turn.as_ref(),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -2964,10 +3815,10 @@ index 5b524c8..e487e9b 100644
                  turn_id: turn.sub_id.clone(),
                  started_at: None,
 diff --git a/codex-rs/core/src/agent/control_tests.rs b/codex-rs/core/src/agent/control_tests.rs
-index 801d4d9..3db3c62 100644
+index 8724766..d0390dc 100644
 --- a/codex-rs/core/src/agent/control_tests.rs
 +++ b/codex-rs/core/src/agent/control_tests.rs
-@@ -599,6 +599,7 @@ async fn on_event_updates_status_from_task_complete() {
+@@ -626,6 +626,7 @@ async fn on_event_updates_status_from_task_complete() {
          ),
      ] {
          let status = agent_status_from_event(&EventMsg::TurnComplete(TurnCompleteEvent {
@@ -2975,7 +3826,7 @@ index 801d4d9..3db3c62 100644
              root_turn_id: None,
              turn_id: "turn-1".to_string(),
              started_at: None,
-@@ -4074,6 +4075,7 @@ async fn multi_agent_v2_completion_ignores_dead_direct_parent() {
+@@ -4564,6 +4565,7 @@ async fn multi_agent_v2_completion_ignores_dead_direct_parent() {
          .send_event(
              tester_turn.as_ref(),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -2983,7 +3834,7 @@ index 801d4d9..3db3c62 100644
                  root_turn_id: None,
                  turn_id: tester_turn.sub_id.clone(),
                  started_at: None,
-@@ -4157,6 +4159,7 @@ async fn multi_agent_v2_completion_queues_message_for_direct_parent() {
+@@ -4647,6 +4649,7 @@ async fn multi_agent_v2_completion_queues_message_for_direct_parent() {
          .send_event(
              tester_turn.as_ref(),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -2992,10 +3843,10 @@ index 801d4d9..3db3c62 100644
                  turn_id: tester_turn.sub_id.clone(),
                  started_at: None,
 diff --git a/codex-rs/core/src/guardian/review_session_tests.rs b/codex-rs/core/src/guardian/review_session_tests.rs
-index 0533730..a25a2e1 100644
+index db4218b..a62d1a6 100644
 --- a/codex-rs/core/src/guardian/review_session_tests.rs
 +++ b/codex-rs/core/src/guardian/review_session_tests.rs
-@@ -181,6 +181,7 @@ fn turn_complete_event(
+@@ -225,6 +225,7 @@ fn turn_complete_event(
      Event {
          id: turn_id.to_string(),
          msg: EventMsg::TurnComplete(TurnCompleteEvent {
@@ -3004,10 +3855,10 @@ index 0533730..a25a2e1 100644
              turn_id: turn_id.to_string(),
              started_at: None,
 diff --git a/codex-rs/core/src/guardian/tests.rs b/codex-rs/core/src/guardian/tests.rs
-index bacd664..43a2c86 100644
+index 239a965..fbc955f 100644
 --- a/codex-rs/core/src/guardian/tests.rs
 +++ b/codex-rs/core/src/guardian/tests.rs
-@@ -2972,6 +2972,7 @@ async fn guardian_reused_trunk_ignores_stale_prior_turn_completion() -> anyhow::
+@@ -2975,6 +2975,7 @@ async fn guardian_reused_trunk_ignores_stale_prior_turn_completion() -> anyhow::
          .send_trunk_event_raw_for_test(Event {
              id: "stale-turn".to_string(),
              msg: EventMsg::TurnComplete(TurnCompleteEvent {
@@ -3016,7 +3867,7 @@ index bacd664..43a2c86 100644
                  turn_id: "stale-turn".to_string(),
                  started_at: None,
 diff --git a/codex-rs/core/src/realtime_conversation/transcript_tail.rs b/codex-rs/core/src/realtime_conversation/transcript_tail.rs
-index db8e85d..fb9862b 100644
+index 86e27dd..bb3f341 100644
 --- a/codex-rs/core/src/realtime_conversation/transcript_tail.rs
 +++ b/codex-rs/core/src/realtime_conversation/transcript_tail.rs
 @@ -73,6 +73,7 @@ pub(super) async fn record(session: &Session, text: String) -> std::io::Result<(
@@ -3028,10 +3879,10 @@ index db8e85d..fb9862b 100644
              last_agent_message: None,
              error: None,
 diff --git a/codex-rs/core/src/session/rollout_reconstruction_tests.rs b/codex-rs/core/src/session/rollout_reconstruction_tests.rs
-index 879115d..1e59081 100644
+index c102a49..2a0ab21 100644
 --- a/codex-rs/core/src/session/rollout_reconstruction_tests.rs
 +++ b/codex-rs/core/src/session/rollout_reconstruction_tests.rs
-@@ -284,6 +284,7 @@ fn completed_user_turn_rollout(
+@@ -294,6 +294,7 @@ fn completed_user_turn_rollout(
      rollout_items.extend(items);
      rollout_items.push(RolloutItem::EventMsg(EventMsg::TurnComplete(
          codex_protocol::protocol::TurnCompleteEvent {
@@ -3039,7 +3890,7 @@ index 879115d..1e59081 100644
              root_turn_id: None,
              turn_id,
              last_agent_message: None,
-@@ -536,6 +537,7 @@ async fn record_initial_history_resumed_hydrates_previous_turn_settings_from_lif
+@@ -546,6 +547,7 @@ async fn record_initial_history_resumed_hydrates_previous_turn_settings_from_lif
          RolloutItem::TurnContext(previous_context_item),
          RolloutItem::EventMsg(EventMsg::TurnComplete(
              codex_protocol::protocol::TurnCompleteEvent {
@@ -3047,7 +3898,7 @@ index 879115d..1e59081 100644
                  root_turn_id: None,
                  turn_id,
                  last_agent_message: None,
-@@ -628,6 +630,7 @@ async fn reconstruct_history_rollback_keeps_history_and_metadata_in_sync_for_com
+@@ -638,6 +640,7 @@ async fn reconstruct_history_rollback_keeps_history_and_metadata_in_sync_for_com
          RolloutItem::ResponseItem(turn_one_assistant.clone().into()),
          RolloutItem::EventMsg(EventMsg::TurnComplete(
              codex_protocol::protocol::TurnCompleteEvent {
@@ -3055,7 +3906,7 @@ index 879115d..1e59081 100644
                  root_turn_id: None,
                  turn_id: first_turn_id,
                  started_at: None,
-@@ -672,6 +675,7 @@ async fn reconstruct_history_rollback_keeps_history_and_metadata_in_sync_for_com
+@@ -682,6 +685,7 @@ async fn reconstruct_history_rollback_keeps_history_and_metadata_in_sync_for_com
          RolloutItem::ResponseItem(turn_two_assistant.into()),
          RolloutItem::EventMsg(EventMsg::TurnComplete(
              codex_protocol::protocol::TurnCompleteEvent {
@@ -3063,7 +3914,7 @@ index 879115d..1e59081 100644
                  root_turn_id: None,
                  turn_id: rolled_back_turn_id,
                  started_at: None,
-@@ -760,6 +764,7 @@ async fn reconstruct_history_rollback_keeps_history_and_metadata_in_sync_for_inc
+@@ -770,6 +774,7 @@ async fn reconstruct_history_rollback_keeps_history_and_metadata_in_sync_for_inc
          RolloutItem::ResponseItem(turn_one_assistant.clone().into()),
          RolloutItem::EventMsg(EventMsg::TurnComplete(
              codex_protocol::protocol::TurnCompleteEvent {
@@ -3071,7 +3922,7 @@ index 879115d..1e59081 100644
                  root_turn_id: None,
                  turn_id: first_turn_id,
                  started_at: None,
-@@ -866,6 +871,7 @@ async fn reconstruct_history_rollback_skips_non_user_turns_for_history_and_metad
+@@ -876,6 +881,7 @@ async fn reconstruct_history_rollback_skips_non_user_turns_for_history_and_metad
          RolloutItem::ResponseItem(turn_one_assistant.clone().into()),
          RolloutItem::EventMsg(EventMsg::TurnComplete(
              codex_protocol::protocol::TurnCompleteEvent {
@@ -3079,7 +3930,7 @@ index 879115d..1e59081 100644
                  root_turn_id: None,
                  turn_id: first_turn_id,
                  started_at: None,
-@@ -901,6 +907,7 @@ async fn reconstruct_history_rollback_skips_non_user_turns_for_history_and_metad
+@@ -911,6 +917,7 @@ async fn reconstruct_history_rollback_skips_non_user_turns_for_history_and_metad
          RolloutItem::ResponseItem(turn_two_assistant.into()),
          RolloutItem::EventMsg(EventMsg::TurnComplete(
              codex_protocol::protocol::TurnCompleteEvent {
@@ -3087,7 +3938,7 @@ index 879115d..1e59081 100644
                  root_turn_id: None,
                  turn_id: second_turn_id,
                  started_at: None,
-@@ -930,6 +937,7 @@ async fn reconstruct_history_rollback_skips_non_user_turns_for_history_and_metad
+@@ -940,6 +947,7 @@ async fn reconstruct_history_rollback_skips_non_user_turns_for_history_and_metad
          }),
          RolloutItem::EventMsg(EventMsg::TurnComplete(
              codex_protocol::protocol::TurnCompleteEvent {
@@ -3095,7 +3946,7 @@ index 879115d..1e59081 100644
                  root_turn_id: None,
                  turn_id: standalone_turn_id,
                  started_at: None,
-@@ -1013,6 +1021,7 @@ async fn reconstruct_history_rollback_counts_inter_agent_assistant_turns() {
+@@ -1023,6 +1031,7 @@ async fn reconstruct_history_rollback_counts_inter_agent_assistant_turns() {
          RolloutItem::ResponseItem(assistant_message("turn 1 assistant").into()),
          RolloutItem::EventMsg(EventMsg::TurnComplete(
              codex_protocol::protocol::TurnCompleteEvent {
@@ -3103,7 +3954,7 @@ index 879115d..1e59081 100644
                  root_turn_id: None,
                  turn_id: first_turn_id,
                  started_at: None,
-@@ -1039,6 +1048,7 @@ async fn reconstruct_history_rollback_counts_inter_agent_assistant_turns() {
+@@ -1049,6 +1058,7 @@ async fn reconstruct_history_rollback_counts_inter_agent_assistant_turns() {
          RolloutItem::ResponseItem(assistant_reply.into()),
          RolloutItem::EventMsg(EventMsg::TurnComplete(
              codex_protocol::protocol::TurnCompleteEvent {
@@ -3111,7 +3962,7 @@ index 879115d..1e59081 100644
                  root_turn_id: None,
                  turn_id: assistant_turn_id,
                  started_at: None,
-@@ -1117,6 +1127,7 @@ async fn reconstruct_history_rollback_clears_history_and_metadata_when_exceeding
+@@ -1127,6 +1137,7 @@ async fn reconstruct_history_rollback_clears_history_and_metadata_when_exceeding
          RolloutItem::ResponseItem(assistant_message("only assistant").into()),
          RolloutItem::EventMsg(EventMsg::TurnComplete(
              codex_protocol::protocol::TurnCompleteEvent {
@@ -3119,7 +3970,7 @@ index 879115d..1e59081 100644
                  root_turn_id: None,
                  turn_id: only_turn_id,
                  started_at: None,
-@@ -1176,6 +1187,7 @@ async fn record_initial_history_resumed_rollback_skips_only_user_turns() {
+@@ -1186,6 +1197,7 @@ async fn record_initial_history_resumed_rollback_skips_only_user_turns() {
          RolloutItem::TurnContext(previous_context_item),
          RolloutItem::EventMsg(EventMsg::TurnComplete(
              codex_protocol::protocol::TurnCompleteEvent {
@@ -3127,7 +3978,7 @@ index 879115d..1e59081 100644
                  root_turn_id: None,
                  turn_id: user_turn_id,
                  started_at: None,
-@@ -1200,6 +1212,7 @@ async fn record_initial_history_resumed_rollback_skips_only_user_turns() {
+@@ -1210,6 +1222,7 @@ async fn record_initial_history_resumed_rollback_skips_only_user_turns() {
          )),
          RolloutItem::EventMsg(EventMsg::TurnComplete(
              codex_protocol::protocol::TurnCompleteEvent {
@@ -3135,7 +3986,7 @@ index 879115d..1e59081 100644
                  root_turn_id: None,
                  turn_id: standalone_turn_id,
                  started_at: None,
-@@ -1263,6 +1276,7 @@ async fn record_initial_history_resumed_rollback_drops_incomplete_user_turn_comp
+@@ -1273,6 +1286,7 @@ async fn record_initial_history_resumed_rollback_drops_incomplete_user_turn_comp
          RolloutItem::TurnContext(previous_context_item.clone()),
          RolloutItem::EventMsg(EventMsg::TurnComplete(
              codex_protocol::protocol::TurnCompleteEvent {
@@ -3143,7 +3994,7 @@ index 879115d..1e59081 100644
                  root_turn_id: None,
                  turn_id: previous_turn_id,
                  started_at: None,
-@@ -2098,6 +2112,7 @@ async fn reconstruct_history_legacy_compaction_without_replacement_history_clear
+@@ -2109,6 +2123,7 @@ async fn reconstruct_history_legacy_compaction_without_replacement_history_clear
          RolloutItem::TurnContext(current_context_item),
          RolloutItem::EventMsg(EventMsg::TurnComplete(
              codex_protocol::protocol::TurnCompleteEvent {
@@ -3151,7 +4002,7 @@ index 879115d..1e59081 100644
                  root_turn_id: None,
                  turn_id: current_turn_id,
                  started_at: None,
-@@ -2187,6 +2202,7 @@ async fn record_initial_history_resumed_turn_context_after_compaction_reestablis
+@@ -2198,6 +2213,7 @@ async fn record_initial_history_resumed_turn_context_after_compaction_reestablis
          RolloutItem::TurnContext(previous_context_item),
          RolloutItem::EventMsg(EventMsg::TurnComplete(
              codex_protocol::protocol::TurnCompleteEvent {
@@ -3159,7 +4010,7 @@ index 879115d..1e59081 100644
                  root_turn_id: None,
                  turn_id: previous_turn_id,
                  started_at: None,
-@@ -2302,6 +2318,7 @@ async fn record_initial_history_resumed_aborted_turn_without_id_clears_active_tu
+@@ -2313,6 +2329,7 @@ async fn record_initial_history_resumed_aborted_turn_without_id_clears_active_tu
          RolloutItem::TurnContext(previous_context_item),
          RolloutItem::EventMsg(EventMsg::TurnComplete(
              codex_protocol::protocol::TurnCompleteEvent {
@@ -3167,7 +4018,7 @@ index 879115d..1e59081 100644
                  root_turn_id: None,
                  turn_id: previous_turn_id,
                  started_at: None,
-@@ -2440,6 +2457,7 @@ async fn record_initial_history_resumed_unmatched_abort_preserves_active_turn_fo
+@@ -2451,6 +2468,7 @@ async fn record_initial_history_resumed_unmatched_abort_preserves_active_turn_fo
          RolloutItem::TurnContext(previous_context_item),
          RolloutItem::EventMsg(EventMsg::TurnComplete(
              codex_protocol::protocol::TurnCompleteEvent {
@@ -3175,7 +4026,7 @@ index 879115d..1e59081 100644
                  root_turn_id: None,
                  turn_id: previous_turn_id,
                  started_at: None,
-@@ -2485,6 +2503,7 @@ async fn record_initial_history_resumed_unmatched_abort_preserves_active_turn_fo
+@@ -2496,6 +2514,7 @@ async fn record_initial_history_resumed_unmatched_abort_preserves_active_turn_fo
          RolloutItem::TurnContext(current_context_item.clone()),
          RolloutItem::EventMsg(EventMsg::TurnComplete(
              codex_protocol::protocol::TurnCompleteEvent {
@@ -3183,7 +4034,7 @@ index 879115d..1e59081 100644
                  root_turn_id: None,
                  turn_id: current_turn_id,
                  started_at: None,
-@@ -2580,6 +2599,7 @@ async fn record_initial_history_resumed_trailing_incomplete_turn_compaction_clea
+@@ -2591,6 +2610,7 @@ async fn record_initial_history_resumed_trailing_incomplete_turn_compaction_clea
          RolloutItem::TurnContext(previous_context_item),
          RolloutItem::EventMsg(EventMsg::TurnComplete(
              codex_protocol::protocol::TurnCompleteEvent {
@@ -3191,7 +4042,7 @@ index 879115d..1e59081 100644
                  root_turn_id: None,
                  turn_id: previous_turn_id,
                  started_at: None,
-@@ -2766,6 +2786,7 @@ async fn record_initial_history_resumed_replaced_incomplete_compacted_turn_clear
+@@ -2777,6 +2797,7 @@ async fn record_initial_history_resumed_replaced_incomplete_compacted_turn_clear
          RolloutItem::TurnContext(previous_context_item),
          RolloutItem::EventMsg(EventMsg::TurnComplete(
              codex_protocol::protocol::TurnCompleteEvent {
@@ -3200,10 +4051,10 @@ index 879115d..1e59081 100644
                  turn_id: previous_turn_id,
                  started_at: None,
 diff --git a/codex-rs/core/src/session/session.rs b/codex-rs/core/src/session/session.rs
-index 263f08f..a260936 100644
+index 52325c5..f097286 100644
 --- a/codex-rs/core/src/session/session.rs
 +++ b/codex-rs/core/src/session/session.rs
-@@ -757,6 +757,35 @@ impl Session {
+@@ -816,6 +816,35 @@ impl Session {
          }
      }
  
@@ -3240,10 +4091,10 @@ index 263f08f..a260936 100644
      #[allow(clippy::too_many_arguments)]
      pub(crate) async fn new(
 diff --git a/codex-rs/core/src/session/tests.rs b/codex-rs/core/src/session/tests.rs
-index 496114a..7a568cd 100644
+index 9bb8aa2..93a0f15 100644
 --- a/codex-rs/core/src/session/tests.rs
 +++ b/codex-rs/core/src/session/tests.rs
-@@ -4370,6 +4370,7 @@ async fn record_initial_history_forked_hydrates_previous_turn_settings() {
+@@ -4574,6 +4574,7 @@ async fn record_initial_history_forked_hydrates_previous_turn_settings() {
          RolloutItem::TurnContext(previous_context_item.clone()),
          RolloutItem::EventMsg(EventMsg::TurnComplete(
              codex_protocol::protocol::TurnCompleteEvent {
@@ -3251,7 +4102,7 @@ index 496114a..7a568cd 100644
                  root_turn_id: None,
                  turn_id,
                  last_agent_message: None,
-@@ -6293,6 +6294,7 @@ async fn compaction_persists_resume_metadata_and_companion_records() {
+@@ -6512,6 +6513,7 @@ async fn compaction_persists_resume_metadata_and_companion_records() {
          if let Some(turn_id) = last_started_turn_id {
              items.push(RolloutItem::EventMsg(EventMsg::TurnComplete(
                  TurnCompleteEvent {
@@ -3260,18 +4111,18 @@ index 496114a..7a568cd 100644
                      turn_id,
                      last_agent_message: None,
 diff --git a/codex-rs/core/src/state/session.rs b/codex-rs/core/src/state/session.rs
-index 53857e1..3e561e0 100644
+index 94c8874..944afa7 100644
 --- a/codex-rs/core/src/state/session.rs
 +++ b/codex-rs/core/src/state/session.rs
-@@ -4,6 +4,7 @@ use codex_protocol::models::BaseInstructionsProvenance;
+@@ -5,6 +5,7 @@ use codex_protocol::models::BaseInstructionsProvenance;
  #[cfg(test)]
  use codex_protocol::models::ResponseItem;
  use codex_protocol::openai_models::ReasoningEffort;
 +use std::collections::HashMap;
  use std::collections::HashSet;
  use std::collections::VecDeque;
- 
-@@ -101,6 +102,9 @@ pub(crate) struct SessionState {
+ use std::sync::Arc;
+@@ -106,6 +107,9 @@ pub(crate) struct SessionState {
      pub(crate) current_time_reminder: CurrentTimeReminderState,
      pub(crate) active_connector_selection: HashSet<String>,
      pub(crate) pending_session_start_sources: VecDeque<codex_hooks::SessionStartSource>,
@@ -3279,18 +4130,31 @@ index 53857e1..3e561e0 100644
 +    /// Entries are used only while that call remains present in active history.
 +    pub(crate) codex_zero_exact_tool_results: HashMap<String, String>,
      next_turn_is_first: bool,
+     initial_settings_pending: bool,
  }
- 
-@@ -142,6 +146,7 @@ impl SessionState {
+@@ -149,6 +153,7 @@ impl SessionState {
              current_time_reminder: CurrentTimeReminderState::default(),
              active_connector_selection: HashSet::new(),
              pending_session_start_sources: VecDeque::new(),
 +            codex_zero_exact_tool_results: HashMap::new(),
              next_turn_is_first: true,
+             initial_settings_pending: true,
          }
-     }
+diff --git a/codex-rs/core/src/stream_events_utils.rs b/codex-rs/core/src/stream_events_utils.rs
+index e548195..7d14e47 100644
+--- a/codex-rs/core/src/stream_events_utils.rs
++++ b/codex-rs/core/src/stream_events_utils.rs
+@@ -357,7 +357,7 @@ pub(crate) async fn handle_output_item_done(
+                         // The call is already in history; resume needs its output even if we never dispatch.
+                         let output =
+                             ToolCallRuntime::aborted_response(&call, /*elapsed_secs*/ None);
+-                        return Ok(output.into_response());
++                        return Ok(output.into_response().await);
+                     }
+                     runtime.handle_tool_call(call, cancellation_token).await
+                 })
 diff --git a/codex-rs/core/src/tasks/mod.rs b/codex-rs/core/src/tasks/mod.rs
-index bfc9c13..442c8b5 100644
+index 77ce9b8..83d0fbe 100644
 --- a/codex-rs/core/src/tasks/mod.rs
 +++ b/codex-rs/core/src/tasks/mod.rs
 @@ -7,6 +7,8 @@ mod user_shell;
@@ -3301,8 +4165,8 @@ index bfc9c13..442c8b5 100644
 +use std::time::UNIX_EPOCH;
  
  use codex_diagnostics::Gauge;
- use codex_extension_api::ThreadIdleCause;
-@@ -785,8 +787,24 @@ impl Session {
+ use codex_exec_server::ExecutorCapabilityDiscoveryV2Cache;
+@@ -827,8 +829,24 @@ impl Session {
                  .track_turn_token_usage(TurnTokenUsageFact {
                      turn_id: turn_context.sub_id.clone(),
                      thread_id: self.thread_id.to_string(),
@@ -3328,7 +4192,7 @@ index bfc9c13..442c8b5 100644
              token_usage_by_model.emit(turn_telemetry, tmp_mem);
          }
          emit_turn_memory_metric(
-@@ -809,7 +827,7 @@ impl Session {
+@@ -856,7 +874,7 @@ impl Session {
              .analytics_events_client
              .track_turn_profile(TurnProfileFact {
                  turn_id: turn_context.sub_id.clone(),
@@ -3337,7 +4201,7 @@ index bfc9c13..442c8b5 100644
              });
          let idle_cause = if matches!(
              abort_reason.as_ref(),
-@@ -845,6 +863,11 @@ impl Session {
+@@ -892,6 +910,11 @@ impl Session {
              self.emit_turn_stop_lifecycle(turn_context.extension_data.as_ref())
                  .await;
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -3349,7 +4213,7 @@ index bfc9c13..442c8b5 100644
                  root_turn_id: Some(turn_context.root_turn_id()),
                  turn_id: turn_context.sub_id.clone(),
                  last_agent_message,
-@@ -1008,7 +1031,7 @@ impl Session {
+@@ -1070,7 +1093,7 @@ impl Session {
              .analytics_events_client
              .track_turn_profile(TurnProfileFact {
                  turn_id: task.turn_context.sub_id.clone(),
@@ -3359,10 +4223,10 @@ index bfc9c13..442c8b5 100644
          self.emit_turn_abort_lifecycle(reason.clone(), task.turn_context.extension_data.as_ref())
              .await;
 diff --git a/codex-rs/core/src/thread_rollout_truncation_tests.rs b/codex-rs/core/src/thread_rollout_truncation_tests.rs
-index cf034df..27ade4a 100644
+index a6ee1d1..296ed26 100644
 --- a/codex-rs/core/src/thread_rollout_truncation_tests.rs
 +++ b/codex-rs/core/src/thread_rollout_truncation_tests.rs
-@@ -55,6 +55,7 @@ fn turn_started(turn_id: &str) -> RolloutItem {
+@@ -63,6 +63,7 @@ fn turn_started(turn_id: &str) -> RolloutItem {
  
  fn turn_completed(turn_id: &str) -> RolloutItem {
      RolloutItem::EventMsg(EventMsg::TurnComplete(TurnCompleteEvent {
@@ -3371,19 +4235,18 @@ index cf034df..27ade4a 100644
          turn_id: turn_id.to_string(),
          started_at: None,
 diff --git a/codex-rs/core/src/tools/context.rs b/codex-rs/core/src/tools/context.rs
-index 1b02ab7..6aa23d0 100644
+index 252ca66..ae1ecb9 100644
 --- a/codex-rs/core/src/tools/context.rs
 +++ b/codex-rs/core/src/tools/context.rs
-@@ -22,13 +22,19 @@ use codex_utils_output_truncation::formatted_truncate_text;
+@@ -21,12 +21,18 @@ use codex_utils_output_truncation::TruncationPolicy;
  use codex_utils_output_truncation::truncate_function_output_payload;
- use codex_utils_output_truncation::truncate_text;
  use codex_utils_output_truncation::with_serialization_allowance;
+ use codex_utils_path_uri::PathUri;
 +use codex_zero_codec::encode_command_output;
 +use codex_zero_codec::select_strictly_smaller;
 +use codex_zero_codec::store_raw;
  use serde::Serialize;
  use serde_json::Value as JsonValue;
- use std::num::NonZeroUsize;
 +use std::path::PathBuf;
  use std::sync::Arc;
  use std::sync::OnceLock;
@@ -3394,7 +4257,7 @@ index 1b02ab7..6aa23d0 100644
  use tokio::sync::Mutex;
  use tokio_util::sync::CancellationToken;
  
-@@ -295,6 +301,22 @@ impl ToolOutput for FunctionToolOutput {
+@@ -339,6 +345,22 @@ impl ToolOutput for FunctionToolOutput {
          self.success.unwrap_or(true)
      }
  
@@ -3417,17 +4280,17 @@ index 1b02ab7..6aa23d0 100644
      fn to_response_item(&self, call_id: &str, payload: &ToolPayload) -> ResponseInputItem {
          function_tool_response(call_id, payload, self.body.clone(), self.success)
      }
-@@ -391,6 +413,9 @@ pub struct ExecCommandToolOutput {
-     /// Bytes omitted by the output collection cap before model-facing truncation.
-     pub output_omitted_bytes: Option<NonZeroUsize>,
-     pub hook_command: Option<String>,
+@@ -436,6 +458,9 @@ pub struct ExecCommandToolOutput {
+     /// Local execution cwd retained for PostToolUse, independent of the collecting
+     /// turn. Remote commands leave this unset to retain the host hook cwd.
+     pub tool_cwd: Option<PathUri>,
 +    pub compact_model_payload: bool,
 +    pub lossless_terminal_codec: bool,
 +    pub command_aware_projection: bool,
  }
  
  impl ToolOutput for ExecCommandToolOutput {
-@@ -410,12 +435,58 @@ impl ToolOutput for ExecCommandToolOutput {
+@@ -451,12 +476,58 @@ impl ToolOutput for ExecCommandToolOutput {
          true
      }
  
@@ -3468,9 +4331,9 @@ index 1b02ab7..6aa23d0 100644
 +            exit_code: self.exit_code,
 +            process_id: self.process_id,
 +            original_token_count: self.original_token_count,
-+            output_omitted_bytes: self.output_omitted_bytes.map(NonZeroUsize::get),
-+            raw_sha256: codex_zero_codec::sha256(&self.raw_output),
-+            raw_byte_count: self.raw_output.len(),
++            output_omitted_bytes: self.output_omitted_bytes(),
++            raw_sha256: codex_zero_codec::sha256(self.raw_output.text.as_bytes()),
++            raw_byte_count: self.raw_output.text.len(),
 +            same_output_as_tool_call: previous_call_id,
 +            source_state_sha256,
 +        })
@@ -3487,7 +4350,18 @@ index 1b02ab7..6aa23d0 100644
              }],
              Some(true),
          )
-@@ -573,6 +644,159 @@ impl ExecCommandToolOutput {
+@@ -542,6 +613,10 @@ impl ExecCommandToolOutput {
+             .render(Some(policy), self.original_token_count)
+     }
+ 
++    fn output_omitted_bytes(&self) -> Option<usize> {
++        (self.raw_output.omitted_bytes > 0).then_some(self.raw_output.omitted_bytes)
++    }
++
+     fn response_header(&self) -> String {
+         let mut sections = Vec::new();
+ 
+@@ -594,6 +669,159 @@ impl ExecCommandToolOutput {
  
          format!("{header}\n{output}")
      }
@@ -3520,7 +4394,7 @@ index 1b02ab7..6aa23d0 100644
 +        artifact_root: &std::path::Path,
 +        telemetry_path: Option<&std::path::Path>,
 +    ) -> String {
-+        let Ok(artifact) = store_raw(artifact_root, &self.raw_output) else {
++        let Ok(artifact) = store_raw(artifact_root, self.raw_output.text.as_bytes()) else {
 +            return original;
 +        };
 +
@@ -3583,7 +4457,7 @@ index 1b02ab7..6aa23d0 100644
 +            exit_code: self.exit_code,
 +            process_id: self.process_id,
 +            original_token_count: self.original_token_count,
-+            output_omitted_bytes: self.output_omitted_bytes.map(NonZeroUsize::get),
++            output_omitted_bytes: self.output_omitted_bytes(),
 +            artifact: ArtifactMetadata {
 +                sha256: &artifact.sha256,
 +                raw_byte_count: artifact.byte_count,
@@ -3629,7 +4503,7 @@ index 1b02ab7..6aa23d0 100644
 +            "event": "exec_model_payload",
 +            "timestamp_ms": timestamp_ms,
 +            "artifact_sha256": artifact_sha256,
-+            "raw_byte_count": self.raw_output.len(),
++            "raw_byte_count": self.raw_output.text.len(),
 +            "original_tokens": selection.original_tokens,
 +            "selected_tokens": selection.selected_tokens,
 +            "tokens_eliminated": selection.original_tokens.saturating_sub(selection.selected_tokens),
@@ -3648,40 +4522,40 @@ index 1b02ab7..6aa23d0 100644
  
  fn function_tool_response(
 diff --git a/codex-rs/core/src/tools/context_tests.rs b/codex-rs/core/src/tools/context_tests.rs
-index bd0cb0c..f6fe657 100644
+index aa9a5f3..5df2af1 100644
 --- a/codex-rs/core/src/tools/context_tests.rs
 +++ b/codex-rs/core/src/tools/context_tests.rs
-@@ -424,6 +424,9 @@ fn exec_command_tool_output_formats_truncated_response() {
+@@ -426,6 +426,9 @@ fn exec_command_tool_output_formats_truncated_response() {
          original_token_count: Some(10),
-         output_omitted_bytes: None,
          hook_command: None,
+         tool_cwd: None,
 +        compact_model_payload: false,
 +        lossless_terminal_codec: false,
 +        command_aware_projection: false,
      };
      assert_eq!(
          output.log_output(),
-@@ -481,6 +484,9 @@ fn exec_command_tool_output_reserves_metadata_budget_and_preserves_policy_units(
+@@ -482,6 +485,9 @@ fn exec_command_tool_output_reserves_metadata_budget_and_preserves_policy_units(
              original_token_count: Some(123),
-             output_omitted_bytes: None,
              hook_command: None,
+             tool_cwd: None,
 +            compact_model_payload: false,
 +            lossless_terminal_codec: false,
 +            command_aware_projection: false,
          }
          .to_response_item("call-42", &payload);
  
-@@ -525,6 +531,9 @@ fn exec_command_tool_output_preserves_omission_metadata_when_truncated() {
+@@ -528,6 +534,9 @@ fn exec_command_tool_output_preserves_omission_metadata_when_truncated() {
          original_token_count: Some(42_000),
-         output_omitted_bytes: NonZeroUsize::new(/*n*/ 123_456),
          hook_command: None,
+         tool_cwd: None,
 +        compact_model_payload: false,
 +        lossless_terminal_codec: false,
 +        command_aware_projection: false,
      };
      let expected_header = "Chunk ID: abc123\nWall time: 1.2500 seconds\nProcess exited with code 0\nOriginal token count: 42000\nOutput:\n";
      assert_eq!(
-@@ -554,3 +563,149 @@ fn exec_command_tool_output_preserves_omission_metadata_when_truncated() {
+@@ -554,3 +563,148 @@ fn exec_command_tool_output_preserves_omission_metadata_when_truncated() {
      assert!(text.contains("Warning: truncated output (original token count: 42000)"));
      assert_eq!(text.matches(&marker).count(), 1);
  }
@@ -3690,19 +4564,19 @@ index bd0cb0c..f6fe657 100644
 +fn codex_zero_exec_payload_is_selected_only_when_strictly_smaller() {
 +    let temp = tempfile::tempdir().expect("temporary artifact directory");
 +    let telemetry_path = temp.path().join("telemetry.jsonl");
-+    let raw_output = "same diagnostic line\n".repeat(400).into_bytes();
++    let raw_output = "same diagnostic line\n".repeat(400);
 +    let output = ExecCommandToolOutput {
 +        event_call_id: "call-zero".to_string(),
 +        chunk_id: "zero123".to_string(),
 +        wall_time: std::time::Duration::from_millis(1250),
-+        raw_output: raw_output.clone(),
++        raw_output: raw_output.as_str().into(),
 +        truncation_policy: TruncationPolicy::Tokens(100_000),
 +        max_output_tokens: None,
 +        process_id: None,
 +        exit_code: Some(0),
 +        original_token_count: Some(1600),
-+        output_omitted_bytes: None,
 +        hook_command: Some("ignored model command".to_string()),
++        tool_cwd: None,
 +        compact_model_payload: true,
 +        lossless_terminal_codec: true,
 +        command_aware_projection: true,
@@ -3722,7 +4596,7 @@ index bd0cb0c..f6fe657 100644
 +        .expect("artifact hash");
 +    assert_eq!(
 +        std::fs::read(temp.path().join("sha256").join(sha)).expect("raw artifact"),
-+        raw_output
++        raw_output.as_bytes()
 +    );
 +    let telemetry = std::fs::read_to_string(telemetry_path).expect("telemetry record");
 +    assert!(telemetry.contains(r#""transformed":true"#));
@@ -3735,14 +4609,14 @@ index bd0cb0c..f6fe657 100644
 +        event_call_id: "call-zero-small".to_string(),
 +        chunk_id: String::new(),
 +        wall_time: std::time::Duration::ZERO,
-+        raw_output: Vec::new(),
++        raw_output: CapturedStream::default(),
 +        truncation_policy: TruncationPolicy::Tokens(100),
 +        max_output_tokens: None,
 +        process_id: None,
 +        exit_code: None,
 +        original_token_count: None,
-+        output_omitted_bytes: None,
 +        hook_command: None,
++        tool_cwd: None,
 +        compact_model_payload: true,
 +        lossless_terminal_codec: true,
 +        command_aware_projection: true,
@@ -3771,19 +4645,18 @@ index bd0cb0c..f6fe657 100644
 +    raw_output.push_str(&"heartbeat\n".repeat(1000));
 +    raw_output.push_str("warning: deprecated fixture\nsrc/check.js:10\n");
 +    raw_output.push_str("Tests: 140 passed, 140 total\n");
-+    let raw_output = raw_output.into_bytes();
 +    let output = ExecCommandToolOutput {
 +        event_call_id: "call-projection".to_string(),
 +        chunk_id: "projection123".to_string(),
 +        wall_time: std::time::Duration::from_millis(1250),
-+        raw_output: raw_output.clone(),
++        raw_output: raw_output.as_str().into(),
 +        truncation_policy: TruncationPolicy::Tokens(100_000),
 +        max_output_tokens: Some(100_000),
 +        process_id: None,
 +        exit_code: Some(0),
 +        original_token_count: Some(2000),
-+        output_omitted_bytes: None,
 +        hook_command: Some("npm test".to_string()),
++        tool_cwd: None,
 +        compact_model_payload: true,
 +        lossless_terminal_codec: true,
 +        command_aware_projection: true,
@@ -3810,7 +4683,7 @@ index bd0cb0c..f6fe657 100644
 +        presentation_changed: false,
 +    })
 +    .expect("reversible output");
-+    assert_eq!(decoded.as_bytes(), raw_output.as_slice());
++    assert_eq!(decoded, raw_output);
 +    assert!(
 +        codex_zero_codec::token_count(&selected)
 +            < codex_zero_codec::token_count(&output.response_text())
@@ -3826,7 +4699,7 @@ index bd0cb0c..f6fe657 100644
 +        .expect("artifact hash");
 +    assert_eq!(
 +        std::fs::read(temp.path().join("sha256").join(sha)).expect("raw artifact"),
-+        raw_output
++        raw_output.as_bytes()
 +    );
 +    let telemetry = std::fs::read_to_string(telemetry_path).expect("telemetry record");
 +    assert!(telemetry.contains(r#""projection":null"#));
@@ -4038,10 +4911,10 @@ index 0000000..87da34e
 +    output.status.success().then_some(output.stdout)
 +}
 diff --git a/codex-rs/core/src/tools/handlers/multi_agents_tests.rs b/codex-rs/core/src/tools/handlers/multi_agents_tests.rs
-index 6991af1..6850b7e 100644
+index 0a9d78c..6c6d768 100644
 --- a/codex-rs/core/src/tools/handlers/multi_agents_tests.rs
 +++ b/codex-rs/core/src/tools/handlers/multi_agents_tests.rs
-@@ -1503,6 +1503,7 @@ async fn multi_agent_v2_list_agents_returns_completed_status() {
+@@ -1508,6 +1508,7 @@ async fn multi_agent_v2_list_agents_returns_completed_status() {
          .send_event(
              child_turn.as_ref(),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -4049,7 +4922,7 @@ index 6991af1..6850b7e 100644
                  root_turn_id: None,
                  turn_id: child_turn.sub_id.clone(),
                  started_at: None,
-@@ -1941,6 +1942,7 @@ async fn multi_agent_v2_followup_task_completion_notifies_parent_on_every_turn()
+@@ -1946,6 +1947,7 @@ async fn multi_agent_v2_followup_task_completion_notifies_parent_on_every_turn()
          .send_event(
              first_turn.as_ref(),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -4057,7 +4930,7 @@ index 6991af1..6850b7e 100644
                  root_turn_id: None,
                  turn_id: first_turn.sub_id.clone(),
                  started_at: None,
-@@ -1984,6 +1986,7 @@ async fn multi_agent_v2_followup_task_completion_notifies_parent_on_every_turn()
+@@ -1989,6 +1991,7 @@ async fn multi_agent_v2_followup_task_completion_notifies_parent_on_every_turn()
          .send_event(
              second_turn.as_ref(),
              EventMsg::TurnComplete(TurnCompleteEvent {
@@ -4066,41 +4939,47 @@ index 6991af1..6850b7e 100644
                  turn_id: second_turn.sub_id.clone(),
                  started_at: None,
 diff --git a/codex-rs/core/src/tools/handlers/unified_exec/exec_command.rs b/codex-rs/core/src/tools/handlers/unified_exec/exec_command.rs
-index faf8b90..c2d3da2 100644
+index 6a81b62..885ecda 100644
 --- a/codex-rs/core/src/tools/handlers/unified_exec/exec_command.rs
 +++ b/codex-rs/core/src/tools/handlers/unified_exec/exec_command.rs
-@@ -395,6 +395,18 @@ impl ExecCommandHandler {
+@@ -206,6 +206,21 @@ impl ExecCommandHandler {
                  original_token_count: None,
-                 output_omitted_bytes: None,
                  hook_command: None,
-+                compact_model_payload: turn
+                 tool_cwd: None,
++                compact_model_payload: step_context
++                    .turn
 +                    .config
 +                    .features
 +                    .enabled(Feature::CodexZeroCompactExecOutput),
-+                lossless_terminal_codec: turn
++                lossless_terminal_codec: step_context
++                    .turn
 +                    .config
 +                    .features
 +                    .enabled(Feature::CodexZeroLosslessTerminalCodec),
-+                command_aware_projection: turn
++                command_aware_projection: step_context
++                    .turn
 +                    .config
 +                    .features
 +                    .enabled(Feature::CodexZeroCommandAwareProjection),
              }));
          }
  
-@@ -462,6 +474,18 @@ impl ExecCommandHandler {
+@@ -264,6 +279,21 @@ impl ExecCommandHandler {
                      original_token_count: Some(original_token_count),
-                     output_omitted_bytes,
                      hook_command: Some(hook_command),
-+                    compact_model_payload: turn
+                     tool_cwd,
++                    compact_model_payload: step_context
++                        .turn
 +                        .config
 +                        .features
 +                        .enabled(Feature::CodexZeroCompactExecOutput),
-+                    lossless_terminal_codec: turn
++                    lossless_terminal_codec: step_context
++                        .turn
 +                        .config
 +                        .features
 +                        .enabled(Feature::CodexZeroLosslessTerminalCodec),
-+                    command_aware_projection: turn
++                    command_aware_projection: step_context
++                        .turn
 +                        .config
 +                        .features
 +                        .enabled(Feature::CodexZeroCommandAwareProjection),
@@ -4108,17 +4987,18 @@ index faf8b90..c2d3da2 100644
              }
              Err(err) => {
 diff --git a/codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs b/codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs
-index 3a6aa8d..ac2a0d0 100644
+index ce64c7c..6d40792 100644
 --- a/codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs
 +++ b/codex-rs/core/src/tools/handlers/unified_exec/write_stdin.rs
-@@ -1,5 +1,5 @@
--use crate::function_tool::FunctionCallError;
- use codex_features::Feature;
-+use crate::function_tool::FunctionCallError;
- 
- use crate::tools::context::ToolInvocation;
- use crate::tools::context::ToolPayload;
-@@ -116,6 +116,22 @@ impl WriteStdinHandler {
+@@ -14,6 +14,7 @@ use crate::unified_exec::UnifiedExecContext;
+ use crate::unified_exec::UnifiedExecError;
+ use crate::unified_exec::WriteStdinInteractionEvent;
+ use crate::unified_exec::WriteStdinRequest;
++use codex_features::Feature;
+ use codex_tools::ToolName;
+ use codex_tools::ToolSpec;
+ use serde::Deserialize;
+@@ -109,6 +110,22 @@ impl WriteStdinHandler {
                          session: &session,
                          turn: &turn,
                      }),
@@ -4142,23 +5022,23 @@ index 3a6aa8d..ac2a0d0 100644
              )
              .await
 diff --git a/codex-rs/core/src/tools/handlers/unified_exec_tests.rs b/codex-rs/core/src/tools/handlers/unified_exec_tests.rs
-index d834c24..ab74355 100644
+index 14dedbc..8a70ac5 100644
 --- a/codex-rs/core/src/tools/handlers/unified_exec_tests.rs
 +++ b/codex-rs/core/src/tools/handlers/unified_exec_tests.rs
-@@ -613,6 +613,9 @@ async fn exec_command_post_tool_use_payload_uses_output_for_noninteractive_one_s
+@@ -611,6 +611,9 @@ async fn exec_command_post_tool_use_payload_uses_output_for_noninteractive_one_s
          original_token_count: None,
-         output_omitted_bytes: None,
          hook_command: Some("echo three".to_string()),
+         tool_cwd: Some(PathUri::parse("file:///C:/workspace").expect("valid Windows cwd")),
 +        compact_model_payload: false,
 +        lossless_terminal_codec: false,
 +        command_aware_projection: false,
      };
      let invocation = invocation_for_payload("exec_command", "call-43", payload).await;
      let handler = ExecCommandHandler::default();
-@@ -644,6 +647,9 @@ async fn exec_command_post_tool_use_payload_uses_output_for_interactive_completi
+@@ -643,6 +646,9 @@ async fn exec_command_post_tool_use_payload_uses_output_for_interactive_completi
          original_token_count: None,
-         output_omitted_bytes: None,
          hook_command: Some("echo three".to_string()),
+         tool_cwd: None,
 +        compact_model_payload: false,
 +        lossless_terminal_codec: false,
 +        command_aware_projection: false,
@@ -4167,8 +5047,8 @@ index d834c24..ab74355 100644
      let handler = ExecCommandHandler::default();
 @@ -676,6 +682,9 @@ async fn exec_command_post_tool_use_payload_skips_running_sessions() {
          original_token_count: None,
-         output_omitted_bytes: None,
          hook_command: Some("echo three".to_string()),
+         tool_cwd: None,
 +        compact_model_payload: false,
 +        lossless_terminal_codec: false,
 +        command_aware_projection: false,
@@ -4177,28 +5057,28 @@ index d834c24..ab74355 100644
      let handler = ExecCommandHandler::default();
 @@ -703,6 +712,9 @@ async fn write_stdin_post_tool_use_payload_uses_original_exec_call_id_and_comman
          original_token_count: None,
-         output_omitted_bytes: None,
          hook_command: Some("sleep 1; echo finished".to_string()),
+         tool_cwd: None,
 +        compact_model_payload: false,
 +        lossless_terminal_codec: false,
 +        command_aware_projection: false,
      };
      let invocation = invocation_for_payload("write_stdin", "write-stdin-call", payload).await;
      let handler = WriteStdinHandler;
-@@ -735,6 +747,9 @@ async fn write_stdin_post_tool_use_payload_keeps_parallel_session_metadata_separ
+@@ -736,6 +748,9 @@ async fn write_stdin_post_tool_use_payload_keeps_parallel_session_metadata_separ
          original_token_count: None,
-         output_omitted_bytes: None,
          hook_command: Some("sleep 2; echo alpha".to_string()),
+         tool_cwd: Some(PathUri::parse("file:///C:/workspace/alpha").expect("valid Windows cwd")),
 +        compact_model_payload: false,
 +        lossless_terminal_codec: false,
 +        command_aware_projection: false,
      };
      let output_b = ExecCommandToolOutput {
          event_call_id: "exec-call-b".to_string(),
-@@ -748,6 +763,9 @@ async fn write_stdin_post_tool_use_payload_keeps_parallel_session_metadata_separ
+@@ -749,6 +764,9 @@ async fn write_stdin_post_tool_use_payload_keeps_parallel_session_metadata_separ
          original_token_count: None,
-         output_omitted_bytes: None,
          hook_command: Some("sleep 1; echo beta".to_string()),
+         tool_cwd: Some(PathUri::parse("file:///C:/workspace/beta").expect("valid Windows cwd")),
 +        compact_model_payload: false,
 +        lossless_terminal_codec: false,
 +        command_aware_projection: false,
@@ -4206,10 +5086,10 @@ index d834c24..ab74355 100644
      let invocation_b = invocation_for_payload("write_stdin", "write-call-b", payload.clone()).await;
      let invocation_a = invocation_for_payload("write_stdin", "write-call-a", payload).await;
 diff --git a/codex-rs/core/src/tools/mod.rs b/codex-rs/core/src/tools/mod.rs
-index 41ed018..c78c3dc 100644
+index 3344ed8..d7afef5 100644
 --- a/codex-rs/core/src/tools/mod.rs
 +++ b/codex-rs/core/src/tools/mod.rs
-@@ -5,6 +5,7 @@ pub(crate) mod code_mode;
+@@ -4,6 +4,7 @@ pub(crate) mod code_mode;
  pub(crate) mod context;
  mod control_tool_analytics;
  pub(crate) mod events;
@@ -4217,7 +5097,7 @@ index 41ed018..c78c3dc 100644
  mod executed_tool_calls;
  pub(crate) mod handlers;
  pub(crate) mod hook_names;
-@@ -73,15 +74,24 @@ pub(crate) fn tool_user_shell_type(
+@@ -64,15 +65,24 @@ pub(crate) fn flat_tool_name(tool_name: &ToolName) -> Cow<'_, str> {
  }
  
  pub(crate) fn requested_tool_mode(turn_context: &TurnContext, model_info: &ModelInfo) -> ToolMode {
@@ -4252,10 +5132,10 @@ index 41ed018..c78c3dc 100644
  
  pub(crate) fn effective_tool_mode(turn_context: &TurnContext, model_info: &ModelInfo) -> ToolMode {
 diff --git a/codex-rs/core/src/tools/parallel.rs b/codex-rs/core/src/tools/parallel.rs
-index 3daefd3..4afbad1 100644
+index 4361a91..78ca913 100644
 --- a/codex-rs/core/src/tools/parallel.rs
 +++ b/codex-rs/core/src/tools/parallel.rs
-@@ -103,7 +103,7 @@ impl ToolCallRuntime {
+@@ -133,7 +133,7 @@ impl ToolCallRuntime {
                      {
                          call.set_tool_result_metadata(ToolResultMetadata::new(metadata));
                      }
@@ -4264,8 +5144,8 @@ index 3daefd3..4afbad1 100644
                  }
                  Err(FunctionCallError::Fatal(message)) => return Err(CodexErr::Fatal(message)),
                  Err(other) => {
-@@ -335,6 +335,9 @@ impl ToolCallRuntime {
-                 message: Self::abort_message(call, secs),
+@@ -486,6 +486,9 @@ impl ToolCallRuntime {
+                 message: Self::abort_message(call, elapsed_secs),
              }),
              post_tool_use_payload: None,
 +            session: None,
@@ -4275,7 +5155,7 @@ index 3daefd3..4afbad1 100644
      }
  
 diff --git a/codex-rs/core/src/tools/registry.rs b/codex-rs/core/src/tools/registry.rs
-index e0acae2..c81170e 100644
+index c9c526a..1574fd7 100644
 --- a/codex-rs/core/src/tools/registry.rs
 +++ b/codex-rs/core/src/tools/registry.rs
 @@ -2,6 +2,8 @@ use std::collections::BTreeMap;
@@ -4286,8 +5166,8 @@ index e0acae2..c81170e 100644
 +use std::time::UNIX_EPOCH;
  
  use crate::function_tool::FunctionCallError;
- use crate::hook_runtime::PreToolUseHookResult;
-@@ -18,6 +20,7 @@ use crate::tools::context::ToolInvocation;
+ use crate::function_tool::OrCancelToolExt;
+@@ -20,6 +22,7 @@ use crate::tools::context::ToolInvocation;
  use crate::tools::context::ToolOutput;
  use crate::tools::context::ToolPayload;
  use crate::tools::control_tool_analytics::ControlToolCallGuard;
@@ -4295,7 +5175,7 @@ index e0acae2..c81170e 100644
  use crate::tools::flat_tool_name;
  use crate::tools::handlers::multi_agents_spec::MULTI_AGENT_V1_NAMESPACE;
  use crate::tools::hook_names::HookToolName;
-@@ -199,24 +202,86 @@ pub(crate) struct AnyToolResult {
+@@ -296,24 +299,86 @@ pub(crate) struct AnyToolResult {
      pub(crate) payload: ToolPayload,
      pub(crate) result: Box<dyn ToolOutput>,
      pub(crate) post_tool_use_payload: Option<PostToolUsePayload>,
@@ -4388,7 +5268,7 @@ index e0acae2..c81170e 100644
      }
  
      pub(crate) fn code_mode_result(self) -> serde_json::Value {
-@@ -822,6 +887,13 @@ async fn handle_any_tool(
+@@ -1061,6 +1126,13 @@ async fn handle_any_tool(
          payload,
          result: output,
          post_tool_use_payload,
@@ -4403,10 +5283,10 @@ index e0acae2..c81170e 100644
      super::user_messaging::capture_delivery(&result, call_state);
      if result.result.contains_external_context()
 diff --git a/codex-rs/core/src/tools/registry_tests.rs b/codex-rs/core/src/tools/registry_tests.rs
-index 895d8d4..99defdc 100644
+index 10f4452..69e3230 100644
 --- a/codex-rs/core/src/tools/registry_tests.rs
 +++ b/codex-rs/core/src/tools/registry_tests.rs
-@@ -593,7 +593,8 @@ async fn write_stdin_does_not_expose_default_pre_tool_use_payload() {
+@@ -608,7 +608,8 @@ async fn write_stdin_does_not_expose_default_pre_tool_use_payload() {
  
  #[test_case::test_case(TruncationPolicy::Tokens(1), 2; "token budget")]
  #[test_case::test_case(TruncationPolicy::Bytes(401), 121; "scale bytes before converting to tokens")]
@@ -4416,7 +5296,7 @@ index 895d8d4..99defdc 100644
      truncation_policy: TruncationPolicy,
      expected_token_limit: usize,
  ) {
-@@ -622,10 +623,13 @@ fn post_tool_use_feedback_output_preserves_fallback_token_limit_override(
+@@ -637,10 +638,13 @@ fn post_tool_use_feedback_output_preserves_fallback_token_limit_override(
              ),
          }),
          post_tool_use_payload: None,
@@ -4431,7 +5311,7 @@ index 895d8d4..99defdc 100644
          ResponseItemEnvelope {
              item: ResponseItem::from(ResponseInputItem::FunctionCallOutput {
                  call_id: "call-1".to_string(),
-@@ -639,8 +643,8 @@ fn post_tool_use_feedback_output_preserves_fallback_token_limit_override(
+@@ -654,8 +658,8 @@ fn post_tool_use_feedback_output_preserves_fallback_token_limit_override(
      );
  }
  
@@ -4442,7 +5322,7 @@ index 895d8d4..99defdc 100644
      let result = AnyToolResult {
          call_id: "call-1".to_string(),
          payload: ToolPayload::Function {
-@@ -656,10 +660,13 @@ fn post_tool_use_feedback_output_keeps_code_mode_result_typed() {
+@@ -671,10 +675,13 @@ fn post_tool_use_feedback_output_keeps_code_mode_result_typed() {
              ),
          }),
          post_tool_use_payload: None,
@@ -4457,7 +5337,7 @@ index 895d8d4..99defdc 100644
          ResponseItemEnvelope::new(
              ResponseInputItem::FunctionCallOutput {
                  call_id: "call-1".to_string(),
-@@ -686,6 +693,9 @@ fn post_tool_use_feedback_output_keeps_code_mode_result_typed() {
+@@ -701,6 +708,9 @@ fn post_tool_use_feedback_output_keeps_code_mode_result_typed() {
              ),
          }),
          post_tool_use_payload: None,
@@ -4467,7 +5347,7 @@ index 895d8d4..99defdc 100644
      };
  
      assert_eq!(
-@@ -731,6 +741,178 @@ fn post_tool_use_feedback_output_preserves_mcp_result_metadata(tool_error: bool)
+@@ -746,6 +756,178 @@ fn post_tool_use_feedback_output_preserves_mcp_result_metadata(tool_error: bool)
      assert_eq!(result.code_mode_result(&payload), original_result);
  }
  
@@ -4647,10 +5527,10 @@ index 895d8d4..99defdc 100644
  async fn dispatch_uses_canonical_tool_names_for_lifecycle_contributors() -> anyhow::Result<()> {
      let (mut session, turn) = crate::session::tests::make_session_and_context().await;
 diff --git a/codex-rs/core/src/tools/router_tests.rs b/codex-rs/core/src/tools/router_tests.rs
-index 05a1e2e..1489bd0 100644
+index 1544c07..751f7a1 100644
 --- a/codex-rs/core/src/tools/router_tests.rs
 +++ b/codex-rs/core/src/tools/router_tests.rs
-@@ -600,7 +600,7 @@ async fn extension_tool_executors_are_model_visible_and_dispatchable() -> anyhow
+@@ -691,7 +691,7 @@ async fn extension_tool_executors_are_model_visible_and_dispatchable() -> anyhow
          )
          .await?;
  
@@ -4660,10 +5540,10 @@ index 05a1e2e..1489bd0 100644
          ResponseItem::FunctionCallOutput {
              call_id, output, ..
 diff --git a/codex-rs/core/src/tools/spec_plan_tests.rs b/codex-rs/core/src/tools/spec_plan_tests.rs
-index 395cc95..10b5bd7 100644
+index 4f6c1ab..b26f314 100644
 --- a/codex-rs/core/src/tools/spec_plan_tests.rs
 +++ b/codex-rs/core/src/tools/spec_plan_tests.rs
-@@ -2618,6 +2618,33 @@ async fn code_mode_config_updates_exec_description() {
+@@ -2605,6 +2605,33 @@ async fn code_mode_config_updates_exec_description() {
      }
  }
  
@@ -4698,7 +5578,7 @@ index 395cc95..10b5bd7 100644
  async fn code_mode_only_exposes_configured_dynamic_namespace_directly() {
      let plan = probe_with(
 diff --git a/codex-rs/core/src/tools/user_messaging_tests.rs b/codex-rs/core/src/tools/user_messaging_tests.rs
-index 6a46eb3..8b13e46 100644
+index 70b927d..375b9b7 100644
 --- a/codex-rs/core/src/tools/user_messaging_tests.rs
 +++ b/codex-rs/core/src/tools/user_messaging_tests.rs
 @@ -46,6 +46,9 @@ fn messaging_result(name: &str, input: Value, success: bool) -> AnyToolResult {
@@ -4709,21 +5589,21 @@ index 6a46eb3..8b13e46 100644
 +        exact_source_fingerprint: None,
 +        exact_duplicate_results_enabled: false,
          post_tool_use_payload: Some(PostToolUsePayload {
+             tool_cwd: None,
              tool_name: HookToolName::new(name),
-             tool_use_id: "message-call".to_owned(),
 diff --git a/codex-rs/core/src/unified_exec/async_watcher_tests.rs b/codex-rs/core/src/unified_exec/async_watcher_tests.rs
-index 8443994..ddd325e 100644
+index 5e9973c..ca73f88 100644
 --- a/codex-rs/core/src/unified_exec/async_watcher_tests.rs
 +++ b/codex-rs/core/src/unified_exec/async_watcher_tests.rs
-@@ -12,6 +12,7 @@ use crate::unified_exec::UnifiedExecProcessManager;
- use crate::unified_exec::process::NoopSpawnLifecycle;
+@@ -11,6 +11,7 @@ use crate::unified_exec::UnifiedExecContext;
+ use crate::unified_exec::UnifiedExecProcessManager;
  use crate::unified_exec::process::OutputBuffers;
  use crate::unified_exec::process::UnifiedExecProcess;
 +use crate::unified_exec::process_manager::OutputCollectionMode;
  use codex_protocol::items::CommandExecutionStatus;
  use codex_protocol::items::TurnItem;
  use codex_protocol::protocol::Event;
-@@ -95,7 +96,7 @@ async fn completed_output_preserves_bytes_before_subscription(
+@@ -91,7 +92,7 @@ async fn completed_output_preserves_bytes_before_subscription(
      let model_output = UnifiedExecProcessManager::collect_output_until_deadline(
          process.output_handles(),
          /*pause_state*/ None,
@@ -4733,10 +5613,10 @@ index 8443994..ddd325e 100644
      .await;
      assert_eq!(model_output.to_bytes(), b"early\n");
 diff --git a/codex-rs/core/src/unified_exec/mod.rs b/codex-rs/core/src/unified_exec/mod.rs
-index 28af9b0..fec4a16 100644
+index 78ec3c5..aca49e7 100644
 --- a/codex-rs/core/src/unified_exec/mod.rs
 +++ b/codex-rs/core/src/unified_exec/mod.rs
-@@ -139,6 +139,10 @@ pub(crate) struct WriteStdinRequest<'a> {
+@@ -127,6 +127,10 @@ pub(crate) struct WriteStdinRequest<'a> {
      pub max_output_tokens: Option<usize>,
      pub truncation_policy: TruncationPolicy,
      pub interaction_event: Option<WriteStdinInteractionEvent<'a>>,
@@ -4748,19 +5628,18 @@ index 28af9b0..fec4a16 100644
  
  pub(crate) struct WriteStdinInteractionEvent<'a> {
 diff --git a/codex-rs/core/src/unified_exec/mod_tests.rs b/codex-rs/core/src/unified_exec/mod_tests.rs
-index 1b8af5b..45cd784 100644
+index 5dbbf83..4c51c63 100644
 --- a/codex-rs/core/src/unified_exec/mod_tests.rs
 +++ b/codex-rs/core/src/unified_exec/mod_tests.rs
-@@ -9,6 +9,8 @@ use crate::session::tests::make_session_and_context;
- use crate::session::turn_context::TurnContext;
+@@ -11,6 +11,7 @@ use crate::session::turn_context::TurnContext;
  use crate::tools::context::ExecCommandToolOutput;
  use crate::unified_exec::WriteStdinRequest;
-+use crate::unified_exec::process::OutputHandles;
+ use crate::unified_exec::output::CapturedStream;
 +use crate::unified_exec::process_manager::OutputCollectionMode;
  use codex_exec_server::ExecProcess;
  use codex_exec_server::ExecProcessEventReceiver;
  use codex_exec_server::ExecProcessFuture;
-@@ -172,7 +174,7 @@ async fn exec_command_with_tty(
+@@ -172,7 +173,7 @@ async fn exec_command_with_tty(
      let collected_output = UnifiedExecProcessManager::collect_output_until_deadline(
          process.output_handles(),
          Some(session.subscribe_elicitation_pause_state()),
@@ -4769,17 +5648,17 @@ index 1b8af5b..45cd784 100644
      )
      .await;
      let wall_time = Instant::now().saturating_duration_since(started_at);
-@@ -215,6 +217,9 @@ async fn exec_command_with_tty(
+@@ -214,6 +215,9 @@ async fn exec_command_with_tty(
          original_token_count: Some(original_token_count),
-         output_omitted_bytes,
          hook_command: Some(cmd.to_string()),
+         tool_cwd: None,
 +        compact_model_payload: false,
 +        lossless_terminal_codec: false,
 +        command_aware_projection: false,
      })
  }
  
-@@ -341,6 +346,10 @@ async fn write_stdin(
+@@ -332,6 +336,10 @@ async fn write_stdin(
                  max_output_tokens: None,
                  truncation_policy: TruncationPolicy::Tokens(10_000),
                  interaction_event: None,
@@ -4790,7 +5669,7 @@ index 1b8af5b..45cd784 100644
              },
          )
          .await
-@@ -841,7 +850,7 @@ async fn unified_exec_uses_remote_exec_server_when_configured() -> anyhow::Resul
+@@ -863,7 +871,7 @@ async fn unified_exec_uses_remote_exec_server_when_configured() -> anyhow::Resul
      let collected = UnifiedExecProcessManager::collect_output_until_deadline(
          process.output_handles(),
          /*pause_state*/ None,
@@ -4799,7 +5678,18 @@ index 1b8af5b..45cd784 100644
      )
      .await
      .to_bytes_with_omission_marker();
-@@ -1098,6 +1107,10 @@ async fn stdin_approval_observes_strict_review_enabled_while_queued() -> anyhow:
+@@ -1038,6 +1046,10 @@ async fn stdin_approval_preserves_the_reviewed_terminal() -> anyhow::Result<()>
+                 max_output_tokens: None,
+                 truncation_policy: TruncationPolicy::Tokens(10_000),
+                 interaction_event: None,
++                compact_model_payload: false,
++                lossless_terminal_codec: false,
++                command_aware_projection: false,
++                event_driven_wait: false,
+             },
+         )
+         .await;
+@@ -1091,6 +1103,10 @@ async fn stdin_approval_observes_strict_review_enabled_while_queued() -> anyhow:
              max_output_tokens: None,
              truncation_policy: TruncationPolicy::Tokens(10_000),
              interaction_event: None,
@@ -4811,7 +5701,7 @@ index 1b8af5b..45cd784 100644
      ));
      let mut task_context = std::task::Context::from_waker(futures::task::noop_waker_ref());
 diff --git a/codex-rs/core/src/unified_exec/process_manager.rs b/codex-rs/core/src/unified_exec/process_manager.rs
-index 2940235..31bfec7 100644
+index 9715d1b..fabb886 100644
 --- a/codex-rs/core/src/unified_exec/process_manager.rs
 +++ b/codex-rs/core/src/unified_exec/process_manager.rs
 @@ -108,6 +108,12 @@ const LATE_NETWORK_DENIAL_GRACE_PERIOD: Duration = Duration::from_millis(100);
@@ -4827,7 +5717,7 @@ index 2940235..31bfec7 100644
  /// Test-only override for deterministic unified exec process IDs.
  ///
  /// In production builds this value should remain at its default (`false`) and
-@@ -642,7 +648,7 @@ impl UnifiedExecProcessManager {
+@@ -662,7 +668,7 @@ impl UnifiedExecProcessManager {
          let collected_output = Self::collect_output_until_deadline(
              process.output_handles(),
              Some(context.session.subscribe_elicitation_pause_state()),
@@ -4836,10 +5726,10 @@ index 2940235..31bfec7 100644
          )
          .await;
          if let Some(completion) = completion.as_mut()
-@@ -840,6 +846,24 @@ impl UnifiedExecProcessManager {
-             original_token_count: Some(original_token_count),
-             output_omitted_bytes,
-             hook_command: Some(request.hook_command.clone()),
+@@ -870,6 +876,24 @@ impl UnifiedExecProcessManager {
+             hook_command: Some(prepared.hook_command.clone()),
+             tool_cwd: (!prepared.turn_environment.environment.is_remote())
+                 .then(|| prepared.cwd.clone()),
 +            compact_model_payload: context
 +                .step_context
 +                .turn
@@ -4861,7 +5751,7 @@ index 2940235..31bfec7 100644
          };
  
          Ok(response)
-@@ -1013,17 +1037,29 @@ impl UnifiedExecProcessManager {
+@@ -1048,17 +1072,29 @@ impl UnifiedExecProcessManager {
          let yield_time_ms = {
              // Empty polls use configurable background timeout bounds. Non-empty
              // writes keep a fixed max cap so interactive stdin remains responsive.
@@ -4897,17 +5787,17 @@ index 2940235..31bfec7 100644
          let wall_time = Instant::now().saturating_duration_since(start);
  
          let original_token_count = usize::try_from(approx_tokens_from_byte_count(
-@@ -1103,6 +1139,9 @@ impl UnifiedExecProcessManager {
+@@ -1131,6 +1167,9 @@ impl UnifiedExecProcessManager {
              original_token_count: Some(original_token_count),
-             output_omitted_bytes,
              hook_command: Some(hook_command),
+             tool_cwd,
 +            compact_model_payload: request.compact_model_payload,
 +            lossless_terminal_codec: request.lossless_terminal_codec,
 +            command_aware_projection: request.command_aware_projection,
          };
  
          let should_emit_interaction = !request.input.is_empty() || response.process_id.is_some();
-@@ -1573,11 +1612,16 @@ impl UnifiedExecProcessManager {
+@@ -1580,11 +1619,16 @@ impl UnifiedExecProcessManager {
      pub(super) async fn collect_output_until_deadline<const MAX_BYTES: usize>(
          output: &OutputHandles<MAX_BYTES>,
          mut pause_state: Option<watch::Receiver<bool>>,
@@ -4925,7 +5815,7 @@ index 2940235..31bfec7 100644
              OutputClosed,
              Deadline,
              PostExitDeadline,
-@@ -1659,6 +1703,9 @@ impl UnifiedExecProcessManager {
+@@ -1667,6 +1711,9 @@ impl UnifiedExecProcessManager {
  
              collected.push_buffer(drained_output);
  
@@ -4935,7 +5825,7 @@ index 2940235..31bfec7 100644
              exit_signal_received |= cancellation_token.is_cancelled();
              if Instant::now() >= deadline {
                  break StopReason::Deadline;
-@@ -1669,6 +1716,7 @@ impl UnifiedExecProcessManager {
+@@ -1677,6 +1724,7 @@ impl UnifiedExecProcessManager {
          span.record(
              "stop_reason",
              match stop_reason {
@@ -4944,10 +5834,10 @@ index 2940235..31bfec7 100644
                  StopReason::Deadline => "deadline",
                  StopReason::PostExitDeadline => "post_exit_deadline",
 diff --git a/codex-rs/core/src/unified_exec/process_manager_tests.rs b/codex-rs/core/src/unified_exec/process_manager_tests.rs
-index ce56681..1a39c30 100644
+index f17801b..24ca7d6 100644
 --- a/codex-rs/core/src/unified_exec/process_manager_tests.rs
 +++ b/codex-rs/core/src/unified_exec/process_manager_tests.rs
-@@ -360,7 +360,7 @@ async fn output_collection_stays_bounded_across_repeated_drains() {
+@@ -362,7 +362,7 @@ async fn output_collection_stays_bounded_across_repeated_drains() {
      let collect = UnifiedExecProcessManager::collect_output_until_deadline(
          &output,
          /*pause_state*/ None,
@@ -4956,7 +5846,7 @@ index ce56681..1a39c30 100644
      );
      let produce = async {
          for chunk in chunks {
-@@ -393,6 +393,41 @@ async fn output_collection_stays_bounded_across_repeated_drains() {
+@@ -398,6 +398,52 @@ async fn output_collection_stays_bounded_across_repeated_drains() {
      assert_eq!(output_buffer.lock().await.transcript, expected);
  }
  
@@ -4973,6 +5863,8 @@ index ce56681..1a39c30 100644
 +        output_closed: Arc::clone(&output_closed),
 +        output_closed_notify: Arc::clone(&output_closed_notify),
 +        cancellation_token: cancellation_token.clone(),
++        collection_finished: CancellationToken::new(),
++        drain_policy: OutputDrainPolicy::BoundedAfterExit,
 +    };
 +
 +    let collect = UnifiedExecProcessManager::collect_output_until_deadline(
@@ -4982,23 +5874,32 @@ index ce56681..1a39c30 100644
 +    );
 +    let produce = async {
 +        tokio::time::sleep(Duration::from_millis(25)).await;
-+        output_buffer.lock().await.push_chunk(b"ready");
++        output_buffer
++            .lock()
++            .await
++            .push_chunk(ExecOutputStream::Stdout, b"ready");
 +        output_notify.notify_one();
 +        tokio::time::sleep(Duration::from_millis(75)).await;
-+        output_buffer.lock().await.push_chunk(b"later");
++        output_buffer
++            .lock()
++            .await
++            .push_chunk(ExecOutputStream::Stdout, b"later");
 +        output_notify.notify_one();
 +    };
 +
 +    let (collected, ()) = tokio::join!(collect, produce);
 +    assert_eq!(collected.to_bytes(), b"ready");
 +    assert_eq!(output_buffer.lock().await.pending.to_bytes(), b"later");
-+    assert_eq!(output_buffer.lock().await.transcript.to_bytes(), b"readylater");
++    assert_eq!(
++        output_buffer.lock().await.transcript.to_bytes(),
++        b"readylater"
++    );
 +}
 +
  #[tokio::test]
  async fn output_collection_preserves_omissions_from_drained_buffer() {
      let mut buffered_output = OutputBuffers::<10>::default();
-@@ -418,7 +453,7 @@ async fn output_collection_preserves_omissions_from_drained_buffer() {
+@@ -425,7 +471,7 @@ async fn output_collection_preserves_omissions_from_drained_buffer() {
      let collected = UnifiedExecProcessManager::collect_output_until_deadline(
          &output,
          /*pause_state*/ None,
@@ -5008,10 +5909,10 @@ index ce56681..1a39c30 100644
      .await;
  
 diff --git a/codex-rs/core/tests/suite/client.rs b/codex-rs/core/tests/suite/client.rs
-index 23e2f11..2ede644 100644
+index 630c515..5cd823c 100644
 --- a/codex-rs/core/tests/suite/client.rs
 +++ b/codex-rs/core/tests/suite/client.rs
-@@ -2850,6 +2850,7 @@ async fn reasoning_summary_is_omitted_when_disabled() -> anyhow::Result<()> {
+@@ -2942,6 +2942,7 @@ async fn reasoning_summary_is_omitted_when_disabled() -> anyhow::Result<()> {
      let TestCodex { codex, .. } = test_codex()
          .with_config(|config| {
              config.model_reasoning_summary = Some(ReasoningSummary::None);
@@ -5019,7 +5920,7 @@ index 23e2f11..2ede644 100644
          })
          .build(&server)
          .await?;
-@@ -2867,11 +2868,10 @@ async fn reasoning_summary_is_omitted_when_disabled() -> anyhow::Result<()> {
+@@ -2959,11 +2960,10 @@ async fn reasoning_summary_is_omitted_when_disabled() -> anyhow::Result<()> {
      let request = resp_mock.single_request();
      let request_body = request.body_json();
  
@@ -5047,10 +5948,10 @@ index 0d4866d..c43c016 100644
                  turn_id,
                  last_agent_message: None,
 diff --git a/codex-rs/core/tests/suite/unified_exec.rs b/codex-rs/core/tests/suite/unified_exec.rs
-index a6e5161..b4fb409 100644
+index a6ffe30..c85e41e 100644
 --- a/codex-rs/core/tests/suite/unified_exec.rs
 +++ b/codex-rs/core/tests/suite/unified_exec.rs
-@@ -1862,6 +1862,100 @@ async fn unified_exec_emits_one_begin_and_one_end_event() -> Result<()> {
+@@ -1937,6 +1937,100 @@ async fn unified_exec_emits_one_begin_and_one_end_event() -> Result<()> {
      Ok(())
  }
  
@@ -5151,7 +6052,7 @@ index a6e5161..b4fb409 100644
  #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
  async fn exec_command_reports_chunk_and_exit_metadata() -> Result<()> {
      // TODO(anp): Remove after unified-exec fixtures use target-native commands.
-@@ -1951,6 +2045,170 @@ async fn exec_command_reports_chunk_and_exit_metadata() -> Result<()> {
+@@ -2026,6 +2120,170 @@ async fn exec_command_reports_chunk_and_exit_metadata() -> Result<()> {
      Ok(())
  }
  
@@ -5323,10 +6224,10 @@ index a6e5161..b4fb409 100644
  async fn exec_command_clamps_model_requested_max_output_tokens_to_policy() -> Result<()> {
      // TODO(anp): Remove after unified-exec fixtures use target-native commands.
 diff --git a/codex-rs/external-agent-migration/src/sessions/export.rs b/codex-rs/external-agent-migration/src/sessions/export.rs
-index f50ee95..0bda2a9 100644
+index d5e7fc2..26ffc46 100644
 --- a/codex-rs/external-agent-migration/src/sessions/export.rs
 +++ b/codex-rs/external-agent-migration/src/sessions/export.rs
-@@ -207,6 +207,7 @@ fn turn_complete_item(
+@@ -214,6 +214,7 @@ fn turn_complete_item(
      completed_at: Option<i64>,
  ) -> RolloutItem {
      RolloutItem::EventMsg(EventMsg::TurnComplete(TurnCompleteEvent {
@@ -5335,10 +6236,10 @@ index f50ee95..0bda2a9 100644
          turn_id,
          last_agent_message: None,
 diff --git a/codex-rs/features/src/lib.rs b/codex-rs/features/src/lib.rs
-index c68bc3b..e575f50 100644
+index 8a9a097..bba45a0 100644
 --- a/codex-rs/features/src/lib.rs
 +++ b/codex-rs/features/src/lib.rs
-@@ -146,6 +146,18 @@ pub enum Feature {
+@@ -167,6 +167,18 @@ pub enum Feature {
      UnifiedExec,
      /// Allow unified exec commands to allocate an interactive terminal.
      UnifiedExecTty,
@@ -5354,10 +6255,10 @@ index c68bc3b..e575f50 100644
 +    CodexZeroEventDrivenWait,
 +    /// Let CodexZero's explicit Focused mode override a model's direct-tool default.
 +    CodexZeroScopedRuntime,
-     /// Route shell tool execution through the zsh exec bridge.
+     /// Removed compatibility flag for the retired patched zsh backend.
      ShellZshFork,
-     /// Allow unified exec to compose with the zsh exec bridge.
-@@ -1043,6 +1055,42 @@ pub const FEATURES: &[FeatureSpec] = &[
+     /// Removed compatibility flag for the retired patched zsh backend.
+@@ -1175,6 +1187,42 @@ pub const FEATURES: &[FeatureSpec] = &[
          stage: Stage::Stable,
          default_enabled: true,
      },
@@ -5401,7 +6302,7 @@ index c68bc3b..e575f50 100644
          id: Feature::ShellZshFork,
          key: "shell_zsh_fork",
 diff --git a/codex-rs/models-manager/src/model_info.rs b/codex-rs/models-manager/src/model_info.rs
-index 20847e1..54025e9 100644
+index f7e6f5b..e766e97 100644
 --- a/codex-rs/models-manager/src/model_info.rs
 +++ b/codex-rs/models-manager/src/model_info.rs
 @@ -126,7 +126,7 @@ pub fn model_info_from_slug(slug: &str) -> ModelInfo {
@@ -5414,10 +6315,10 @@ index 20847e1..54025e9 100644
          comp_hash: None,
          effective_context_window_percent: 95,
 diff --git a/codex-rs/models-manager/src/model_info_tests.rs b/codex-rs/models-manager/src/model_info_tests.rs
-index 9550d69..fe21e33 100644
+index dc061cc..a30d046 100644
 --- a/codex-rs/models-manager/src/model_info_tests.rs
 +++ b/codex-rs/models-manager/src/model_info_tests.rs
-@@ -264,3 +264,21 @@ fn model_context_window_uses_model_value_without_override() {
+@@ -278,3 +278,21 @@ fn model_context_window_uses_model_value_without_override() {
  
      assert_eq!(updated, model);
  }
@@ -5439,12 +6340,11 @@ index 9550d69..fe21e33 100644
 +        assert_eq!(model.effective_context_window_percent, 95);
 +    }
 +}
-\ No newline at end of file
 diff --git a/codex-rs/protocol/src/protocol.rs b/codex-rs/protocol/src/protocol.rs
-index 841c794..e29bfd9 100644
+index a0af620..4341c8a 100644
 --- a/codex-rs/protocol/src/protocol.rs
 +++ b/codex-rs/protocol/src/protocol.rs
-@@ -2169,8 +2169,20 @@ pub struct SafetyBufferingEvent {
+@@ -2381,8 +2381,20 @@ pub struct SafetyBufferingEvent {
  #[derive(Debug, Clone, Deserialize, Serialize, JsonSchema, TS)]
  pub struct ContextCompactedEvent;
  
@@ -5465,7 +6365,7 @@ index 841c794..e29bfd9 100644
      /// Resolved causal root for this turn; absent on older or synthetic events.
      #[serde(default, skip_serializing_if = "Option::is_none")]
      #[ts(optional)]
-@@ -6440,3 +6452,27 @@ mod tests {
+@@ -6767,3 +6779,37 @@ mod tests {
          assert_eq!(info.model_context_window, Some(258_400));
      }
  }
@@ -5478,27 +6378,36 @@ index 841c794..e29bfd9 100644
 +    fn codex_zero_turn_profile_round_trips_and_legacy_completion_still_loads() {
 +        let mut event: TurnCompleteEvent = serde_json::from_value(serde_json::json!({
 +            "turn_id": "turn-1", "last_agent_message": null
-+        })).unwrap();
++        }))
++        .unwrap();
 +        assert!(event.turn_profile.is_none());
-+        assert!(serde_json::to_value(&event).unwrap().get("turn_profile").is_none());
++        assert!(
++            serde_json::to_value(&event)
++                .unwrap()
++                .get("turn_profile")
++                .is_none()
++        );
 +        event.turn_profile = Some(TurnProfileMetrics {
-+            sampling_ms: 3200, tool_blocking_ms: 1400, sampling_request_count: 3,
++            sampling_ms: 3200,
++            tool_blocking_ms: 1400,
++            sampling_request_count: 3,
 +        });
 +        let encoded = serde_json::to_value(EventMsg::TurnComplete(event)).unwrap();
 +        assert_eq!(encoded["turn_profile"]["sampling_ms"], 3200);
 +        assert_eq!(encoded["turn_profile"]["tool_blocking_ms"], 1400);
 +        assert_eq!(encoded["turn_profile"]["sampling_request_count"], 3);
 +        let decoded: EventMsg = serde_json::from_value(encoded).unwrap();
-+        let EventMsg::TurnComplete(decoded) = decoded else { panic!("expected completion") };
++        let EventMsg::TurnComplete(decoded) = decoded else {
++            panic!("expected completion")
++        };
 +        assert_eq!(decoded.turn_profile.unwrap().sampling_ms, 3200);
 +    }
 +}
-\ No newline at end of file
 diff --git a/codex-rs/rollout/src/persistence_metrics_tests.rs b/codex-rs/rollout/src/persistence_metrics_tests.rs
-index ceebe75..83e2a01 100644
+index 6753ba5..a0fabf8 100644
 --- a/codex-rs/rollout/src/persistence_metrics_tests.rs
 +++ b/codex-rs/rollout/src/persistence_metrics_tests.rs
-@@ -61,6 +61,7 @@ fn turn_started(turn_id: &str) -> RolloutItem {
+@@ -63,6 +63,7 @@ fn turn_started(turn_id: &str) -> RolloutItem {
  
  fn turn_complete(turn_id: &str) -> RolloutItem {
      RolloutItem::EventMsg(EventMsg::TurnComplete(TurnCompleteEvent {
@@ -5507,10 +6416,10 @@ index ceebe75..83e2a01 100644
          turn_id: turn_id.to_string(),
          started_at: None,
 diff --git a/codex-rs/thread-store/src/local/mod.rs b/codex-rs/thread-store/src/local/mod.rs
-index 1380ff5..38b919d 100644
+index 8a2506b..7a260ab 100644
 --- a/codex-rs/thread-store/src/local/mod.rs
 +++ b/codex-rs/thread-store/src/local/mod.rs
-@@ -1204,6 +1204,7 @@ mod tests {
+@@ -1270,6 +1270,7 @@ mod tests {
                      },
                  )),
                  RolloutItem::EventMsg(EventMsg::TurnComplete(TurnCompleteEvent {
@@ -5519,10 +6428,10 @@ index 1380ff5..38b919d 100644
                      turn_id: "turn-1".to_string(),
                      started_at: None,
 diff --git a/codex-rs/thread-store/src/local/model_context_tests.rs b/codex-rs/thread-store/src/local/model_context_tests.rs
-index 3e74f2b..c416374 100644
+index d3feb44..28d8b33 100644
 --- a/codex-rs/thread-store/src/local/model_context_tests.rs
 +++ b/codex-rs/thread-store/src/local/model_context_tests.rs
-@@ -629,6 +629,7 @@ fn turn_started(turn_id: &str) -> RolloutItem {
+@@ -686,6 +686,7 @@ fn turn_started(turn_id: &str) -> RolloutItem {
  
  fn turn_complete(turn_id: &str) -> RolloutItem {
      RolloutItem::EventMsg(EventMsg::TurnComplete(TurnCompleteEvent {
@@ -5531,10 +6440,10 @@ index 3e74f2b..c416374 100644
          turn_id: turn_id.to_string(),
          last_agent_message: None,
 diff --git a/codex-rs/thread-store/src/local/revert_thread_tests.rs b/codex-rs/thread-store/src/local/revert_thread_tests.rs
-index 974d58c..9d87ca9 100644
+index 564c990..70ff7a5 100644
 --- a/codex-rs/thread-store/src/local/revert_thread_tests.rs
 +++ b/codex-rs/thread-store/src/local/revert_thread_tests.rs
-@@ -333,6 +333,7 @@ fn turn_started(turn_id: &str) -> RolloutItem {
+@@ -334,6 +334,7 @@ fn turn_started(turn_id: &str) -> RolloutItem {
  
  fn turn_completed(turn_id: &str) -> RolloutItem {
      RolloutItem::EventMsg(EventMsg::TurnComplete(TurnCompleteEvent {
@@ -5543,10 +6452,10 @@ index 974d58c..9d87ca9 100644
          turn_id: turn_id.to_string(),
          last_agent_message: None,
 diff --git a/codex-rs/thread-store/src/local/rollout_migration/canonicalizer.rs b/codex-rs/thread-store/src/local/rollout_migration/canonicalizer.rs
-index 6a8ce71..b6d9ea7 100644
+index 5d7f336..8746fd2 100644
 --- a/codex-rs/thread-store/src/local/rollout_migration/canonicalizer.rs
 +++ b/codex-rs/thread-store/src/local/rollout_migration/canonicalizer.rs
-@@ -375,6 +375,7 @@ impl LegacyRolloutCanonicalizer {
+@@ -376,6 +376,7 @@ impl LegacyRolloutCanonicalizer {
              writer,
              timestamp,
              RolloutItem::EventMsg(EventMsg::TurnComplete(TurnCompleteEvent {
@@ -5555,10 +6464,10 @@ index 6a8ce71..b6d9ea7 100644
                  turn_id,
                  last_agent_message: None,
 diff --git a/codex-rs/thread-store/src/local/rollout_migration_tests.rs b/codex-rs/thread-store/src/local/rollout_migration_tests.rs
-index 61d8a6a..d5e1cfb 100644
+index dea0da6..98d0ecc 100644
 --- a/codex-rs/thread-store/src/local/rollout_migration_tests.rs
 +++ b/codex-rs/thread-store/src/local/rollout_migration_tests.rs
-@@ -256,6 +256,7 @@ fn compacted(replacement_history: Vec<ResponseItem>) -> RolloutItem {
+@@ -265,6 +265,7 @@ fn compacted(replacement_history: Vec<ResponseItem>) -> RolloutItem {
  
  fn completed(turn_id: &str) -> RolloutItem {
      RolloutItem::EventMsg(EventMsg::TurnComplete(TurnCompleteEvent {
@@ -5567,10 +6476,10 @@ index 61d8a6a..d5e1cfb 100644
          turn_id: turn_id.to_string(),
          last_agent_message: None,
 diff --git a/codex-rs/thread-store/src/local/thread_history_materialization_tests.rs b/codex-rs/thread-store/src/local/thread_history_materialization_tests.rs
-index c711043..4d56ccc 100644
+index ce951ad..eb9ae17 100644
 --- a/codex-rs/thread-store/src/local/thread_history_materialization_tests.rs
 +++ b/codex-rs/thread-store/src/local/thread_history_materialization_tests.rs
-@@ -2861,6 +2861,7 @@ fn turn_started_with_root(turn_id: &str, root_turn_id: &str) -> RolloutItem {
+@@ -3121,6 +3121,7 @@ fn turn_started_with_root(turn_id: &str, root_turn_id: &str) -> RolloutItem {
  
  fn turn_completed(turn_id: &str) -> RolloutItem {
      RolloutItem::EventMsg(EventMsg::TurnComplete(TurnCompleteEvent {
@@ -5579,7 +6488,7 @@ index c711043..4d56ccc 100644
          turn_id: turn_id.to_string(),
          last_agent_message: None,
 diff --git a/codex-rs/tools/src/tool_output.rs b/codex-rs/tools/src/tool_output.rs
-index 296c312..d0f13e5 100644
+index 3a4c1e8..efab140 100644
 --- a/codex-rs/tools/src/tool_output.rs
 +++ b/codex-rs/tools/src/tool_output.rs
 @@ -34,6 +34,23 @@ pub trait ToolOutput: Send {
@@ -5606,7 +6515,7 @@ index 296c312..d0f13e5 100644
      fn to_response_item(&self, call_id: &str, payload: &ToolPayload) -> ResponseInputItem;
  
      /// Returns the tool call id exposed to `PostToolUse` hooks for this output.
-@@ -91,6 +108,18 @@ where
+@@ -98,6 +115,18 @@ where
          (**self).fallback_token_limit_override()
      }
  
@@ -5626,10 +6535,10 @@ index 296c312..d0f13e5 100644
          (**self).to_response_item(call_id, payload)
      }
 diff --git a/codex-rs/tui/src/app/tests.rs b/codex-rs/tui/src/app/tests.rs
-index 73bc892..76a26ae 100644
+index f8d8f9a..68fae8d 100644
 --- a/codex-rs/tui/src/app/tests.rs
 +++ b/codex-rs/tui/src/app/tests.rs
-@@ -8427,6 +8427,7 @@ async fn prompt_edit_reverts_earlier_and_first_visible_prompts_in_place() -> Res
+@@ -8910,6 +8910,7 @@ async fn prompt_edit_reverts_earlier_and_first_visible_prompts_in_place_scenario
                  completed_at_ms: 0,
              })),
              RolloutItem::EventMsg(EventMsg::TurnComplete(TurnCompleteEvent {
@@ -5638,7 +6547,7 @@ index 73bc892..76a26ae 100644
                  turn_id: turn_id.to_string(),
                  last_agent_message: None,
 diff --git a/codex-rs/tui/src/app/tests/history_hydration_tests.rs b/codex-rs/tui/src/app/tests/history_hydration_tests.rs
-index 5a65adb..48342a7 100644
+index 111f813..2bd1bf2 100644
 --- a/codex-rs/tui/src/app/tests/history_hydration_tests.rs
 +++ b/codex-rs/tui/src/app/tests/history_hydration_tests.rs
 @@ -80,6 +80,7 @@ async fn history_fixture(
@@ -5650,7 +6559,7 @@ index 5a65adb..48342a7 100644
              turn_id,
              last_agent_message: None,
 diff --git a/codex-rs/tui/src/app/tests/pagination_completion_tests.rs b/codex-rs/tui/src/app/tests/pagination_completion_tests.rs
-index 7cfc88a..d97a0ae 100644
+index ec7d8b4..f387c65 100644
 --- a/codex-rs/tui/src/app/tests/pagination_completion_tests.rs
 +++ b/codex-rs/tui/src/app/tests/pagination_completion_tests.rs
 @@ -95,6 +95,7 @@ pub(super) async fn completed_history_app(

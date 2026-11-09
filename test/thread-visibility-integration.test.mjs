@@ -1,34 +1,19 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import fs from "node:fs";
 import { isDeepStrictEqual } from "node:util";
-import { openAsar } from "../src/asar-patch.mjs";
-import { patchThreadVisibilityMain, patchThreadVisibilityRenderer } from "../src/thread-visibility-patch.mjs";
+import { patchThreadVisibilityMain, patchThreadVisibilityRenderer, THREAD_VISIBILITY_MAIN_TARGET, THREAD_VISIBILITY_RENDERER_TARGET } from "../src/thread-visibility-patch.mjs";
 import visibility from "../assets/native-sidebar-threads.cjs";
+import { bundledAvailable, bundledSources, blockEnd, definition, evaluate } from "./bundled-source.mjs";
 
-const archivePath = process.env.CODEXZERO_TEST_ASAR || "work/local-providers/20260921-reasoning-picker/desktop/resources/app.asar";
-const bundled = { skip: !fs.existsSync(archivePath) };
+const bundled = { skip: !bundledAvailable && "Unpacked desktop bundle unavailable" };
 const { DatabaseSync } = await import("node:sqlite").catch(() => ({}));
 const sqliteBundled = { skip: bundled.skip || (!DatabaseSync && "Node SQLite is unavailable") };
-
-async function bundles() {
-  const archive = await openAsar(archivePath);
-  try {
-    const main = Object.keys(archive.header.files[".vite"].files.build.files).find(name => /^main-.*\.js$/.test(name));
-    const renderer = Object.keys(archive.header.files.webview.files.assets.files).find(name => /^app-initial-.*\.js$/.test(name));
-    return { main: (await archive.read(`.vite/build/${main}`)).toString(), renderer: (await archive.read(`webview/assets/${renderer}`)).toString() };
-  } finally { await archive.close(); }
-}
-
-function fragment(source, start, end) {
-  const a = source.indexOf(start), b = source.indexOf(end, a);
-  assert.ok(a >= 0 && b > a, `Missing bundled fragment: ${start}`);
-  return source.slice(a, b);
-}
+const bundles = () => bundledSources({ main: THREAD_VISIBILITY_MAIN_TARGET, renderer: THREAD_VISIBILITY_RENDERER_TARGET });
+const schema = { safeParse: data => ({ success: true, data }), parse: data => data };
 
 function catalogDatabase() {
   const db = new DatabaseSync(":memory:");
-  db.exec(`CREATE TABLE local_thread_catalog (host_id TEXT, thread_id TEXT, display_title TEXT, source_created_at REAL, source_updated_at REAL, source_recency_at REAL, cwd TEXT, source_kind TEXT, source_detail TEXT, thread_source TEXT, model_provider TEXT, git_branch TEXT, project_id TEXT, conversation_origin TEXT, observation_sequence INTEGER, pending_observed_title INTEGER DEFAULT 0, missing_candidate INTEGER DEFAULT 0, PRIMARY KEY(host_id, thread_id));
+  db.exec(`CREATE TABLE local_thread_catalog (host_id TEXT, thread_id TEXT, display_title TEXT, source_created_at REAL, source_updated_at REAL, source_recency_at REAL, cwd TEXT, source_kind TEXT, source_detail TEXT, thread_source TEXT, model_provider TEXT, git_branch TEXT, project_id TEXT, conversation_origin TEXT, trial_conversation_type TEXT, chatgpt_async_status TEXT, observation_sequence INTEGER, pending_observed_title INTEGER DEFAULT 0, missing_candidate INTEGER DEFAULT 0, PRIMARY KEY(host_id, thread_id));
     CREATE TABLE local_thread_catalog_sync_state (host_id TEXT PRIMARY KEY, watermark_updated_at REAL, initial_build_complete INTEGER DEFAULT 0, last_full_reconciled_at REAL, observation_sequence INTEGER DEFAULT 0);
     CREATE TABLE local_thread_catalog_hosts (host_id TEXT PRIMARY KEY, host_kind TEXT);
     CREATE TABLE local_thread_catalog_metadata (id INTEGER PRIMARY KEY, catalog_revision INTEGER DEFAULT 0);
@@ -39,18 +24,17 @@ function catalogDatabase() {
 }
 
 function storeClass(source) {
-  const code = fragment(source, "var Dme=class{", "var Wh=");
-  const sql = fragment(source, "Eme=`", ";function zh(").slice(4);
-  const schema = { safeParse: data => ({ success: true, data }) };
-  return new Function("czThreadVisibility", "Lh", "Eme", "Cme", "wme", "Tme", "Bh", `${code};return Dme;`)(visibility, "local", new Function(`return ${sql}`)(), schema, schema, {}, ({ threadId }) => threadId);
+  const near = source.indexOf("class pP{");
+  const code = ["pP", "pZ", "pG", "p_", "pM", "pY"].map(name => definition(source, name, near)).join(";");
+  return evaluate(code, { czThreadVisibility: visibility, pk: "local", es: { iFb: 100 }, pB: schema, pV: schema, pT: {}, px: schema }, "pP");
 }
 
 function entry(id, cwd, updatedAt, recencyAt = updatedAt) {
   return { hostId: "local", threadId: id, displayTitle: id, cwd, sourceKind: "cli", sourceDetail: null, threadSource: null, modelProvider: "openai", gitBranch: null, sourceCreatedAt: 1, sourceUpdatedAt: updatedAt, sourceRecencyAt: recencyAt };
 }
 
-test("real patched catalog queries preserve assignment inclusion, aliases, exclusions and page boundaries", sqliteBundled, async () => {
-  const { main } = await bundles();
+test("real patched catalog queries preserve assignment inclusion, aliases, exclusions and page boundaries", sqliteBundled, () => {
+  const { main } = bundles();
   const patched = patchThreadVisibilityMain(main);
   assert.throws(() => patchThreadVisibilityMain(patched));
   assert.throws(() => patchThreadVisibilityMain("changed upstream"));
@@ -69,23 +53,21 @@ test("real patched catalog queries preserve assignment inclusion, aliases, exclu
 });
 
 function coordinatorClass(source) {
-  const code = fragment(source, "Rtt=class{", ";function ztt(");
-  const context = { czThreadVisibility: visibility, n: { ar: params => params?.threadId, ir: params => params?.thread },
-    Mtt: 30_000, O5: 10_000, Ntt: 250, Ptt: 1000, Ftt: 8, Itt: 3_600_000, Ltt: 60_000, D5: 100,
-    k5: items => new Map(items.map(item => [item.id, item.updatedAt])), ztt: items => items.length ? Math.max(...items.map(item => item.updatedAt)) : null,
-    zh: thread => thread.ephemeral ? null : entry(thread.id, thread.cwd, thread.updatedAt, thread.recencyAt) };
-  return new Function(...Object.keys(context), `let ${code};return Rtt;`)(...Object.values(context));
+  const near = source.indexOf("class efn{");
+  const code = ["efn", "efi"].map(name => definition(source, name, near)).join(";");
+  return evaluate(code, { czThreadVisibility: visibility, eu: { _gS: params => params?.threadId, P26: params => params?.thread }, Gi: () => null,
+    pX: thread => thread.ephemeral ? null : entry(thread.id, thread.cwd, thread.updatedAt, thread.recencyAt) }, "efn");
 }
 
 test("real coordinator startup revalidates completed history and Activity updates the project catalog", sqliteBundled, async () => {
-  const { main } = await bundles(), patched = patchThreadVisibilityMain(main);
+  const patched = patchThreadVisibilityMain(bundles().main);
   const Store = storeClass(patched), Coordinator = coordinatorClass(patched), db = catalogDatabase();
   const store = new Store(db);
   let now = 1000, coordinator;
   try {
     const firstScan = store.beginScan("full"); store.applyScanPage(firstScan, [entry("existing", "C:/repo", 1)]); store.completeScan(firstScan, 1, now);
     const modes = [], updates = [];
-    const listing = visibility.createListing(async ({ useStateDbOnly }) => ({ data: useStateDbOnly ? [{ id: "existing", cwd: "C:/repo", updatedAt: 1, recencyAt: 1 }] : [{ id: "mobile", cwd: "C:\\Repo", updatedAt: 2, recencyAt: 2 }], nextCursor: null }), "local", ["cli"]);
+    const listing = visibility.createListing(async ({ useStateDbOnly }) => ({ data: useStateDbOnly ? [{ id: "existing", cwd: "C:/repo", updatedAt: 1, recencyAt: 1 }] : [{ id: "mobile", cwd: "C:\\Repo", updatedAt: 2, recencyAt: 2 }], nextCursor: null }), "local", []);
     coordinator = new Coordinator({ listPage: async params => { const page = await listing(params); return { items: page.data.map(thread => ({ id: thread.id, updatedAt: thread.updatedAt, entry: entry(thread.id, thread.cwd, thread.updatedAt, thread.recencyAt) })), nextCursor: page.nextCursor }; },
       readItem: async id => ({ entry: entry(id, "C:/repo", 20, 19) }) }, store, { now: () => now, scheduleRun: async (mode, _, run) => { modes.push(mode); return run(); } });
     coordinator.subscribe(update => updates.push(update));
@@ -108,18 +90,17 @@ test("real coordinator startup revalidates completed history and Activity update
   } finally { coordinator?.dispose(); db.close(); }
 });
 
-test("both bundled live stores refresh sort fields and their fallbacks never freeze recency", bundled, async () => {
-  const { main, renderer } = await bundles();
-  for (const [source, patch, summaryToken, metadataToken, equalityToken, sortToken] of [
-    [main, patchThreadVisibilityMain, "ky", "jy", "W", "Xge"],
-    [renderer, patchThreadVisibilityRenderer, "sh", "lh", "uh", "EBt"],
+test("both bundled live stores refresh sort fields and their fallbacks never freeze recency", bundled, () => {
+  const { main, renderer } = bundles();
+  for (const [source, patch, fallbackName, context] of [
+    [main, patchThreadVisibilityMain, "SM", { p$: id => id, S_: thread => ({ updatedAt: thread.updatedAt * 1000 }), SD: () => ({}), rc: () => false, t4: () => isDeepStrictEqual, SY: () => 0 }],
+    [renderer, patchThreadVisibilityRenderer, "rd", { g: { J: id => id }, ru: thread => ({ updatedAt: thread.updatedAt * 1000 }), rh: () => ({}), nF: { sZ: () => false }, tD: () => isDeepStrictEqual, rc: () => 0 }],
   ]) {
     const patched = patch(source);
-    const method = fragment(patched, "observeCatalogThreads(e){", "getCachedThreadMetadata(");
+    const start = patched.indexOf("observeCatalogThreads(e){");
+    const method = patched.slice(start, blockEnd(patched, start));
     const live = { id: "task", updatedAt: 1000, recencyAt: 1000, cwd: "old", title: "Task", resumeState: "needs_resume" };
-    const context = { czThreadVisibility: visibility, czObserveThread: visibility.applyObservation, czObservedActivity: visibility.observedActivity, n: { Iu: id => id }, ti: id => id,
-      [summaryToken]: thread => ({ updatedAt: thread.updatedAt * 1000 }), [metadataToken]: () => ({}), [equalityToken]: { default: isDeepStrictEqual }, [sortToken]: () => 0 };
-    const instance = new Function(...Object.keys(context), `return ({${method}});`)(...Object.values(context));
+    const instance = evaluate("", { czThreadVisibility: visibility, czObserveThread: visibility.applyObservation, czObservedActivity: visibility.observedActivity, ...context }, `({${method}})`);
     Object.assign(instance, { threadSummaries: [], conversations: new Map([["task", live]]), threadsById: new Map(), pendingThreadTitlesById: new Map(), confirmedThreadTitlesById: new Map(), getCachedDisplayThreadTitle: name => name, applyPendingThreadTitle: row => row, takeRuntimeStatusEvidence: row => row,
       updateConversationState: (_, update) => update(live), getThreadSummaryFromThread: row => ({ conversationId: row.id }), shouldSurfaceThreadSummary: () => true, replaceRecentThreadSummaries: () => {} });
     instance.observeCatalogThreads([{ id: "task", updatedAt: 20, recencyAt: 19, cwd: "new", name: "Task" }]);
@@ -131,11 +112,7 @@ test("both bundled live stores refresh sort fields and their fallbacks never fre
     assert.equal(live.cwd, "changed");
     instance.observeCatalogThreads([{ id: "task", updatedAt: 10, recencyAt: 9, cwd: "stale", name: "Task" }]);
     assert.equal(live.recencyAt, 25_000); assert.equal(live.cwd, "changed");
-    const fallbackName = source === main ? "Ay" : "ch";
-    const fallbackStart = patched.indexOf(`function ${fallbackName}(`);
-    const fallbackEnd = patched.indexOf("}", patched.indexOf("){", fallbackStart)) + 1;
-    assert.ok(fallbackStart >= 0 && fallbackEnd > fallbackStart);
-    const recency = new Function(`${patched.slice(fallbackStart, fallbackEnd)};return ${fallbackName};`)();
+    const recency = evaluate(definition(patched, fallbackName, patched.indexOf(`function ${fallbackName}(`)), {}, fallbackName);
     assert.equal(recency({ currentRecencyAt: 5, threadRecencyAt: null, updatedAt: 10 }), 10);
     assert.equal(recency({ currentRecencyAt: 20, threadRecencyAt: 10, updatedAt: 30 }), 20, "metadata updatedAt must not displace explicit recency");
   }

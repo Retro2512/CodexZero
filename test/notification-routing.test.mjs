@@ -42,32 +42,35 @@ test("Windows notification body activates its task and retains native action pay
   assert.equal(routing.createNotification(Notification, { title: "No task" }, "win32").toastXml, undefined);
 });
 
-const mainFixture = 'function create(e){let t=new l.Notification(e);return t}function show(e,c){let l;l=this.createNotification({title:c,body:gh(e.body)});return l}function navigate(e,t){switch(t.kind){case`localConversation`:{return}}}function listen(t,n){switch(`close`){case`close`:return t.on(`close`,()=>{n(void 0)})}}';
+const mainFixture = 'let en={Notification:class{constructor(o){this.options=o;this.id="toast1"}}};function Manager(e){this.notifications=new Map;this.removed=0;this.removeNotification=()=>this.removed++;this.createNotification=e.createNotification??(e=>new en.Notification(e))}function show(e){let s=this.createNotification({title:f,body:e.body});return s}function listen(e,s){this.notifications.set(e.id,{notification:s});s.on("close",()=>{this.notifications.get(e.id)?.notification===s&&this.removeNotification(e.id)})}async function navigate(e,t,l){switch(t.kind){case"localConversation":{return}}}var f="Title";';
 
-test("patched native route uses existing navigation and retains callbacks after banner timeout", () => {
+test("patched native route uses existing navigation and retains callbacks after banner timeout", async () => {
   const calls = [];
-  const context = { process: { platform: "win32" }, u: (...args) => calls.push(args) };
+  const context = { process: { platform: "win32" }, require: () => routing };
   vm.runInNewContext(patchNotificationMain(mainFixture), context);
-  context.navigate("window", routing.notificationRoute(link("/local/abc?hostId=worker")));
+  await context.navigate("window", routing.notificationRoute(link("/local/abc?hostId=worker")), (...args) => calls.push(args));
   assert.deepEqual(calls, [["window", "/local/abc?hostId=worker"]]);
+  const manager = new context.Manager({});
+  const shown = context.show.call(manager, { body: "Done", navigationPath: "/local/abc" });
+  assert.equal(shown.options.codexZeroNavigationPath, undefined);
+  if (process.platform === "win32") assert.match(shown.toastXml, /activationType="protocol"/);
   const notification = new EventEmitter();
-  let removed = 0;
-  context.listen(notification, () => removed++);
+  context.listen.call(manager, { id: "n" }, notification);
   notification.emit("close", { reason: "timedOut" });
   notification.emit("close", {});
-  assert.equal(removed, 0);
+  assert.equal(manager.removed, 0);
   notification.emit("close", { reason: "userCanceled" });
-  assert.equal(removed, 1);
+  assert.equal(manager.removed, 1);
   context.process.platform = "darwin";
   notification.emit("close", {});
-  assert.equal(removed, 2);
+  assert.equal(manager.removed, 2);
 });
 
 test("bootstrap accepts task links on startup and reuse, failing closed when upstream changes", () => {
   const context = { require: () => routing, URL };
-  vm.runInNewContext(patchNotificationBootstrap('function UO(e){let t;return null}'), context);
-  assert.equal(context.UO(link("/remote/abc")).path, "/remote/abc");
-  assert.equal(context.UO("not a link"), null);
+  vm.runInNewContext(patchNotificationBootstrap('function j(e){let t;try{t=new URL(e)}catch{return null}if("https:"===t.protocol){return null}return null}'), context);
+  assert.equal(context.j(link("/remote/abc")).path, "/remote/abc");
+  assert.equal(context.j("not a link"), null);
   for (const patch of [patchNotificationMain, patchNotificationBootstrap]) {
     assert.throws(() => patch("changed upstream"), /updated notification routing patch/);
   }

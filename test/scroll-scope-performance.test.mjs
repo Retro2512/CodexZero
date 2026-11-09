@@ -2,9 +2,9 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { patchSelectionScroll } from '../src/scroll-scope-performance.mjs';
 
-// The handler and its captured container are the exact minified bundle shape.
-const source = 'S=()=>{let e=s??c?.current??void 0,t=o==null?void 0:e?.querySelector(o)??void 0,r=null,' +
-  'b=e=>{let n=window.getSelection();if(!(p.current||n==null||n.rangeCount===0||n.isCollapsed)){if(t!=null&&t.contains(n.getRangeAt(0).commonAncestorContainer)){let r=e.target;if(!(r instanceof Node&&t.contains(r))){v();return}if(!n.getRangeAt(0).intersectsNode(r))return}l()}},x=e=>{}';
+// The containers lookup and the scroll handler are the exact minified bundle shape.
+const source = 'n=()=>{t();E.current=window.requestAnimationFrame(()=>{E.current=null;let e=null!=j||null==T?[j]:T.map(h).filter(m),t=null;})},o=()=>{},' +
+  'a=t=>{let a=window.getSelection(),r=O.current?.portalTarget;if(!L.current&&null!=a&&0!==a.rangeCount&&!a.isCollapsed){if(null!=r&&r.contains(a.getRangeAt(0).commonAncestorContainer)){let n=t.target;if(!(n instanceof Node&&r.contains(n)))return void(null!=e&&window.clearTimeout(e),e=window.setTimeout(()=>{e=null,o()},100));if(!a.getRangeAt(0).intersectsNode(n))return}n()}},r=e=>{}';
 
 class FixtureNode {
   constructor(parent = null) { this.parent = parent; }
@@ -16,9 +16,9 @@ class FixtureNode {
   }
 }
 
-function listener(sourceText, container, portalTarget = null, selectionNode = null) {
-  const start = sourceText.indexOf('b=');
-  const end = sourceText.indexOf(',x=e=>', start);
+function listener(sourceText, { container, containerRefs = null, portalTarget = null, selectionNode = null }) {
+  const start = sourceText.indexOf('a=t=>');
+  const end = sourceText.indexOf(',r=e=>', start);
   assert.ok(start >= 0 && end > start, 'Selection listener must be extractable');
   const expression = sourceText.slice(start + 2, end);
   const calls = { selectionReads: 0, updates: 0, delayed: 0 };
@@ -30,16 +30,21 @@ function listener(sourceText, container, portalTarget = null, selectionNode = nu
       intersectsNode: node => node?.contains(selectionNode) ?? false,
     }),
   };
-  const window = { getSelection() { calls.selectionReads++; return selection; } };
-  const callback = Function('e', 't', 'p', 'v', 'l', 'window', 'Node', `return (${expression});`)(
-    container, portalTarget, { current: false }, () => calls.delayed++, () => calls.updates++, window, FixtureNode,
+  const window = {
+    getSelection() { calls.selectionReads++; return selection; },
+    setTimeout(callback) { calls.delayed++; return 1; },
+    clearTimeout() {},
+  };
+  const callback = Function('j', 'T', 'h', 'm', 'O', 'L', 'e', 'o', 'n', 'window', 'Node', `return (${expression});`)(
+    container, containerRefs, ref => ref.current, value => value != null, { current: portalTarget == null ? null : { portalTarget } },
+    { current: false }, null, () => {}, () => calls.updates++, window, FixtureNode,
   );
   return { callback, calls };
 }
 
 test('selection patch rejects missing, ambiguous, and previously patched anchors', () => {
   const patched = patchSelectionScroll(source);
-  assert.match(patched, /scrollTarget instanceof Node&&!scrollTarget\.contains\(e\)&&!e\.contains\(scrollTarget\)/);
+  assert.match(patched, /scrollTarget instanceof Node/);
   assert.throws(() => patchSelectionScroll('different bundle'), /Unsupported selection overlay bundle anchor/);
   assert.throws(() => patchSelectionScroll(source + source), /Unsupported selection overlay bundle anchor/);
   assert.throws(() => patchSelectionScroll(patched), /Unsupported selection overlay bundle anchor/);
@@ -52,7 +57,7 @@ test('sidebar sibling scroll avoids even reading selection, but ancestor and tra
   const internalScroller = new FixtureNode(transcript);
   const sidebar = new FixtureNode(document);
   const nestedSidebarScroller = new FixtureNode(sidebar);
-  const { callback, calls } = listener(patchSelectionScroll(source), transcript, null, selectedText);
+  const { callback, calls } = listener(patchSelectionScroll(source), { container: transcript, selectionNode: selectedText });
 
   callback({ target: sidebar });
   callback({ target: nestedSidebarScroller });
@@ -65,15 +70,30 @@ test('sidebar sibling scroll avoids even reading selection, but ancestor and tra
   assert.deepEqual(calls, { selectionReads: 4, updates: 4, delayed: 0 });
 });
 
+test('thread panes passed as refs are each treated as the transcript', () => {
+  const document = new FixtureNode();
+  const left = new FixtureNode(document);
+  const right = new FixtureNode(document);
+  const sidebar = new FixtureNode(document);
+  const selectedText = new FixtureNode(right);
+  const refs = [{ current: left }, { current: null }, { current: right }];
+  const { callback, calls } = listener(patchSelectionScroll(source), { containerRefs: refs, selectionNode: selectedText });
+  callback({ target: sidebar });
+  assert.deepEqual(calls, { selectionReads: 0, updates: 0, delayed: 0 });
+  callback({ target: new FixtureNode(right) });
+  callback({ target: new FixtureNode(left) });
+  assert.deepEqual(calls, { selectionReads: 2, updates: 2, delayed: 0 });
+});
+
 test('relevant portal selection behavior remains identical to the original listener', () => {
   const document = new FixtureNode();
   const transcript = new FixtureNode(document);
   const portal = new FixtureNode(transcript);
-  const selectedText = new FixtureNode(portal);
   const selectedScroller = new FixtureNode(portal);
-  selectedText.parent = selectedScroller;
-  const oldListener = listener(source, transcript, portal, selectedText);
-  const newListener = listener(patchSelectionScroll(source), transcript, portal, selectedText);
+  const selectedText = new FixtureNode(selectedScroller);
+  const options = { container: transcript, portalTarget: portal, selectionNode: selectedText };
+  const oldListener = listener(source, options);
+  const newListener = listener(patchSelectionScroll(source), options);
   for (const target of [selectedScroller, portal, transcript, document, { kind: 'window' }]) {
     oldListener.callback({ target });
     newListener.callback({ target });
@@ -82,17 +102,19 @@ test('relevant portal selection behavior remains identical to the original liste
   assert.deepEqual(newListener.calls, { selectionReads: 5, updates: 2, delayed: 3 });
 });
 
-test('unknown container keeps original behavior and independent overlays keep independent scopes', () => {
+test('unknown containers keep original behavior and independent overlays keep independent scopes', () => {
   const document = new FixtureNode();
   const transcript = new FixtureNode(document);
   const sidebar = new FixtureNode(document);
   const selectedText = new FixtureNode(transcript);
-  const unknown = listener(patchSelectionScroll(source), undefined, null, selectedText);
-  unknown.callback({ target: sidebar });
-  assert.deepEqual(unknown.calls, { selectionReads: 1, updates: 1, delayed: 0 });
+  for (const options of [{ container: undefined }, { containerRefs: [{ current: null }] }]) {
+    const unknown = listener(patchSelectionScroll(source), { ...options, selectionNode: selectedText });
+    unknown.callback({ target: sidebar });
+    assert.deepEqual(unknown.calls, { selectionReads: 1, updates: 1, delayed: 0 });
+  }
 
-  const transcriptOverlay = listener(patchSelectionScroll(source), transcript, null, selectedText);
-  const sidebarOverlay = listener(patchSelectionScroll(source), sidebar, null, selectedText);
+  const transcriptOverlay = listener(patchSelectionScroll(source), { container: transcript, selectionNode: selectedText });
+  const sidebarOverlay = listener(patchSelectionScroll(source), { container: sidebar, selectionNode: selectedText });
   transcriptOverlay.callback({ target: sidebar });
   sidebarOverlay.callback({ target: sidebar });
   assert.deepEqual(transcriptOverlay.calls, { selectionReads: 0, updates: 0, delayed: 0 });

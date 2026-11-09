@@ -11,16 +11,21 @@ import {
 
 const body = "Do not handle credentials. Required confirmations remain binding.\n";
 const document = "# Browser Safety\n" + body;
+const escaped = text => text.replaceAll("\n", "\\r\n");
 const bundle = Array.from({ length: 4 }, (_, i) =>
-  `const environment${i}={"browser-safety":\`${document}\`,confirmations:"unchanged",browserAuth:"unchanged"};`
-).join("\n");
+  `environment${i}={"browser-safety":\`${escaped(document)}\`,confirmations:"unchanged",browserAuth:"unchanged"};`
+).join("\n") + `\ntraining={"browser-safety-training":\`${escaped(document)}\`};`;
 
 test("continuation guidance is additive, syntactically valid, and idempotent", () => {
   const patched = patchBrowserContinuation(bundle);
-  assert.equal(patched.split(BROWSER_CONTINUATION_GUIDANCE).length - 1, 4);
-  assert.equal(patched.replaceAll(BROWSER_CONTINUATION_GUIDANCE + "\n", ""), bundle);
+  assert.equal(patched.split(escaped(BROWSER_CONTINUATION_GUIDANCE)).length - 1, 4);
+  assert.equal(patched.replaceAll(escaped(BROWSER_CONTINUATION_GUIDANCE + "\n"), ""), bundle);
   assert.equal(patchBrowserContinuation(patched), patched);
-  new vm.Script(patched);
+  const context = {};
+  new vm.Script(patched).runInNewContext(context);
+  const crlf = text => text.replaceAll("\n", "\r\n");
+  assert.equal(context.environment3["browser-safety"], crlf("# Browser Safety\n" + BROWSER_CONTINUATION_GUIDANCE + "\n" + body));
+  assert.equal(context.training["browser-safety-training"], crlf(document));
 });
 
 test("guidance retains authentication, confirmation, and context boundaries", () => {
@@ -32,8 +37,9 @@ test("guidance retains authentication, confirmation, and context boundaries", ()
 });
 
 test("unexpected and partially patched bundles are rejected", () => {
-  for (const source of ["", bundle + bundle, bundle.replace(document, "changed"),
-    bundle.replace(document, "# Browser Safety\n" + BROWSER_CONTINUATION_GUIDANCE + "\n" + body),
+  for (const source of ["", bundle + bundle, bundle.replace(escaped(document), "changed"),
+    bundle.replace(escaped(document), escaped("# Browser Safety\n" + BROWSER_CONTINUATION_GUIDANCE + "\n" + body)),
+    bundle.replaceAll(escaped(document), document),
     bundle + "### Browser task continuation",
   ]) assert.throws(() => patchBrowserContinuation(source), /updated browser continuation patch/);
 });

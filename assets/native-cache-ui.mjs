@@ -758,3 +758,75 @@ export function createCacheSettings(React, Section) {
     return isLocalHost(hostId) ? h(LocalCacheSettings) : null;
   };
 }
+
+const FEATURE_OPTIONS = [
+  { key: "workMode", label: "Work mode" },
+  { key: "chats", label: "ChatGPT chats" },
+  { key: "dots", label: "Dots" },
+];
+
+export function normalizeFeatures(value) {
+  return { workMode: value?.workMode === true, chats: value?.chats === true, dots: value?.dots === true };
+}
+
+export function featuresChanged(saved, running) {
+  return FEATURE_OPTIONS.some(({ key }) => saved[key] !== running[key]);
+}
+
+export function createFeatureSettings(React, Section) {
+  const h = React.createElement;
+  const { useState } = React;
+
+  function FeatureSettings() {
+    const api = globalThis.window && globalThis.window.codexZeroFeatures;
+    const running = normalizeFeatures(api?.current);
+    const [saved, setSaved] = useState(running);
+    const [busy, setBusy] = useState(false);
+    const [error, setError] = useState("");
+
+    async function toggle(key, checked) {
+      if (busy) return;
+      setBusy(true);
+      setError("");
+      try {
+        setSaved(normalizeFeatures(await api.save({ ...saved, [key]: checked })));
+      } catch {
+        setError("Could not save changes");
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    async function restart() {
+      setBusy(true);
+      try { await api.restart(); } catch { setBusy(false); setError("Could not restart"); }
+    }
+
+    const pending = featuresChanged(saved, running);
+    return h(Section, {},
+      h(Section.Header, { title: "Optional features" }),
+      h(Section.Content, {},
+        h("style", null, SETTINGS_STYLES),
+        h("div", { className: "czcs", "aria-busy": busy },
+          h("div", { className: "czcs-fields" },
+            ...FEATURE_OPTIONS.map(({ key, label }) => h("label", { className: "czcs-check", key },
+              h("input", { type: "checkbox", checked: saved[key], disabled: busy,
+                onChange: event => void toggle(key, event.target.checked) }),
+              h("span", null, label),
+            )),
+          ),
+          error || pending ? h("div", { className: "czcs-actions" },
+            h("p", { className: "czcs-status", "data-kind": error ? "error" : "",
+              role: error ? "alert" : "status", "aria-live": "polite" }, error || "Restart CodexZero to apply"),
+            pending ? h("button", { className: "czcs-button", type: "button", disabled: busy, onClick: restart }, "Restart") : null,
+          ) : null,
+        ),
+      ),
+    );
+  }
+
+  return function OptionalFeatures({ hostId }) {
+    const api = globalThis.window && globalThis.window.codexZeroFeatures;
+    return isLocalHost(hostId) && api?.current?.available === true ? h(FeatureSettings) : null;
+  };
+}

@@ -1,8 +1,10 @@
 // Keep selection overlay repositioning tied to scroll events that can affect
 // its transcript. The original handler is otherwise left unchanged.
-const containerAnchor = 'S=()=>{let e=s??c?.current??void 0,t=o==null?void 0:e?.querySelector(o)??void 0,r=null';
-const originalHandler = 'b=e=>{let n=window.getSelection();if(!(p.current||n==null||n.rangeCount===0||n.isCollapsed)){if(t!=null&&t.contains(n.getRangeAt(0).commonAncestorContainer)){let r=e.target;if(!(r instanceof Node&&t.contains(r))){v();return}if(!n.getRangeAt(0).intersectsNode(r))return}l()}}';
-const scopedHandler = 'b=event=>{let scrollTarget=event.target;if(e!=null&&scrollTarget instanceof Node&&!scrollTarget.contains(e)&&!e.contains(scrollTarget))return;let n=window.getSelection();if(!(p.current||n==null||n.rangeCount===0||n.isCollapsed)){if(t!=null&&t.contains(n.getRangeAt(0).commonAncestorContainer)){let r=event.target;if(!(r instanceof Node&&t.contains(r))){v();return}if(!n.getRangeAt(0).intersectsNode(r))return}l()}}';
+export const SELECTION_SCROLL_TARGET = "\"[data-thread-scroll-footer='true']\"";
+
+const containersAnchor = "let e=null!=j||null==T?[j]:T.map(h).filter(m),t=null;";
+const originalHandler = "a=t=>{let a=window.getSelection(),r=O.current?.portalTarget;";
+const scopedHandler = "a=t=>{let scrollTarget=t.target;if(scrollTarget instanceof Node){let containers=null!=j||null==T?[j]:T.map(h).filter(m);if(containers.length>0&&containers.every(c=>c instanceof Node&&!scrollTarget.contains(c)&&!c.contains(scrollTarget)))return}let a=window.getSelection(),r=O.current?.portalTarget;";
 
 function assertOnce(source, anchor) {
   if (source.split(anchor).length !== 2) {
@@ -11,7 +13,7 @@ function assertOnce(source, anchor) {
 }
 
 export function patchSelectionScroll(source) {
-  assertOnce(source, containerAnchor);
+  assertOnce(source, containersAnchor);
   assertOnce(source, originalHandler);
-  return source.replace(originalHandler, scopedHandler);
+  return source.replace(originalHandler, () => scopedHandler);
 }

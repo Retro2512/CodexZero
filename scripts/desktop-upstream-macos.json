@@ -1,14 +1,14 @@
 {
-  "version": "26.915.31945",
+  "version": "26.1103.32239",
   "bundleId": "com.openai.codex",
   "arm64": {
-    "url": "https://persistent.oaistatic.com/codex-app-prod/ChatGPT-darwin-arm64-26.915.31945.zip",
-    "sha256": "3ada2015ae95a44cab8218623fb4a36c9d6d462d69ae6c2682780101254180c7",
-    "size": 595324030
+    "url": "https://persistent.oaistatic.com/codex-app-prod/ChatGPT-darwin-arm64-26.1103.32239.zip",
+    "sha256": "68dabcb2dfee91d245e570c5cc45552c96f3eb719dedc98c907efa64197fa40d",
+    "size": 815384629
   },
   "x64": {
-    "url": "https://persistent.oaistatic.com/codex-app-prod/ChatGPT-darwin-x64-26.915.31945.zip",
-    "sha256": "3c02a2d130801f178dc4ba3070597ec6ac9153833fa3a84f0377f5c16eeb76ec",
-    "size": 582402044
+    "url": "https://persistent.oaistatic.com/codex-app-prod/ChatGPT-darwin-x64-26.1103.32239.zip",
+    "sha256": "15b1e0adf3a817e7b4ae00f9ade759f3e229029ddd1dcb65927d85b31a9e0cf9",
+    "size": 842494836
   }
 }

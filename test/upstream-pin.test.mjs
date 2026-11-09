@@ -4,8 +4,8 @@ import path from "node:path";
 import test from "node:test";
 
 const root = path.resolve(import.meta.dirname, "..");
-const upstreamTag = "rust-v0.162.1";
-const upstreamVersion = "0.162.1";
+const upstreamTag = "rust-v0.167.0";
+const upstreamVersion = "0.167.0";
 const patchName = `codex-${upstreamTag}.patch`;
 
 test("all active build paths use the verified upstream release", async () => {
@@ -14,7 +14,7 @@ test("all active build paths use the verified upstream release", async () => {
   );
 
   assert.equal(compatibility.core.upstreamTag, upstreamTag);
-  assert.equal(compatibility.core.upstreamCommit, "092d3acd6bec3e3a14bdc7e7a2810ab628ab759d");
+  assert.equal(compatibility.core.upstreamCommit, "086ccc833bc9cf01024ad2dd6af7dbd421b6bf9a");
 
   const requiredPins = new Map([
     ["CONTRIBUTING.md", [upstreamTag, patchName]],
