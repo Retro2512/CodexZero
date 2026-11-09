@@ -121,6 +121,7 @@ jobs:
           # git dependencies such as rusty_v8 have submodules that cargo's built-in git client fails to fetch on hosted runners.
           CARGO_NET_GIT_FETCH_WITH_CLI: "true"
         run: |
+          git config --global core.longpaths true
           packages=(-p codex-cli)
           if [ "${{ runner.os }}" = "Windows" ]; then
             packages+=(-p codex-windows-sandbox -p codex-windows-sandbox-service)
