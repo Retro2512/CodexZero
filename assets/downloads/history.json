@@ -602,7 +602,12 @@
       "date": "2026-11-19",
       "downloads": 925,
       "kind": "observed"
+    },
+    {
+      "date": "2026-11-20",
+      "downloads": 926,
+      "kind": "observed"
     }
   ],
-  "updated_at": "2026-11-19T15:51:15Z"
+  "updated_at": "2026-11-20T15:33:20Z"
 }
